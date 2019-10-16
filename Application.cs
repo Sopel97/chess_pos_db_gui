@@ -14,22 +14,37 @@ namespace chess_pos_db_gui
 {
     public partial class Application : Form
     {
-        private List<GameLevel> levels;
-        private List<Select> selects;
+        private HashSet<GameLevel> levels;
+        private HashSet<Select> selects;
+        private QueryResponse data;
 
         public Application()
         {
+            levels = new HashSet<GameLevel>();
+            selects = new HashSet<Select>();
+            data = null;
+
             InitializeComponent();
+
+            levelHumanCheckBox.Checked = true;
+            levelEngineCheckBox.Checked = true;
+            levelServerCheckBox.Checked = true;
+            typeContinuationsCheckBox.Checked = true;
+            typeTranspositionsCheckBox.Checked = true;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             string jsonStr = File.ReadAllText("data/test.json");
             var json = JsonValue.Parse(jsonStr);
-            QueryResponse resp = QueryResponse.FromJson(json);
-            Populate(resp, 
-                new List<Select>{chess_pos_db_gui.Select.Continuations, chess_pos_db_gui.Select.Transpositions}, 
-                new List<GameLevel>{GameLevel.Human, GameLevel.Engine, GameLevel.Server });
+            data = QueryResponse.FromJson(json);
+            Repopulate();
+        }
+
+        private string PctToString(float pct)
+        {
+            if (float.IsNaN(pct) || float.IsPositiveInfinity(pct) || float.IsNegativeInfinity(pct)) return "-";
+            return (pct * 100).ToString("F1") + "%";
         }
 
         private void Populate(string move, AggregatedEntry entry)
@@ -40,8 +55,8 @@ namespace chess_pos_db_gui
             entriesGridView["WinCount", row].Value = entry.WinCount;
             entriesGridView["DrawCount", row].Value = entry.DrawCount;
             entriesGridView["LossCount", row].Value = entry.LossCount;
-            entriesGridView["Perf", row].Value = (entry.Perf * 100).ToString("F1") + "%";
-            entriesGridView["DrawPct", row].Value = (entry.DrawRate * 100).ToString("F1") + "%";
+            entriesGridView["Perf", row].Value = PctToString(entry.Perf);
+            entriesGridView["DrawPct", row].Value = PctToString(entry.DrawRate);
 
             foreach (GameHeader header in entry.FirstGame)
             {
@@ -110,29 +125,51 @@ namespace chess_pos_db_gui
             entriesGridView.Refresh();
         }
 
+        private void Repopulate()
+        {
+            if (selects.Count == 0 || levels.Count == 0 || data == null)
+            {
+                Clear();
+            }
+            else
+            {
+                Populate(data, selects.ToList(), levels.ToList());
+            }
+        }
+
         private void LevelHumanCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (levelHumanCheckBox.Checked) levels.Add(GameLevel.Human);
+            else levels.Remove(GameLevel.Human);
+            Repopulate();
         }
 
         private void LevelEngineCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (levelEngineCheckBox.Checked) levels.Add(GameLevel.Engine);
+            else levels.Remove(GameLevel.Engine);
+            Repopulate();
         }
 
         private void LevelServerCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (levelServerCheckBox.Checked) levels.Add(GameLevel.Server);
+            else levels.Remove(GameLevel.Server);
+            Repopulate();
         }
 
         private void TypeContinuationsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (typeContinuationsCheckBox.Checked) selects.Add(chess_pos_db_gui.Select.Continuations);
+            else selects.Remove(chess_pos_db_gui.Select.Continuations);
+            Repopulate();
         }
 
         private void TypeTranspositionsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (typeTranspositionsCheckBox.Checked) selects.Add(chess_pos_db_gui.Select.Transpositions);
+            else selects.Remove(chess_pos_db_gui.Select.Transpositions);
+            Repopulate();
         }
     }
 }

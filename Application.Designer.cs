@@ -217,7 +217,7 @@
             this.typeSelectionGroupBox.Size = new System.Drawing.Size(206, 44);
             this.typeSelectionGroupBox.TabIndex = 4;
             this.typeSelectionGroupBox.TabStop = false;
-            this.typeSelectionGroupBox.Text = "Type";
+            this.typeSelectionGroupBox.Text = "Select";
             // 
             // typeTranspositionsCheckBox
             // 
