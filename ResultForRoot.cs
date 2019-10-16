@@ -20,7 +20,7 @@ namespace chess_pos_db_gui
 
             foreach (Select select in SelectHelper.Values)
             {
-                var selectStr = select.ToString();
+                var selectStr = select.Stringify();
                 if (json.ContainsKey(selectStr))
                 {
                     result.ResultsBySelect.Add(select, SelectResult.FromJson(json[selectStr]));

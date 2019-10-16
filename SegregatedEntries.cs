@@ -47,17 +47,22 @@ namespace chess_pos_db_gui
 
             return null;
         }
+
+        public IEnumerator GetEnumerator()
+        {
+            return entries.GetEnumerator();
+        }
     }
 
     internal struct Origin
     {
         public GameLevel Level { get; set; }
-        public GameResult result { get; set; }
+        public GameResult Result { get; set; }
 
         public Origin(GameLevel level, GameResult result)
         {
             Level = level;
-            this.result = result;
+            this.Result = result;
         }
     }
 }

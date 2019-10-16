@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ChessDotNet, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ChessDotNet.0.11.0\lib\netstandard1.3\ChessDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Json, Version=2.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -49,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AggregatedEntry.cs" />
     <Compile Include="Application.cs">
       <SubType>Form</SubType>
     </Compile>

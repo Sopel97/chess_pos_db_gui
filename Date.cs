@@ -25,9 +25,9 @@ namespace chess_pos_db_gui
 
             return new Date
             {
-                Year = UInt16.TryParse(str, out ushort year) ? Optional<ushort>.Create(year) : Optional<ushort>.CreateEmpty(),
-                Month = Byte.TryParse(str, out byte month) ? Optional<byte>.Create(month) : Optional<byte>.CreateEmpty(),
-                Day = Byte.TryParse(str, out byte day) ? Optional<byte>.Create(day) : Optional<byte>.CreateEmpty()
+                Year = UInt16.TryParse(parts[0], out ushort year) ? Optional<ushort>.Create(year) : Optional<ushort>.CreateEmpty(),
+                Month = Byte.TryParse(parts[1], out byte month) ? Optional<byte>.Create(month) : Optional<byte>.CreateEmpty(),
+                Day = Byte.TryParse(parts[2], out byte day) ? Optional<byte>.Create(day) : Optional<byte>.CreateEmpty()
             };
         }
 
@@ -36,6 +36,15 @@ namespace chess_pos_db_gui
             Year = Optional<ushort>.Create(year);
             Month = Optional<byte>.Create(month);
             Day = Optional<byte>.Create(day);
+        }
+
+        public override string ToString()
+        {
+            return string.Join(".", new string[]{
+                Year.Select(y => y.ToString("D4")).DefaultIfEmpty("????").First(),
+                Month.Select(y => y.ToString("D2")).DefaultIfEmpty("??").First(),
+                Day.Select(y => y.ToString("D2")).DefaultIfEmpty("??").First()
+            });
         }
     }
 }

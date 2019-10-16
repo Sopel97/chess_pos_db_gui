@@ -10,7 +10,7 @@ namespace chess_pos_db_gui
 
     static class GameLevelHelper
     {
-        public static string ToString(this GameLevel result)
+        public static string Stringify(this GameLevel result)
         {
             switch (result)
             {

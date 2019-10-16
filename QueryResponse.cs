@@ -15,7 +15,7 @@ namespace chess_pos_db_gui
         {
             var result = new QueryResponse();
 
-            foreach(JsonValue entry in json)
+            foreach(JsonValue entry in json["results"])
             {
                 result.Results.Add(ResultForRoot.FromJson(entry));
             }

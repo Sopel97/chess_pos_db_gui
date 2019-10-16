@@ -31,5 +31,10 @@ namespace chess_pos_db_gui
             Category = category;
             Index = index;
         }
+
+        public override string ToString()
+        {
+            return Category + Index.ToString("D2");
+        }
     }
 }

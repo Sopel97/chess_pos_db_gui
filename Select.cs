@@ -12,7 +12,7 @@ namespace chess_pos_db_gui
     {
         public static Select[] Values = { Select.Continuations, Select.Transpositions, Select.All };
 
-        public static string ToString(this Select result)
+        public static string Stringify(this Select result)
         {
             switch (result)
             {
