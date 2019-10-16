@@ -74,7 +74,7 @@ namespace chess_pos_db_gui
             {
                 FirstGame = entry.FirstGame;
             }
-            else if (entry.FirstGame.Count() != 0 && entry.FirstGame.First().GameId < FirstGame.First().GameId)
+            else if (entry.FirstGame.Count() != 0 && entry.FirstGame.First().IsBefore(FirstGame.First()))
             {
                 FirstGame = entry.FirstGame;
             }

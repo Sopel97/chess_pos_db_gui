@@ -52,5 +52,13 @@ namespace chess_pos_db_gui
             White = white;
             Black = black;
         }
+
+        public bool IsBefore(GameHeader gameHeader)
+        {
+            if (this.Date.IsBefore(gameHeader.Date)) return true;
+            if (gameHeader.Date.IsBefore(this.Date)) return false;
+
+            return GameId < gameHeader.GameId;
+        }
     }
 }

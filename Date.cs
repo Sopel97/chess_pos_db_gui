@@ -46,5 +46,24 @@ namespace chess_pos_db_gui
                 Day.Select(y => y.ToString("D2")).DefaultIfEmpty("??").First()
             });
         }
+
+        public bool IsBefore(Date other)
+        {
+            // missing is less than 1
+
+            int y0 = Year.Or(0);
+            int y1 = other.Year.Or(0);
+            if (y0 < y1) return true;
+            else if (y1 < y0) return false;
+
+            int m0 = Month.Or(0);
+            int m1 = other.Month.Or(0);
+            if (m0 < m1) return true;
+            else if (m1 < m0) return false;
+
+            int d0 = Day.Or(0);
+            int d1 = other.Day.Or(0);
+            return d0 < d1;
+        }
     }
 }

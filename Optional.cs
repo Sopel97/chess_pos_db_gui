@@ -36,5 +36,11 @@ namespace chess_pos_db_gui
         {
             return this.data.GetEnumerator();
         }
+
+        public T Or(T def)
+        {
+            if (data.Count() == 0) return def;
+            else return data[0];
+        }
     }
 }
