@@ -51,13 +51,24 @@
             this.typeSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.typeTranspositionsCheckBox = new System.Windows.Forms.CheckBox();
             this.typeContinuationsCheckBox = new System.Windows.Forms.CheckBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             this.typeSelectionGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // entriesGridView
             // 
+            this.entriesGridView.AllowUserToAddRows = false;
+            this.entriesGridView.AllowUserToDeleteRows = false;
+            this.entriesGridView.AllowUserToOrderColumns = true;
+            this.entriesGridView.AllowUserToResizeRows = false;
+            this.entriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Move,
@@ -75,92 +86,109 @@
             this.Result,
             this.Eco,
             this.PlyCount});
-            this.entriesGridView.Location = new System.Drawing.Point(12, 201);
+            this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.entriesGridView.Location = new System.Drawing.Point(3, 53);
             this.entriesGridView.Name = "entriesGridView";
-            this.entriesGridView.Size = new System.Drawing.Size(776, 237);
+            this.entriesGridView.ReadOnly = true;
+            this.entriesGridView.Size = new System.Drawing.Size(794, 143);
             this.entriesGridView.TabIndex = 0;
             // 
             // Move
             // 
             this.Move.HeaderText = "Move";
             this.Move.Name = "Move";
+            this.Move.ReadOnly = true;
             this.Move.Width = 60;
             // 
             // Count
             // 
             this.Count.HeaderText = "N";
             this.Count.Name = "Count";
+            this.Count.ReadOnly = true;
             // 
             // WinCount
             // 
             this.WinCount.HeaderText = "W";
             this.WinCount.Name = "WinCount";
+            this.WinCount.ReadOnly = true;
             // 
             // DrawCount
             // 
             this.DrawCount.HeaderText = "D";
             this.DrawCount.Name = "DrawCount";
+            this.DrawCount.ReadOnly = true;
             // 
             // LossCount
             // 
             this.LossCount.HeaderText = "L";
             this.LossCount.Name = "LossCount";
+            this.LossCount.ReadOnly = true;
             // 
             // Perf
             // 
             this.Perf.HeaderText = "%";
             this.Perf.Name = "Perf";
+            this.Perf.ReadOnly = true;
             this.Perf.Width = 40;
             // 
             // DrawPct
             // 
             this.DrawPct.HeaderText = "D%";
             this.DrawPct.Name = "DrawPct";
+            this.DrawPct.ReadOnly = true;
             this.DrawPct.Width = 40;
             // 
             // GameId
             // 
             this.GameId.HeaderText = "GameId";
             this.GameId.Name = "GameId";
+            this.GameId.ReadOnly = true;
             this.GameId.Width = 60;
             // 
             // Date
             // 
             this.Date.HeaderText = "Date";
             this.Date.Name = "Date";
+            this.Date.ReadOnly = true;
             this.Date.Width = 65;
             // 
             // Event
             // 
             this.Event.HeaderText = "Event";
             this.Event.Name = "Event";
+            this.Event.ReadOnly = true;
             // 
             // White
             // 
             this.White.HeaderText = "White";
             this.White.Name = "White";
+            this.White.ReadOnly = true;
             // 
             // Black
             // 
             this.Black.HeaderText = "Black";
             this.Black.Name = "Black";
+            this.Black.ReadOnly = true;
             // 
             // Result
             // 
             this.Result.HeaderText = "Result";
             this.Result.Name = "Result";
+            this.Result.ReadOnly = true;
             this.Result.Width = 30;
             // 
             // Eco
             // 
             this.Eco.HeaderText = "ECO";
             this.Eco.Name = "Eco";
+            this.Eco.ReadOnly = true;
             this.Eco.Width = 40;
             // 
             // PlyCount
             // 
             this.PlyCount.HeaderText = "Plies";
             this.PlyCount.Name = "PlyCount";
+            this.PlyCount.ReadOnly = true;
             this.PlyCount.Width = 40;
             // 
             // levelSelectionGroupBox
@@ -168,7 +196,7 @@
             this.levelSelectionGroupBox.Controls.Add(this.levelServerCheckBox);
             this.levelSelectionGroupBox.Controls.Add(this.levelEngineCheckBox);
             this.levelSelectionGroupBox.Controls.Add(this.levelHumanCheckBox);
-            this.levelSelectionGroupBox.Location = new System.Drawing.Point(12, 151);
+            this.levelSelectionGroupBox.Location = new System.Drawing.Point(3, 3);
             this.levelSelectionGroupBox.Name = "levelSelectionGroupBox";
             this.levelSelectionGroupBox.Size = new System.Drawing.Size(206, 44);
             this.levelSelectionGroupBox.TabIndex = 1;
@@ -212,7 +240,7 @@
             // 
             this.typeSelectionGroupBox.Controls.Add(this.typeTranspositionsCheckBox);
             this.typeSelectionGroupBox.Controls.Add(this.typeContinuationsCheckBox);
-            this.typeSelectionGroupBox.Location = new System.Drawing.Point(224, 151);
+            this.typeSelectionGroupBox.Location = new System.Drawing.Point(215, 3);
             this.typeSelectionGroupBox.Name = "typeSelectionGroupBox";
             this.typeSelectionGroupBox.Size = new System.Drawing.Size(206, 44);
             this.typeSelectionGroupBox.TabIndex = 4;
@@ -241,14 +269,30 @@
             this.typeContinuationsCheckBox.UseVisualStyleBackColor = true;
             this.typeContinuationsCheckBox.CheckedChanged += new System.EventHandler(this.TypeContinuationsCheckBox_CheckedChanged);
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.IsSplitterFixed = true;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.typeSelectionGroupBox);
+            this.splitContainer1.Panel2.Controls.Add(this.levelSelectionGroupBox);
+            this.splitContainer1.Panel2.Controls.Add(this.entriesGridView);
+            this.splitContainer1.Size = new System.Drawing.Size(800, 450);
+            this.splitContainer1.SplitterDistance = 250;
+            this.splitContainer1.TabIndex = 6;
+            // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.typeSelectionGroupBox);
-            this.Controls.Add(this.levelSelectionGroupBox);
-            this.Controls.Add(this.entriesGridView);
+            this.Controls.Add(this.splitContainer1);
             this.Name = "Application";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -257,6 +301,9 @@
             this.levelSelectionGroupBox.PerformLayout();
             this.typeSelectionGroupBox.ResumeLayout(false);
             this.typeSelectionGroupBox.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -286,6 +333,7 @@
         private System.Windows.Forms.GroupBox typeSelectionGroupBox;
         private System.Windows.Forms.CheckBox typeTranspositionsCheckBox;
         private System.Windows.Forms.CheckBox typeContinuationsCheckBox;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
 
