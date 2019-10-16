@@ -68,6 +68,8 @@ namespace chess_pos_db_gui
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            chessBoard.LoadImages("assets/graphics");
+
             string jsonStr = File.ReadAllText("data/test.json");
             var json = JsonValue.Parse(jsonStr);
             data = QueryResponse.FromJson(json);

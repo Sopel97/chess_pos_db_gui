@@ -59,6 +59,12 @@
     <Compile Include="Application.Designer.cs">
       <DependentUpon>Application.cs</DependentUpon>
     </Compile>
+    <Compile Include="ChessBoard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ChessBoard.Designer.cs">
+      <DependentUpon>ChessBoard.cs</DependentUpon>
+    </Compile>
     <Compile Include="Date.cs" />
     <Compile Include="Eco.cs" />
     <Compile Include="Entry.cs" />
@@ -75,6 +81,9 @@
     <Compile Include="Select.cs" />
     <EmbeddedResource Include="Application.resx">
       <DependentUpon>Application.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChessBoard.resx">
+      <DependentUpon>ChessBoard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

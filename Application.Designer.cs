@@ -37,10 +37,12 @@
             this.typeTranspositionsCheckBox = new System.Windows.Forms.CheckBox();
             this.typeContinuationsCheckBox = new System.Windows.Forms.CheckBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             this.typeSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
@@ -59,7 +61,7 @@
             this.entriesGridView.Location = new System.Drawing.Point(3, 53);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
-            this.entriesGridView.Size = new System.Drawing.Size(794, 143);
+            this.entriesGridView.Size = new System.Drawing.Size(794, 169);
             this.entriesGridView.TabIndex = 0;
             // 
             // levelSelectionGroupBox
@@ -149,20 +151,32 @@
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.chessBoard);
+            // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.typeSelectionGroupBox);
             this.splitContainer1.Panel2.Controls.Add(this.levelSelectionGroupBox);
             this.splitContainer1.Panel2.Controls.Add(this.entriesGridView);
-            this.splitContainer1.Size = new System.Drawing.Size(800, 450);
-            this.splitContainer1.SplitterDistance = 250;
+            this.splitContainer1.Size = new System.Drawing.Size(800, 526);
+            this.splitContainer1.SplitterDistance = 300;
             this.splitContainer1.TabIndex = 6;
+            // 
+            // chessBoard
+            // 
+            this.chessBoard.Location = new System.Drawing.Point(22, 13);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.Size = new System.Drawing.Size(399, 248);
+            this.chessBoard.TabIndex = 0;
             // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 526);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Application";
             this.Text = "Form1";
@@ -172,6 +186,7 @@
             this.levelSelectionGroupBox.PerformLayout();
             this.typeSelectionGroupBox.ResumeLayout(false);
             this.typeSelectionGroupBox.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
@@ -190,6 +205,7 @@
         private System.Windows.Forms.CheckBox typeTranspositionsCheckBox;
         private System.Windows.Forms.CheckBox typeContinuationsCheckBox;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private ChessBoard chessBoard;
     }
 }
 
