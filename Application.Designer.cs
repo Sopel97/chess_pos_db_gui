@@ -29,21 +29,6 @@
         private void InitializeComponent()
         {
             this.entriesGridView = new System.Windows.Forms.DataGridView();
-            this.Move = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.WinCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DrawCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LossCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Perf = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DrawPct = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.GameId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Event = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.White = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Black = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Eco = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PlyCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
             this.levelEngineCheckBox = new System.Windows.Forms.CheckBox();
@@ -70,126 +55,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.entriesGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Move,
-            this.Count,
-            this.WinCount,
-            this.DrawCount,
-            this.LossCount,
-            this.Perf,
-            this.DrawPct,
-            this.GameId,
-            this.Date,
-            this.Event,
-            this.White,
-            this.Black,
-            this.Result,
-            this.Eco,
-            this.PlyCount});
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.entriesGridView.Location = new System.Drawing.Point(3, 53);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.Size = new System.Drawing.Size(794, 143);
             this.entriesGridView.TabIndex = 0;
-            // 
-            // Move
-            // 
-            this.Move.HeaderText = "Move";
-            this.Move.Name = "Move";
-            this.Move.ReadOnly = true;
-            this.Move.Width = 60;
-            // 
-            // Count
-            // 
-            this.Count.HeaderText = "N";
-            this.Count.Name = "Count";
-            this.Count.ReadOnly = true;
-            // 
-            // WinCount
-            // 
-            this.WinCount.HeaderText = "W";
-            this.WinCount.Name = "WinCount";
-            this.WinCount.ReadOnly = true;
-            // 
-            // DrawCount
-            // 
-            this.DrawCount.HeaderText = "D";
-            this.DrawCount.Name = "DrawCount";
-            this.DrawCount.ReadOnly = true;
-            // 
-            // LossCount
-            // 
-            this.LossCount.HeaderText = "L";
-            this.LossCount.Name = "LossCount";
-            this.LossCount.ReadOnly = true;
-            // 
-            // Perf
-            // 
-            this.Perf.HeaderText = "%";
-            this.Perf.Name = "Perf";
-            this.Perf.ReadOnly = true;
-            this.Perf.Width = 40;
-            // 
-            // DrawPct
-            // 
-            this.DrawPct.HeaderText = "D%";
-            this.DrawPct.Name = "DrawPct";
-            this.DrawPct.ReadOnly = true;
-            this.DrawPct.Width = 40;
-            // 
-            // GameId
-            // 
-            this.GameId.HeaderText = "GameId";
-            this.GameId.Name = "GameId";
-            this.GameId.ReadOnly = true;
-            this.GameId.Width = 60;
-            // 
-            // Date
-            // 
-            this.Date.HeaderText = "Date";
-            this.Date.Name = "Date";
-            this.Date.ReadOnly = true;
-            this.Date.Width = 65;
-            // 
-            // Event
-            // 
-            this.Event.HeaderText = "Event";
-            this.Event.Name = "Event";
-            this.Event.ReadOnly = true;
-            // 
-            // White
-            // 
-            this.White.HeaderText = "White";
-            this.White.Name = "White";
-            this.White.ReadOnly = true;
-            // 
-            // Black
-            // 
-            this.Black.HeaderText = "Black";
-            this.Black.Name = "Black";
-            this.Black.ReadOnly = true;
-            // 
-            // Result
-            // 
-            this.Result.HeaderText = "Result";
-            this.Result.Name = "Result";
-            this.Result.ReadOnly = true;
-            this.Result.Width = 30;
-            // 
-            // Eco
-            // 
-            this.Eco.HeaderText = "ECO";
-            this.Eco.Name = "Eco";
-            this.Eco.ReadOnly = true;
-            this.Eco.Width = 40;
-            // 
-            // PlyCount
-            // 
-            this.PlyCount.HeaderText = "Plies";
-            this.PlyCount.Name = "PlyCount";
-            this.PlyCount.ReadOnly = true;
-            this.PlyCount.Width = 40;
             // 
             // levelSelectionGroupBox
             // 
@@ -311,21 +182,6 @@
         #endregion
 
         private System.Windows.Forms.DataGridView entriesGridView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Move;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Count;
-        private System.Windows.Forms.DataGridViewTextBoxColumn WinCount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DrawCount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LossCount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Perf;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DrawPct;
-        private System.Windows.Forms.DataGridViewTextBoxColumn GameId;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Event;
-        private System.Windows.Forms.DataGridViewTextBoxColumn White;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Black;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Result;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Eco;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PlyCount;
         private System.Windows.Forms.GroupBox levelSelectionGroupBox;
         private System.Windows.Forms.CheckBox levelServerCheckBox;
         private System.Windows.Forms.CheckBox levelEngineCheckBox;

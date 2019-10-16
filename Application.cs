@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Json;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,12 +18,14 @@ namespace chess_pos_db_gui
         private HashSet<GameLevel> levels;
         private HashSet<Select> selects;
         private QueryResponse data;
+        private DataTable tabulatedData;
 
         public Application()
         {
             levels = new HashSet<GameLevel>();
             selects = new HashSet<Select>();
             data = null;
+            tabulatedData = new DataTable();
 
             InitializeComponent();
 
@@ -31,6 +34,36 @@ namespace chess_pos_db_gui
             levelServerCheckBox.Checked = true;
             typeContinuationsCheckBox.Checked = true;
             typeTranspositionsCheckBox.Checked = true;
+
+            DoubleBuffered = true;
+
+            tabulatedData.Columns.Add(new DataColumn("Move"));
+            tabulatedData.Columns.Add(new DataColumn("Count"));
+            tabulatedData.Columns.Add(new DataColumn("WinCount"));
+            tabulatedData.Columns.Add(new DataColumn("DrawCount"));
+            tabulatedData.Columns.Add(new DataColumn("LossCount"));
+            tabulatedData.Columns.Add(new DataColumn("Perf"));
+            tabulatedData.Columns.Add(new DataColumn("DrawPct"));
+            tabulatedData.Columns.Add(new DataColumn("GameId"));
+            tabulatedData.Columns.Add(new DataColumn("Date"));
+            tabulatedData.Columns.Add(new DataColumn("Event"));
+            tabulatedData.Columns.Add(new DataColumn("White"));
+            tabulatedData.Columns.Add(new DataColumn("Black"));
+            tabulatedData.Columns.Add(new DataColumn("Result"));
+            tabulatedData.Columns.Add(new DataColumn("Eco"));
+            tabulatedData.Columns.Add(new DataColumn("PlyCount"));
+
+            MakeDoubleBuffered(entriesGridView);
+            entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            entriesGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.EnableResizing;
+            entriesGridView.DataSource = tabulatedData;
+        }
+        private static void MakeDoubleBuffered(DataGridView dgv)
+        {
+            Type dgvType = dgv.GetType();
+            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
+                  BindingFlags.Instance | BindingFlags.NonPublic);
+            pi.SetValue(dgv, true, null);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -49,35 +82,40 @@ namespace chess_pos_db_gui
 
         private void Populate(string move, AggregatedEntry entry)
         {
-            int row = entriesGridView.Rows.Add();
-            entriesGridView["Move", row].Value = move;
-            entriesGridView["Count", row].Value = entry.Count;
-            entriesGridView["WinCount", row].Value = entry.WinCount;
-            entriesGridView["DrawCount", row].Value = entry.DrawCount;
-            entriesGridView["LossCount", row].Value = entry.LossCount;
-            entriesGridView["Perf", row].Value = PctToString(entry.Perf);
-            entriesGridView["DrawPct", row].Value = PctToString(entry.DrawRate);
+            var row = tabulatedData.NewRow();
+            row["Move"] = move;
+            row["Count"] = entry.Count;
+            row["WinCount"] = entry.WinCount;
+            row["DrawCount"] = entry.DrawCount;
+            row["LossCount"] = entry.LossCount;
+            row["Perf"] = PctToString(entry.Perf);
+            row["DrawPct"] = PctToString(entry.DrawRate);
 
             foreach (GameHeader header in entry.FirstGame)
             {
-                entriesGridView["GameId", row].Value = header.GameId;
-                entriesGridView["Date", row].Value = header.Date.ToString();
-                entriesGridView["Event", row].Value = header.Event;
-                entriesGridView["White", row].Value = header.White;
-                entriesGridView["Black", row].Value = header.Black;
-                entriesGridView["Result", row].Value = header.Result.Stringify(new GameResultLetterFormat());
-                entriesGridView["Eco", row].Value = header.Eco.ToString();
-                entriesGridView["PlyCount", row].Value = header.PlyCount.FirstOrDefault();
+                row["GameId"] = header.GameId;
+                row["Date"] = header.Date.ToString();
+                row["Event"] = header.Event;
+                row["White"] = header.White;
+                row["Black"] = header.Black;
+                row["Result"] = header.Result.Stringify(new GameResultLetterFormat());
+                row["Eco"] = header.Eco.ToString();
+                row["PlyCount"] = header.PlyCount.FirstOrDefault();
             }
+
+            tabulatedData.Rows.Add(row);
         }
 
         private void Populate(Dictionary<string, AggregatedEntry> entries)
         {
+            entriesGridView.SuspendLayout();
             Clear();
             foreach (KeyValuePair<string, AggregatedEntry> entry in entries)
             {
                 Populate(entry.Key, entry.Value);
             }
+            entriesGridView.ResumeLayout(false);
+
             entriesGridView.Refresh();
         }
 
@@ -121,7 +159,7 @@ namespace chess_pos_db_gui
 
         private void Clear()
         {
-            entriesGridView.Rows.Clear();
+            tabulatedData.Clear();
             entriesGridView.Refresh();
         }
 
