@@ -23,6 +23,7 @@ namespace chess_pos_db_gui
         public RootPosition(string fen)
         {
             Fen = fen;
+            Move = Optional<string>.CreateEmpty();
         }
 
         public RootPosition(string fen, Optional<string> move)

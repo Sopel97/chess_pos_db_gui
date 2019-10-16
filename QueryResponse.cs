@@ -22,5 +22,10 @@ namespace chess_pos_db_gui
 
             return result;
         }
+
+        public QueryResponse()
+        {
+            Results = new List<ResultForRoot>();
+        }
     }
 }

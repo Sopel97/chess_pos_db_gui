@@ -14,9 +14,9 @@ namespace chess_pos_db_gui
 
         public static ResultForRoot FromJson(JsonValue json)
         {
-            var result = new ResultForRoot();
-
-            result.Position = RootPosition.FromJson(json["position"]);
+            var result = new ResultForRoot(
+                RootPosition.FromJson(json["position"])
+            );
 
             foreach (Select select in SelectHelper.Values)
             {
@@ -28,6 +28,18 @@ namespace chess_pos_db_gui
             }
 
             return result;
+        }
+
+        public ResultForRoot()
+        {
+            Position = null;
+            ResultsBySelect = new Dictionary<Select, SelectResult>();
+        }
+
+        public ResultForRoot(RootPosition position)
+        {
+            Position = position;
+            ResultsBySelect = new Dictionary<Select, SelectResult>();
         }
     }
 
@@ -54,6 +66,11 @@ namespace chess_pos_db_gui
             }
 
             return result;
+        }
+
+        public SelectResult()
+        {
+            Children = new Dictionary<string, SegregatedEntries>();
         }
     }
 }

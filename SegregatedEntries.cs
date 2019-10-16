@@ -35,12 +35,12 @@ namespace chess_pos_db_gui
             entries = new Dictionary<Origin, Entry>();
         }
 
-        void Add(GameLevel level, GameResult result, Entry entry)
+        public void Add(GameLevel level, GameResult result, Entry entry)
         {
             entries.Add(new Origin(level, result), entry);
         }
 
-        Entry GetEntry(GameLevel level, GameResult result)
+        public Entry Get(GameLevel level, GameResult result)
         {
             if (entries.TryGetValue(new Origin(level, result), out Entry e))
                 return e;
@@ -51,8 +51,8 @@ namespace chess_pos_db_gui
 
     internal struct Origin
     {
-        GameLevel Level { get; set; }
-        GameResult result { get; set; }
+        public GameLevel Level { get; set; }
+        public GameResult result { get; set; }
 
         public Origin(GameLevel level, GameResult result)
         {
