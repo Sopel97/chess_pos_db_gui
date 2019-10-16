@@ -166,10 +166,10 @@
             // 
             // chessBoard
             // 
-            this.chessBoard.Location = new System.Drawing.Point(22, 13);
+            this.chessBoard.Location = new System.Drawing.Point(9, 9);
             this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
             this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(399, 248);
+            this.chessBoard.Size = new System.Drawing.Size(782, 291);
             this.chessBoard.TabIndex = 0;
             // 
             // Application

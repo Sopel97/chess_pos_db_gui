@@ -36,7 +36,7 @@
             this.chessBoardPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.chessBoardPanel.Location = new System.Drawing.Point(17, 19);
+            this.chessBoardPanel.Location = new System.Drawing.Point(0, 0);
             this.chessBoardPanel.Margin = new System.Windows.Forms.Padding(0);
             this.chessBoardPanel.Name = "chessBoardPanel";
             this.chessBoardPanel.Size = new System.Drawing.Size(256, 256);
@@ -51,7 +51,7 @@
             this.Controls.Add(this.chessBoardPanel);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "ChessBoard";
-            this.Size = new System.Drawing.Size(368, 320);
+            this.Size = new System.Drawing.Size(512, 256);
             this.Load += new System.EventHandler(this.ChessBoard_Load);
             this.ResumeLayout(false);
 
