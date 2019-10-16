@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ChessDotNet;
+using ChessDotNet.Pieces;
 
 namespace chess_pos_db_gui
 {
@@ -33,14 +34,17 @@ namespace chess_pos_db_gui
         private Image blackQueen { get; set; }
         private Image blackKing { get; set; }
 
-        private Dictionary<char, Image> pieceImages;
+        private Dictionary<Piece, Image> pieceImages;
 
         public ChessBoard()
         {
             InitializeComponent();
 
             Game = new ChessGame();
-            pieceImages = new Dictionary<char, Image>();
+            Game.MakeMove(San.ParseSan(Game, "e4"), false);
+            Game.MakeMove(San.ParseSan(Game, "e5"), false);
+            Game.MakeMove(San.ParseSan(Game, "Ke2"), false);
+            pieceImages = new Dictionary<Piece, Image>();
         }
 
         public void LoadImages(string path)
@@ -70,19 +74,19 @@ namespace chess_pos_db_gui
         {
             pieceImages.Clear();
 
-            pieceImages.Add('P', whitePawn);
-            pieceImages.Add('N', whiteKnight);
-            pieceImages.Add('B', whiteBishop);
-            pieceImages.Add('R', whiteRook);
-            pieceImages.Add('Q', whiteQueen);
-            pieceImages.Add('K', whiteKing);
+            pieceImages.Add(new Pawn(Player.White), whitePawn);
+            pieceImages.Add(new Knight(Player.White), whiteKnight);
+            pieceImages.Add(new Bishop(Player.White), whiteBishop);
+            pieceImages.Add(new Rook(Player.White), whiteRook);
+            pieceImages.Add(new Queen(Player.White), whiteQueen);
+            pieceImages.Add(new King(Player.White), whiteKing);
 
-            pieceImages.Add('p', blackPawn);
-            pieceImages.Add('n', blackKnight);
-            pieceImages.Add('b', blackBishop);
-            pieceImages.Add('r', blackRook);
-            pieceImages.Add('q', blackQueen);
-            pieceImages.Add('k', blackKing);
+            pieceImages.Add(new Pawn(Player.Black), blackPawn);
+            pieceImages.Add(new Knight(Player.Black), blackKnight);
+            pieceImages.Add(new Bishop(Player.Black), blackBishop);
+            pieceImages.Add(new Rook(Player.Black), blackRook);
+            pieceImages.Add(new Queen(Player.Black), blackQueen);
+            pieceImages.Add(new King(Player.Black), blackKing);
         }
 
         private void DrawBoard(Graphics g)
@@ -112,8 +116,7 @@ namespace chess_pos_db_gui
 
         private void DrawPiece(Graphics g, Piece piece, int file, int rank)
         {
-            char c = piece.GetFenCharacter();
-            Image img = pieceImages[c];
+            Image img = pieceImages[piece];
             DrawOnSquare(g, img, file, rank);
         }
 
