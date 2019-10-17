@@ -61,7 +61,7 @@
             this.entriesGridView.Location = new System.Drawing.Point(3, 53);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
-            this.entriesGridView.Size = new System.Drawing.Size(794, 169);
+            this.entriesGridView.Size = new System.Drawing.Size(436, 509);
             this.entriesGridView.TabIndex = 0;
             // 
             // levelSelectionGroupBox
@@ -147,7 +147,6 @@
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
@@ -159,28 +158,28 @@
             this.splitContainer1.Panel2.Controls.Add(this.typeSelectionGroupBox);
             this.splitContainer1.Panel2.Controls.Add(this.levelSelectionGroupBox);
             this.splitContainer1.Panel2.Controls.Add(this.entriesGridView);
-            this.splitContainer1.Size = new System.Drawing.Size(800, 526);
-            this.splitContainer1.SplitterDistance = 300;
+            this.splitContainer1.Panel2MinSize = 430;
+            this.splitContainer1.Size = new System.Drawing.Size(784, 562);
+            this.splitContainer1.SplitterDistance = 338;
             this.splitContainer1.TabIndex = 6;
             // 
             // chessBoard
             // 
-            this.chessBoard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.chessBoard.Location = new System.Drawing.Point(9, 9);
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
             this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
             this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
             this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(782, 274);
+            this.chessBoard.Size = new System.Drawing.Size(338, 562);
             this.chessBoard.TabIndex = 0;
             // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 526);
+            this.ClientSize = new System.Drawing.Size(784, 562);
             this.Controls.Add(this.splitContainer1);
+            this.MinimumSize = new System.Drawing.Size(800, 256);
             this.Name = "Application";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);

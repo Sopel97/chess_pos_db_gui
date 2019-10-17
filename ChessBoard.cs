@@ -114,6 +114,8 @@ namespace chess_pos_db_gui
             blackKing = Image.FromFile(path + "/black_king.png");
 
             UpdatePieceImagesDictionary();
+
+            chessBoardPanel.Refresh();
         }
 
         private void UpdatePieceImagesDictionary()
@@ -248,14 +250,18 @@ namespace chess_pos_db_gui
 
         private void ChessBoard_SizeChanged(object sender, EventArgs e)
         {
-            chessBoardPanel.Size = FitWithAspectRatio(Size, 1.0f);
-            historyPanel.Height = Height - historyPanel.Margin.Top - historyPanel.Margin.Bottom;
+            splitContainer2.Height = Height - splitContainer2.Panel1.Height;
+        }
+
+        private void SplitContainer1_Panel1_SizeChanged(object sender, EventArgs e)
+        {
+            Size s = new Size(splitContainer1.Panel1.Width, splitContainer1.Panel1.Height);
+            chessBoardPanel.Size = FitWithAspectRatio(s, 1.0f);
             chessBoardPanel.Refresh();
         }
 
         private void ChessBoardPanel_SizeChanged(object sender, EventArgs e)
         {
-            historyPanel.Location = new Point(chessBoardPanel.Location.X + chessBoardPanel.Width, historyPanel.Location.Y);
         }
 
         private Size FitWithAspectRatio(Size size, float ratio)
