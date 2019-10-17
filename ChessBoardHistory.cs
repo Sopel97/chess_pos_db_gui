@@ -18,8 +18,8 @@ namespace chess_pos_db_gui
             
             if (GCD.Moves.Length > 0)
             {
-                Move = GCD.Moves.First();
-                GCD.Moves = new DetailedMove[0];
+                Move = GCD.Moves.Last();
+                GCD.Moves = new DetailedMove[1] { Move };
             }
         }
 
