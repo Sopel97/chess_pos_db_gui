@@ -16,7 +16,7 @@ namespace chess_pos_db_gui
     {
         private static readonly Bitmap DefaultBitmap = CreateDefaultBitmap();
 
-        private ChessGame Game { get; set; }
+        private ChessBoardHistory History { get; set; }
 
         private Image boardImage { get; set; }
         private Image boardLightSquare { get; set; }
@@ -40,10 +40,11 @@ namespace chess_pos_db_gui
         {
             InitializeComponent();
 
-            Game = new ChessGame();
-            Game.MakeMove(San.ParseSan(Game, "e4"), false);
-            Game.MakeMove(San.ParseSan(Game, "e5"), false);
-            Game.MakeMove(San.ParseSan(Game, "Ke2"), false);
+            History = new ChessBoardHistory();
+            History.DoMove("e4");
+            History.DoMove("e5");
+            History.DoMove("Ke2");
+            History.UndoMove();
             pieceImages = new Dictionary<Piece, Image>();
         }
 
@@ -122,11 +123,12 @@ namespace chess_pos_db_gui
 
         private void DrawPieces(Graphics g)
         {
-            var board = Game.GetBoard();
+            var game = History.Last();
+            var board = game.GetBoard();
 
-            for(int x = 0; x < Game.BoardWidth; ++x)
+            for(int x = 0; x < 8; ++x)
             {
-                for(int y = 0; y < Game.BoardHeight; ++y)
+                for(int y = 0; y < 8; ++y)
                 {
                     Piece piece = board[y][x];
                     if (piece != null)
@@ -156,7 +158,7 @@ namespace chess_pos_db_gui
 
         private void ChessBoard_Load(object sender, EventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(Game.GetFen());
+            System.Diagnostics.Debug.WriteLine(History.Last().GetFen());
             System.Diagnostics.Debug.WriteLine(Size);
 
             boardImage = DefaultBitmap;

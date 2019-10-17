@@ -70,7 +70,7 @@ namespace chess_pos_db_gui
         {
             chessBoard.LoadImages("assets/graphics");
 
-            string jsonStr = File.ReadAllText("data/test.json");
+            string jsonStr = File.ReadAllText("data/data.json");
             var json = JsonValue.Parse(jsonStr);
             data = QueryResponse.FromJson(json);
             Repopulate();

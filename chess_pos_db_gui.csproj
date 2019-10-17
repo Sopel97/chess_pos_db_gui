@@ -65,6 +65,7 @@
     <Compile Include="ChessBoard.Designer.cs">
       <DependentUpon>ChessBoard.cs</DependentUpon>
     </Compile>
+    <Compile Include="ChessBoardHistory.cs" />
     <Compile Include="Date.cs" />
     <Compile Include="Eco.cs" />
     <Compile Include="Entry.cs" />
