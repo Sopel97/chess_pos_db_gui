@@ -37,21 +37,21 @@ namespace chess_pos_db_gui
 
             DoubleBuffered = true;
 
-            tabulatedData.Columns.Add(new DataColumn("Move"));
-            tabulatedData.Columns.Add(new DataColumn("Count"));
-            tabulatedData.Columns.Add(new DataColumn("WinCount"));
-            tabulatedData.Columns.Add(new DataColumn("DrawCount"));
-            tabulatedData.Columns.Add(new DataColumn("LossCount"));
-            tabulatedData.Columns.Add(new DataColumn("Perf"));
-            tabulatedData.Columns.Add(new DataColumn("DrawPct"));
-            tabulatedData.Columns.Add(new DataColumn("GameId"));
-            tabulatedData.Columns.Add(new DataColumn("Date"));
-            tabulatedData.Columns.Add(new DataColumn("Event"));
-            tabulatedData.Columns.Add(new DataColumn("White"));
-            tabulatedData.Columns.Add(new DataColumn("Black"));
-            tabulatedData.Columns.Add(new DataColumn("Result"));
-            tabulatedData.Columns.Add(new DataColumn("Eco"));
-            tabulatedData.Columns.Add(new DataColumn("PlyCount"));
+            tabulatedData.Columns.Add(new DataColumn("Move", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("Count", typeof(ulong)));
+            tabulatedData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
+            tabulatedData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
+            tabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
+            tabulatedData.Columns.Add(new DataColumn("Perf", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("GameId", typeof(uint)));
+            tabulatedData.Columns.Add(new DataColumn("Date", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("White", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("Black", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("Result", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("Eco", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("PlyCount", typeof(ushort)));
 
             MakeDoubleBuffered(entriesGridView);
             entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
