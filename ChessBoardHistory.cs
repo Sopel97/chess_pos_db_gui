@@ -55,11 +55,13 @@ namespace chess_pos_db_gui
             };
         }
 
-        public void DoMove(Move move)
+        public bool DoMove(Move move)
         {
             ChessGame pos = new ChessGame(Entries.Last().GCD);
-            pos.MakeMove(move, false);
+            if (!pos.IsValidMove(move)) return false;
+            pos.MakeMove(move, true);
             Entries.Add(new ChessBoardHistoryEntry(pos));
+            return true;
         }
 
         public void DoMove(string san)

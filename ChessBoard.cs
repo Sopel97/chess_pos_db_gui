@@ -35,6 +35,8 @@ namespace chess_pos_db_gui
         private Image blackKing { get; set; }
 
         private Dictionary<Piece, Image> pieceImages;
+        private Point? MouseFrom { get; set; }
+        private Point? MouseTo { get; set; }
 
         public ChessBoard()
         {
@@ -46,6 +48,9 @@ namespace chess_pos_db_gui
             History.DoMove("Ke2");
             History.UndoMove();
             pieceImages = new Dictionary<Piece, Image>();
+
+            MouseFrom = null;
+            MouseTo = null;
         }
 
         public void LoadImages(string path)
@@ -110,6 +115,26 @@ namespace chess_pos_db_gui
             return new Rectangle((int)x, (int)y, (int)sw, (int)sh);
         }
 
+        private Position PointToSquare(Point point)
+        {
+            float w = chessBoardPanel.Width;
+            float h = chessBoardPanel.Height;
+
+            float sw = w / 8;
+            float sh = h / 8;
+
+            int x = (int)(point.X / sw);
+            int y = (int)(point.Y / sh);
+
+            x = Math.Min(x, 7);
+            x = Math.Max(x, 0);
+
+            y = Math.Min(y, 7);
+            y = Math.Max(y, 0);
+
+            return new Position((File)x, 8 - y); //y is in range 1-8
+        }
+
         private void DrawOnSquare(Graphics g, Image img, int file, int rank)
         {
             g.DrawImage(img, GetSquareRectangle(file, rank));
@@ -147,6 +172,11 @@ namespace chess_pos_db_gui
             DrawPieces(g);
 
             System.Diagnostics.Debug.WriteLine("DRAW");
+        }
+
+        private void UpdateBoard()
+        {
+            chessBoardPanel.Refresh();
         }
 
         private static Bitmap CreateDefaultBitmap()
@@ -201,6 +231,38 @@ namespace chess_pos_db_gui
             }
 
             return new Size((int)w, (int)h);
+        }
+
+        private bool TryPerformMoveBasedOnMouseDrag(Point? from, Point? to)
+        {
+            if (from == null || to == null) return false;
+
+            Position fromSquare = PointToSquare(from.Value);
+            Position toSquare = PointToSquare(to.Value);
+
+            if(!History.DoMove(new Move(fromSquare, toSquare, History.Last().GCD.WhoseTurn)))
+            {
+                System.Diagnostics.Debug.WriteLine("Invalid move.");
+                System.Diagnostics.Debug.WriteLine(fromSquare);
+                System.Diagnostics.Debug.WriteLine(toSquare);
+            }
+            else
+            {
+                UpdateBoard();
+            }
+
+            return true;
+        }
+
+        private void ChessBoardPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            MouseFrom = new Point(e.X, e.Y);
+        }
+
+        private void ChessBoardPanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            MouseTo = new Point(e.X, e.Y);
+            TryPerformMoveBasedOnMouseDrag(MouseFrom, MouseTo);
         }
     }
 }
