@@ -294,11 +294,14 @@ namespace chess_pos_db_gui
                 MoveHistory.Rows.Add();
                 MoveHistory.Last().No = Plies / 2 + 1;
                 MoveHistory.Last().WhiteDetailedMove = move;
+                moveHistoryGridView["WhiteMove", MoveHistory.Rows.Count - 1].Selected = true;
             }
             else
             {
                 MoveHistory.Last().BlackDetailedMove = move;
+                moveHistoryGridView["BlackMove", MoveHistory.Rows.Count - 1].Selected = true;
             }
+
         }
 
         private void ChessBoardPanel_MouseDown(object sender, MouseEventArgs e)
