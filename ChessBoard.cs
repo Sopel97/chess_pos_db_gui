@@ -62,6 +62,8 @@ namespace chess_pos_db_gui
             moveHistoryGridView.CellBorderStyle = DataGridViewCellBorderStyle.None;
 
             MakeDoubleBuffered(chessBoardPanel);
+
+            Reset("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         }
 
         private void Reset(string fen)
@@ -242,8 +244,6 @@ namespace chess_pos_db_gui
             blackKing = DefaultBitmap;
 
             UpdatePieceImagesDictionary();
-
-            Reset("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         }
 
         private void ChessBoard_SizeChanged(object sender, EventArgs e)
