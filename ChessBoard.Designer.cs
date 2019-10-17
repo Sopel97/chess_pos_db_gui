@@ -82,6 +82,7 @@
             this.moveHistoryGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.moveHistoryGridView.Size = new System.Drawing.Size(203, 243);
             this.moveHistoryGridView.TabIndex = 0;
+            this.moveHistoryGridView.SelectionChanged += new System.EventHandler(this.MoveHistoryGridView_SelectionChanged);
             // 
             // ChessBoard
             // 

@@ -44,6 +44,7 @@ namespace chess_pos_db_gui
     class ChessBoardHistory
     {
         private List<ChessBoardHistoryEntry> Entries { get; set; }
+        private int CurrentIdx { get; set; }
 
         public ChessBoardHistory()
         {
@@ -53,36 +54,59 @@ namespace chess_pos_db_gui
                     new ChessGame()
                 )
             };
+            CurrentIdx = 0;
+        }
+
+        public void SetCurrent(int i)
+        {
+            CurrentIdx = i;
         }
 
         public bool DoMove(Move move)
         {
+            if (CurrentIdx != Entries.Count - 1) return false;
+
             ChessGame pos = new ChessGame(Entries.Last().GCD);
             if (!pos.IsValidMove(move)) return false;
             pos.MakeMove(move, true);
             Entries.Add(new ChessBoardHistoryEntry(pos));
+            ++CurrentIdx;
             return true;
         }
 
-        public void DoMove(string san)
+        public bool DoMove(string san)
         {
+            if (CurrentIdx != Entries.Count - 1) return false;
+
             ChessGame pos = new ChessGame(Entries.Last().GCD);
             Move move = San.ParseSan(pos, san);
+            if (move == null) return false;
             pos.MakeMove(move, false);
             Entries.Add(new ChessBoardHistoryEntry(pos));
+            ++CurrentIdx;
+            return true;
         }
 
-        public void UndoMove()
+        public bool UndoMove()
         {
             if (Entries.Count() > 1)
             {
                 Entries.RemoveAt(Entries.Count() - 1);
+                --CurrentIdx;
+                return true;
             }
+
+            return false;
         }
 
         public ChessBoardHistoryEntry Last()
         {
             return Entries[Entries.Count() - 1];
+        }
+
+        public ChessBoardHistoryEntry Current()
+        {
+            return Entries[CurrentIdx];
         }
     }
 }

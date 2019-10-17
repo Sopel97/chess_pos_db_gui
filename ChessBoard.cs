@@ -48,10 +48,7 @@ namespace chess_pos_db_gui
             InitializeComponent();
 
             History = new ChessBoardHistory();
-            History.DoMove("e4");
-            History.DoMove("e5");
-            History.DoMove("Ke2");
-            History.UndoMove();
+
             pieceImages = new Dictionary<Piece, Image>();
 
             MouseFrom = null;
@@ -169,7 +166,7 @@ namespace chess_pos_db_gui
 
         private void DrawPieces(Graphics g)
         {
-            var game = History.Last();
+            var game = History.Current();
             var board = game.GetBoard();
 
             for(int x = 0; x < 8; ++x)
@@ -254,6 +251,56 @@ namespace chess_pos_db_gui
 
             return new Size((int)w, (int)h);
         }
+        private bool DoMove(string san)
+        {
+            Move move = San.ParseSan(new ChessGame(History.Current().GCD), san);
+            return DoMove(move);
+        }
+
+        private bool DoMove(Move move)
+        {
+            if (History.DoMove(move))
+            {
+                AddMoveToMoveHistory(History.Current().Move);
+                moveHistoryGridView.Refresh();
+                chessBoardPanel.Refresh();
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Invalid move.");
+                System.Diagnostics.Debug.WriteLine(move.OriginalPosition);
+                System.Diagnostics.Debug.WriteLine(move.NewPosition);
+            }
+
+            return true;
+        }
+
+        private bool UndoMove()
+        {
+            if (History.UndoMove())
+            {
+                RemoveLastMoveFromMoveHistory();
+                return true;
+            }
+
+            return false;
+        }
+
+        private void RemoveLastMoveFromMoveHistory()
+        {
+            Player player = Plies % 2 == 0 ? Player.Black : Player.White;
+            --Plies;
+
+            if (player == Player.White)
+            {
+                MoveHistory.Rows.RemoveAt(MoveHistory.Rows.Count - 1);
+            }
+            else
+            {
+                MoveHistory.Last().BlackDetailedMove = null;
+                moveHistoryGridView["WhiteMove", MoveHistory.Rows.Count - 1].Selected = true;
+            }
+        }
 
         private bool TryPerformMoveBasedOnMouseDrag(Point? from, Point? to)
         {
@@ -262,22 +309,9 @@ namespace chess_pos_db_gui
             Position fromSquare = PointToSquare(from.Value);
             Position toSquare = PointToSquare(to.Value);
 
-            Player player = History.Last().GCD.WhoseTurn;
+            Player player = History.Current().GCD.WhoseTurn;
             Move move = new Move(fromSquare, toSquare, player);
-            if (History.DoMove(move))
-            {
-                AddMoveToMoveHistory(History.Last().Move);
-                moveHistoryGridView.Refresh();
-                chessBoardPanel.Refresh();
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Invalid move.");
-                System.Diagnostics.Debug.WriteLine(fromSquare);
-                System.Diagnostics.Debug.WriteLine(toSquare);
-            }
-
-            return true;
+            return DoMove(move);
         }
 
         private void AddMoveToMoveHistory(DetailedMove move)
@@ -313,6 +347,20 @@ namespace chess_pos_db_gui
         {
             MouseTo = new Point(e.X, e.Y);
             TryPerformMoveBasedOnMouseDrag(MouseFrom, MouseTo);
+        }
+
+        private void MoveHistoryGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            var cell = moveHistoryGridView.SelectedCells[0];
+            int row = cell.RowIndex;
+            int col = cell.ColumnIndex;
+            int ply = row * 2 + col;
+            History.SetCurrent(ply);
+
+            System.Diagnostics.Debug.WriteLine("SELECT");
+            System.Diagnostics.Debug.WriteLine(ply);
+
+            chessBoardPanel.Refresh();
         }
     }
     internal class MoveHistoryDataRow : DataRow
