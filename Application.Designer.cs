@@ -165,6 +165,9 @@
             // 
             // chessBoard
             // 
+            this.chessBoard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.chessBoard.Location = new System.Drawing.Point(9, 9);
             this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
             this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
