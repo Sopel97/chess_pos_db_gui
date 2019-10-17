@@ -227,10 +227,5 @@ namespace chess_pos_db_gui
             else selects.Remove(chess_pos_db_gui.Select.Transpositions);
             Repopulate();
         }
-
-        private void SplitContainer1_Panel1_SizeChanged(object sender, EventArgs e)
-        {
-            //chessBoard.Width = splitContainer1.Panel1.Width - splitContainer1.Margin.Left - splitContainer1.Margin.Right;
-        }
     }
 }

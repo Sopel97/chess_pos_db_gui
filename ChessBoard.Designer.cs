@@ -35,17 +35,17 @@
             this.goToPrevButton = new System.Windows.Forms.Button();
             this.goToNextButton = new System.Windows.Forms.Button();
             this.goToEndButton = new System.Windows.Forms.Button();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.splitBoardAndMoves = new System.Windows.Forms.SplitContainer();
+            this.splitFenAndControls = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.moveHistoryGridView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitBoardAndMoves)).BeginInit();
+            this.splitBoardAndMoves.Panel1.SuspendLayout();
+            this.splitBoardAndMoves.Panel2.SuspendLayout();
+            this.splitBoardAndMoves.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitFenAndControls)).BeginInit();
+            this.splitFenAndControls.Panel1.SuspendLayout();
+            this.splitFenAndControls.Panel2.SuspendLayout();
+            this.splitFenAndControls.SuspendLayout();
             this.SuspendLayout();
             // 
             // chessBoardPanel
@@ -56,7 +56,6 @@
             this.chessBoardPanel.Name = "chessBoardPanel";
             this.chessBoardPanel.Size = new System.Drawing.Size(97, 133);
             this.chessBoardPanel.TabIndex = 0;
-            this.chessBoardPanel.SizeChanged += new System.EventHandler(this.ChessBoardPanel_SizeChanged);
             this.chessBoardPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.ChessBoardPanel_Paint);
             this.chessBoardPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChessBoardPanel_MouseDown);
             this.chessBoardPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ChessBoardPanel_MouseUp);
@@ -137,56 +136,56 @@
             this.goToEndButton.UseVisualStyleBackColor = true;
             this.goToEndButton.Click += new System.EventHandler(this.GoToEndButton_Click);
             // 
-            // splitContainer1
+            // splitBoardAndMoves
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
+            this.splitBoardAndMoves.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitBoardAndMoves.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitBoardAndMoves.IsSplitterFixed = true;
+            this.splitBoardAndMoves.Location = new System.Drawing.Point(0, 0);
+            this.splitBoardAndMoves.Name = "splitBoardAndMoves";
             // 
-            // splitContainer1.Panel1
+            // splitBoardAndMoves.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.chessBoardPanel);
-            this.splitContainer1.Panel1.SizeChanged += new System.EventHandler(this.SplitContainer1_Panel1_SizeChanged);
+            this.splitBoardAndMoves.Panel1.Controls.Add(this.chessBoardPanel);
+            this.splitBoardAndMoves.Panel1.SizeChanged += new System.EventHandler(this.SplitContainer1_Panel1_SizeChanged);
             // 
-            // splitContainer1.Panel2
+            // splitBoardAndMoves.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.goToEndButton);
-            this.splitContainer1.Panel2.Controls.Add(this.goToPrevButton);
-            this.splitContainer1.Panel2.Controls.Add(this.goToNextButton);
-            this.splitContainer1.Panel2.Controls.Add(this.moveHistoryGridView);
-            this.splitContainer1.Panel2.Controls.Add(this.goToStartButton);
-            this.splitContainer1.Size = new System.Drawing.Size(429, 310);
-            this.splitContainer1.SplitterDistance = 271;
-            this.splitContainer1.TabIndex = 6;
+            this.splitBoardAndMoves.Panel2.Controls.Add(this.goToEndButton);
+            this.splitBoardAndMoves.Panel2.Controls.Add(this.goToPrevButton);
+            this.splitBoardAndMoves.Panel2.Controls.Add(this.goToNextButton);
+            this.splitBoardAndMoves.Panel2.Controls.Add(this.moveHistoryGridView);
+            this.splitBoardAndMoves.Panel2.Controls.Add(this.goToStartButton);
+            this.splitBoardAndMoves.Size = new System.Drawing.Size(429, 310);
+            this.splitBoardAndMoves.SplitterDistance = 271;
+            this.splitBoardAndMoves.TabIndex = 6;
             // 
-            // splitContainer2
+            // splitFenAndControls
             // 
-            this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.splitFenAndControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer2.IsSplitterFixed = true;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitFenAndControls.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitFenAndControls.IsSplitterFixed = true;
+            this.splitFenAndControls.Location = new System.Drawing.Point(0, 0);
+            this.splitFenAndControls.Name = "splitFenAndControls";
+            this.splitFenAndControls.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer2.Panel1
+            // splitFenAndControls.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.fenTextBox);
+            this.splitFenAndControls.Panel1.Controls.Add(this.fenTextBox);
             // 
-            // splitContainer2.Panel2
+            // splitFenAndControls.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainer2.Size = new System.Drawing.Size(429, 339);
-            this.splitContainer2.SplitterDistance = 25;
-            this.splitContainer2.TabIndex = 7;
+            this.splitFenAndControls.Panel2.Controls.Add(this.splitBoardAndMoves);
+            this.splitFenAndControls.Size = new System.Drawing.Size(429, 339);
+            this.splitFenAndControls.SplitterDistance = 25;
+            this.splitFenAndControls.TabIndex = 7;
             // 
             // ChessBoard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.splitContainer2);
+            this.Controls.Add(this.splitFenAndControls);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.MinimumSize = new System.Drawing.Size(1, 1);
             this.Name = "ChessBoard";
@@ -194,15 +193,15 @@
             this.Load += new System.EventHandler(this.ChessBoard_Load);
             this.SizeChanged += new System.EventHandler(this.ChessBoard_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.moveHistoryGridView)).EndInit();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel1.PerformLayout();
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
+            this.splitBoardAndMoves.Panel1.ResumeLayout(false);
+            this.splitBoardAndMoves.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitBoardAndMoves)).EndInit();
+            this.splitBoardAndMoves.ResumeLayout(false);
+            this.splitFenAndControls.Panel1.ResumeLayout(false);
+            this.splitFenAndControls.Panel1.PerformLayout();
+            this.splitFenAndControls.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitFenAndControls)).EndInit();
+            this.splitFenAndControls.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -216,7 +215,7 @@
         private System.Windows.Forms.Button goToPrevButton;
         private System.Windows.Forms.Button goToNextButton;
         private System.Windows.Forms.Button goToEndButton;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.SplitContainer splitBoardAndMoves;
+        private System.Windows.Forms.SplitContainer splitFenAndControls;
     }
 }

@@ -250,18 +250,14 @@ namespace chess_pos_db_gui
 
         private void ChessBoard_SizeChanged(object sender, EventArgs e)
         {
-            splitContainer2.Height = Height - splitContainer2.Panel1.Height;
+            splitFenAndControls.Height = Height - splitFenAndControls.Panel1.Height;
         }
 
         private void SplitContainer1_Panel1_SizeChanged(object sender, EventArgs e)
         {
-            Size s = new Size(splitContainer1.Panel1.Width, splitContainer1.Panel1.Height);
+            Size s = new Size(splitBoardAndMoves.Panel1.Width, splitBoardAndMoves.Panel1.Height);
             chessBoardPanel.Size = FitWithAspectRatio(s, 1.0f);
             chessBoardPanel.Refresh();
-        }
-
-        private void ChessBoardPanel_SizeChanged(object sender, EventArgs e)
-        {
         }
 
         private Size FitWithAspectRatio(Size size, float ratio)
