@@ -44,19 +44,27 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("Perf", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(string)));
-            tabulatedData.Columns.Add(new DataColumn("GameId", typeof(uint)));
             tabulatedData.Columns.Add(new DataColumn("Date", typeof(string)));
-            tabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("White", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("Black", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("Result", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("Eco", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("PlyCount", typeof(ushort)));
+            tabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("GameId", typeof(uint)));
 
             MakeDoubleBuffered(entriesGridView);
             entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             entriesGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.EnableResizing;
             entriesGridView.DataSource = tabulatedData;
+
+            foreach (DataColumn column in tabulatedData.Columns)
+            {
+                if (column.DataType == typeof(ulong) || column.DataType == typeof(uint))
+                {
+                    entriesGridView.Columns[column.ColumnName].DefaultCellStyle.Format = "N0";
+                }
+            }
         }
         private static void MakeDoubleBuffered(DataGridView dgv)
         {
