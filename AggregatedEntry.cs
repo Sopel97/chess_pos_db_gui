@@ -13,8 +13,8 @@ namespace chess_pos_db_gui
         public ulong DrawCount { get; set; }
         public ulong LossCount { get; set; }
         public Optional<GameHeader> FirstGame { get; set; }
-        public float Perf { get { return (WinCount + DrawCount / 2.0f) / Count; } }
-        public float DrawRate { get { return (float)DrawCount / Count; } }
+        public double Perf { get { return (WinCount + DrawCount / 2.0) / Count; } }
+        public double DrawRate { get { return (double)DrawCount / Count; } }
 
         public AggregatedEntry()
         {

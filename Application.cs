@@ -44,6 +44,7 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("Perf", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("Date", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("White", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("Black", typeof(string)));
@@ -84,13 +85,13 @@ namespace chess_pos_db_gui
             Repopulate();
         }
 
-        private string PctToString(float pct)
+        private string PctToString(double pct)
         {
-            if (float.IsNaN(pct) || float.IsPositiveInfinity(pct) || float.IsNegativeInfinity(pct)) return "-";
+            if (double.IsNaN(pct) || double.IsPositiveInfinity(pct) || double.IsNegativeInfinity(pct)) return "-";
             return (pct * 100).ToString("F1") + "%";
         }
 
-        private void Populate(string move, AggregatedEntry entry)
+        private void Populate(string move, AggregatedEntry entry, AggregatedEntry humanEntry)
         {
             var row = tabulatedData.NewRow();
             row["Move"] = move;
@@ -100,6 +101,7 @@ namespace chess_pos_db_gui
             row["LossCount"] = entry.LossCount;
             row["Perf"] = PctToString(entry.Perf);
             row["DrawPct"] = PctToString(entry.DrawRate);
+            row["HumanPct"] = PctToString((double)humanEntry.Count / (double)entry.Count);
 
             foreach (GameHeader header in entry.FirstGame)
             {
@@ -116,13 +118,13 @@ namespace chess_pos_db_gui
             tabulatedData.Rows.Add(row);
         }
 
-        private void Populate(Dictionary<string, AggregatedEntry> entries)
+        private void Populate(Dictionary<string, AggregatedEntry> entries, Dictionary<string, AggregatedEntry> humanEntries)
         {
             entriesGridView.SuspendLayout();
             Clear();
             foreach (KeyValuePair<string, AggregatedEntry> entry in entries)
             {
-                Populate(entry.Key, entry.Value);
+                Populate(entry.Key, entry.Value, humanEntries[entry.Key]);
             }
             entriesGridView.ResumeLayout(false);
 
@@ -164,7 +166,13 @@ namespace chess_pos_db_gui
                 Gather(res, select, levels, ref aggregatedEntries);
             }
 
-            Populate(aggregatedEntries);
+            Dictionary<string, AggregatedEntry> aggregatedHumanEntries = new Dictionary<string, AggregatedEntry>();
+            foreach (Select select in selects)
+            {
+                Gather(res, select, new List<GameLevel> { GameLevel.Human }, ref aggregatedHumanEntries);
+            }
+
+            Populate(aggregatedEntries, aggregatedHumanEntries);
         }
 
         private void Clear()
