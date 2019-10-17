@@ -35,6 +35,7 @@
             this.goToPrevButton = new System.Windows.Forms.Button();
             this.goToStartButton = new System.Windows.Forms.Button();
             this.moveHistoryGridView = new System.Windows.Forms.DataGridView();
+            this.fenTextBox = new System.Windows.Forms.TextBox();
             this.historyPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.moveHistoryGridView)).BeginInit();
             this.SuspendLayout();
@@ -56,6 +57,7 @@
             // 
             // historyPanel
             // 
+            this.historyPanel.Controls.Add(this.fenTextBox);
             this.historyPanel.Controls.Add(this.goToEndButton);
             this.historyPanel.Controls.Add(this.goToNextButton);
             this.historyPanel.Controls.Add(this.goToPrevButton);
@@ -132,6 +134,16 @@
             this.moveHistoryGridView.TabIndex = 0;
             this.moveHistoryGridView.SelectionChanged += new System.EventHandler(this.MoveHistoryGridView_SelectionChanged);
             // 
+            // fenTextBox
+            // 
+            this.fenTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.fenTextBox.Location = new System.Drawing.Point(156, 11);
+            this.fenTextBox.Name = "fenTextBox";
+            this.fenTextBox.Size = new System.Drawing.Size(472, 20);
+            this.fenTextBox.TabIndex = 5;
+            this.fenTextBox.TextChanged += new System.EventHandler(this.FenTextBox_TextChanged);
+            // 
             // ChessBoard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -145,6 +157,7 @@
             this.Load += new System.EventHandler(this.ChessBoard_Load);
             this.SizeChanged += new System.EventHandler(this.ChessBoard_SizeChanged);
             this.historyPanel.ResumeLayout(false);
+            this.historyPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.moveHistoryGridView)).EndInit();
             this.ResumeLayout(false);
 
@@ -159,5 +172,6 @@
         private System.Windows.Forms.Button goToNextButton;
         private System.Windows.Forms.Button goToPrevButton;
         private System.Windows.Forms.Button goToStartButton;
+        private System.Windows.Forms.TextBox fenTextBox;
     }
 }

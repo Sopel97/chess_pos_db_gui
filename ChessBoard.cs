@@ -43,6 +43,7 @@ namespace chess_pos_db_gui
         private MoveHistoryTable MoveHistory { get; set; }
         private int Plies { get; set; }
         private int FirstPly { get; set; }
+        private string LastFen { get; set; }
 
         public ChessBoard()
         {
@@ -65,14 +66,16 @@ namespace chess_pos_db_gui
 
         private void Reset(string fen)
         {
+            LastFen = fen;
+            UpdateFenTextBox(LastFen);
             History.Reset(fen);
             MoveHistory.Clear();
             Plies = 0;
+            MoveHistory.Rows.Add();
+            MoveHistory.Last().No = 1;
             if (History.Current().GCD.WhoseTurn == Player.Black)
             {
                 History.DuplicateLast();
-                MoveHistory.Rows.Add();
-                MoveHistory.Last().No = 1;
                 MoveHistory.Last().WhiteDetailedMove = null;
                 Plies = 1;
                 SetSelection(1);
@@ -240,7 +243,7 @@ namespace chess_pos_db_gui
 
             UpdatePieceImagesDictionary();
 
-            Reset("rnbqkb1r/pp3ppp/4pn2/3p4/2pP1B2/4PN2/PPP1BPPP/RN1QK2R w KQkq - 1 6");
+            Reset("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         }
 
         private void ChessBoard_SizeChanged(object sender, EventArgs e)
@@ -395,7 +398,10 @@ namespace chess_pos_db_gui
 
             if (move.Player == Player.White)
             {
-                MoveHistory.Rows.Add();
+                if (Plies > 1)
+                {
+                    MoveHistory.Rows.Add();
+                }
                 MoveHistory.Last().No = Plies / 2 + 1;
                 MoveHistory.Last().WhiteDetailedMove = move;
             }
@@ -430,11 +436,19 @@ namespace chess_pos_db_gui
             if (ply > Plies) return;
 
             History.SetCurrent(ply);
+            string fen = History.Current().GetFen();
+            UpdateFenTextBox(fen);
 
             System.Diagnostics.Debug.WriteLine("SELECT");
             System.Diagnostics.Debug.WriteLine(ply);
 
             chessBoardPanel.Refresh();
+        }
+
+        private void UpdateFenTextBox(string fen)
+        {
+            LastFen = fen;
+            fenTextBox.Text = fen;
         }
 
         private void GoToStartButton_Click(object sender, EventArgs e)
@@ -455,6 +469,27 @@ namespace chess_pos_db_gui
         private void GoToEndButton_Click(object sender, EventArgs e)
         {
             SetSelection(History.Count - 1);
+        }
+
+        private void FenTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (LastFen != fenTextBox.Text)
+            {
+                System.Diagnostics.Debug.WriteLine(fenTextBox.Text);
+
+                try
+                {
+                    new ChessGame(fenTextBox.Text);
+                }
+                catch(Exception)
+                {
+                    MessageBox.Show("Invalid FEN.");
+                    return;
+                }
+
+                LastFen = fenTextBox.Text;
+                Reset(LastFen);
+            }
         }
     }
     internal class MoveHistoryDataRow : DataRow
