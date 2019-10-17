@@ -30,11 +30,11 @@
         {
             this.chessBoardPanel = new System.Windows.Forms.Panel();
             this.historyPanel = new System.Windows.Forms.Panel();
-            this.moveHistoryGridView = new System.Windows.Forms.DataGridView();
-            this.goToStartButton = new System.Windows.Forms.Button();
-            this.goToPrevButton = new System.Windows.Forms.Button();
-            this.goToNextButton = new System.Windows.Forms.Button();
             this.goToEndButton = new System.Windows.Forms.Button();
+            this.goToNextButton = new System.Windows.Forms.Button();
+            this.goToPrevButton = new System.Windows.Forms.Button();
+            this.goToStartButton = new System.Windows.Forms.Button();
+            this.moveHistoryGridView = new System.Windows.Forms.DataGridView();
             this.historyPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.moveHistoryGridView)).BeginInit();
             this.SuspendLayout();
@@ -63,8 +63,48 @@
             this.historyPanel.Controls.Add(this.moveHistoryGridView);
             this.historyPanel.Location = new System.Drawing.Point(259, 3);
             this.historyPanel.Name = "historyPanel";
-            this.historyPanel.Size = new System.Drawing.Size(250, 250);
+            this.historyPanel.Size = new System.Drawing.Size(632, 250);
             this.historyPanel.TabIndex = 1;
+            // 
+            // goToEndButton
+            // 
+            this.goToEndButton.Location = new System.Drawing.Point(118, 4);
+            this.goToEndButton.Name = "goToEndButton";
+            this.goToEndButton.Size = new System.Drawing.Size(32, 32);
+            this.goToEndButton.TabIndex = 4;
+            this.goToEndButton.Text = ">>";
+            this.goToEndButton.UseVisualStyleBackColor = true;
+            this.goToEndButton.Click += new System.EventHandler(this.GoToEndButton_Click);
+            // 
+            // goToNextButton
+            // 
+            this.goToNextButton.Location = new System.Drawing.Point(80, 4);
+            this.goToNextButton.Name = "goToNextButton";
+            this.goToNextButton.Size = new System.Drawing.Size(32, 32);
+            this.goToNextButton.TabIndex = 3;
+            this.goToNextButton.Text = ">";
+            this.goToNextButton.UseVisualStyleBackColor = true;
+            this.goToNextButton.Click += new System.EventHandler(this.GoToNextButton_Click);
+            // 
+            // goToPrevButton
+            // 
+            this.goToPrevButton.Location = new System.Drawing.Point(42, 4);
+            this.goToPrevButton.Name = "goToPrevButton";
+            this.goToPrevButton.Size = new System.Drawing.Size(32, 32);
+            this.goToPrevButton.TabIndex = 2;
+            this.goToPrevButton.Text = "<";
+            this.goToPrevButton.UseVisualStyleBackColor = true;
+            this.goToPrevButton.Click += new System.EventHandler(this.GoToPrevButton_Click);
+            // 
+            // goToStartButton
+            // 
+            this.goToStartButton.Location = new System.Drawing.Point(4, 4);
+            this.goToStartButton.Name = "goToStartButton";
+            this.goToStartButton.Size = new System.Drawing.Size(32, 32);
+            this.goToStartButton.TabIndex = 1;
+            this.goToStartButton.Text = "<<";
+            this.goToStartButton.UseVisualStyleBackColor = true;
+            this.goToStartButton.Click += new System.EventHandler(this.GoToStartButton_Click);
             // 
             // moveHistoryGridView
             // 
@@ -82,55 +122,15 @@
             this.moveHistoryGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.moveHistoryGridView.GridColor = System.Drawing.SystemColors.Window;
             this.moveHistoryGridView.Location = new System.Drawing.Point(4, 42);
-            this.moveHistoryGridView.MinimumSize = new System.Drawing.Size(203, 0);
+            this.moveHistoryGridView.MinimumSize = new System.Drawing.Size(146, 0);
             this.moveHistoryGridView.MultiSelect = false;
             this.moveHistoryGridView.Name = "moveHistoryGridView";
             this.moveHistoryGridView.ReadOnly = true;
             this.moveHistoryGridView.RowHeadersVisible = false;
             this.moveHistoryGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.moveHistoryGridView.Size = new System.Drawing.Size(203, 205);
+            this.moveHistoryGridView.Size = new System.Drawing.Size(146, 205);
             this.moveHistoryGridView.TabIndex = 0;
             this.moveHistoryGridView.SelectionChanged += new System.EventHandler(this.MoveHistoryGridView_SelectionChanged);
-            // 
-            // goToStartButton
-            // 
-            this.goToStartButton.Location = new System.Drawing.Point(4, 4);
-            this.goToStartButton.Name = "goToStartButton";
-            this.goToStartButton.Size = new System.Drawing.Size(32, 32);
-            this.goToStartButton.TabIndex = 1;
-            this.goToStartButton.Text = "<<";
-            this.goToStartButton.UseVisualStyleBackColor = true;
-            this.goToStartButton.Click += new System.EventHandler(this.GoToStartButton_Click);
-            // 
-            // goToPrevButton
-            // 
-            this.goToPrevButton.Location = new System.Drawing.Point(42, 4);
-            this.goToPrevButton.Name = "goToPrevButton";
-            this.goToPrevButton.Size = new System.Drawing.Size(32, 32);
-            this.goToPrevButton.TabIndex = 2;
-            this.goToPrevButton.Text = "<";
-            this.goToPrevButton.UseVisualStyleBackColor = true;
-            this.goToPrevButton.Click += new System.EventHandler(this.GoToPrevButton_Click);
-            // 
-            // goToNextButton
-            // 
-            this.goToNextButton.Location = new System.Drawing.Point(80, 4);
-            this.goToNextButton.Name = "goToNextButton";
-            this.goToNextButton.Size = new System.Drawing.Size(32, 32);
-            this.goToNextButton.TabIndex = 3;
-            this.goToNextButton.Text = ">";
-            this.goToNextButton.UseVisualStyleBackColor = true;
-            this.goToNextButton.Click += new System.EventHandler(this.GoToNextButton_Click);
-            // 
-            // goToEndButton
-            // 
-            this.goToEndButton.Location = new System.Drawing.Point(118, 4);
-            this.goToEndButton.Name = "goToEndButton";
-            this.goToEndButton.Size = new System.Drawing.Size(32, 32);
-            this.goToEndButton.TabIndex = 4;
-            this.goToEndButton.Text = ">>";
-            this.goToEndButton.UseVisualStyleBackColor = true;
-            this.goToEndButton.Click += new System.EventHandler(this.GoToEndButton_Click);
             // 
             // ChessBoard
             // 
@@ -141,7 +141,7 @@
             this.Margin = new System.Windows.Forms.Padding(0);
             this.MinimumSize = new System.Drawing.Size(1, 1);
             this.Name = "ChessBoard";
-            this.Size = new System.Drawing.Size(512, 256);
+            this.Size = new System.Drawing.Size(894, 256);
             this.Load += new System.EventHandler(this.ChessBoard_Load);
             this.SizeChanged += new System.EventHandler(this.ChessBoard_SizeChanged);
             this.historyPanel.ResumeLayout(false);

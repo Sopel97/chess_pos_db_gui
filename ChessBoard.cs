@@ -42,6 +42,7 @@ namespace chess_pos_db_gui
 
         private MoveHistoryTable MoveHistory { get; set; }
         private int Plies { get; set; }
+        private int FirstPly { get; set; }
 
         public ChessBoard()
         {
@@ -59,10 +60,26 @@ namespace chess_pos_db_gui
             moveHistoryGridView.DataSource = MoveHistory;
             moveHistoryGridView.CellBorderStyle = DataGridViewCellBorderStyle.None;
 
-            Plies = 0;
-
             MakeDoubleBuffered(chessBoardPanel);
         }
+
+        private void Reset(string fen)
+        {
+            History.Reset(fen);
+            MoveHistory.Clear();
+            Plies = 0;
+            if (History.Current().GCD.WhoseTurn == Player.Black)
+            {
+                History.DuplicateLast();
+                MoveHistory.Rows.Add();
+                MoveHistory.Last().No = 1;
+                MoveHistory.Last().WhiteDetailedMove = null;
+                Plies = 1;
+                SetSelection(1);
+            }
+            FirstPly = Plies;
+        }
+
         private static void MakeDoubleBuffered(Panel chessBoardPanel)
         {
             Type dgvType = chessBoardPanel.GetType();
@@ -222,6 +239,8 @@ namespace chess_pos_db_gui
             blackKing = DefaultBitmap;
 
             UpdatePieceImagesDictionary();
+
+            Reset("rnbqkb1r/pp3ppp/4pn2/3p4/2pP1B2/4PN2/PPP1BPPP/RN1QK2R w KQkq - 1 6");
         }
 
         private void ChessBoard_SizeChanged(object sender, EventArgs e)
@@ -254,6 +273,11 @@ namespace chess_pos_db_gui
 
         private void SynchronizeMoveListWithHistory()
         {
+            if (History.Plies < FirstPly)
+            {
+                SetSelection(FirstPly);
+            }
+
             if (Plies > History.Plies)
             {
                 RemoveLastMovesFromMoveHistory(Plies - History.Plies);
@@ -339,7 +363,7 @@ namespace chess_pos_db_gui
 
         private void SetSelection(int beforePly)
         {
-            if (beforePly < 0 || beforePly > Plies) return;
+            if (beforePly < FirstPly || beforePly > Plies) return;
 
             if (beforePly == 0)
             {
@@ -399,9 +423,12 @@ namespace chess_pos_db_gui
             if (moveHistoryGridView.SelectedCells.Count == 0) return;
 
             var cell = moveHistoryGridView.SelectedCells[0];
+
             int row = cell.RowIndex;
             int col = cell.ColumnIndex;
             int ply = row * 2 + col;
+            if (ply > Plies) return;
+
             History.SetCurrent(ply);
 
             System.Diagnostics.Debug.WriteLine("SELECT");
@@ -412,7 +439,7 @@ namespace chess_pos_db_gui
 
         private void GoToStartButton_Click(object sender, EventArgs e)
         {
-            SetSelection(0);
+            SetSelection(FirstPly);
         }
 
         private void GoToPrevButton_Click(object sender, EventArgs e)

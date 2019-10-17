@@ -58,6 +58,19 @@ namespace chess_pos_db_gui
             Plies = 0;
         }
 
+        public void Reset(string fen)
+        {
+            Entries.Clear();
+            Plies = 0;
+            var game = new ChessGame(fen);
+            Entries = new List<ChessBoardHistoryEntry>
+            {
+                new ChessBoardHistoryEntry(
+                    game
+                )
+            };
+        }
+
         public void SetCurrent(int i)
         {
             Plies = i;
@@ -79,6 +92,12 @@ namespace chess_pos_db_gui
             Entries.Add(new ChessBoardHistoryEntry(pos));
             ++Plies;
             return true;
+        }
+
+        internal void DuplicateLast()
+        {
+            Entries.Add(Entries.Last());
+            ++Plies;
         }
 
         public bool DoMove(string san)
