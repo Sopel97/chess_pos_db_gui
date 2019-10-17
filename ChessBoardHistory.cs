@@ -45,6 +45,7 @@ namespace chess_pos_db_gui
     {
         private List<ChessBoardHistoryEntry> Entries { get; set; }
         public int Plies { get; private set; }
+        public int Count { get { return Entries.Count; } }
 
         public ChessBoardHistory()
         {

@@ -337,6 +337,29 @@ namespace chess_pos_db_gui
             return DoMove(move);
         }
 
+        private void SetSelection(int beforePly)
+        {
+            if (beforePly < 0 || beforePly > Plies) return;
+
+            if (beforePly == 0)
+            {
+                moveHistoryGridView["No", 0].Selected = true;
+            }
+            else
+            {
+                --beforePly;
+                Player player = beforePly % 2 == 0 ? Player.White : Player.Black;
+                if (player == Player.White)
+                {
+                    moveHistoryGridView["WhiteMove", beforePly / 2].Selected = true;
+                }
+                else
+                {
+                    moveHistoryGridView["BlackMove", beforePly / 2].Selected = true;
+                }
+            }
+        }
+
         private void AddMoveToMoveHistory(DetailedMove move)
         {
             Player shouldBePlayer = Plies % 2 == 0 ? Player.White : Player.Black;
@@ -351,14 +374,13 @@ namespace chess_pos_db_gui
                 MoveHistory.Rows.Add();
                 MoveHistory.Last().No = Plies / 2 + 1;
                 MoveHistory.Last().WhiteDetailedMove = move;
-                moveHistoryGridView["WhiteMove", MoveHistory.Rows.Count - 1].Selected = true;
             }
             else
             {
                 MoveHistory.Last().BlackDetailedMove = move;
-                moveHistoryGridView["BlackMove", MoveHistory.Rows.Count - 1].Selected = true;
             }
 
+            SetSelection(Plies);
         }
 
         private void ChessBoardPanel_MouseDown(object sender, MouseEventArgs e)
@@ -386,6 +408,26 @@ namespace chess_pos_db_gui
             System.Diagnostics.Debug.WriteLine(ply);
 
             chessBoardPanel.Refresh();
+        }
+
+        private void GoToStartButton_Click(object sender, EventArgs e)
+        {
+            SetSelection(0);
+        }
+
+        private void GoToPrevButton_Click(object sender, EventArgs e)
+        {
+            SetSelection(History.Plies - 1);
+        }
+
+        private void GoToNextButton_Click(object sender, EventArgs e)
+        {
+            SetSelection(History.Plies + 1);
+        }
+
+        private void GoToEndButton_Click(object sender, EventArgs e)
+        {
+            SetSelection(History.Count - 1);
         }
     }
     internal class MoveHistoryDataRow : DataRow
