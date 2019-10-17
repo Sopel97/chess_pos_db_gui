@@ -1,0 +1,3455 @@
+{
+    "query": {
+        "continuations": {
+            "fetch_children": true,
+            "fetch_first_game": true,
+            "fetch_first_game_for_each_child": true,
+            "fetch_last_game": false,
+            "fetch_last_game_for_each_child": false
+        },
+        "levels": [
+            "human",
+            "engine",
+            "server"
+        ],
+        "positions": [
+            {
+                "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+            }
+        ],
+        "results": [
+            "win",
+            "loss",
+            "draw"
+        ],
+        "token": "toktok",
+        "transpositions": {
+            "fetch_children": true,
+            "fetch_first_game": true,
+            "fetch_first_game_for_each_child": true,
+            "fetch_last_game": false,
+            "fetch_last_game_for_each_child": false
+        }
+    },
+    "results": [
+        {
+            "continuations": {
+                "--": {
+                    "engine": {
+                        "draw": {
+                            "count": 35113,
+                            "first_game": {
+                                "black": "vadi2",
+                                "date": "2013.01.31",
+                                "eco": "D06",
+                                "event": "Rated Classical game",
+                                "game_id": 121369,
+                                "ply_count": 87,
+                                "result": "1/2-1/2",
+                                "white": "federer"
+                            }
+                        },
+                        "loss": {
+                            "count": 509872,
+                            "first_game": {
+                                "black": "Vigorito",
+                                "date": "2013.01.31",
+                                "eco": "D85",
+                                "event": "Rated Classical game",
+                                "game_id": 121337,
+                                "ply_count": 52,
+                                "result": "0-1",
+                                "white": "jajce3"
+                            }
+                        },
+                        "win": {
+                            "count": 571063,
+                            "first_game": {
+                                "black": "McCoy",
+                                "date": "2013.01.31",
+                                "eco": "B01",
+                                "event": "Rated Classical game",
+                                "game_id": 121332,
+                                "ply_count": 33,
+                                "result": "1-0",
+                                "white": "Smok"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 31213,
+                            "first_game": {
+                                "black": "chinokoli",
+                                "date": "2012.12.31",
+                                "eco": "B21",
+                                "event": "Rated Blitz game",
+                                "game_id": 14,
+                                "ply_count": 117,
+                                "result": "1/2-1/2",
+                                "white": "nichiren1967"
+                            }
+                        },
+                        "loss": {
+                            "count": 449536,
+                            "first_game": {
+                                "black": "800",
+                                "date": "2012.12.31",
+                                "eco": "B12",
+                                "event": "Rated Bullet game",
+                                "game_id": 3,
+                                "ply_count": 94,
+                                "result": "0-1",
+                                "white": "Naitero_Nagasaki"
+                            }
+                        },
+                        "win": {
+                            "count": 502952,
+                            "first_game": {
+                                "black": "mamalak",
+                                "date": "2012.12.31",
+                                "eco": "C00",
+                                "event": "Rated Classical game",
+                                "game_id": 0,
+                                "ply_count": 25,
+                                "result": "1-0",
+                                "white": "BFG9k"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 40589,
+                            "first_game": {
+                                "black": "titus406",
+                                "date": "2013.02.28",
+                                "eco": "C42",
+                                "event": "Rated Classical game",
+                                "game_id": 245300,
+                                "ply_count": 47,
+                                "result": "1/2-1/2",
+                                "white": "kris9191"
+                            }
+                        },
+                        "loss": {
+                            "count": 588110,
+                            "first_game": {
+                                "black": "apsu2323",
+                                "date": "2013.02.28",
+                                "eco": "C00",
+                                "event": "Rated Bullet game",
+                                "game_id": 245293,
+                                "ply_count": 16,
+                                "result": "0-1",
+                                "white": "esmir"
+                            }
+                        },
+                        "win": {
+                            "count": 657975,
+                            "first_game": {
+                                "black": "JSpower",
+                                "date": "2013.02.28",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 245297,
+                                "ply_count": 79,
+                                "result": "1-0",
+                                "white": "bballer"
+                            }
+                        }
+                    }
+                },
+                "Na3": {
+                    "engine": {
+                        "draw": {
+                            "count": 5,
+                            "first_game": {
+                                "black": "MinuitNeuf",
+                                "date": "2013.05.14",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 637004,
+                                "ply_count": 159,
+                                "result": "1/2-1/2",
+                                "white": "toto981"
+                            }
+                        },
+                        "loss": {
+                            "count": 74,
+                            "first_game": {
+                                "black": "jeancasius",
+                                "date": "2013.02.03",
+                                "eco": "A00",
+                                "event": "Rated Correspondence game",
+                                "game_id": 130067,
+                                "ply_count": 76,
+                                "result": "0-1",
+                                "white": "yeskasbull"
+                            }
+                        },
+                        "win": {
+                            "count": 46,
+                            "first_game": {
+                                "black": "delara",
+                                "date": "2013.02.10",
+                                "eco": "A00",
+                                "event": "Rated Correspondence game",
+                                "game_id": 160705,
+                                "ply_count": 11,
+                                "result": "1-0",
+                                "white": "abol4534"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 1,
+                            "first_game": {
+                                "black": "begginer",
+                                "date": "2013.07.19",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 1129525,
+                                "ply_count": 93,
+                                "result": "1/2-1/2",
+                                "white": "miroslavm970"
+                            }
+                        },
+                        "loss": {
+                            "count": 88,
+                            "first_game": {
+                                "black": "Sa052",
+                                "date": "2013.01.06",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 21824,
+                                "ply_count": 48,
+                                "result": "0-1",
+                                "white": "toshu526"
+                            }
+                        },
+                        "win": {
+                            "count": 33,
+                            "first_game": {
+                                "black": "?",
+                                "date": "2013.04.05",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 428451,
+                                "ply_count": 27,
+                                "result": "1-0",
+                                "white": "JiveTurky"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 10,
+                            "first_game": {
+                                "black": "dayathlin",
+                                "date": "2013.03.12",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 302454,
+                                "ply_count": 84,
+                                "result": "1/2-1/2",
+                                "white": "RobertH"
+                            }
+                        },
+                        "loss": {
+                            "count": 91,
+                            "first_game": {
+                                "black": "k1500",
+                                "date": "2013.03.02",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 252420,
+                                "ply_count": 26,
+                                "result": "0-1",
+                                "white": "nazi01"
+                            }
+                        },
+                        "win": {
+                            "count": 47,
+                            "first_game": {
+                                "black": "hardnheavy",
+                                "date": "2013.06.11",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 810167,
+                                "ply_count": 69,
+                                "result": "1-0",
+                                "white": "pink_overdoze"
+                            }
+                        }
+                    }
+                },
+                "Nc3": {
+                    "engine": {
+                        "draw": {
+                            "count": 160,
+                            "first_game": {
+                                "black": "Oz",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 122541,
+                                "ply_count": 124,
+                                "result": "1/2-1/2",
+                                "white": "Greenlan"
+                            }
+                        },
+                        "loss": {
+                            "count": 2932,
+                            "first_game": {
+                                "black": "senip",
+                                "date": "2013.01.31",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 121434,
+                                "ply_count": 140,
+                                "result": "0-1",
+                                "white": "Loserbernd"
+                            }
+                        },
+                        "win": {
+                            "count": 2641,
+                            "first_game": {
+                                "black": "mistergrey",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 121968,
+                                "ply_count": 73,
+                                "result": "1-0",
+                                "white": "CheyenneBodie"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 160,
+                            "first_game": {
+                                "black": "COLDEST",
+                                "date": "2013.01.04",
+                                "eco": "C00",
+                                "event": "Rated Blitz game",
+                                "game_id": 11496,
+                                "ply_count": 108,
+                                "result": "1/2-1/2",
+                                "white": "stau"
+                            }
+                        },
+                        "loss": {
+                            "count": 2335,
+                            "first_game": {
+                                "black": "pseudoknight",
+                                "date": "2012.12.31",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 44,
+                                "ply_count": 82,
+                                "result": "0-1",
+                                "white": "Ben_Dover"
+                            }
+                        },
+                        "win": {
+                            "count": 2110,
+                            "first_game": {
+                                "black": "namesnik",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 731,
+                                "ply_count": 63,
+                                "result": "1-0",
+                                "white": "oilmanesh"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 230,
+                            "first_game": {
+                                "black": "RechChess",
+                                "date": "2013.03.01",
+                                "eco": "C46",
+                                "event": "Rated Classical game",
+                                "game_id": 248245,
+                                "ply_count": 84,
+                                "result": "1/2-1/2",
+                                "white": "khan"
+                            }
+                        },
+                        "loss": {
+                            "count": 3191,
+                            "first_game": {
+                                "black": "Winner1",
+                                "date": "2013.02.28",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 245294,
+                                "ply_count": 56,
+                                "result": "0-1",
+                                "white": "pingchess"
+                            }
+                        },
+                        "win": {
+                            "count": 3612,
+                            "first_game": {
+                                "black": "Andrandand",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 246611,
+                                "ply_count": 41,
+                                "result": "1-0",
+                                "white": "NicolasDelaye"
+                            }
+                        }
+                    }
+                },
+                "Nf3": {
+                    "engine": {
+                        "draw": {
+                            "count": 897,
+                            "first_game": {
+                                "black": "rx",
+                                "date": "2013.02.01",
+                                "eco": "A04",
+                                "event": "Rated Classical game",
+                                "game_id": 122912,
+                                "ply_count": 77,
+                                "result": "1/2-1/2",
+                                "white": "Icy"
+                            }
+                        },
+                        "loss": {
+                            "count": 12145,
+                            "first_game": {
+                                "black": "preira",
+                                "date": "2013.01.31",
+                                "eco": "A06",
+                                "event": "Rated Classical game",
+                                "game_id": 121407,
+                                "ply_count": 50,
+                                "result": "0-1",
+                                "white": "tadamasca"
+                            }
+                        },
+                        "win": {
+                            "count": 13635,
+                            "first_game": {
+                                "black": "tadamasca",
+                                "date": "2013.01.31",
+                                "eco": "A04",
+                                "event": "Rated Classical game",
+                                "game_id": 121424,
+                                "ply_count": 75,
+                                "result": "1-0",
+                                "white": "preira"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 804,
+                            "first_game": {
+                                "black": "Maroz",
+                                "date": "2013.01.02",
+                                "eco": "A04",
+                                "event": "Rated Classical game",
+                                "game_id": 6000,
+                                "ply_count": 132,
+                                "result": "1/2-1/2",
+                                "white": "Beto370"
+                            }
+                        },
+                        "loss": {
+                            "count": 10527,
+                            "first_game": {
+                                "black": "sonie",
+                                "date": "2012.12.31",
+                                "eco": "A04",
+                                "event": "Rated Bullet game",
+                                "game_id": 71,
+                                "ply_count": 68,
+                                "result": "0-1",
+                                "white": "Gardo"
+                            }
+                        },
+                        "win": {
+                            "count": 11970,
+                            "first_game": {
+                                "black": "Boss92",
+                                "date": "2012.12.31",
+                                "eco": "A04",
+                                "event": "Rated Bullet game",
+                                "game_id": 85,
+                                "ply_count": 87,
+                                "result": "1-0",
+                                "white": "Gardo"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 1061,
+                            "first_game": {
+                                "black": "RICARDO59",
+                                "date": "2013.03.01",
+                                "eco": "A04",
+                                "event": "Rated Classical game",
+                                "game_id": 245988,
+                                "ply_count": 132,
+                                "result": "1/2-1/2",
+                                "white": "robusto"
+                            }
+                        },
+                        "loss": {
+                            "count": 14058,
+                            "first_game": {
+                                "black": "Blerim",
+                                "date": "2013.02.28",
+                                "eco": "A06",
+                                "event": "Rated Blitz game",
+                                "game_id": 245397,
+                                "ply_count": 42,
+                                "result": "0-1",
+                                "white": "edmario"
+                            }
+                        },
+                        "win": {
+                            "count": 16367,
+                            "first_game": {
+                                "black": "valera111",
+                                "date": "2013.02.28",
+                                "eco": "A06",
+                                "event": "Rated Blitz game",
+                                "game_id": 245337,
+                                "ply_count": 41,
+                                "result": "1-0",
+                                "white": "edmario"
+                            }
+                        }
+                    }
+                },
+                "Nh3": {
+                    "engine": {
+                        "draw": {
+                            "count": 5,
+                            "first_game": {
+                                "black": "chessers",
+                                "date": "2013.08.30",
+                                "eco": "E00",
+                                "event": "Rated Blitz game",
+                                "game_id": 1570025,
+                                "ply_count": 196,
+                                "result": "1/2-1/2",
+                                "white": "Confusion"
+                            }
+                        },
+                        "loss": {
+                            "count": 141,
+                            "first_game": {
+                                "black": "thalesalex",
+                                "date": "2013.02.02",
+                                "eco": "E00",
+                                "event": "Rated Classical game",
+                                "game_id": 127510,
+                                "ply_count": 100,
+                                "result": "0-1",
+                                "white": "cpneto"
+                            }
+                        },
+                        "win": {
+                            "count": 55,
+                            "first_game": {
+                                "black": "tadamasca",
+                                "date": "2013.02.02",
+                                "eco": "E00",
+                                "event": "Rated Bullet game",
+                                "game_id": 128835,
+                                "ply_count": 13,
+                                "result": "1-0",
+                                "white": "Na"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 4,
+                            "first_game": {
+                                "black": "brian177",
+                                "date": "2013.07.03",
+                                "eco": "E00",
+                                "event": "Rated Classical game",
+                                "game_id": 983965,
+                                "ply_count": 78,
+                                "result": "1/2-1/2",
+                                "white": "CANCERVERO123"
+                            }
+                        },
+                        "loss": {
+                            "count": 128,
+                            "first_game": {
+                                "black": "Kyklades",
+                                "date": "2013.01.04",
+                                "eco": "E00",
+                                "event": "Rated Bullet game",
+                                "game_id": 12280,
+                                "ply_count": 20,
+                                "result": "0-1",
+                                "white": "lichess1367"
+                            }
+                        },
+                        "win": {
+                            "count": 58,
+                            "first_game": {
+                                "black": "vleick9496",
+                                "date": "2013.01.12",
+                                "eco": "E00",
+                                "event": "Rated Correspondence game",
+                                "game_id": 43229,
+                                "ply_count": 3,
+                                "result": "1-0",
+                                "white": "queque90"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 10,
+                            "first_game": {
+                                "black": "samba137",
+                                "date": "2013.03.08",
+                                "eco": "E00",
+                                "event": "Rated Correspondence game",
+                                "game_id": 282491,
+                                "ply_count": 121,
+                                "result": "1/2-1/2",
+                                "white": "blurps"
+                            }
+                        },
+                        "loss": {
+                            "count": 185,
+                            "first_game": {
+                                "black": "bori83",
+                                "date": "2013.03.07",
+                                "eco": "E00",
+                                "event": "Rated Blitz game",
+                                "game_id": 276038,
+                                "ply_count": 39,
+                                "result": "0-1",
+                                "white": "oblivion77"
+                            }
+                        },
+                        "win": {
+                            "count": 62,
+                            "first_game": {
+                                "black": "AL3103",
+                                "date": "2013.03.06",
+                                "eco": "E00",
+                                "event": "Rated Classical game",
+                                "game_id": 273971,
+                                "ply_count": 53,
+                                "result": "1-0",
+                                "white": "smiling_bishop"
+                            }
+                        }
+                    }
+                },
+                "a3": {
+                    "engine": {
+                        "draw": {
+                            "count": 91,
+                            "first_game": {
+                                "black": "Karen_Armenia",
+                                "date": "2013.02.23",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 219455,
+                                "ply_count": 68,
+                                "result": "1/2-1/2",
+                                "white": "marina1984"
+                            }
+                        },
+                        "loss": {
+                            "count": 1115,
+                            "first_game": {
+                                "black": "Jordeniel01",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Correspondence game",
+                                "game_id": 121785,
+                                "ply_count": 50,
+                                "result": "0-1",
+                                "white": "?"
+                            }
+                        },
+                        "win": {
+                            "count": 1371,
+                            "first_game": {
+                                "black": "jagoiq",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 123832,
+                                "ply_count": 125,
+                                "result": "1-0",
+                                "white": "marina1984"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 83,
+                            "first_game": {
+                                "black": "gomi13",
+                                "date": "2013.01.06",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 21924,
+                                "ply_count": 83,
+                                "result": "1/2-1/2",
+                                "white": "marina1984"
+                            }
+                        },
+                        "loss": {
+                            "count": 958,
+                            "first_game": {
+                                "black": "Lain",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 2621,
+                                "ply_count": 2,
+                                "result": "0-1",
+                                "white": "valjevo"
+                            }
+                        },
+                        "win": {
+                            "count": 1283,
+                            "first_game": {
+                                "black": "kaldere",
+                                "date": "2013.01.04",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 15257,
+                                "ply_count": 67,
+                                "result": "1-0",
+                                "white": "captainRobinson"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 123,
+                            "first_game": {
+                                "black": "samba137",
+                                "date": "2013.03.03",
+                                "eco": "A00",
+                                "event": "Rated Correspondence game",
+                                "game_id": 256652,
+                                "ply_count": 88,
+                                "result": "1/2-1/2",
+                                "white": "blurps"
+                            }
+                        },
+                        "loss": {
+                            "count": 1451,
+                            "first_game": {
+                                "black": "Kentiara",
+                                "date": "2013.03.02",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 250607,
+                                "ply_count": 40,
+                                "result": "0-1",
+                                "white": "kasper92"
+                            }
+                        },
+                        "win": {
+                            "count": 1829,
+                            "first_game": {
+                                "black": "fredymam",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 248611,
+                                "ply_count": 63,
+                                "result": "1-0",
+                                "white": "marina1984"
+                            }
+                        }
+                    }
+                },
+                "a4": {
+                    "engine": {
+                        "draw": {
+                            "count": 38,
+                            "first_game": {
+                                "black": "yoloswag420",
+                                "date": "2013.02.06",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 144441,
+                                "ply_count": 89,
+                                "result": "1/2-1/2",
+                                "white": "superbee2000"
+                            }
+                        },
+                        "loss": {
+                            "count": 677,
+                            "first_game": {
+                                "black": "mistergrey",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 121847,
+                                "ply_count": 110,
+                                "result": "0-1",
+                                "white": "Sija"
+                            }
+                        },
+                        "win": {
+                            "count": 375,
+                            "first_game": {
+                                "black": "MikeS",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 123472,
+                                "ply_count": 47,
+                                "result": "1-0",
+                                "white": "Sla_Bo"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 31,
+                            "first_game": {
+                                "black": "Roncho",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Correspondence game",
+                                "game_id": 1613,
+                                "ply_count": 121,
+                                "result": "1/2-1/2",
+                                "white": "iom2010"
+                            }
+                        },
+                        "loss": {
+                            "count": 616,
+                            "first_game": {
+                                "black": "rusli",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 1465,
+                                "ply_count": 60,
+                                "result": "0-1",
+                                "white": "baddu"
+                            }
+                        },
+                        "win": {
+                            "count": 448,
+                            "first_game": {
+                                "black": "Rozee",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 1173,
+                                "ply_count": 73,
+                                "result": "1-0",
+                                "white": "baddu"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 43,
+                            "first_game": {
+                                "black": "?",
+                                "date": "2013.03.05",
+                                "eco": "A00",
+                                "event": "Rated Correspondence game",
+                                "game_id": 266302,
+                                "ply_count": 88,
+                                "result": "1/2-1/2",
+                                "white": "lebedmax"
+                            }
+                        },
+                        "loss": {
+                            "count": 805,
+                            "first_game": {
+                                "black": "bijean",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 249666,
+                                "ply_count": 34,
+                                "result": "0-1",
+                                "white": "Mafia_top"
+                            }
+                        },
+                        "win": {
+                            "count": 539,
+                            "first_game": {
+                                "black": "gomlGbdonuts",
+                                "date": "2013.03.09",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 285839,
+                                "ply_count": 63,
+                                "result": "1-0",
+                                "white": "goml"
+                            }
+                        }
+                    }
+                },
+                "b3": {
+                    "engine": {
+                        "draw": {
+                            "count": 461,
+                            "first_game": {
+                                "black": "NicolasDelaye",
+                                "date": "2013.02.01",
+                                "eco": "A01",
+                                "event": "Rated Classical game",
+                                "game_id": 124481,
+                                "ply_count": 123,
+                                "result": "1/2-1/2",
+                                "white": "salmo"
+                            }
+                        },
+                        "loss": {
+                            "count": 6910,
+                            "first_game": {
+                                "black": "Federico",
+                                "date": "2013.01.31",
+                                "eco": "A01",
+                                "event": "Rated Blitz game",
+                                "game_id": 121340,
+                                "ply_count": 48,
+                                "result": "0-1",
+                                "white": "WealthandTaste"
+                            }
+                        },
+                        "win": {
+                            "count": 7611,
+                            "first_game": {
+                                "black": "sebas013",
+                                "date": "2013.02.01",
+                                "eco": "A01",
+                                "event": "Rated Bullet game",
+                                "game_id": 121585,
+                                "ply_count": 29,
+                                "result": "1-0",
+                                "white": "Panevis"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 337,
+                            "first_game": {
+                                "black": "Ivan64",
+                                "date": "2013.01.01",
+                                "eco": "A01",
+                                "event": "Rated Classical game",
+                                "game_id": 1663,
+                                "ply_count": 122,
+                                "result": "1/2-1/2",
+                                "white": "troepianiz"
+                            }
+                        },
+                        "loss": {
+                            "count": 5101,
+                            "first_game": {
+                                "black": "hostking",
+                                "date": "2012.12.31",
+                                "eco": "A01",
+                                "event": "Rated Classical game",
+                                "game_id": 15,
+                                "ply_count": 16,
+                                "result": "0-1",
+                                "white": "troepianiz"
+                            }
+                        },
+                        "win": {
+                            "count": 5180,
+                            "first_game": {
+                                "black": "Jonathan_52",
+                                "date": "2012.12.31",
+                                "eco": "A01",
+                                "event": "Rated Bullet game",
+                                "game_id": 62,
+                                "ply_count": 63,
+                                "result": "1-0",
+                                "white": "1000"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 475,
+                            "first_game": {
+                                "black": "thomas_greece",
+                                "date": "2013.03.01",
+                                "eco": "A01",
+                                "event": "Rated Bullet game",
+                                "game_id": 246702,
+                                "ply_count": 119,
+                                "result": "1/2-1/2",
+                                "white": "Karen_Armenia"
+                            }
+                        },
+                        "loss": {
+                            "count": 7797,
+                            "first_game": {
+                                "black": "PersianBoy",
+                                "date": "2013.03.01",
+                                "eco": "A01",
+                                "event": "Rated Bullet game",
+                                "game_id": 246549,
+                                "ply_count": 100,
+                                "result": "0-1",
+                                "white": "whitenoise"
+                            }
+                        },
+                        "win": {
+                            "count": 8270,
+                            "first_game": {
+                                "black": "DiamanteNegro75",
+                                "date": "2013.02.28",
+                                "eco": "A01",
+                                "event": "Rated Blitz game",
+                                "game_id": 245336,
+                                "ply_count": 69,
+                                "result": "1-0",
+                                "white": "asnegao"
+                            }
+                        }
+                    }
+                },
+                "b4": {
+                    "engine": {
+                        "draw": {
+                            "count": 199,
+                            "first_game": {
+                                "black": "Jarno",
+                                "date": "2013.02.03",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 132487,
+                                "ply_count": 135,
+                                "result": "1/2-1/2",
+                                "white": "DiamanteNegro75"
+                            }
+                        },
+                        "loss": {
+                            "count": 2797,
+                            "first_game": {
+                                "black": "Semmel",
+                                "date": "2013.01.31",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 121394,
+                                "ply_count": 38,
+                                "result": "0-1",
+                                "white": "koishiteru2"
+                            }
+                        },
+                        "win": {
+                            "count": 3046,
+                            "first_game": {
+                                "black": "rusak",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 121985,
+                                "ply_count": 107,
+                                "result": "1-0",
+                                "white": "DiamanteNegro75"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 149,
+                            "first_game": {
+                                "black": "Skar",
+                                "date": "2013.01.03",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 9500,
+                                "ply_count": 138,
+                                "result": "1/2-1/2",
+                                "white": "alex296"
+                            }
+                        },
+                        "loss": {
+                            "count": 2563,
+                            "first_game": {
+                                "black": "lancelotukr",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 1256,
+                                "ply_count": 96,
+                                "result": "0-1",
+                                "white": "alex296"
+                            }
+                        },
+                        "win": {
+                            "count": 2695,
+                            "first_game": {
+                                "black": "crazy2013",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 765,
+                                "ply_count": 39,
+                                "result": "1-0",
+                                "white": "Delaza62"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 248,
+                            "first_game": {
+                                "black": "paxworth",
+                                "date": "2013.03.03",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 255941,
+                                "ply_count": 129,
+                                "result": "1/2-1/2",
+                                "white": "Delaza62"
+                            }
+                        },
+                        "loss": {
+                            "count": 3542,
+                            "first_game": {
+                                "black": "Thiago",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 246198,
+                                "ply_count": 72,
+                                "result": "0-1",
+                                "white": "WAHAHAHA"
+                            }
+                        },
+                        "win": {
+                            "count": 3927,
+                            "first_game": {
+                                "black": "1a2a3a",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 245852,
+                                "ply_count": 19,
+                                "result": "1-0",
+                                "white": "Delaza62"
+                            }
+                        }
+                    }
+                },
+                "c3": {
+                    "engine": {
+                        "draw": {
+                            "count": 105,
+                            "first_game": {
+                                "black": "rapitrance",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 122049,
+                                "ply_count": 116,
+                                "result": "1/2-1/2",
+                                "white": "Oz"
+                            }
+                        },
+                        "loss": {
+                            "count": 1897,
+                            "first_game": {
+                                "black": "Naitero_Nagasaki",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 121646,
+                                "ply_count": 36,
+                                "result": "0-1",
+                                "white": "Oz"
+                            }
+                        },
+                        "win": {
+                            "count": 1686,
+                            "first_game": {
+                                "black": "namesnik",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 121625,
+                                "ply_count": 45,
+                                "result": "1-0",
+                                "white": "Oz"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 97,
+                            "first_game": {
+                                "black": "Sandrov",
+                                "date": "2013.01.02",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 6725,
+                                "ply_count": 164,
+                                "result": "1/2-1/2",
+                                "white": "t4nk"
+                            }
+                        },
+                        "loss": {
+                            "count": 1764,
+                            "first_game": {
+                                "black": "Thiago",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 568,
+                                "ply_count": 56,
+                                "result": "0-1",
+                                "white": "garlic"
+                            }
+                        },
+                        "win": {
+                            "count": 1540,
+                            "first_game": {
+                                "black": "donchester",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 699,
+                                "ply_count": 29,
+                                "result": "1-0",
+                                "white": "garlic"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 121,
+                            "first_game": {
+                                "black": "Oksana",
+                                "date": "2013.03.06",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 273142,
+                                "ply_count": 169,
+                                "result": "1/2-1/2",
+                                "white": "Sergiyua"
+                            }
+                        },
+                        "loss": {
+                            "count": 2054,
+                            "first_game": {
+                                "black": "Jonathan_52",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 245582,
+                                "ply_count": 42,
+                                "result": "0-1",
+                                "white": "pingchess"
+                            }
+                        },
+                        "win": {
+                            "count": 1946,
+                            "first_game": {
+                                "black": "manuel_ts87",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 246804,
+                                "ply_count": 63,
+                                "result": "1-0",
+                                "white": "WAHAHAHA"
+                            }
+                        }
+                    }
+                },
+                "c4": {
+                    "engine": {
+                        "draw": {
+                            "count": 1069,
+                            "first_game": {
+                                "black": "LeHiboux",
+                                "date": "2013.02.01",
+                                "eco": "A22",
+                                "event": "Rated Classical game",
+                                "game_id": 122981,
+                                "ply_count": 129,
+                                "result": "1/2-1/2",
+                                "white": "demirkiran"
+                            }
+                        },
+                        "loss": {
+                            "count": 14194,
+                            "first_game": {
+                                "black": "Artin",
+                                "date": "2013.01.31",
+                                "eco": "A10",
+                                "event": "Rated Classical game",
+                                "game_id": 121360,
+                                "ply_count": 190,
+                                "result": "0-1",
+                                "white": "Hunab_Ku"
+                            }
+                        },
+                        "win": {
+                            "count": 16158,
+                            "first_game": {
+                                "black": "gonsar",
+                                "date": "2013.01.31",
+                                "eco": "A10",
+                                "event": "Rated Blitz game",
+                                "game_id": 121405,
+                                "ply_count": 73,
+                                "result": "1-0",
+                                "white": "The_Black_Rider"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 971,
+                            "first_game": {
+                                "black": "akayhan",
+                                "date": "2013.01.01",
+                                "eco": "A21",
+                                "event": "Rated Classical game",
+                                "game_id": 865,
+                                "ply_count": 116,
+                                "result": "1/2-1/2",
+                                "white": "MihaSAH"
+                            }
+                        },
+                        "loss": {
+                            "count": 12243,
+                            "first_game": {
+                                "black": "chess345",
+                                "date": "2012.12.31",
+                                "eco": "A15",
+                                "event": "Rated Bullet game",
+                                "game_id": 94,
+                                "ply_count": 64,
+                                "result": "0-1",
+                                "white": "Batalha"
+                            }
+                        },
+                        "win": {
+                            "count": 14297,
+                            "first_game": {
+                                "black": "Voltvolf",
+                                "date": "2012.12.31",
+                                "eco": "A15",
+                                "event": "Rated Bullet game",
+                                "game_id": 27,
+                                "ply_count": 97,
+                                "result": "1-0",
+                                "white": "800"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 1270,
+                            "first_game": {
+                                "black": "RASA",
+                                "date": "2013.03.01",
+                                "eco": "A20",
+                                "event": "Rated Classical game",
+                                "game_id": 246606,
+                                "ply_count": 137,
+                                "result": "1/2-1/2",
+                                "white": "mersad"
+                            }
+                        },
+                        "loss": {
+                            "count": 16101,
+                            "first_game": {
+                                "black": "Grunberg",
+                                "date": "2013.03.01",
+                                "eco": "A20",
+                                "event": "Rated Blitz game",
+                                "game_id": 245568,
+                                "ply_count": 50,
+                                "result": "0-1",
+                                "white": "analichax"
+                            }
+                        },
+                        "win": {
+                            "count": 18269,
+                            "first_game": {
+                                "black": "Laplace_Demonio",
+                                "date": "2013.02.28",
+                                "eco": "A29",
+                                "event": "Rated Classical game",
+                                "game_id": 245345,
+                                "ply_count": 17,
+                                "result": "1-0",
+                                "white": "marchello"
+                            }
+                        }
+                    }
+                },
+                "d3": {
+                    "engine": {
+                        "draw": {
+                            "count": 236,
+                            "first_game": {
+                                "black": "NoPlayNoFun",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 122451,
+                                "ply_count": 131,
+                                "result": "1/2-1/2",
+                                "white": "Greenlan"
+                            }
+                        },
+                        "loss": {
+                            "count": 4704,
+                            "first_game": {
+                                "black": "pseudoknight",
+                                "date": "2013.01.31",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 121389,
+                                "ply_count": 62,
+                                "result": "0-1",
+                                "white": "Greenlan"
+                            }
+                        },
+                        "win": {
+                            "count": 3842,
+                            "first_game": {
+                                "black": "chrisstansell",
+                                "date": "2013.01.31",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 121334,
+                                "ply_count": 3,
+                                "result": "1-0",
+                                "white": "Greenlan"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 233,
+                            "first_game": {
+                                "black": "F1_ALONSO_FERRARI",
+                                "date": "2013.01.02",
+                                "eco": "C00",
+                                "event": "Rated Bullet game",
+                                "game_id": 6337,
+                                "ply_count": 119,
+                                "result": "1/2-1/2",
+                                "white": "habatur"
+                            }
+                        },
+                        "loss": {
+                            "count": 4417,
+                            "first_game": {
+                                "black": "1000",
+                                "date": "2012.12.31",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 117,
+                                "ply_count": 56,
+                                "result": "0-1",
+                                "white": "t4nk"
+                            }
+                        },
+                        "win": {
+                            "count": 3361,
+                            "first_game": {
+                                "black": "t4nk",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 219,
+                                "ply_count": 23,
+                                "result": "1-0",
+                                "white": "Batalha"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 271,
+                            "first_game": {
+                                "black": "uco",
+                                "date": "2013.03.02",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 253535,
+                                "ply_count": 90,
+                                "result": "1/2-1/2",
+                                "white": "M2Beaul3"
+                            }
+                        },
+                        "loss": {
+                            "count": 5958,
+                            "first_game": {
+                                "black": "metrolog",
+                                "date": "2013.02.28",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 245318,
+                                "ply_count": 54,
+                                "result": "0-1",
+                                "white": "legend999"
+                            }
+                        },
+                        "win": {
+                            "count": 4800,
+                            "first_game": {
+                                "black": "pontuschka",
+                                "date": "2013.02.28",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 245348,
+                                "ply_count": 153,
+                                "result": "1-0",
+                                "white": "legend999"
+                            }
+                        }
+                    }
+                },
+                "d4": {
+                    "engine": {
+                        "draw": {
+                            "count": 8803,
+                            "first_game": {
+                                "black": "vadi2",
+                                "date": "2013.01.31",
+                                "eco": "D06",
+                                "event": "Rated Classical game",
+                                "game_id": 121369,
+                                "ply_count": 87,
+                                "result": "1/2-1/2",
+                                "white": "federer"
+                            }
+                        },
+                        "loss": {
+                            "count": 117132,
+                            "first_game": {
+                                "black": "Vigorito",
+                                "date": "2013.01.31",
+                                "eco": "D85",
+                                "event": "Rated Classical game",
+                                "game_id": 121337,
+                                "ply_count": 52,
+                                "result": "0-1",
+                                "white": "jajce3"
+                            }
+                        },
+                        "win": {
+                            "count": 139050,
+                            "first_game": {
+                                "black": "van9",
+                                "date": "2013.01.31",
+                                "eco": "A45",
+                                "event": "Rated Blitz game",
+                                "game_id": 121345,
+                                "ply_count": 89,
+                                "result": "1-0",
+                                "white": "MonaBlue"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 7842,
+                            "first_game": {
+                                "black": "Kyklades",
+                                "date": "2012.12.31",
+                                "eco": "D06",
+                                "event": "Rated Blitz game",
+                                "game_id": 130,
+                                "ply_count": 77,
+                                "result": "1/2-1/2",
+                                "white": "Mariss"
+                            }
+                        },
+                        "loss": {
+                            "count": 102881,
+                            "first_game": {
+                                "black": "hamiakaz",
+                                "date": "2012.12.31",
+                                "eco": "A40",
+                                "event": "Rated Blitz game",
+                                "game_id": 9,
+                                "ply_count": 90,
+                                "result": "0-1",
+                                "white": "adamsrj"
+                            }
+                        },
+                        "win": {
+                            "count": 123188,
+                            "first_game": {
+                                "black": "savinka59",
+                                "date": "2012.12.31",
+                                "eco": "D04",
+                                "event": "Rated Classical game",
+                                "game_id": 1,
+                                "ply_count": 35,
+                                "result": "1-0",
+                                "white": "Desmond_Wilson"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 10199,
+                            "first_game": {
+                                "black": "pseudoknight",
+                                "date": "2013.02.28",
+                                "eco": "A43",
+                                "event": "Rated Bullet game",
+                                "game_id": 245330,
+                                "ply_count": 89,
+                                "result": "1/2-1/2",
+                                "white": "F1_ALONSO_FERRARI"
+                            }
+                        },
+                        "loss": {
+                            "count": 135234,
+                            "first_game": {
+                                "black": "moledor",
+                                "date": "2013.02.28",
+                                "eco": "D30",
+                                "event": "Rated Classical game",
+                                "game_id": 245306,
+                                "ply_count": 68,
+                                "result": "0-1",
+                                "white": "metrolog"
+                            }
+                        },
+                        "win": {
+                            "count": 161222,
+                            "first_game": {
+                                "black": "brigoodwinan",
+                                "date": "2013.02.28",
+                                "eco": "D41",
+                                "event": "Rated Blitz game",
+                                "game_id": 245301,
+                                "ply_count": 97,
+                                "result": "1-0",
+                                "white": "As17"
+                            }
+                        }
+                    }
+                },
+                "e3": {
+                    "engine": {
+                        "draw": {
+                            "count": 856,
+                            "first_game": {
+                                "black": "Cliff_Burton",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 124745,
+                                "ply_count": 105,
+                                "result": "1/2-1/2",
+                                "white": "srbija"
+                            }
+                        },
+                        "loss": {
+                            "count": 17553,
+                            "first_game": {
+                                "black": "curitibano",
+                                "date": "2013.01.31",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 121446,
+                                "ply_count": 94,
+                                "result": "0-1",
+                                "white": "jockey"
+                            }
+                        },
+                        "win": {
+                            "count": 14370,
+                            "first_game": {
+                                "black": "mundistrul",
+                                "date": "2013.01.31",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 121473,
+                                "ply_count": 2,
+                                "result": "1-0",
+                                "white": "jockey"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 787,
+                            "first_game": {
+                                "black": "cheesedout",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 377,
+                                "ply_count": 108,
+                                "result": "1/2-1/2",
+                                "white": "t4nk"
+                            }
+                        },
+                        "loss": {
+                            "count": 15404,
+                            "first_game": {
+                                "black": "Gardo",
+                                "date": "2012.12.31",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 107,
+                                "ply_count": 64,
+                                "result": "0-1",
+                                "white": "Boss92"
+                            }
+                        },
+                        "win": {
+                            "count": 13298,
+                            "first_game": {
+                                "black": "MARC0",
+                                "date": "2012.12.31",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 37,
+                                "ply_count": 77,
+                                "result": "1-0",
+                                "white": "migsan"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 963,
+                            "first_game": {
+                                "black": "World__Champion__",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 245636,
+                                "ply_count": 122,
+                                "result": "1/2-1/2",
+                                "white": "benzoa"
+                            }
+                        },
+                        "loss": {
+                            "count": 19080,
+                            "first_game": {
+                                "black": "MARCO0019",
+                                "date": "2013.02.28",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 245339,
+                                "ply_count": 42,
+                                "result": "0-1",
+                                "white": "SAIRAM"
+                            }
+                        },
+                        "win": {
+                            "count": 15338,
+                            "first_game": {
+                                "black": "snob",
+                                "date": "2013.02.28",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 245304,
+                                "ply_count": 91,
+                                "result": "1-0",
+                                "white": "SAIRAM"
+                            }
+                        }
+                    }
+                },
+                "e4": {
+                    "engine": {
+                        "draw": {
+                            "count": 21209,
+                            "first_game": {
+                                "black": "Kiriush",
+                                "date": "2013.01.31",
+                                "eco": "C33",
+                                "event": "Rated Bullet game",
+                                "game_id": 121416,
+                                "ply_count": 77,
+                                "result": "1/2-1/2",
+                                "white": "nichiren1967"
+                            }
+                        },
+                        "loss": {
+                            "count": 309758,
+                            "first_game": {
+                                "black": "gonsar",
+                                "date": "2013.01.31",
+                                "eco": "B20",
+                                "event": "Rated Blitz game",
+                                "game_id": 121339,
+                                "ply_count": 118,
+                                "result": "0-1",
+                                "white": "bijean"
+                            }
+                        },
+                        "win": {
+                            "count": 350448,
+                            "first_game": {
+                                "black": "McCoy",
+                                "date": "2013.01.31",
+                                "eco": "B01",
+                                "event": "Rated Classical game",
+                                "game_id": 121332,
+                                "ply_count": 33,
+                                "result": "1-0",
+                                "white": "Smok"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 18870,
+                            "first_game": {
+                                "black": "chinokoli",
+                                "date": "2012.12.31",
+                                "eco": "B21",
+                                "event": "Rated Blitz game",
+                                "game_id": 14,
+                                "ply_count": 117,
+                                "result": "1/2-1/2",
+                                "white": "nichiren1967"
+                            }
+                        },
+                        "loss": {
+                            "count": 275553,
+                            "first_game": {
+                                "black": "800",
+                                "date": "2012.12.31",
+                                "eco": "B12",
+                                "event": "Rated Bullet game",
+                                "game_id": 3,
+                                "ply_count": 94,
+                                "result": "0-1",
+                                "white": "Naitero_Nagasaki"
+                            }
+                        },
+                        "win": {
+                            "count": 308185,
+                            "first_game": {
+                                "black": "mamalak",
+                                "date": "2012.12.31",
+                                "eco": "C00",
+                                "event": "Rated Classical game",
+                                "game_id": 0,
+                                "ply_count": 25,
+                                "result": "1-0",
+                                "white": "BFG9k"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 24375,
+                            "first_game": {
+                                "black": "titus406",
+                                "date": "2013.02.28",
+                                "eco": "C42",
+                                "event": "Rated Classical game",
+                                "game_id": 245300,
+                                "ply_count": 47,
+                                "result": "1/2-1/2",
+                                "white": "kris9191"
+                            }
+                        },
+                        "loss": {
+                            "count": 357081,
+                            "first_game": {
+                                "black": "apsu2323",
+                                "date": "2013.02.28",
+                                "eco": "C00",
+                                "event": "Rated Bullet game",
+                                "game_id": 245293,
+                                "ply_count": 16,
+                                "result": "0-1",
+                                "white": "esmir"
+                            }
+                        },
+                        "win": {
+                            "count": 400666,
+                            "first_game": {
+                                "black": "augustus_hill",
+                                "date": "2013.02.28",
+                                "eco": "C65",
+                                "event": "Rated Bullet game",
+                                "game_id": 245299,
+                                "ply_count": 71,
+                                "result": "1-0",
+                                "white": "Romoda"
+                            }
+                        }
+                    }
+                },
+                "f3": {
+                    "engine": {
+                        "draw": {
+                            "count": 26,
+                            "first_game": {
+                                "black": "hurtig",
+                                "date": "2013.02.07",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 148269,
+                                "ply_count": 125,
+                                "result": "1/2-1/2",
+                                "white": "BulletSpeed"
+                            }
+                        },
+                        "loss": {
+                            "count": 474,
+                            "first_game": {
+                                "black": "rtyjghh",
+                                "date": "2013.02.01",
+                                "eco": "C20",
+                                "event": "Rated Bullet tournament https://lichess.org/tournament/3ee7hvvz",
+                                "game_id": 123401,
+                                "ply_count": 128,
+                                "result": "0-1",
+                                "white": "king_qazvin"
+                            }
+                        },
+                        "win": {
+                            "count": 341,
+                            "first_game": {
+                                "black": "msusngi",
+                                "date": "2013.02.01",
+                                "eco": "C20",
+                                "event": "Rated Bullet game",
+                                "game_id": 122071,
+                                "ply_count": 47,
+                                "result": "1-0",
+                                "white": "RookieRook"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 19,
+                            "first_game": {
+                                "black": "t4nk",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 163,
+                                "ply_count": 139,
+                                "result": "1/2-1/2",
+                                "white": "namesnik"
+                            }
+                        },
+                        "loss": {
+                            "count": 482,
+                            "first_game": {
+                                "black": "cheesedout",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 395,
+                                "ply_count": 44,
+                                "result": "0-1",
+                                "white": "t4nk"
+                            }
+                        },
+                        "win": {
+                            "count": 283,
+                            "first_game": {
+                                "black": "oilmanesh",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 726,
+                                "ply_count": 53,
+                                "result": "1-0",
+                                "white": "garlic"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 22,
+                            "first_game": {
+                                "black": "thonon",
+                                "date": "2013.03.17",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 327096,
+                                "ply_count": 78,
+                                "result": "1/2-1/2",
+                                "white": "Backtrackfire"
+                            }
+                        },
+                        "loss": {
+                            "count": 647,
+                            "first_game": {
+                                "black": "jesse",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 247103,
+                                "ply_count": 26,
+                                "result": "0-1",
+                                "white": "fil77"
+                            }
+                        },
+                        "win": {
+                            "count": 479,
+                            "first_game": {
+                                "black": "_-_-_-_-_-_",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 245840,
+                                "ply_count": 51,
+                                "result": "1-0",
+                                "white": "thechessengine"
+                            }
+                        }
+                    }
+                },
+                "f4": {
+                    "engine": {
+                        "draw": {
+                            "count": 246,
+                            "first_game": {
+                                "black": "pronik",
+                                "date": "2013.02.01",
+                                "eco": "A02",
+                                "event": "Rated Blitz game",
+                                "game_id": 121727,
+                                "ply_count": 142,
+                                "result": "1/2-1/2",
+                                "white": "nikola1"
+                            }
+                        },
+                        "loss": {
+                            "count": 4222,
+                            "first_game": {
+                                "black": "pronik",
+                                "date": "2013.02.01",
+                                "eco": "A03",
+                                "event": "Rated Blitz game",
+                                "game_id": 121597,
+                                "ply_count": 62,
+                                "result": "0-1",
+                                "white": "nikola1"
+                            }
+                        },
+                        "win": {
+                            "count": 4587,
+                            "first_game": {
+                                "black": "pronik",
+                                "date": "2013.02.01",
+                                "eco": "A02",
+                                "event": "Rated Blitz game",
+                                "game_id": 121522,
+                                "ply_count": 67,
+                                "result": "1-0",
+                                "white": "nikola1"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 242,
+                            "first_game": {
+                                "black": "prccvrc",
+                                "date": "2013.01.01",
+                                "eco": "A03",
+                                "event": "Rated Bullet game",
+                                "game_id": 1480,
+                                "ply_count": 65,
+                                "result": "1/2-1/2",
+                                "white": "kinner"
+                            }
+                        },
+                        "loss": {
+                            "count": 4106,
+                            "first_game": {
+                                "black": "cheesedout",
+                                "date": "2013.01.01",
+                                "eco": "A02",
+                                "event": "Rated Bullet game",
+                                "game_id": 373,
+                                "ply_count": 24,
+                                "result": "0-1",
+                                "white": "t4nk"
+                            }
+                        },
+                        "win": {
+                            "count": 4471,
+                            "first_game": {
+                                "black": "fistfullofbastard",
+                                "date": "2013.01.01",
+                                "eco": "A03",
+                                "event": "Rated Classical game",
+                                "game_id": 595,
+                                "ply_count": 81,
+                                "result": "1-0",
+                                "white": "PES69Z28"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 324,
+                            "first_game": {
+                                "black": "thechessengine",
+                                "date": "2013.03.01",
+                                "eco": "A03",
+                                "event": "Rated Blitz game",
+                                "game_id": 249574,
+                                "ply_count": 63,
+                                "result": "1/2-1/2",
+                                "white": "arina1999"
+                            }
+                        },
+                        "loss": {
+                            "count": 5364,
+                            "first_game": {
+                                "black": "Trompetenfurz",
+                                "date": "2013.02.28",
+                                "eco": "A02",
+                                "event": "Rated Bullet game",
+                                "game_id": 245498,
+                                "ply_count": 76,
+                                "result": "0-1",
+                                "white": "bsn232"
+                            }
+                        },
+                        "win": {
+                            "count": 5861,
+                            "first_game": {
+                                "black": "german11",
+                                "date": "2013.02.28",
+                                "eco": "A02",
+                                "event": "Rated Bullet tournament https://lichess.org/tournament/oxnn8u4l",
+                                "game_id": 245312,
+                                "ply_count": 57,
+                                "result": "1-0",
+                                "white": "Grunberg"
+                            }
+                        }
+                    }
+                },
+                "g3": {
+                    "engine": {
+                        "draw": {
+                            "count": 597,
+                            "first_game": {
+                                "black": "McPiter",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 123037,
+                                "ply_count": 174,
+                                "result": "1/2-1/2",
+                                "white": "zer001"
+                            }
+                        },
+                        "loss": {
+                            "count": 10519,
+                            "first_game": {
+                                "black": "agdani",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 121607,
+                                "ply_count": 24,
+                                "result": "0-1",
+                                "white": "WealthandTaste"
+                            }
+                        },
+                        "win": {
+                            "count": 10342,
+                            "first_game": {
+                                "black": "FF4",
+                                "date": "2013.02.01",
+                                "eco": "A07",
+                                "event": "Rated Classical game",
+                                "game_id": 121830,
+                                "ply_count": 23,
+                                "result": "1-0",
+                                "white": "SAYANTAN"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 506,
+                            "first_game": {
+                                "black": "Carroll",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 2100,
+                                "ply_count": 114,
+                                "result": "1/2-1/2",
+                                "white": "SAYANTAN"
+                            }
+                        },
+                        "loss": {
+                            "count": 8568,
+                            "first_game": {
+                                "black": "cheesedout",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 359,
+                                "ply_count": 40,
+                                "result": "0-1",
+                                "white": "t4nk"
+                            }
+                        },
+                        "win": {
+                            "count": 9304,
+                            "first_game": {
+                                "black": "cheesedout",
+                                "date": "2012.12.31",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 119,
+                                "ply_count": 121,
+                                "result": "1-0",
+                                "white": "Krieg"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 744,
+                            "first_game": {
+                                "black": "tehas23",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 246035,
+                                "ply_count": 124,
+                                "result": "1/2-1/2",
+                                "white": "bballer"
+                            }
+                        },
+                        "loss": {
+                            "count": 12696,
+                            "first_game": {
+                                "black": "pseudoknight",
+                                "date": "2013.02.28",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 245441,
+                                "ply_count": 32,
+                                "result": "0-1",
+                                "white": "332"
+                            }
+                        },
+                        "win": {
+                            "count": 13206,
+                            "first_game": {
+                                "black": "JSpower",
+                                "date": "2013.02.28",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 245297,
+                                "ply_count": 79,
+                                "result": "1-0",
+                                "white": "bballer"
+                            }
+                        }
+                    }
+                },
+                "g4": {
+                    "engine": {
+                        "draw": {
+                            "count": 48,
+                            "first_game": {
+                                "black": "pepecueto",
+                                "date": "2013.02.10",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 161986,
+                                "ply_count": 29,
+                                "result": "1/2-1/2",
+                                "white": "McCoy"
+                            }
+                        },
+                        "loss": {
+                            "count": 924,
+                            "first_game": {
+                                "black": "Aletts",
+                                "date": "2013.01.31",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 121350,
+                                "ply_count": 10,
+                                "result": "0-1",
+                                "white": "Rochin"
+                            }
+                        },
+                        "win": {
+                            "count": 640,
+                            "first_game": {
+                                "black": "Magus",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 124332,
+                                "ply_count": 53,
+                                "result": "1-0",
+                                "white": "longboard"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 39,
+                            "first_game": {
+                                "black": "Kakurenbo",
+                                "date": "2013.01.07",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 27299,
+                                "ply_count": 113,
+                                "result": "1/2-1/2",
+                                "white": "alexbc"
+                            }
+                        },
+                        "loss": {
+                            "count": 738,
+                            "first_game": {
+                                "black": "kinner",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 1455,
+                                "ply_count": 2,
+                                "result": "0-1",
+                                "white": "BulletPlay"
+                            }
+                        },
+                        "win": {
+                            "count": 652,
+                            "first_game": {
+                                "black": "vytaskas",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 2672,
+                                "ply_count": 41,
+                                "result": "1-0",
+                                "white": "MFGSGhost"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 32,
+                            "first_game": {
+                                "black": "terminator100",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 250187,
+                                "ply_count": 146,
+                                "result": "1/2-1/2",
+                                "white": "faulschlamm"
+                            }
+                        },
+                        "loss": {
+                            "count": 829,
+                            "first_game": {
+                                "black": "MILADBCH",
+                                "date": "2013.03.02",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 251248,
+                                "ply_count": 60,
+                                "result": "0-1",
+                                "white": "entry"
+                            }
+                        },
+                        "win": {
+                            "count": 669,
+                            "first_game": {
+                                "black": "analichax",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 245585,
+                                "ply_count": 37,
+                                "result": "1-0",
+                                "white": "Grunberg"
+                            }
+                        }
+                    }
+                },
+                "h3": {
+                    "engine": {
+                        "draw": {
+                            "count": 12,
+                            "first_game": {
+                                "black": "momentum",
+                                "date": "2013.02.11",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 164022,
+                                "ply_count": 66,
+                                "result": "1/2-1/2",
+                                "white": "kramer"
+                            }
+                        },
+                        "loss": {
+                            "count": 715,
+                            "first_game": {
+                                "black": "MihaSAH",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 122895,
+                                "ply_count": 112,
+                                "result": "0-1",
+                                "white": "legend999"
+                            }
+                        },
+                        "win": {
+                            "count": 249,
+                            "first_game": {
+                                "black": "MihaSAH",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 122765,
+                                "ply_count": 47,
+                                "result": "1-0",
+                                "white": "legend999"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 19,
+                            "first_game": {
+                                "black": "loop",
+                                "date": "2013.01.09",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 33450,
+                                "ply_count": 175,
+                                "result": "1/2-1/2",
+                                "white": "BozzOz"
+                            }
+                        },
+                        "loss": {
+                            "count": 383,
+                            "first_game": {
+                                "black": "angarsk",
+                                "date": "2013.01.03",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 8367,
+                                "ply_count": 2,
+                                "result": "0-1",
+                                "white": "toyota"
+                            }
+                        },
+                        "win": {
+                            "count": 229,
+                            "first_game": {
+                                "black": "ilhan",
+                                "date": "2013.01.06",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 19515,
+                                "ply_count": 97,
+                                "result": "1-0",
+                                "white": "alfix"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 26,
+                            "first_game": {
+                                "black": "Hafez",
+                                "date": "2013.03.12",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 303116,
+                                "ply_count": 179,
+                                "result": "1/2-1/2",
+                                "white": "FCST1923"
+                            }
+                        },
+                        "loss": {
+                            "count": 779,
+                            "first_game": {
+                                "black": "Kentiara",
+                                "date": "2013.03.02",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 250626,
+                                "ply_count": 46,
+                                "result": "0-1",
+                                "white": "kasper92"
+                            }
+                        },
+                        "win": {
+                            "count": 343,
+                            "first_game": {
+                                "black": "Delaza62",
+                                "date": "2013.03.02",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 252537,
+                                "ply_count": 55,
+                                "result": "1-0",
+                                "white": "gautam"
+                            }
+                        }
+                    }
+                },
+                "h4": {
+                    "engine": {
+                        "draw": {
+                            "count": 41,
+                            "first_game": {
+                                "black": "kravchukigor",
+                                "date": "2013.02.19",
+                                "eco": "A00",
+                                "event": "Rated Correspondence game",
+                                "game_id": 198688,
+                                "ply_count": 1,
+                                "result": "1/2-1/2",
+                                "white": "LiloRoman"
+                            }
+                        },
+                        "loss": {
+                            "count": 865,
+                            "first_game": {
+                                "black": "legend999",
+                                "date": "2013.02.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 122715,
+                                "ply_count": 50,
+                                "result": "0-1",
+                                "white": "juketay"
+                            }
+                        },
+                        "win": {
+                            "count": 443,
+                            "first_game": {
+                                "black": "joudy",
+                                "date": "2013.02.02",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 127177,
+                                "ply_count": 23,
+                                "result": "1-0",
+                                "white": "kramer"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 20,
+                            "first_game": {
+                                "black": "lyna",
+                                "date": "2013.01.11",
+                                "eco": "A00",
+                                "event": "Rated Blitz game",
+                                "game_id": 42455,
+                                "ply_count": 32,
+                                "result": "1/2-1/2",
+                                "white": "Hydro"
+                            }
+                        },
+                        "loss": {
+                            "count": 542,
+                            "first_game": {
+                                "black": "garderob",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Bullet game",
+                                "game_id": 1904,
+                                "ply_count": 48,
+                                "result": "0-1",
+                                "white": "cyclo"
+                            }
+                        },
+                        "win": {
+                            "count": 366,
+                            "first_game": {
+                                "black": "Norb",
+                                "date": "2013.01.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 1286,
+                                "ply_count": 53,
+                                "result": "1-0",
+                                "white": "jesuss"
+                            }
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 44,
+                            "first_game": {
+                                "black": "kikiki",
+                                "date": "2013.03.15",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 315422,
+                                "ply_count": 55,
+                                "result": "1/2-1/2",
+                                "white": "FCST1923"
+                            }
+                        },
+                        "loss": {
+                            "count": 893,
+                            "first_game": {
+                                "black": "kualalumpur",
+                                "date": "2013.03.01",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 249250,
+                                "ply_count": 40,
+                                "result": "0-1",
+                                "white": "adiprenne"
+                            }
+                        },
+                        "win": {
+                            "count": 522,
+                            "first_game": {
+                                "black": "McCoy",
+                                "date": "2013.02.28",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 245506,
+                                "ply_count": 51,
+                                "result": "1-0",
+                                "white": "adiprenne"
+                            }
+                        }
+                    }
+                }
+            },
+            "position": {
+                "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+            },
+            "transpositions": {
+                "--": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 4,
+                            "first_game": {
+                                "black": "xxx_lexa_kolor_xxx",
+                                "date": "2013.11.18",
+                                "eco": "A04",
+                                "event": "Rated Classical game",
+                                "game_id": 2592128,
+                                "ply_count": 8,
+                                "result": "0-1",
+                                "white": "ygygyfyf"
+                            }
+                        },
+                        "win": {
+                            "count": 2,
+                            "first_game": {
+                                "black": "_love_",
+                                "date": "2013.11.18",
+                                "eco": "A04",
+                                "event": "Rated Classical game",
+                                "game_id": 2593687,
+                                "ply_count": 4,
+                                "result": "1-0",
+                                "white": "xxx_lexa_kolor_xxx"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 1,
+                            "first_game": {
+                                "black": "LilAmine",
+                                "date": "2013.07.10",
+                                "eco": "A00",
+                                "event": "Rated Correspondence game",
+                                "game_id": 1053026,
+                                "ply_count": 97,
+                                "result": "1/2-1/2",
+                                "white": "Ahmed13013"
+                            }
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 2,
+                            "first_game": {
+                                "black": "abart4",
+                                "date": "2013.12.22",
+                                "eco": "A00",
+                                "event": "Rated Classical game",
+                                "game_id": 3194161,
+                                "ply_count": 11,
+                                "result": "1/2-1/2",
+                                "white": "Loser109"
+                            }
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "Na3": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "Nc3": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "Nf3": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "Nh3": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "a3": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "a4": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "b3": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "b4": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "c3": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "c4": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "d3": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "d4": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "e3": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "e4": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 1,
+                            "first_game": {
+                                "black": "DaveBloom",
+                                "date": "2013.05.22",
+                                "eco": "B02",
+                                "event": "Rated Classical game",
+                                "game_id": 686133,
+                                "ply_count": 51,
+                                "result": "1-0",
+                                "white": "deniscarmo"
+                            }
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "f3": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "f4": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "g3": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "g4": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "h3": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                },
+                "h4": {
+                    "engine": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "human": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    },
+                    "server": {
+                        "draw": {
+                            "count": 0
+                        },
+                        "loss": {
+                            "count": 0
+                        },
+                        "win": {
+                            "count": 0
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
