@@ -398,11 +398,12 @@ namespace chess_pos_db_gui
 
             if (move.Player == Player.White)
             {
-                if (Plies > 1)
+                int No = Plies / 2 + 1;
+                while (MoveHistory.Rows.Count < No)
                 {
                     MoveHistory.Rows.Add();
                 }
-                MoveHistory.Last().No = Plies / 2 + 1;
+                MoveHistory.Last().No = No;
                 MoveHistory.Last().WhiteDetailedMove = move;
             }
             else
