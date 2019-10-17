@@ -211,5 +211,10 @@ namespace chess_pos_db_gui
             else selects.Remove(chess_pos_db_gui.Select.Transpositions);
             Repopulate();
         }
+
+        private void SplitContainer1_Panel1_SizeChanged(object sender, EventArgs e)
+        {
+            chessBoard.Height = splitContainer1.Panel1.Height - splitContainer1.Margin.Bottom - splitContainer1.Margin.Top;
+        }
     }
 }

@@ -145,8 +145,6 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -154,6 +152,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.chessBoard);
+            this.splitContainer1.Panel1.SizeChanged += new System.EventHandler(this.SplitContainer1_Panel1_SizeChanged);
             // 
             // splitContainer1.Panel2
             // 
@@ -166,6 +165,8 @@
             // 
             // chessBoard
             // 
+            this.chessBoard.AutoSize = true;
+            this.chessBoard.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.chessBoard.Location = new System.Drawing.Point(9, 9);
             this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
             this.chessBoard.Name = "chessBoard";
@@ -187,6 +188,7 @@
             this.typeSelectionGroupBox.ResumeLayout(false);
             this.typeSelectionGroupBox.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);

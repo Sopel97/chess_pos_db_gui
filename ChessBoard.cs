@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ChessDotNet;
 using ChessDotNet.Pieces;
+using System.Reflection;
 
 namespace chess_pos_db_gui
 {
+
     public partial class ChessBoard : UserControl
     {
         private static readonly Bitmap DefaultBitmap = CreateDefaultBitmap();
@@ -38,6 +40,9 @@ namespace chess_pos_db_gui
         private Point? MouseFrom { get; set; }
         private Point? MouseTo { get; set; }
 
+        private MoveHistoryTable MoveHistory { get; set; }
+        private int Plies { get; set; }
+
         public ChessBoard()
         {
             InitializeComponent();
@@ -51,6 +56,22 @@ namespace chess_pos_db_gui
 
             MouseFrom = null;
             MouseTo = null;
+
+            MoveHistory = new MoveHistoryTable();
+
+            moveHistoryGridView.DataSource = MoveHistory;
+            moveHistoryGridView.CellBorderStyle = DataGridViewCellBorderStyle.None;
+
+            Plies = 0;
+
+            MakeDoubleBuffered(chessBoardPanel);
+        }
+        private static void MakeDoubleBuffered(Panel chessBoardPanel)
+        {
+            Type dgvType = chessBoardPanel.GetType();
+            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
+                  BindingFlags.Instance | BindingFlags.NonPublic);
+            pi.SetValue(chessBoardPanel, true, null);
         }
 
         public void LoadImages(string path)
@@ -174,11 +195,6 @@ namespace chess_pos_db_gui
             System.Diagnostics.Debug.WriteLine("DRAW");
         }
 
-        private void UpdateBoard()
-        {
-            chessBoardPanel.Refresh();
-        }
-
         private static Bitmap CreateDefaultBitmap()
         {
             var bmp = new Bitmap(8, 8);
@@ -189,7 +205,6 @@ namespace chess_pos_db_gui
         private void ChessBoard_Load(object sender, EventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(History.Last().GetFen());
-            System.Diagnostics.Debug.WriteLine(Size);
 
             boardImage = DefaultBitmap;
             boardLightSquare = DefaultBitmap;
@@ -212,9 +227,16 @@ namespace chess_pos_db_gui
             UpdatePieceImagesDictionary();
         }
 
+        private void ChessBoard_SizeChanged(object sender, EventArgs e)
+        {
+            chessBoardPanel.Size = FitWithAspectRatio(Size, 1.0f);
+            historyPanel.Height = Height - historyPanel.Margin.Top - historyPanel.Margin.Bottom;
+            chessBoardPanel.Refresh();
+        }
+
         private void ChessBoardPanel_SizeChanged(object sender, EventArgs e)
         {
-            chessBoardPanel.Size = FitWithAspectRatio(chessBoardPanel.Size, 1.0f);
+            historyPanel.Location = new Point(chessBoardPanel.Location.X + chessBoardPanel.Width, historyPanel.Location.Y);
         }
 
         private Size FitWithAspectRatio(Size size, float ratio)
@@ -240,18 +262,43 @@ namespace chess_pos_db_gui
             Position fromSquare = PointToSquare(from.Value);
             Position toSquare = PointToSquare(to.Value);
 
-            if(!History.DoMove(new Move(fromSquare, toSquare, History.Last().GCD.WhoseTurn)))
+            Player player = History.Last().GCD.WhoseTurn;
+            Move move = new Move(fromSquare, toSquare, player);
+            if (History.DoMove(move))
+            {
+                AddMoveToMoveHistory(History.Last().Move);
+                moveHistoryGridView.Refresh();
+                chessBoardPanel.Refresh();
+            }
+            else
             {
                 System.Diagnostics.Debug.WriteLine("Invalid move.");
                 System.Diagnostics.Debug.WriteLine(fromSquare);
                 System.Diagnostics.Debug.WriteLine(toSquare);
             }
-            else
-            {
-                UpdateBoard();
-            }
 
             return true;
+        }
+
+        private void AddMoveToMoveHistory(DetailedMove move)
+        {
+            Player shouldBePlayer = Plies % 2 == 0 ? Player.White : Player.Black;
+            if (move.Player != shouldBePlayer)
+            {
+                throw new ArgumentException("");
+            }
+            ++Plies;
+
+            if (move.Player == Player.White)
+            {
+                MoveHistory.Rows.Add();
+                MoveHistory.Last().No = Plies / 2 + 1;
+                MoveHistory.Last().WhiteDetailedMove = move;
+            }
+            else
+            {
+                MoveHistory.Last().BlackDetailedMove = move;
+            }
         }
 
         private void ChessBoardPanel_MouseDown(object sender, MouseEventArgs e)
@@ -263,6 +310,62 @@ namespace chess_pos_db_gui
         {
             MouseTo = new Point(e.X, e.Y);
             TryPerformMoveBasedOnMouseDrag(MouseFrom, MouseTo);
+        }
+    }
+    internal class MoveHistoryDataRow : DataRow
+    {
+        private int _No { get; set; }
+        private DetailedMove _WhiteDetailedMove { get; set; }
+        private DetailedMove _BlackDetailedMove { get; set; }
+        public int No {
+            get { return _No; }
+            set { _No = value; base["No"] = value.ToString() + "."; }
+        }
+        public DetailedMove WhiteDetailedMove {
+            get { return _WhiteDetailedMove; }
+            set { _WhiteDetailedMove = value; base["WhiteMove"] = value.SAN; }
+        }
+        public DetailedMove BlackDetailedMove {
+            get { return _BlackDetailedMove; }
+            set { _BlackDetailedMove = value; base["BlackMove"] = value.SAN; } 
+        }
+
+        public MoveHistoryDataRow(DataRowBuilder builder) :
+            base(builder)
+        {
+        }
+    }
+
+    internal class MoveHistoryTable : DataTable
+    {
+        public MoveHistoryTable()
+        {
+            Columns.Add(new DataColumn("No", typeof(string)));
+            Columns.Add(new DataColumn("WhiteMove", typeof(string)));
+            Columns.Add(new DataColumn("BlackMove", typeof(string)));
+        }
+        public MoveHistoryDataRow this[int idx]
+        {
+            get { return (MoveHistoryDataRow)Rows[idx]; }
+        }
+
+        public MoveHistoryDataRow Last()
+        {
+            return this[Rows.Count - 1];
+        }
+
+        protected override Type GetRowType()
+        {
+            return typeof(MoveHistoryDataRow);
+        }
+
+        protected override DataRow NewRowFromBuilder(DataRowBuilder builder)
+        {
+            return new MoveHistoryDataRow(builder);
+        }
+        public void Add(MoveHistoryDataRow row)
+        {
+            Rows.Add(row);
         }
     }
 }
