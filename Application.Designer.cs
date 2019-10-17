@@ -165,12 +165,11 @@
             // 
             // chessBoard
             // 
-            this.chessBoard.AutoSize = true;
-            this.chessBoard.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.chessBoard.Location = new System.Drawing.Point(9, 9);
             this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
             this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(782, 291);
+            this.chessBoard.Size = new System.Drawing.Size(782, 274);
             this.chessBoard.TabIndex = 0;
             // 
             // Application
@@ -188,7 +187,6 @@
             this.typeSelectionGroupBox.ResumeLayout(false);
             this.typeSelectionGroupBox.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);

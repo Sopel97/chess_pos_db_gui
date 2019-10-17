@@ -44,7 +44,7 @@ namespace chess_pos_db_gui
     class ChessBoardHistory
     {
         private List<ChessBoardHistoryEntry> Entries { get; set; }
-        private int CurrentIdx { get; set; }
+        public int Plies { get; private set; }
 
         public ChessBoardHistory()
         {
@@ -54,36 +54,42 @@ namespace chess_pos_db_gui
                     new ChessGame()
                 )
             };
-            CurrentIdx = 0;
+            Plies = 0;
         }
 
         public void SetCurrent(int i)
         {
-            CurrentIdx = i;
+            Plies = i;
+        }
+
+        private void TruncateToCurrent()
+        {
+            if (Plies != Entries.Count - 1)
+                Entries.RemoveRange(Plies + 1, Entries.Count - Plies - 1);
         }
 
         public bool DoMove(Move move)
         {
-            if (CurrentIdx != Entries.Count - 1) return false;
+            TruncateToCurrent();
 
             ChessGame pos = new ChessGame(Entries.Last().GCD);
             if (!pos.IsValidMove(move)) return false;
             pos.MakeMove(move, true);
             Entries.Add(new ChessBoardHistoryEntry(pos));
-            ++CurrentIdx;
+            ++Plies;
             return true;
         }
 
         public bool DoMove(string san)
         {
-            if (CurrentIdx != Entries.Count - 1) return false;
+            TruncateToCurrent();
 
             ChessGame pos = new ChessGame(Entries.Last().GCD);
             Move move = San.ParseSan(pos, san);
             if (move == null) return false;
             pos.MakeMove(move, false);
             Entries.Add(new ChessBoardHistoryEntry(pos));
-            ++CurrentIdx;
+            ++Plies;
             return true;
         }
 
@@ -92,21 +98,16 @@ namespace chess_pos_db_gui
             if (Entries.Count() > 1)
             {
                 Entries.RemoveAt(Entries.Count() - 1);
-                --CurrentIdx;
+                --Plies;
                 return true;
             }
 
             return false;
         }
 
-        public ChessBoardHistoryEntry Last()
-        {
-            return Entries[Entries.Count() - 1];
-        }
-
         public ChessBoardHistoryEntry Current()
         {
-            return Entries[CurrentIdx];
+            return Entries[Plies];
         }
     }
 }

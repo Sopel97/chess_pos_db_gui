@@ -201,7 +201,7 @@ namespace chess_pos_db_gui
 
         private void ChessBoard_Load(object sender, EventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(History.Last().GetFen());
+            System.Diagnostics.Debug.WriteLine(History.Current().GetFen());
 
             boardImage = DefaultBitmap;
             boardLightSquare = DefaultBitmap;
@@ -251,7 +251,16 @@ namespace chess_pos_db_gui
 
             return new Size((int)w, (int)h);
         }
-        private bool DoMove(string san)
+
+        private void SynchronizeMoveListWithHistory()
+        {
+            if (Plies > History.Plies)
+            {
+                RemoveLastMovesFromMoveHistory(Plies - History.Plies);
+            }
+        }
+
+        public bool DoMove(string san)
         {
             Move move = San.ParseSan(new ChessGame(History.Current().GCD), san);
             return DoMove(move);
@@ -259,6 +268,8 @@ namespace chess_pos_db_gui
 
         private bool DoMove(Move move)
         {
+            SynchronizeMoveListWithHistory();
+
             if (History.DoMove(move))
             {
                 AddMoveToMoveHistory(History.Current().Move);
@@ -288,17 +299,36 @@ namespace chess_pos_db_gui
 
         private void RemoveLastMoveFromMoveHistory()
         {
-            Player player = Plies % 2 == 0 ? Player.Black : Player.White;
-            --Plies;
+            RemoveLastMovesFromMoveHistory(1);
+        }
 
-            if (player == Player.White)
+        private void RemoveLastMovesFromMoveHistory(int count)
+        {
+            for(int i = 0; i < count; ++i)
             {
-                MoveHistory.Rows.RemoveAt(MoveHistory.Rows.Count - 1);
+                Player player = Plies % 2 == 0 ? Player.Black : Player.White;
+                --Plies;
+
+                if (player == Player.White)
+                {
+                    MoveHistory.Rows.RemoveAt(MoveHistory.Rows.Count - 1);
+                }
+                else
+                {
+                    MoveHistory.Last().BlackDetailedMove = null;
+                }
             }
-            else
+
+            if (Plies != 0)
             {
-                MoveHistory.Last().BlackDetailedMove = null;
-                moveHistoryGridView["WhiteMove", MoveHistory.Rows.Count - 1].Selected = true;
+                if (Plies % 2 == 0)
+                {
+                    moveHistoryGridView["WhiteMove", MoveHistory.Rows.Count - 1].Selected = true;
+                }
+                else
+                {
+                    moveHistoryGridView["BlackMove", MoveHistory.Rows.Count - 1].Selected = true;
+                }
             }
         }
 
@@ -351,6 +381,8 @@ namespace chess_pos_db_gui
 
         private void MoveHistoryGridView_SelectionChanged(object sender, EventArgs e)
         {
+            if (moveHistoryGridView.SelectedCells.Count == 0) return;
+
             var cell = moveHistoryGridView.SelectedCells[0];
             int row = cell.RowIndex;
             int col = cell.ColumnIndex;
@@ -374,11 +406,19 @@ namespace chess_pos_db_gui
         }
         public DetailedMove WhiteDetailedMove {
             get { return _WhiteDetailedMove; }
-            set { _WhiteDetailedMove = value; base["WhiteMove"] = value.SAN; }
+            set {
+                _WhiteDetailedMove = value;
+                if (value != null) base["WhiteMove"] = value.SAN;
+                else base["WhiteMove"] = "";
+            }
         }
         public DetailedMove BlackDetailedMove {
             get { return _BlackDetailedMove; }
-            set { _BlackDetailedMove = value; base["BlackMove"] = value.SAN; } 
+            set {
+                _BlackDetailedMove = value;
+                if (value != null) base["BlackMove"] = value.SAN;
+                else base["BlackMove"] = "";
+            } 
         }
 
         public MoveHistoryDataRow(DataRowBuilder builder) :
