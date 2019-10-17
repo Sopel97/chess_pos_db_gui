@@ -268,6 +268,9 @@ namespace chess_pos_db_gui
 
         private bool DoMove(Move move)
         {
+            if (!History.IsMoveValid(move)) return false;
+
+            // We only synch when te move was valid
             SynchronizeMoveListWithHistory();
 
             if (History.DoMove(move))
@@ -288,6 +291,8 @@ namespace chess_pos_db_gui
 
         private bool UndoMove()
         {
+            SynchronizeMoveListWithHistory();
+
             if (History.UndoMove())
             {
                 RemoveLastMoveFromMoveHistory();
@@ -316,18 +321,6 @@ namespace chess_pos_db_gui
                 else
                 {
                     MoveHistory.Last().BlackDetailedMove = null;
-                }
-            }
-
-            if (Plies != 0)
-            {
-                if (Plies % 2 == 0)
-                {
-                    moveHistoryGridView["WhiteMove", MoveHistory.Rows.Count - 1].Selected = true;
-                }
-                else
-                {
-                    moveHistoryGridView["BlackMove", MoveHistory.Rows.Count - 1].Selected = true;
                 }
             }
         }

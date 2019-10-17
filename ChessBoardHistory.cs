@@ -72,7 +72,7 @@ namespace chess_pos_db_gui
         {
             TruncateToCurrent();
 
-            ChessGame pos = new ChessGame(Entries.Last().GCD);
+            ChessGame pos = new ChessGame(Current().GCD);
             if (!pos.IsValidMove(move)) return false;
             pos.MakeMove(move, true);
             Entries.Add(new ChessBoardHistoryEntry(pos));
@@ -84,7 +84,7 @@ namespace chess_pos_db_gui
         {
             TruncateToCurrent();
 
-            ChessGame pos = new ChessGame(Entries.Last().GCD);
+            ChessGame pos = new ChessGame(Current().GCD);
             Move move = San.ParseSan(pos, san);
             if (move == null) return false;
             pos.MakeMove(move, false);
@@ -95,6 +95,8 @@ namespace chess_pos_db_gui
 
         public bool UndoMove()
         {
+            TruncateToCurrent();
+
             if (Entries.Count() > 1)
             {
                 Entries.RemoveAt(Entries.Count() - 1);
@@ -108,6 +110,12 @@ namespace chess_pos_db_gui
         public ChessBoardHistoryEntry Current()
         {
             return Entries[Plies];
+        }
+
+        internal bool IsMoveValid(Move move)
+        {
+            ChessGame pos = new ChessGame(Current().GCD);
+            return pos.IsValidMove(move);
         }
     }
 }
