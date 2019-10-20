@@ -21,7 +21,10 @@ namespace chess_pos_db_gui
             process = new Process();
             process.StartInfo.FileName = "chess_pos_db.exe";
             process.StartInfo.Arguments = "tcp \"" + path + "\" " + port;
-            process.StartInfo.RedirectStandardOutput = true;
+
+            // TODO: Setting this to true makes the program hang after a few queries
+            //       Find a fix as it will be needed for reporting progress to the user.
+            // process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
@@ -65,7 +68,13 @@ namespace chess_pos_db_gui
                 while (stream.DataAvailable);
 
                 var response = Encoding.UTF8.GetString(writer.ToArray());
-                return QueryResponse.FromJson(JsonValue.Parse(response));
+                var responseJson = JsonValue.Parse(response);
+                if (responseJson.ContainsKey("error"))
+                {
+                    throw new InvalidDataException(responseJson["error"].ToString());
+                }
+
+                return QueryResponse.FromJson(responseJson);
             }
         }
 

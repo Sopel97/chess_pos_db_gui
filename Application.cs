@@ -78,7 +78,7 @@ namespace chess_pos_db_gui
             pi.SetValue(dgv, true, null);
         }
 
-        void OnProcessExit(object sender, EventArgs e)
+        private void OnProcessExit(object sender, EventArgs e)
         {
             database.Close();
         }
@@ -87,12 +87,12 @@ namespace chess_pos_db_gui
         {
             chessBoard.LoadImages("assets/graphics");
 
-
             try
             {
                 database = new DatabaseWrapper("w:/catobase/.tmp", "127.0.0.1", 1234);
 
-                AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+                AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
+                chessBoard.PositionChanged += OnPositionChanged;
 
                 data = database.Query("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
                 Repopulate();
@@ -101,7 +101,20 @@ namespace chess_pos_db_gui
             {
                 System.Diagnostics.Debug.WriteLine(ee.Message);
             }
+        }
 
+        private void OnPositionChanged(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(chessBoard.GetFen());
+            try
+            {
+                data = database.Query(chessBoard.GetFen());
+                Repopulate();
+            }
+            catch (Exception ee)
+            {
+                System.Diagnostics.Debug.WriteLine(ee.Message);
+            }
         }
 
         private string PctToString(double pct)

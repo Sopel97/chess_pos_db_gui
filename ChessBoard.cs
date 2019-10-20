@@ -45,6 +45,20 @@ namespace chess_pos_db_gui
         private int FirstPly { get; set; }
         private string LastFen { get; set; }
 
+        private EventHandler onPositionChanged { get; set; }
+        public event EventHandler PositionChanged
+        {
+            add
+            {
+                onPositionChanged += value;
+            }
+
+            remove
+            {
+                onPositionChanged -= value;
+            }
+        }
+
         public ChessBoard()
         {
             InitializeComponent();
@@ -64,6 +78,11 @@ namespace chess_pos_db_gui
             MakeDoubleBuffered(chessBoardPanel);
 
             Reset("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        }
+
+        public string GetFen()
+        {
+            return History.Current().GetFen();
         }
 
         private void Reset(string fen)
@@ -450,8 +469,12 @@ namespace chess_pos_db_gui
 
         private void UpdateFenTextBox(string fen)
         {
-            LastFen = fen;
-            fenTextBox.Text = fen;
+            if (LastFen != fen)
+            {
+                onPositionChanged?.Invoke(this, new EventArgs());
+                LastFen = fen;
+                fenTextBox.Text = fen;
+            }
         }
 
         private void GoToStartButton_Click(object sender, EventArgs e)
