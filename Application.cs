@@ -19,6 +19,7 @@ namespace chess_pos_db_gui
         private HashSet<Select> selects;
         private QueryResponse data;
         private DataTable tabulatedData;
+        private DatabaseWrapper database;
 
         public Application()
         {
@@ -67,22 +68,40 @@ namespace chess_pos_db_gui
                 }
             }
         }
+
         private static void MakeDoubleBuffered(DataGridView dgv)
         {
             Type dgvType = dgv.GetType();
             PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
                   BindingFlags.Instance | BindingFlags.NonPublic);
+
             pi.SetValue(dgv, true, null);
+        }
+
+        void OnProcessExit(object sender, EventArgs e)
+        {
+            database.Close();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             chessBoard.LoadImages("assets/graphics");
 
-            string jsonStr = File.ReadAllText("data/data.json");
-            var json = JsonValue.Parse(jsonStr);
-            data = QueryResponse.FromJson(json);
-            Repopulate();
+
+            try
+            {
+                database = new DatabaseWrapper("w:/catobase/.tmp", "127.0.0.1", 1234);
+
+                AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+
+                data = database.Query("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+                Repopulate();
+            }
+            catch (Exception ee)
+            {
+                System.Diagnostics.Debug.WriteLine(ee.Message);
+            }
+
         }
 
         private string PctToString(double pct)

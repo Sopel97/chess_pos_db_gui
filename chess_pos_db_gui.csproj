@@ -66,6 +66,7 @@
       <DependentUpon>ChessBoard.cs</DependentUpon>
     </Compile>
     <Compile Include="ChessBoardHistory.cs" />
+    <Compile Include="DatabaseWrapper.cs" />
     <Compile Include="Date.cs" />
     <Compile Include="Eco.cs" />
     <Compile Include="Entry.cs" />
