@@ -15,11 +15,14 @@ namespace chess_pos_db_gui
 {
     public partial class Application : Form
     {
+        private static readonly int queryCacheSize = 128;
+
         private HashSet<GameLevel> levels;
         private HashSet<Select> selects;
         private QueryResponse data;
         private DataTable tabulatedData;
         private DatabaseWrapper database;
+        private LRUCache<string, QueryResponse> queryCache;
 
         public Application()
         {
@@ -27,6 +30,7 @@ namespace chess_pos_db_gui
             selects = new HashSet<Select>();
             data = null;
             tabulatedData = new DataTable();
+            queryCache = new LRUCache<string, QueryResponse>(queryCacheSize);
 
             InitializeComponent();
 
@@ -94,8 +98,7 @@ namespace chess_pos_db_gui
                 AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
                 chessBoard.PositionChanged += OnPositionChanged;
 
-                data = database.Query("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-                Repopulate();
+                OnPositionChanged(this, new EventArgs());
             }
             catch (Exception ee)
             {
@@ -105,10 +108,20 @@ namespace chess_pos_db_gui
 
         private void OnPositionChanged(object sender, EventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(chessBoard.GetFen());
+            var fen = chessBoard.GetFen();
+            System.Diagnostics.Debug.WriteLine(fen);
             try
             {
-                data = database.Query(chessBoard.GetFen());
+                var cached = queryCache.Get(fen);
+                if (cached == null)
+                {
+                    data = database.Query(fen);
+                    queryCache.Add(fen, data);
+                }
+                else
+                {
+                    data = cached;
+                }
                 Repopulate();
             }
             catch (Exception ee)

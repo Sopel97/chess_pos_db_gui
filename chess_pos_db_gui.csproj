@@ -73,6 +73,7 @@
     <Compile Include="GameHeader.cs" />
     <Compile Include="GameLevel.cs" />
     <Compile Include="GameResult.cs" />
+    <Compile Include="LRUCache.cs" />
     <Compile Include="Optional.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
