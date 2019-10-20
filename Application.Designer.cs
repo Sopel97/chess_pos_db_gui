@@ -37,6 +37,9 @@
             this.typeTranspositionsCheckBox = new System.Windows.Forms.CheckBox();
             this.typeContinuationsCheckBox = new System.Windows.Forms.CheckBox();
             this.splitChessAndData = new System.Windows.Forms.SplitContainer();
+            this.queryGroupBox = new System.Windows.Forms.GroupBox();
+            this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
+            this.queryButton = new System.Windows.Forms.Button();
             this.chessBoard = new chess_pos_db_gui.ChessBoard();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
@@ -45,6 +48,7 @@
             this.splitChessAndData.Panel1.SuspendLayout();
             this.splitChessAndData.Panel2.SuspendLayout();
             this.splitChessAndData.SuspendLayout();
+            this.queryGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -61,15 +65,16 @@
             this.entriesGridView.Location = new System.Drawing.Point(3, 53);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
-            this.entriesGridView.Size = new System.Drawing.Size(436, 509);
+            this.entriesGridView.Size = new System.Drawing.Size(559, 509);
             this.entriesGridView.TabIndex = 0;
             // 
             // levelSelectionGroupBox
             // 
+            this.levelSelectionGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.levelSelectionGroupBox.Controls.Add(this.levelServerCheckBox);
             this.levelSelectionGroupBox.Controls.Add(this.levelEngineCheckBox);
             this.levelSelectionGroupBox.Controls.Add(this.levelHumanCheckBox);
-            this.levelSelectionGroupBox.Location = new System.Drawing.Point(3, 3);
+            this.levelSelectionGroupBox.Location = new System.Drawing.Point(135, 3);
             this.levelSelectionGroupBox.Name = "levelSelectionGroupBox";
             this.levelSelectionGroupBox.Size = new System.Drawing.Size(206, 44);
             this.levelSelectionGroupBox.TabIndex = 1;
@@ -111,9 +116,10 @@
             // 
             // typeSelectionGroupBox
             // 
+            this.typeSelectionGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.typeSelectionGroupBox.Controls.Add(this.typeTranspositionsCheckBox);
             this.typeSelectionGroupBox.Controls.Add(this.typeContinuationsCheckBox);
-            this.typeSelectionGroupBox.Location = new System.Drawing.Point(215, 3);
+            this.typeSelectionGroupBox.Location = new System.Drawing.Point(347, 3);
             this.typeSelectionGroupBox.Name = "typeSelectionGroupBox";
             this.typeSelectionGroupBox.Size = new System.Drawing.Size(206, 44);
             this.typeSelectionGroupBox.TabIndex = 4;
@@ -154,13 +160,46 @@
             // 
             // splitChessAndData.Panel2
             // 
+            this.splitChessAndData.Panel2.Controls.Add(this.queryGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.typeSelectionGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.levelSelectionGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.entriesGridView);
-            this.splitChessAndData.Panel2MinSize = 430;
-            this.splitChessAndData.Size = new System.Drawing.Size(784, 562);
-            this.splitChessAndData.SplitterDistance = 338;
+            this.splitChessAndData.Panel2MinSize = 494;
+            this.splitChessAndData.Size = new System.Drawing.Size(924, 562);
+            this.splitChessAndData.SplitterDistance = 355;
             this.splitChessAndData.TabIndex = 6;
+            // 
+            // queryGroupBox
+            // 
+            this.queryGroupBox.Controls.Add(this.queryButton);
+            this.queryGroupBox.Controls.Add(this.autoQueryCheckbox);
+            this.queryGroupBox.Location = new System.Drawing.Point(3, 3);
+            this.queryGroupBox.Name = "queryGroupBox";
+            this.queryGroupBox.Size = new System.Drawing.Size(126, 44);
+            this.queryGroupBox.TabIndex = 3;
+            this.queryGroupBox.TabStop = false;
+            this.queryGroupBox.Text = "Level";
+            // 
+            // autoQueryCheckbox
+            // 
+            this.autoQueryCheckbox.AutoSize = true;
+            this.autoQueryCheckbox.Location = new System.Drawing.Point(72, 19);
+            this.autoQueryCheckbox.Name = "autoQueryCheckbox";
+            this.autoQueryCheckbox.Size = new System.Drawing.Size(48, 17);
+            this.autoQueryCheckbox.TabIndex = 0;
+            this.autoQueryCheckbox.Text = "Auto";
+            this.autoQueryCheckbox.UseVisualStyleBackColor = true;
+            this.autoQueryCheckbox.CheckedChanged += new System.EventHandler(this.AutoQueryCheckbox_CheckedChanged);
+            // 
+            // queryButton
+            // 
+            this.queryButton.Location = new System.Drawing.Point(6, 15);
+            this.queryButton.Name = "queryButton";
+            this.queryButton.Size = new System.Drawing.Size(60, 23);
+            this.queryButton.TabIndex = 1;
+            this.queryButton.Text = "Query";
+            this.queryButton.UseVisualStyleBackColor = true;
+            this.queryButton.Click += new System.EventHandler(this.QueryButton_Click);
             // 
             // chessBoard
             // 
@@ -169,16 +208,16 @@
             this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
             this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
             this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(338, 562);
+            this.chessBoard.Size = new System.Drawing.Size(355, 562);
             this.chessBoard.TabIndex = 0;
             // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 562);
+            this.ClientSize = new System.Drawing.Size(924, 562);
             this.Controls.Add(this.splitChessAndData);
-            this.MinimumSize = new System.Drawing.Size(800, 256);
+            this.MinimumSize = new System.Drawing.Size(940, 256);
             this.Name = "Application";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -191,6 +230,8 @@
             this.splitChessAndData.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).EndInit();
             this.splitChessAndData.ResumeLayout(false);
+            this.queryGroupBox.ResumeLayout(false);
+            this.queryGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -207,6 +248,9 @@
         private System.Windows.Forms.CheckBox typeContinuationsCheckBox;
         private System.Windows.Forms.SplitContainer splitChessAndData;
         private ChessBoard chessBoard;
+        private System.Windows.Forms.GroupBox queryGroupBox;
+        private System.Windows.Forms.Button queryButton;
+        private System.Windows.Forms.CheckBox autoQueryCheckbox;
     }
 }
 

@@ -108,25 +108,9 @@ namespace chess_pos_db_gui
 
         private void OnPositionChanged(object sender, EventArgs e)
         {
-            var fen = chessBoard.GetFen();
-            System.Diagnostics.Debug.WriteLine(fen);
-            try
+            if (autoQueryCheckbox.Checked)
             {
-                var cached = queryCache.Get(fen);
-                if (cached == null)
-                {
-                    data = database.Query(fen);
-                    queryCache.Add(fen, data);
-                }
-                else
-                {
-                    data = cached;
-                }
-                Repopulate();
-            }
-            catch (Exception ee)
-            {
-                System.Diagnostics.Debug.WriteLine(ee.Message);
+                UpdateData();
             }
         }
 
@@ -271,6 +255,48 @@ namespace chess_pos_db_gui
             if (typeTranspositionsCheckBox.Checked) selects.Add(chess_pos_db_gui.Select.Transpositions);
             else selects.Remove(chess_pos_db_gui.Select.Transpositions);
             Repopulate();
+        }
+
+        private void AutoQueryCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (autoQueryCheckbox.Checked)
+            {
+                queryButton.Enabled = false;
+                UpdateData();
+            }
+            else
+            {
+                queryButton.Enabled = true;
+            }
+        }
+
+        private void QueryButton_Click(object sender, EventArgs e)
+        {
+            UpdateData();
+        }
+
+        private void UpdateData()
+        {
+            var fen = chessBoard.GetFen();
+            System.Diagnostics.Debug.WriteLine(fen);
+            try
+            {
+                var cached = queryCache.Get(fen);
+                if (cached == null)
+                {
+                    data = database.Query(fen);
+                    queryCache.Add(fen, data);
+                }
+                else
+                {
+                    data = cached;
+                }
+                Repopulate();
+            }
+            catch (Exception ee)
+            {
+                System.Diagnostics.Debug.WriteLine(ee.Message);
+            }
         }
     }
 }
