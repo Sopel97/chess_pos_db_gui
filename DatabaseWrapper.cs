@@ -44,12 +44,10 @@ namespace chess_pos_db_gui
                 }
             }
         }
-
-        public QueryResponse Query(string fen)
+        private QueryResponse ExecuteQuery(string query)
         {
             var stream = client.GetStream();
 
-            string query = "{\"continuations\":{\"fetch_children\":true,\"fetch_first_game\":true,\"fetch_first_game_for_each_child\":true,\"fetch_last_game\":false,\"fetch_last_game_for_each_child\":false},\"levels\":[\"human\",\"engine\",\"server\"],\"positions\":[{\"fen\":\"" + fen + "\"}],\"results\":[\"win\",\"loss\",\"draw\"],\"token\":\"toktok\",\"transpositions\":{\"fetch_children\":true,\"fetch_first_game\":true,\"fetch_first_game_for_each_child\":true,\"fetch_last_game\":false,\"fetch_last_game_for_each_child\":false}}";
             var bytes = System.Text.Encoding.UTF8.GetBytes(query);
             stream.Write(bytes, 0, bytes.Length);
 
@@ -76,6 +74,18 @@ namespace chess_pos_db_gui
 
                 return QueryResponse.FromJson(responseJson);
             }
+        }
+
+        public QueryResponse Query(string fen)
+        {
+            string query = "{\"continuations\":{\"fetch_children\":true,\"fetch_first_game\":true,\"fetch_first_game_for_each_child\":true,\"fetch_last_game\":false,\"fetch_last_game_for_each_child\":false},\"levels\":[\"human\",\"engine\",\"server\"],\"positions\":[{\"fen\":\"" + fen + "\"}],\"results\":[\"win\",\"loss\",\"draw\"],\"token\":\"toktok\",\"transpositions\":{\"fetch_children\":true,\"fetch_first_game\":true,\"fetch_first_game_for_each_child\":true,\"fetch_last_game\":false,\"fetch_last_game_for_each_child\":false}}";
+            return ExecuteQuery(query);   
+        }
+        public QueryResponse Query(string fen, string san)
+        {
+            System.Diagnostics.Debug.WriteLine(san);
+            string query = "{\"continuations\":{\"fetch_children\":true,\"fetch_first_game\":true,\"fetch_first_game_for_each_child\":true,\"fetch_last_game\":false,\"fetch_last_game_for_each_child\":false},\"levels\":[\"human\",\"engine\",\"server\"],\"positions\":[{\"fen\":\"" + fen + "\", \"move\":\"" + san + "\"}],\"results\":[\"win\",\"loss\",\"draw\"],\"token\":\"toktok\",\"transpositions\":{\"fetch_children\":true,\"fetch_first_game\":true,\"fetch_first_game_for_each_child\":true,\"fetch_last_game\":false,\"fetch_last_game_for_each_child\":false}}";
+            return ExecuteQuery(query);
         }
 
         public void Close()

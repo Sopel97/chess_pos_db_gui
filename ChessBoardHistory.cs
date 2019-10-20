@@ -132,6 +132,11 @@ namespace chess_pos_db_gui
             return Entries[Plies];
         }
 
+        public ChessBoardHistoryEntry Prev()
+        {
+            return Entries[Plies - 1];
+        }
+
         internal bool IsMoveValid(Move move)
         {
             ChessGame pos = new ChessGame(Current().GCD);

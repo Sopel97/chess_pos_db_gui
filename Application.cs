@@ -277,15 +277,27 @@ namespace chess_pos_db_gui
 
         private void UpdateData()
         {
-            var fen = chessBoard.GetFen();
+            var san = chessBoard.GetLastMoveSan();
+            var fen = san == "--"
+                ? chessBoard.GetFen()
+                : chessBoard.GetPrevFen();
+
             System.Diagnostics.Debug.WriteLine(fen);
             try
             {
                 var cached = queryCache.Get(fen);
                 if (cached == null)
                 {
-                    data = database.Query(fen);
-                    queryCache.Add(fen, data);
+                    if (san == "--")
+                    {
+                        data = database.Query(fen);
+                        queryCache.Add(fen, data);
+                    }
+                    else
+                    {
+                        data = database.Query(fen, san);
+                        queryCache.Add(fen, data);
+                    }
                 }
                 else
                 {

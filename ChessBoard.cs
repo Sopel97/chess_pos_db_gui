@@ -85,6 +85,16 @@ namespace chess_pos_db_gui
             return History.Current().GetFen();
         }
 
+        public string GetPrevFen()
+        {
+            return History.Prev().GetFen();
+        }
+
+        public string GetLastMoveSan()
+        {
+            return History.Current().GetSan();
+        }
+
         private void Reset(string fen)
         {
             LastFen = fen;
