@@ -18,6 +18,8 @@ namespace chess_pos_db_gui
 
         public DatabaseWrapper(string path, string address, int port, int numTries = 3, int msBetweenTries = 1000)
         {
+            path = path.Replace("\\", "\\\\"); // we stringify it naively to json so we need to escape manually
+
             process = new Process();
             process.StartInfo.FileName = "chess_pos_db.exe";
             process.StartInfo.Arguments = "tcp " + port;
@@ -49,9 +51,22 @@ namespace chess_pos_db_gui
 
                     break;
                 }
+                catch (SocketException)
+                {
+                    if (numTries == 0)
+                    {
+                        process.Kill();
+                        throw new InvalidDataException("Cannot open communication channel with the database.");
+                    }
+                    else
+                    {
+                        Thread.Sleep(msBetweenTries);
+                    }
+                }
                 catch
                 {
-                    Thread.Sleep(msBetweenTries);
+                    process.Kill();
+                    throw;
                 }
             }
         }
@@ -87,9 +102,15 @@ namespace chess_pos_db_gui
         public void Close()
         {
             var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"exit\"}");
-            var stream = client.GetStream();
-            stream.Write(bytes, 0, bytes.Length);
-            process.WaitForExit();
+            try
+            {
+                var stream = client.GetStream();
+                stream.Write(bytes, 0, bytes.Length);
+                process.WaitForExit();
+            }
+            catch
+            {
+            }
             client.Close();
         }
 

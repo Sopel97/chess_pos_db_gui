@@ -99,7 +99,7 @@ namespace chess_pos_db_gui
 
         private void OnProcessExit(object sender, EventArgs e)
         {
-            database.Close();
+            database?.Close();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -325,9 +325,18 @@ namespace chess_pos_db_gui
         {
             try
             {
-                database = new DatabaseWrapper("w:/catobase/.tmp", "127.0.0.1", 1234);
+                using (FolderBrowserDialog browser = new FolderBrowserDialog())
+                {
+                    if (browser.ShowDialog() == DialogResult.OK)
+                    {
+                        //Get the path of specified file
+                        var path = browser.SelectedPath;
 
-                OnPositionChanged(this, new EventArgs());
+                        database = new DatabaseWrapper(path, "127.0.0.1", 1234);
+
+                        OnPositionChanged(this, new EventArgs());
+                    }
+                }
             }
             catch (Exception ee)
             {
