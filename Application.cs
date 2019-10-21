@@ -23,9 +23,13 @@ namespace chess_pos_db_gui
         private DataTable tabulatedData;
         private DatabaseWrapper database;
         private LRUCache<string, QueryResponse> queryCache;
+        private DatabaseCreationForm dbform;
 
         public Application()
         {
+            dbform = new DatabaseCreationForm();
+            dbform.Show();
+
             levels = new HashSet<GameLevel>();
             selects = new HashSet<Select>();
             data = null;
@@ -62,6 +66,7 @@ namespace chess_pos_db_gui
             MakeDoubleBuffered(entriesGridView);
             entriesGridView.DataSource = tabulatedData;
 
+            entriesGridView.Columns["Move"].Frozen = true;
             entriesGridView.Columns["Move"].Width = 60;
             entriesGridView.Columns["Count"].Width = 100;
             entriesGridView.Columns["WinCount"].Width = 100;

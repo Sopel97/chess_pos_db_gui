@@ -39,16 +39,16 @@
             this.splitChessAndData = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.databaseInfoGroupBox = new System.Windows.Forms.GroupBox();
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
-            this.queryGroupBox = new System.Windows.Forms.GroupBox();
-            this.queryButton = new System.Windows.Forms.Button();
-            this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
+            this.databaseInfoRichTextBox = new System.Windows.Forms.RichTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.databaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.databaseInfoRichTextBox = new System.Windows.Forms.RichTextBox();
+            this.queryGroupBox = new System.Windows.Forms.GroupBox();
+            this.queryButton = new System.Windows.Forms.Button();
+            this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             this.typeSelectionGroupBox.SuspendLayout();
@@ -61,8 +61,8 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.databaseInfoGroupBox.SuspendLayout();
-            this.queryGroupBox.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.queryGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -219,15 +219,61 @@
             this.databaseInfoGroupBox.TabStop = false;
             this.databaseInfoGroupBox.Text = "Database";
             // 
-            // chessBoard
+            // databaseInfoRichTextBox
             // 
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(346, 414);
-            this.chessBoard.TabIndex = 0;
+            this.databaseInfoRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.databaseInfoRichTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.databaseInfoRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.databaseInfoRichTextBox.Location = new System.Drawing.Point(3, 16);
+            this.databaseInfoRichTextBox.Name = "databaseInfoRichTextBox";
+            this.databaseInfoRichTextBox.ReadOnly = true;
+            this.databaseInfoRichTextBox.Size = new System.Drawing.Size(340, 91);
+            this.databaseInfoRichTextBox.TabIndex = 0;
+            this.databaseInfoRichTextBox.Text = "";
+            this.databaseInfoRichTextBox.WordWrap = false;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.databaseToolStripMenuItem});
+            this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.menuStrip1.Size = new System.Drawing.Size(346, 24);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "Menu";
+            // 
+            // databaseToolStripMenuItem
+            // 
+            this.databaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.createToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.closeToolStripMenuItem});
+            this.databaseToolStripMenuItem.Name = "databaseToolStripMenuItem";
+            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.databaseToolStripMenuItem.Text = "Database";
+            // 
+            // createToolStripMenuItem
+            // 
+            this.createToolStripMenuItem.Name = "createToolStripMenuItem";
+            this.createToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.createToolStripMenuItem.Text = "Create";
+            this.createToolStripMenuItem.Click += new System.EventHandler(this.CreateToolStripMenuItem_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
+            // 
+            // closeToolStripMenuItem
+            // 
+            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.closeToolStripMenuItem.Text = "Close";
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
             // 
             // queryGroupBox
             // 
@@ -261,61 +307,15 @@
             this.autoQueryCheckbox.UseVisualStyleBackColor = true;
             this.autoQueryCheckbox.CheckedChanged += new System.EventHandler(this.AutoQueryCheckbox_CheckedChanged);
             // 
-            // menuStrip1
+            // chessBoard
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.databaseToolStripMenuItem});
-            this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.menuStrip1.Size = new System.Drawing.Size(346, 24);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "Menu";
-            // 
-            // databaseToolStripMenuItem
-            // 
-            this.databaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createToolStripMenuItem,
-            this.openToolStripMenuItem,
-            this.closeToolStripMenuItem});
-            this.databaseToolStripMenuItem.Name = "databaseToolStripMenuItem";
-            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
-            this.databaseToolStripMenuItem.Text = "Database";
-            // 
-            // createToolStripMenuItem
-            // 
-            this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-            this.createToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.createToolStripMenuItem.Text = "Create";
-            this.createToolStripMenuItem.Click += new System.EventHandler(this.CreateToolStripMenuItem_Click);
-            // 
-            // openToolStripMenuItem
-            // 
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.openToolStripMenuItem.Text = "Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
-            // 
-            // closeToolStripMenuItem
-            // 
-            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.closeToolStripMenuItem.Text = "Close";
-            this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
-            // 
-            // databaseInfoRichTextBox
-            // 
-            this.databaseInfoRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.databaseInfoRichTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.databaseInfoRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.databaseInfoRichTextBox.Location = new System.Drawing.Point(3, 16);
-            this.databaseInfoRichTextBox.Name = "databaseInfoRichTextBox";
-            this.databaseInfoRichTextBox.ReadOnly = true;
-            this.databaseInfoRichTextBox.Size = new System.Drawing.Size(340, 91);
-            this.databaseInfoRichTextBox.TabIndex = 0;
-            this.databaseInfoRichTextBox.Text = "";
-            this.databaseInfoRichTextBox.WordWrap = false;
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.Size = new System.Drawing.Size(346, 414);
+            this.chessBoard.TabIndex = 0;
             // 
             // Application
             // 
@@ -343,10 +343,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.databaseInfoGroupBox.ResumeLayout(false);
-            this.queryGroupBox.ResumeLayout(false);
-            this.queryGroupBox.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.queryGroupBox.ResumeLayout(false);
+            this.queryGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
