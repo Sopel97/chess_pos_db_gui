@@ -18,10 +18,21 @@ namespace chess_pos_db_gui
 
         public DatabaseWrapper(string path, string address, int port, int numTries = 3, int msBetweenTries = 1000)
         {
+            var processName = "chess_pos_db";
+
+            {
+                var collidingProcessses = System.Diagnostics.Process.GetProcessesByName(processName);
+                System.Diagnostics.Debug.WriteLine("Killing " + collidingProcessses.Length + " colliding processes...");
+                foreach(var process in collidingProcessses)
+                {
+                    process.Kill();
+                }
+            }
+
             path = path.Replace("\\", "\\\\"); // we stringify it naively to json so we need to escape manually
 
             process = new Process();
-            process.StartInfo.FileName = "chess_pos_db.exe";
+            process.StartInfo.FileName = processName + ".exe";
             process.StartInfo.Arguments = "tcp " + port;
 
             // TODO: Setting this to true makes the program hang after a few queries
