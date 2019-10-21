@@ -254,8 +254,6 @@ namespace chess_pos_db_gui
 
         private void ChessBoard_Load(object sender, EventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(History.Current().GetFen());
-
             boardImage = DefaultBitmap;
             boardLightSquare = DefaultBitmap;
             boardDarkSquare = DefaultBitmap;
@@ -481,9 +479,9 @@ namespace chess_pos_db_gui
         {
             if (LastFen != fen)
             {
-                onPositionChanged?.Invoke(this, new EventArgs());
                 LastFen = fen;
                 fenTextBox.Text = fen;
+                onPositionChanged?.Invoke(this, new EventArgs());
             }
         }
 

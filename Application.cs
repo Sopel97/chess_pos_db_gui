@@ -282,21 +282,21 @@ namespace chess_pos_db_gui
                 ? chessBoard.GetFen()
                 : chessBoard.GetPrevFen();
 
-            System.Diagnostics.Debug.WriteLine(fen);
+            var sig = fen + san;
             try
             {
-                var cached = queryCache.Get(fen);
+                var cached = queryCache.Get(sig);
                 if (cached == null)
                 {
                     if (san == "--")
                     {
                         data = database.Query(fen);
-                        queryCache.Add(fen, data);
+                        queryCache.Add(sig, data);
                     }
                     else
                     {
                         data = database.Query(fen, san);
-                        queryCache.Add(fen, data);
+                        queryCache.Add(sig, data);
                     }
                 }
                 else
