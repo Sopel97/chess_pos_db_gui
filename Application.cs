@@ -334,7 +334,6 @@ namespace chess_pos_db_gui
                 {
                     if (browser.ShowDialog() == DialogResult.OK)
                     {
-                        //Get the path of specified file
                         var path = browser.SelectedPath;
 
                         database = new DatabaseWrapper(path, "127.0.0.1", 1234);

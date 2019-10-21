@@ -29,35 +29,35 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.databaseFormatLabel = new System.Windows.Forms.Label();
+            this.databaseFormatComboBox = new System.Windows.Forms.ComboBox();
             this.clearTempFolderButton = new System.Windows.Forms.Button();
             this.tempFolderLabel = new System.Windows.Forms.Label();
-            this.destinationPathLabel = new System.Windows.Forms.Label();
-            this.setDestinationPathButton = new System.Windows.Forms.Button();
+            this.destinationFolderLabel = new System.Windows.Forms.Label();
+            this.setDestinationFolderButton = new System.Windows.Forms.Button();
             this.setTempFolderButton = new System.Windows.Forms.Button();
             this.tempFolderTextBox = new System.Windows.Forms.TextBox();
-            this.destinationPathTextBox = new System.Windows.Forms.TextBox();
-            this.databaseFormatComboBox = new System.Windows.Forms.ComboBox();
-            this.databaseFormatLabel = new System.Windows.Forms.Label();
+            this.destinationFolderTextBox = new System.Windows.Forms.TextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.serverTabPage = new System.Windows.Forms.TabPage();
-            this.engineTabPage = new System.Windows.Forms.TabPage();
-            this.humanTabPage = new System.Windows.Forms.TabPage();
             this.pgnPathsTabControl = new System.Windows.Forms.TabControl();
-            this.humanPgnsDataGridView = new System.Windows.Forms.DataGridView();
+            this.humanTabPage = new System.Windows.Forms.TabPage();
             this.addHumanPgnsButton = new System.Windows.Forms.Button();
-            this.addEnginePgnsButton = new System.Windows.Forms.Button();
-            this.addServerPgnsButton = new System.Windows.Forms.Button();
-            this.mergeCheckBox = new System.Windows.Forms.CheckBox();
+            this.humanPgnsDataGridView = new System.Windows.Forms.DataGridView();
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Progress = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.engineTabPage = new System.Windows.Forms.TabPage();
             this.enginePgnsDataGridView = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.addEnginePgnsButton = new System.Windows.Forms.Button();
+            this.serverTabPage = new System.Windows.Forms.TabPage();
             this.serverPgnsDataGridView = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buildButton = new System.Windows.Forms.Button();
+            this.addServerPgnsButton = new System.Windows.Forms.Button();
             this.openCheckBox = new System.Windows.Forms.CheckBox();
+            this.buildButton = new System.Windows.Forms.Button();
+            this.mergeCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -66,12 +66,12 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.serverTabPage.SuspendLayout();
-            this.engineTabPage.SuspendLayout();
-            this.humanTabPage.SuspendLayout();
             this.pgnPathsTabControl.SuspendLayout();
+            this.humanTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.humanPgnsDataGridView)).BeginInit();
+            this.engineTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.enginePgnsDataGridView)).BeginInit();
+            this.serverTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.serverPgnsDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -90,11 +90,11 @@
             this.splitContainer1.Panel1.Controls.Add(this.databaseFormatComboBox);
             this.splitContainer1.Panel1.Controls.Add(this.clearTempFolderButton);
             this.splitContainer1.Panel1.Controls.Add(this.tempFolderLabel);
-            this.splitContainer1.Panel1.Controls.Add(this.destinationPathLabel);
-            this.splitContainer1.Panel1.Controls.Add(this.setDestinationPathButton);
+            this.splitContainer1.Panel1.Controls.Add(this.destinationFolderLabel);
+            this.splitContainer1.Panel1.Controls.Add(this.setDestinationFolderButton);
             this.splitContainer1.Panel1.Controls.Add(this.setTempFolderButton);
             this.splitContainer1.Panel1.Controls.Add(this.tempFolderTextBox);
-            this.splitContainer1.Panel1.Controls.Add(this.destinationPathTextBox);
+            this.splitContainer1.Panel1.Controls.Add(this.destinationFolderTextBox);
             this.splitContainer1.Panel1MinSize = 90;
             // 
             // splitContainer1.Panel2
@@ -104,76 +104,14 @@
             this.splitContainer1.SplitterDistance = 90;
             this.splitContainer1.TabIndex = 0;
             // 
-            // clearTempFolderButton
+            // databaseFormatLabel
             // 
-            this.clearTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.clearTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.clearTempFolderButton.Location = new System.Drawing.Point(586, 38);
-            this.clearTempFolderButton.Name = "clearTempFolderButton";
-            this.clearTempFolderButton.Size = new System.Drawing.Size(26, 19);
-            this.clearTempFolderButton.TabIndex = 8;
-            this.clearTempFolderButton.Text = "X";
-            this.clearTempFolderButton.UseVisualStyleBackColor = true;
-            // 
-            // tempFolderLabel
-            // 
-            this.tempFolderLabel.AutoSize = true;
-            this.tempFolderLabel.Location = new System.Drawing.Point(26, 41);
-            this.tempFolderLabel.Name = "tempFolderLabel";
-            this.tempFolderLabel.Size = new System.Drawing.Size(63, 13);
-            this.tempFolderLabel.TabIndex = 7;
-            this.tempFolderLabel.Text = "Temp folder";
-            // 
-            // destinationPathLabel
-            // 
-            this.destinationPathLabel.AutoSize = true;
-            this.destinationPathLabel.Location = new System.Drawing.Point(5, 15);
-            this.destinationPathLabel.Name = "destinationPathLabel";
-            this.destinationPathLabel.Size = new System.Drawing.Size(84, 13);
-            this.destinationPathLabel.TabIndex = 6;
-            this.destinationPathLabel.Text = "Destination path";
-            // 
-            // setDestinationPathButton
-            // 
-            this.setDestinationPathButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.setDestinationPathButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.setDestinationPathButton.Location = new System.Drawing.Point(541, 12);
-            this.setDestinationPathButton.Name = "setDestinationPathButton";
-            this.setDestinationPathButton.Size = new System.Drawing.Size(39, 19);
-            this.setDestinationPathButton.TabIndex = 5;
-            this.setDestinationPathButton.Text = "...";
-            this.setDestinationPathButton.UseVisualStyleBackColor = true;
-            // 
-            // setTempFolderButton
-            // 
-            this.setTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.setTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.setTempFolderButton.Location = new System.Drawing.Point(541, 38);
-            this.setTempFolderButton.Name = "setTempFolderButton";
-            this.setTempFolderButton.Size = new System.Drawing.Size(39, 19);
-            this.setTempFolderButton.TabIndex = 4;
-            this.setTempFolderButton.Text = "...";
-            this.setTempFolderButton.UseVisualStyleBackColor = true;
-            // 
-            // tempFolderTextBox
-            // 
-            this.tempFolderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tempFolderTextBox.Location = new System.Drawing.Point(95, 38);
-            this.tempFolderTextBox.Name = "tempFolderTextBox";
-            this.tempFolderTextBox.ReadOnly = true;
-            this.tempFolderTextBox.Size = new System.Drawing.Size(440, 20);
-            this.tempFolderTextBox.TabIndex = 2;
-            // 
-            // destinationPathTextBox
-            // 
-            this.destinationPathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.destinationPathTextBox.Location = new System.Drawing.Point(95, 12);
-            this.destinationPathTextBox.Name = "destinationPathTextBox";
-            this.destinationPathTextBox.ReadOnly = true;
-            this.destinationPathTextBox.Size = new System.Drawing.Size(440, 20);
-            this.destinationPathTextBox.TabIndex = 0;
+            this.databaseFormatLabel.AutoSize = true;
+            this.databaseFormatLabel.Location = new System.Drawing.Point(4, 68);
+            this.databaseFormatLabel.Name = "databaseFormatLabel";
+            this.databaseFormatLabel.Size = new System.Drawing.Size(85, 13);
+            this.databaseFormatLabel.TabIndex = 10;
+            this.databaseFormatLabel.Text = "Database format";
             // 
             // databaseFormatComboBox
             // 
@@ -185,14 +123,79 @@
             this.databaseFormatComboBox.Size = new System.Drawing.Size(440, 21);
             this.databaseFormatComboBox.TabIndex = 9;
             // 
-            // databaseFormatLabel
+            // clearTempFolderButton
             // 
-            this.databaseFormatLabel.AutoSize = true;
-            this.databaseFormatLabel.Location = new System.Drawing.Point(4, 68);
-            this.databaseFormatLabel.Name = "databaseFormatLabel";
-            this.databaseFormatLabel.Size = new System.Drawing.Size(85, 13);
-            this.databaseFormatLabel.TabIndex = 10;
-            this.databaseFormatLabel.Text = "Database format";
+            this.clearTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.clearTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.clearTempFolderButton.Location = new System.Drawing.Point(586, 38);
+            this.clearTempFolderButton.Name = "clearTempFolderButton";
+            this.clearTempFolderButton.Size = new System.Drawing.Size(26, 19);
+            this.clearTempFolderButton.TabIndex = 8;
+            this.clearTempFolderButton.Text = "X";
+            this.clearTempFolderButton.UseVisualStyleBackColor = true;
+            this.clearTempFolderButton.Click += new System.EventHandler(this.ClearTempFolderButton_Click);
+            // 
+            // tempFolderLabel
+            // 
+            this.tempFolderLabel.AutoSize = true;
+            this.tempFolderLabel.Location = new System.Drawing.Point(26, 41);
+            this.tempFolderLabel.Name = "tempFolderLabel";
+            this.tempFolderLabel.Size = new System.Drawing.Size(63, 13);
+            this.tempFolderLabel.TabIndex = 7;
+            this.tempFolderLabel.Text = "Temp folder";
+            // 
+            // destinationFolderLabel
+            // 
+            this.destinationFolderLabel.AutoSize = true;
+            this.destinationFolderLabel.Location = new System.Drawing.Point(0, 15);
+            this.destinationFolderLabel.Name = "destinationFolderLabel";
+            this.destinationFolderLabel.Size = new System.Drawing.Size(89, 13);
+            this.destinationFolderLabel.TabIndex = 6;
+            this.destinationFolderLabel.Text = "Destination folder";
+            // 
+            // setDestinationFolderButton
+            // 
+            this.setDestinationFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.setDestinationFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.setDestinationFolderButton.Location = new System.Drawing.Point(541, 12);
+            this.setDestinationFolderButton.Name = "setDestinationFolderButton";
+            this.setDestinationFolderButton.Size = new System.Drawing.Size(39, 19);
+            this.setDestinationFolderButton.TabIndex = 5;
+            this.setDestinationFolderButton.Text = "...";
+            this.setDestinationFolderButton.UseVisualStyleBackColor = true;
+            this.setDestinationFolderButton.Click += new System.EventHandler(this.SetDestinationFolderButton_Click);
+            // 
+            // setTempFolderButton
+            // 
+            this.setTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.setTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.setTempFolderButton.Location = new System.Drawing.Point(541, 38);
+            this.setTempFolderButton.Name = "setTempFolderButton";
+            this.setTempFolderButton.Size = new System.Drawing.Size(39, 19);
+            this.setTempFolderButton.TabIndex = 4;
+            this.setTempFolderButton.Text = "...";
+            this.setTempFolderButton.UseVisualStyleBackColor = true;
+            this.setTempFolderButton.Click += new System.EventHandler(this.SetTempFolderButton_Click);
+            // 
+            // tempFolderTextBox
+            // 
+            this.tempFolderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tempFolderTextBox.Location = new System.Drawing.Point(95, 38);
+            this.tempFolderTextBox.Name = "tempFolderTextBox";
+            this.tempFolderTextBox.ReadOnly = true;
+            this.tempFolderTextBox.Size = new System.Drawing.Size(440, 20);
+            this.tempFolderTextBox.TabIndex = 2;
+            // 
+            // destinationFolderTextBox
+            // 
+            this.destinationFolderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.destinationFolderTextBox.Location = new System.Drawing.Point(95, 12);
+            this.destinationFolderTextBox.Name = "destinationFolderTextBox";
+            this.destinationFolderTextBox.ReadOnly = true;
+            this.destinationFolderTextBox.Size = new System.Drawing.Size(440, 20);
+            this.destinationFolderTextBox.TabIndex = 0;
             // 
             // splitContainer2
             // 
@@ -216,29 +219,17 @@
             this.splitContainer2.SplitterDistance = 406;
             this.splitContainer2.TabIndex = 0;
             // 
-            // serverTabPage
+            // pgnPathsTabControl
             // 
-            this.serverTabPage.Controls.Add(this.serverPgnsDataGridView);
-            this.serverTabPage.Controls.Add(this.addServerPgnsButton);
-            this.serverTabPage.Location = new System.Drawing.Point(4, 22);
-            this.serverTabPage.Name = "serverTabPage";
-            this.serverTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.serverTabPage.Size = new System.Drawing.Size(616, 380);
-            this.serverTabPage.TabIndex = 2;
-            this.serverTabPage.Text = "Server";
-            this.serverTabPage.UseVisualStyleBackColor = true;
-            // 
-            // engineTabPage
-            // 
-            this.engineTabPage.Controls.Add(this.enginePgnsDataGridView);
-            this.engineTabPage.Controls.Add(this.addEnginePgnsButton);
-            this.engineTabPage.Location = new System.Drawing.Point(4, 22);
-            this.engineTabPage.Name = "engineTabPage";
-            this.engineTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.engineTabPage.Size = new System.Drawing.Size(616, 380);
-            this.engineTabPage.TabIndex = 1;
-            this.engineTabPage.Text = "Engine";
-            this.engineTabPage.UseVisualStyleBackColor = true;
+            this.pgnPathsTabControl.Controls.Add(this.humanTabPage);
+            this.pgnPathsTabControl.Controls.Add(this.engineTabPage);
+            this.pgnPathsTabControl.Controls.Add(this.serverTabPage);
+            this.pgnPathsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pgnPathsTabControl.Location = new System.Drawing.Point(0, 0);
+            this.pgnPathsTabControl.Name = "pgnPathsTabControl";
+            this.pgnPathsTabControl.SelectedIndex = 0;
+            this.pgnPathsTabControl.Size = new System.Drawing.Size(624, 406);
+            this.pgnPathsTabControl.TabIndex = 0;
             // 
             // humanTabPage
             // 
@@ -252,17 +243,15 @@
             this.humanTabPage.Text = "Human";
             this.humanTabPage.UseVisualStyleBackColor = true;
             // 
-            // pgnPathsTabControl
+            // addHumanPgnsButton
             // 
-            this.pgnPathsTabControl.Controls.Add(this.humanTabPage);
-            this.pgnPathsTabControl.Controls.Add(this.engineTabPage);
-            this.pgnPathsTabControl.Controls.Add(this.serverTabPage);
-            this.pgnPathsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pgnPathsTabControl.Location = new System.Drawing.Point(0, 0);
-            this.pgnPathsTabControl.Name = "pgnPathsTabControl";
-            this.pgnPathsTabControl.SelectedIndex = 0;
-            this.pgnPathsTabControl.Size = new System.Drawing.Size(624, 406);
-            this.pgnPathsTabControl.TabIndex = 0;
+            this.addHumanPgnsButton.Location = new System.Drawing.Point(6, 6);
+            this.addHumanPgnsButton.Name = "addHumanPgnsButton";
+            this.addHumanPgnsButton.Size = new System.Drawing.Size(110, 26);
+            this.addHumanPgnsButton.TabIndex = 1;
+            this.addHumanPgnsButton.Text = "Add PGN Files";
+            this.addHumanPgnsButton.UseVisualStyleBackColor = true;
+            this.addHumanPgnsButton.Click += new System.EventHandler(this.AddHumanPgnsButton_Click);
             // 
             // humanPgnsDataGridView
             // 
@@ -272,52 +261,16 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.humanPgnsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.humanPgnsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.humanPgnsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.humanPgnsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Path,
             this.Progress});
+            this.humanPgnsDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.humanPgnsDataGridView.Location = new System.Drawing.Point(6, 38);
             this.humanPgnsDataGridView.Name = "humanPgnsDataGridView";
-            this.humanPgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.humanPgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.humanPgnsDataGridView.Size = new System.Drawing.Size(604, 335);
             this.humanPgnsDataGridView.TabIndex = 0;
-            // 
-            // addHumanPgnsButton
-            // 
-            this.addHumanPgnsButton.Location = new System.Drawing.Point(6, 6);
-            this.addHumanPgnsButton.Name = "addHumanPgnsButton";
-            this.addHumanPgnsButton.Size = new System.Drawing.Size(110, 26);
-            this.addHumanPgnsButton.TabIndex = 1;
-            this.addHumanPgnsButton.Text = "Add PGN Files";
-            this.addHumanPgnsButton.UseVisualStyleBackColor = true;
-            // 
-            // addEnginePgnsButton
-            // 
-            this.addEnginePgnsButton.Location = new System.Drawing.Point(6, 6);
-            this.addEnginePgnsButton.Name = "addEnginePgnsButton";
-            this.addEnginePgnsButton.Size = new System.Drawing.Size(110, 26);
-            this.addEnginePgnsButton.TabIndex = 3;
-            this.addEnginePgnsButton.Text = "Add PGN Files";
-            this.addEnginePgnsButton.UseVisualStyleBackColor = true;
-            // 
-            // addServerPgnsButton
-            // 
-            this.addServerPgnsButton.Location = new System.Drawing.Point(6, 6);
-            this.addServerPgnsButton.Name = "addServerPgnsButton";
-            this.addServerPgnsButton.Size = new System.Drawing.Size(110, 26);
-            this.addServerPgnsButton.TabIndex = 3;
-            this.addServerPgnsButton.Text = "Add PGN Files";
-            this.addServerPgnsButton.UseVisualStyleBackColor = true;
-            // 
-            // mergeCheckBox
-            // 
-            this.mergeCheckBox.AutoSize = true;
-            this.mergeCheckBox.Location = new System.Drawing.Point(12, 12);
-            this.mergeCheckBox.Name = "mergeCheckBox";
-            this.mergeCheckBox.Size = new System.Drawing.Size(111, 17);
-            this.mergeCheckBox.TabIndex = 0;
-            this.mergeCheckBox.Text = "Merge after import";
-            this.mergeCheckBox.UseVisualStyleBackColor = true;
             // 
             // Path
             // 
@@ -333,6 +286,18 @@
             this.Progress.Name = "Progress";
             this.Progress.ReadOnly = true;
             // 
+            // engineTabPage
+            // 
+            this.engineTabPage.Controls.Add(this.enginePgnsDataGridView);
+            this.engineTabPage.Controls.Add(this.addEnginePgnsButton);
+            this.engineTabPage.Location = new System.Drawing.Point(4, 22);
+            this.engineTabPage.Name = "engineTabPage";
+            this.engineTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.engineTabPage.Size = new System.Drawing.Size(616, 380);
+            this.engineTabPage.TabIndex = 1;
+            this.engineTabPage.Text = "Engine";
+            this.engineTabPage.UseVisualStyleBackColor = true;
+            // 
             // enginePgnsDataGridView
             // 
             this.enginePgnsDataGridView.AllowUserToAddRows = false;
@@ -341,13 +306,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.enginePgnsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.enginePgnsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.enginePgnsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.enginePgnsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2});
+            this.enginePgnsDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.enginePgnsDataGridView.Location = new System.Drawing.Point(6, 38);
             this.enginePgnsDataGridView.Name = "enginePgnsDataGridView";
-            this.enginePgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.enginePgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.enginePgnsDataGridView.Size = new System.Drawing.Size(604, 335);
             this.enginePgnsDataGridView.TabIndex = 4;
             // 
@@ -365,6 +331,28 @@
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.ReadOnly = true;
             // 
+            // addEnginePgnsButton
+            // 
+            this.addEnginePgnsButton.Location = new System.Drawing.Point(6, 6);
+            this.addEnginePgnsButton.Name = "addEnginePgnsButton";
+            this.addEnginePgnsButton.Size = new System.Drawing.Size(110, 26);
+            this.addEnginePgnsButton.TabIndex = 3;
+            this.addEnginePgnsButton.Text = "Add PGN Files";
+            this.addEnginePgnsButton.UseVisualStyleBackColor = true;
+            this.addEnginePgnsButton.Click += new System.EventHandler(this.AddEnginePgnsButton_Click);
+            // 
+            // serverTabPage
+            // 
+            this.serverTabPage.Controls.Add(this.serverPgnsDataGridView);
+            this.serverTabPage.Controls.Add(this.addServerPgnsButton);
+            this.serverTabPage.Location = new System.Drawing.Point(4, 22);
+            this.serverTabPage.Name = "serverTabPage";
+            this.serverTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.serverTabPage.Size = new System.Drawing.Size(616, 380);
+            this.serverTabPage.TabIndex = 2;
+            this.serverTabPage.Text = "Server";
+            this.serverTabPage.UseVisualStyleBackColor = true;
+            // 
             // serverPgnsDataGridView
             // 
             this.serverPgnsDataGridView.AllowUserToAddRows = false;
@@ -373,13 +361,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.serverPgnsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.serverPgnsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.serverPgnsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.serverPgnsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn3,
             this.dataGridViewTextBoxColumn4});
+            this.serverPgnsDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.serverPgnsDataGridView.Location = new System.Drawing.Point(6, 38);
             this.serverPgnsDataGridView.Name = "serverPgnsDataGridView";
-            this.serverPgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.serverPgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.serverPgnsDataGridView.Size = new System.Drawing.Size(604, 335);
             this.serverPgnsDataGridView.TabIndex = 4;
             // 
@@ -397,15 +386,15 @@
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.ReadOnly = true;
             // 
-            // buildButton
+            // addServerPgnsButton
             // 
-            this.buildButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.buildButton.Location = new System.Drawing.Point(496, 0);
-            this.buildButton.Name = "buildButton";
-            this.buildButton.Size = new System.Drawing.Size(128, 98);
-            this.buildButton.TabIndex = 1;
-            this.buildButton.Text = "Build";
-            this.buildButton.UseVisualStyleBackColor = true;
+            this.addServerPgnsButton.Location = new System.Drawing.Point(6, 6);
+            this.addServerPgnsButton.Name = "addServerPgnsButton";
+            this.addServerPgnsButton.Size = new System.Drawing.Size(110, 26);
+            this.addServerPgnsButton.TabIndex = 3;
+            this.addServerPgnsButton.Text = "Add PGN Files";
+            this.addServerPgnsButton.UseVisualStyleBackColor = true;
+            this.addServerPgnsButton.Click += new System.EventHandler(this.AddServerPgnsButton_Click);
             // 
             // openCheckBox
             // 
@@ -417,6 +406,26 @@
             this.openCheckBox.Text = "Open when finished";
             this.openCheckBox.UseVisualStyleBackColor = true;
             // 
+            // buildButton
+            // 
+            this.buildButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.buildButton.Location = new System.Drawing.Point(496, 0);
+            this.buildButton.Name = "buildButton";
+            this.buildButton.Size = new System.Drawing.Size(128, 98);
+            this.buildButton.TabIndex = 1;
+            this.buildButton.Text = "Build";
+            this.buildButton.UseVisualStyleBackColor = true;
+            // 
+            // mergeCheckBox
+            // 
+            this.mergeCheckBox.AutoSize = true;
+            this.mergeCheckBox.Location = new System.Drawing.Point(12, 12);
+            this.mergeCheckBox.Name = "mergeCheckBox";
+            this.mergeCheckBox.Size = new System.Drawing.Size(111, 17);
+            this.mergeCheckBox.TabIndex = 0;
+            this.mergeCheckBox.Text = "Merge after import";
+            this.mergeCheckBox.UseVisualStyleBackColor = true;
+            // 
             // DatabaseCreationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -426,6 +435,7 @@
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "DatabaseCreationForm";
             this.Text = "DatabaseCreationForm";
+            this.Load += new System.EventHandler(this.DatabaseCreationForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -436,12 +446,12 @@
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.serverTabPage.ResumeLayout(false);
-            this.engineTabPage.ResumeLayout(false);
-            this.humanTabPage.ResumeLayout(false);
             this.pgnPathsTabControl.ResumeLayout(false);
+            this.humanTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.humanPgnsDataGridView)).EndInit();
+            this.engineTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.enginePgnsDataGridView)).EndInit();
+            this.serverTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.serverPgnsDataGridView)).EndInit();
             this.ResumeLayout(false);
 
@@ -452,11 +462,11 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button clearTempFolderButton;
         private System.Windows.Forms.Label tempFolderLabel;
-        private System.Windows.Forms.Label destinationPathLabel;
-        private System.Windows.Forms.Button setDestinationPathButton;
+        private System.Windows.Forms.Label destinationFolderLabel;
+        private System.Windows.Forms.Button setDestinationFolderButton;
         private System.Windows.Forms.Button setTempFolderButton;
         private System.Windows.Forms.TextBox tempFolderTextBox;
-        private System.Windows.Forms.TextBox destinationPathTextBox;
+        private System.Windows.Forms.TextBox destinationFolderTextBox;
         private System.Windows.Forms.Label databaseFormatLabel;
         private System.Windows.Forms.ComboBox databaseFormatComboBox;
         private System.Windows.Forms.SplitContainer splitContainer2;
