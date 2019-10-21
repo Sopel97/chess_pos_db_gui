@@ -86,9 +86,11 @@ namespace chess_pos_db_gui
 
         public void Close()
         {
+            var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"exit\"}");
+            var stream = client.GetStream();
+            stream.Write(bytes, 0, bytes.Length);
+            process.WaitForExit();
             client.Close();
-            process.StandardInput.WriteLine("exit");
-            process.Close();
         }
 
         private string Read(NetworkStream stream)
