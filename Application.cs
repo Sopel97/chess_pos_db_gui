@@ -106,19 +106,8 @@ namespace chess_pos_db_gui
         {
             chessBoard.LoadImages("assets/graphics");
 
-            try
-            {
-                database = new DatabaseWrapper("w:/catobase/.tmp", "127.0.0.1", 1234);
-
-                AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
-                chessBoard.PositionChanged += OnPositionChanged;
-
-                OnPositionChanged(this, new EventArgs());
-            }
-            catch (Exception ee)
-            {
-                System.Diagnostics.Debug.WriteLine(ee.Message);
-            }
+            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
+            chessBoard.PositionChanged += OnPositionChanged;
         }
 
         private void OnPositionChanged(object sender, EventArgs e)
@@ -292,6 +281,8 @@ namespace chess_pos_db_gui
 
         private void UpdateData()
         {
+            if (database == null) return;
+
             var san = chessBoard.GetLastMoveSan();
             var fen = san == "--"
                 ? chessBoard.GetFen()
@@ -324,6 +315,30 @@ namespace chess_pos_db_gui
             {
                 System.Diagnostics.Debug.WriteLine(ee.Message);
             }
+        }
+
+        private void CreateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                database = new DatabaseWrapper("w:/catobase/.tmp", "127.0.0.1", 1234);
+
+                OnPositionChanged(this, new EventArgs());
+            }
+            catch (Exception ee)
+            {
+                System.Diagnostics.Debug.WriteLine(ee.Message);
+            }
+        }
+
+        private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            database.Close();
+            database = null;
         }
     }
 }
