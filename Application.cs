@@ -117,7 +117,7 @@ namespace chess_pos_db_gui
         private string PctToString(double pct)
         {
             if (double.IsNaN(pct) || double.IsPositiveInfinity(pct) || double.IsNegativeInfinity(pct)) return "-";
-            return (pct * 100).ToString("F1") + "%";
+            return (pct * 100).ToString("00.0") + "%";
         }
 
         private void Populate(string move, AggregatedEntry entry, AggregatedEntry humanEntry)

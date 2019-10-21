@@ -37,10 +37,10 @@
             this.typeTranspositionsCheckBox = new System.Windows.Forms.CheckBox();
             this.typeContinuationsCheckBox = new System.Windows.Forms.CheckBox();
             this.splitChessAndData = new System.Windows.Forms.SplitContainer();
-            this.queryGroupBox = new System.Windows.Forms.GroupBox();
-            this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
-            this.queryButton = new System.Windows.Forms.Button();
             this.chessBoard = new chess_pos_db_gui.ChessBoard();
+            this.queryGroupBox = new System.Windows.Forms.GroupBox();
+            this.queryButton = new System.Windows.Forms.Button();
+            this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             this.typeSelectionGroupBox.SuspendLayout();
@@ -65,7 +65,7 @@
             this.entriesGridView.Location = new System.Drawing.Point(3, 53);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
-            this.entriesGridView.Size = new System.Drawing.Size(559, 509);
+            this.entriesGridView.Size = new System.Drawing.Size(560, 505);
             this.entriesGridView.TabIndex = 0;
             // 
             // levelSelectionGroupBox
@@ -74,7 +74,7 @@
             this.levelSelectionGroupBox.Controls.Add(this.levelServerCheckBox);
             this.levelSelectionGroupBox.Controls.Add(this.levelEngineCheckBox);
             this.levelSelectionGroupBox.Controls.Add(this.levelHumanCheckBox);
-            this.levelSelectionGroupBox.Location = new System.Drawing.Point(135, 3);
+            this.levelSelectionGroupBox.Location = new System.Drawing.Point(136, 3);
             this.levelSelectionGroupBox.Name = "levelSelectionGroupBox";
             this.levelSelectionGroupBox.Size = new System.Drawing.Size(206, 44);
             this.levelSelectionGroupBox.TabIndex = 1;
@@ -119,7 +119,7 @@
             this.typeSelectionGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.typeSelectionGroupBox.Controls.Add(this.typeTranspositionsCheckBox);
             this.typeSelectionGroupBox.Controls.Add(this.typeContinuationsCheckBox);
-            this.typeSelectionGroupBox.Location = new System.Drawing.Point(347, 3);
+            this.typeSelectionGroupBox.Location = new System.Drawing.Point(348, 3);
             this.typeSelectionGroupBox.Name = "typeSelectionGroupBox";
             this.typeSelectionGroupBox.Size = new System.Drawing.Size(206, 44);
             this.typeSelectionGroupBox.TabIndex = 4;
@@ -150,6 +150,7 @@
             // 
             // splitChessAndData
             // 
+            this.splitChessAndData.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitChessAndData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitChessAndData.Location = new System.Drawing.Point(0, 0);
             this.splitChessAndData.Name = "splitChessAndData";
@@ -164,10 +165,21 @@
             this.splitChessAndData.Panel2.Controls.Add(this.typeSelectionGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.levelSelectionGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.entriesGridView);
-            this.splitChessAndData.Panel2MinSize = 494;
+            this.splitChessAndData.Panel2MinSize = 570;
             this.splitChessAndData.Size = new System.Drawing.Size(924, 562);
-            this.splitChessAndData.SplitterDistance = 355;
+            this.splitChessAndData.SplitterDistance = 350;
+            this.splitChessAndData.SplitterWidth = 5;
             this.splitChessAndData.TabIndex = 6;
+            // 
+            // chessBoard
+            // 
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.Size = new System.Drawing.Size(346, 558);
+            this.chessBoard.TabIndex = 0;
             // 
             // queryGroupBox
             // 
@@ -180,17 +192,6 @@
             this.queryGroupBox.TabStop = false;
             this.queryGroupBox.Text = "Level";
             // 
-            // autoQueryCheckbox
-            // 
-            this.autoQueryCheckbox.AutoSize = true;
-            this.autoQueryCheckbox.Location = new System.Drawing.Point(72, 19);
-            this.autoQueryCheckbox.Name = "autoQueryCheckbox";
-            this.autoQueryCheckbox.Size = new System.Drawing.Size(48, 17);
-            this.autoQueryCheckbox.TabIndex = 0;
-            this.autoQueryCheckbox.Text = "Auto";
-            this.autoQueryCheckbox.UseVisualStyleBackColor = true;
-            this.autoQueryCheckbox.CheckedChanged += new System.EventHandler(this.AutoQueryCheckbox_CheckedChanged);
-            // 
             // queryButton
             // 
             this.queryButton.Location = new System.Drawing.Point(6, 15);
@@ -201,15 +202,16 @@
             this.queryButton.UseVisualStyleBackColor = true;
             this.queryButton.Click += new System.EventHandler(this.QueryButton_Click);
             // 
-            // chessBoard
+            // autoQueryCheckbox
             // 
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(355, 562);
-            this.chessBoard.TabIndex = 0;
+            this.autoQueryCheckbox.AutoSize = true;
+            this.autoQueryCheckbox.Location = new System.Drawing.Point(72, 19);
+            this.autoQueryCheckbox.Name = "autoQueryCheckbox";
+            this.autoQueryCheckbox.Size = new System.Drawing.Size(48, 17);
+            this.autoQueryCheckbox.TabIndex = 0;
+            this.autoQueryCheckbox.Text = "Auto";
+            this.autoQueryCheckbox.UseVisualStyleBackColor = true;
+            this.autoQueryCheckbox.CheckedChanged += new System.EventHandler(this.AutoQueryCheckbox_CheckedChanged);
             // 
             // Application
             // 
