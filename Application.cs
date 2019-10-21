@@ -23,13 +23,10 @@ namespace chess_pos_db_gui
         private DataTable tabulatedData;
         private DatabaseWrapper database;
         private LRUCache<string, QueryResponse> queryCache;
-        private DatabaseCreationForm dbform;
+        private bool isEntryDataUpToDate = false;
 
         public Application()
         {
-            dbform = new DatabaseCreationForm();
-            dbform.Show();
-
             levels = new HashSet<GameLevel>();
             selects = new HashSet<Select>();
             data = null;
@@ -120,6 +117,11 @@ namespace chess_pos_db_gui
             if (autoQueryCheckbox.Checked)
             {
                 UpdateData();
+                isEntryDataUpToDate = true;
+            }
+            else
+            {
+                isEntryDataUpToDate = false;
             }
         }
 
@@ -324,6 +326,10 @@ namespace chess_pos_db_gui
 
         private void CreateToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            using (var form = new DatabaseCreationForm())
+            {
+                form.ShowDialog();
+            }
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -352,6 +358,21 @@ namespace chess_pos_db_gui
         {
             database.Close();
             database = null;
+        }
+
+        private void EntriesGridView_DoubleClick(object sender, EventArgs e)
+        {
+            if (isEntryDataUpToDate && entriesGridView.SelectedCells.Count > 0)
+            {
+                var cell = entriesGridView.SelectedCells[0];
+                if (cell.ColumnIndex == 0)
+                {
+                    var san = cell.Value.ToString();
+                    System.Diagnostics.Debug.WriteLine(san);
+                    if (san != "--")
+                        chessBoard.DoMove(san);
+                }
+            }
         }
     }
 }
