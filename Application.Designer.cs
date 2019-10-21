@@ -37,10 +37,18 @@
             this.typeTranspositionsCheckBox = new System.Windows.Forms.CheckBox();
             this.typeContinuationsCheckBox = new System.Windows.Forms.CheckBox();
             this.splitChessAndData = new System.Windows.Forms.SplitContainer();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.databaseInfoGroupBox = new System.Windows.Forms.GroupBox();
             this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.queryGroupBox = new System.Windows.Forms.GroupBox();
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.databaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.databaseInfoRichTextBox = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             this.typeSelectionGroupBox.SuspendLayout();
@@ -48,7 +56,13 @@
             this.splitChessAndData.Panel1.SuspendLayout();
             this.splitChessAndData.Panel2.SuspendLayout();
             this.splitChessAndData.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            this.databaseInfoGroupBox.SuspendLayout();
             this.queryGroupBox.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -60,11 +74,12 @@
             this.entriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.entriesGridView.Location = new System.Drawing.Point(3, 53);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
+            this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.entriesGridView.Size = new System.Drawing.Size(560, 505);
             this.entriesGridView.TabIndex = 0;
             // 
@@ -157,7 +172,8 @@
             // 
             // splitChessAndData.Panel1
             // 
-            this.splitChessAndData.Panel1.Controls.Add(this.chessBoard);
+            this.splitChessAndData.Panel1.Controls.Add(this.splitContainer1);
+            this.splitChessAndData.Panel1MinSize = 200;
             // 
             // splitChessAndData.Panel2
             // 
@@ -171,6 +187,38 @@
             this.splitChessAndData.SplitterWidth = 5;
             this.splitChessAndData.TabIndex = 6;
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.IsSplitterFixed = true;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.databaseInfoGroupBox);
+            this.splitContainer1.Panel1.Controls.Add(this.menuStrip1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.chessBoard);
+            this.splitContainer1.Size = new System.Drawing.Size(346, 558);
+            this.splitContainer1.SplitterDistance = 140;
+            this.splitContainer1.TabIndex = 1;
+            // 
+            // databaseInfoGroupBox
+            // 
+            this.databaseInfoGroupBox.Controls.Add(this.databaseInfoRichTextBox);
+            this.databaseInfoGroupBox.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.databaseInfoGroupBox.Location = new System.Drawing.Point(0, 30);
+            this.databaseInfoGroupBox.Name = "databaseInfoGroupBox";
+            this.databaseInfoGroupBox.Size = new System.Drawing.Size(346, 110);
+            this.databaseInfoGroupBox.TabIndex = 0;
+            this.databaseInfoGroupBox.TabStop = false;
+            this.databaseInfoGroupBox.Text = "Database";
+            // 
             // chessBoard
             // 
             this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -178,7 +226,7 @@
             this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
             this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
             this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(346, 558);
+            this.chessBoard.Size = new System.Drawing.Size(346, 414);
             this.chessBoard.TabIndex = 0;
             // 
             // queryGroupBox
@@ -190,7 +238,7 @@
             this.queryGroupBox.Size = new System.Drawing.Size(126, 44);
             this.queryGroupBox.TabIndex = 3;
             this.queryGroupBox.TabStop = false;
-            this.queryGroupBox.Text = "Level";
+            this.queryGroupBox.Text = "Query";
             // 
             // queryButton
             // 
@@ -213,12 +261,66 @@
             this.autoQueryCheckbox.UseVisualStyleBackColor = true;
             this.autoQueryCheckbox.CheckedChanged += new System.EventHandler(this.AutoQueryCheckbox_CheckedChanged);
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.databaseToolStripMenuItem});
+            this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.menuStrip1.Size = new System.Drawing.Size(346, 24);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "Menu";
+            // 
+            // databaseToolStripMenuItem
+            // 
+            this.databaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.createToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.closeToolStripMenuItem});
+            this.databaseToolStripMenuItem.Name = "databaseToolStripMenuItem";
+            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.databaseToolStripMenuItem.Text = "Database";
+            // 
+            // createToolStripMenuItem
+            // 
+            this.createToolStripMenuItem.Name = "createToolStripMenuItem";
+            this.createToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createToolStripMenuItem.Text = "Create";
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            // 
+            // closeToolStripMenuItem
+            // 
+            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeToolStripMenuItem.Text = "Close";
+            // 
+            // databaseInfoRichTextBox
+            // 
+            this.databaseInfoRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.databaseInfoRichTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.databaseInfoRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.databaseInfoRichTextBox.Location = new System.Drawing.Point(3, 16);
+            this.databaseInfoRichTextBox.Name = "databaseInfoRichTextBox";
+            this.databaseInfoRichTextBox.ReadOnly = true;
+            this.databaseInfoRichTextBox.Size = new System.Drawing.Size(340, 91);
+            this.databaseInfoRichTextBox.TabIndex = 0;
+            this.databaseInfoRichTextBox.Text = "";
+            this.databaseInfoRichTextBox.WordWrap = false;
+            // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(924, 562);
             this.Controls.Add(this.splitChessAndData);
+            this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(940, 256);
             this.Name = "Application";
             this.Text = "Form1";
@@ -232,8 +334,16 @@
             this.splitChessAndData.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).EndInit();
             this.splitChessAndData.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.databaseInfoGroupBox.ResumeLayout(false);
             this.queryGroupBox.ResumeLayout(false);
             this.queryGroupBox.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -253,6 +363,14 @@
         private System.Windows.Forms.GroupBox queryGroupBox;
         private System.Windows.Forms.Button queryButton;
         private System.Windows.Forms.CheckBox autoQueryCheckbox;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.GroupBox databaseInfoGroupBox;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem databaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+        private System.Windows.Forms.RichTextBox databaseInfoRichTextBox;
     }
 }
 

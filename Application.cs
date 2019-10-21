@@ -60,9 +60,24 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("GameId", typeof(uint)));
 
             MakeDoubleBuffered(entriesGridView);
-            entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            entriesGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.EnableResizing;
             entriesGridView.DataSource = tabulatedData;
+
+            entriesGridView.Columns["Move"].Width = 60;
+            entriesGridView.Columns["Count"].Width = 100;
+            entriesGridView.Columns["WinCount"].Width = 100;
+            entriesGridView.Columns["DrawCount"].Width = 100;
+            entriesGridView.Columns["LossCount"].Width = 100;
+            entriesGridView.Columns["Perf"].Width = 45;
+            entriesGridView.Columns["DrawPct"].Width = 45;
+            entriesGridView.Columns["HumanPct"].Width = 45;
+            entriesGridView.Columns["Date"].Width = 70;
+            entriesGridView.Columns["White"].Width = 100;
+            entriesGridView.Columns["Black"].Width = 100;
+            entriesGridView.Columns["Result"].Width = 25;
+            entriesGridView.Columns["Eco"].Width = 32;
+            entriesGridView.Columns["PlyCount"].Width = 32;
+            entriesGridView.Columns["Event"].Width = 100;
+            entriesGridView.Columns["GameId"].Width = 80;
 
             foreach (DataColumn column in tabulatedData.Columns)
             {
