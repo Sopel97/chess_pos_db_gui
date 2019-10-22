@@ -77,7 +77,7 @@ namespace chess_pos_db_gui
 
             MakeDoubleBuffered(chessBoardPanel);
 
-            Reset("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            LastFen = "";
         }
 
         public string GetFen()
@@ -97,8 +97,8 @@ namespace chess_pos_db_gui
 
         private void Reset(string fen)
         {
+            UpdateFenTextBox(fen);
             LastFen = fen;
-            UpdateFenTextBox(LastFen);
             History.Reset(fen);
             MoveHistory.Clear();
             Plies = 0;
@@ -273,6 +273,8 @@ namespace chess_pos_db_gui
             blackKing = DefaultBitmap;
 
             UpdatePieceImagesDictionary();
+
+            Reset("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         }
 
         private void ChessBoard_SizeChanged(object sender, EventArgs e)
