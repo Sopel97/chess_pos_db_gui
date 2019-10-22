@@ -18,9 +18,12 @@ namespace chess_pos_db_gui
 
         public bool IsOpen { get; private set; }
 
+        public string Path { get; private set; }
+
         public DatabaseWrapper(string address, int port, int numTries = 3, int msBetweenTries = 1000)
         {
             IsOpen = false;
+            Path = "";
 
             var processName = "chess_pos_db";
 
@@ -74,10 +77,16 @@ namespace chess_pos_db_gui
             }
         }
 
+        public DatabaseInfo GetInfo()
+        {
+            return new DatabaseInfo(Path, IsOpen);
+        }
+
         public void Open(string path)
         {
             if (IsOpen) Close();
 
+            Path = path;
             path = path.Replace("\\", "\\\\"); // we stringify it naively to json so we need to escape manually
 
             var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"open\", \"database_path\":\"" + path + "\"}");
@@ -124,6 +133,7 @@ namespace chess_pos_db_gui
         public void Close()
         {
             if (!IsOpen) return;
+            Path = "";
 
             var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"close\"}");
             try
@@ -187,6 +197,18 @@ namespace chess_pos_db_gui
             {
                 throw new InvalidDataException(responseJson["error"].ToString());
             }
+        }
+    }
+
+    public class DatabaseInfo
+    {
+        public bool IsOpen { get; private set; }
+        public string Path { get; private set; }
+
+        public DatabaseInfo(string path, bool isOpen)
+        {
+            Path = path;
+            IsOpen = isOpen;
         }
     }
 }

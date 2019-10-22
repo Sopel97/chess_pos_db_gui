@@ -112,6 +112,8 @@ namespace chess_pos_db_gui
 
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
             chessBoard.PositionChanged += OnPositionChanged;
+
+            UpdateDatabaseInfo();
         }
 
         private void OnPositionChanged(object sender, EventArgs e)
@@ -331,6 +333,8 @@ namespace chess_pos_db_gui
             using (var form = new DatabaseCreationForm(database))
             {
                 form.ShowDialog();
+                UpdateDatabaseInfo();
+                OnPositionChanged(this, new EventArgs());
             }
         }
 
@@ -339,7 +343,24 @@ namespace chess_pos_db_gui
             database.Close();
             database.Open(path);
             queryCache.Clear();
+            UpdateDatabaseInfo();
+
             OnPositionChanged(this, new EventArgs());
+        }
+
+        private void UpdateDatabaseInfo()
+        {
+            var info = database.GetInfo();
+
+            if (info.IsOpen)
+            {
+                databaseInfoRichTextBox.Text =
+                    "Path: " + info.Path + Environment.NewLine;
+            }
+            else
+            {
+                databaseInfoRichTextBox.Text = "No database open.";
+            }
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
