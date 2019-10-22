@@ -19,6 +19,10 @@ namespace chess_pos_db_gui
 
         public string DatabasePath { get { return destinationFolderTextBox.Text; } }
 
+        public ulong NumGames { get; private set; }
+        public ulong NumPosition { get; private set; }
+        public ulong NumSkippedGames { get; private set; }
+
         private readonly DatabaseProxy database;
 
         public DatabaseCreationForm(DatabaseProxy db)
@@ -26,6 +30,7 @@ namespace chess_pos_db_gui
             InitializeComponent();
 
             database = db;
+            mergeProgressBar.Maximum = 100;
         }
 
         private void SetTempFolderButton_Click(object sender, EventArgs e)
@@ -75,7 +80,7 @@ namespace chess_pos_db_gui
 
         private void AddPaths(DataGridView dgv, string[] paths)
         {
-            foreach(string path in paths)
+            foreach (string path in paths)
             {
                 AddPath(dgv, path);
             }
@@ -116,7 +121,7 @@ namespace chess_pos_db_gui
         {
             var list = new List<JsonValue>();
 
-            foreach(DataGridViewRow row in dgv.Rows)
+            foreach (DataGridViewRow row in dgv.Rows)
             {
                 list.Add(row.Cells[0].Value.ToString());
             }
@@ -139,6 +144,59 @@ namespace chess_pos_db_gui
             return GetPgns(serverPgnsDataGridView);
         }
 
+        private DataGridViewRow FindRowWithPgnFile(string path)
+        {
+            DataGridView[] dgvs = new DataGridView[] {
+                humanPgnsDataGridView,
+                enginePgnsDataGridView,
+                serverPgnsDataGridView
+            };
+
+            foreach (var dgv in dgvs)
+            {
+                foreach (DataGridViewRow row in dgv.Rows)
+                {
+                    if ((string)row.Cells[0].Value == path)
+                    {
+                        return row;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private void SetFileProgress(string path, float progress)
+        {
+            var row = FindRowWithPgnFile(path);
+            if (row != null)
+            {
+                row.Cells[1].Value = ((int)(progress * 100)).ToString() + "%";
+                row.Selected = true;
+            }
+        }
+
+        private void ProgressCallback(JsonValue progressReport)
+        {
+            if (progressReport["operation"] == "import")
+            {
+                if (progressReport.ContainsKey("imported_file_path"))
+                {
+                    SetFileProgress(progressReport["imported_file_path"], 1.0f);
+                }
+            }
+            else if (progressReport["operation"] == "merge")
+            {
+                mergeProgressBar.Value = (int)(progressReport["overall_progress"] * 100.0);
+            }
+            else
+            {
+                return;
+            }
+
+            Refresh();
+        }
+
         private void BuildDatabase()
         {
             JsonObject request = new JsonObject
@@ -159,7 +217,7 @@ namespace chess_pos_db_gui
 
             try
             {
-                database.Create(request);
+                database.Create(request, ProgressCallback);
                 finishedWithErrors = false;
                 MessageBox.Show("Finished");
             }

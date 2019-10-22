@@ -197,7 +197,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        public void Create(JsonValue json)
+        public void Create(JsonValue json, Action<JsonValue> callback)
         {
             var stream = client.GetStream();
 
@@ -206,20 +206,18 @@ namespace chess_pos_db_gui
 
             while (true)
             {
-                var responseJson = JsonValue.Parse(Read(stream));
+                var response = Read(stream);
+                var responseJson = JsonValue.Parse(response);
                 if (responseJson.ContainsKey("error"))
                 {
                     throw new InvalidDataException(responseJson["error"].ToString());
                 }
                 else if (responseJson.ContainsKey("operation"))
                 {
-                    if (responseJson["operation"] == "import")
+                    if (responseJson["operation"] == "import"
+                        || responseJson["operation"] == "merge")
                     {
-                        System.Diagnostics.Debug.WriteLine(responseJson["imported_file_path"]);
-                    }
-                    else if (responseJson["operation"] == "merge")
-                    {
-                        System.Diagnostics.Debug.WriteLine(responseJson["overall_progress"]);
+                        callback.Invoke(responseJson);
                     }
                     else if (responseJson["operation"] == "create")
                     {
