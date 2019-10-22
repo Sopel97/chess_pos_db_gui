@@ -22,6 +22,7 @@ namespace chess_pos_db_gui
         public ulong NumGames { get; private set; }
         public ulong NumPositions { get; private set; }
         public ulong NumSkippedGames { get; private set; }
+        public bool KeepFormAlive { get; private set; }
 
         private readonly DatabaseProxy database;
 
@@ -255,6 +256,8 @@ namespace chess_pos_db_gui
                 database.Open(DatabasePath);
             }
 
+            KeepFormAlive = false;
+
             if (InvokeRequired)
             {
                 Invoke(new Action(Close));
@@ -280,6 +283,8 @@ namespace chess_pos_db_gui
             addHumanPgnsButton.Enabled = false;
             addEnginePgnsButton.Enabled = false;
             addServerPgnsButton.Enabled = false;
+
+            KeepFormAlive = true;
         }
 
         private async void BuildButton_Click(object sender, EventArgs e)
@@ -303,6 +308,14 @@ namespace chess_pos_db_gui
             }
 
             await Task.Run(() => BuildDatabase(request));
+        }
+
+        private void DatabaseCreationForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (KeepFormAlive)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

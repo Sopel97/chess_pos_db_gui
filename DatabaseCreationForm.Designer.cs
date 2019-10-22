@@ -55,10 +55,10 @@
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.addServerPgnsButton = new System.Windows.Forms.Button();
+            this.mergeProgressBar = new System.Windows.Forms.ProgressBar();
             this.openCheckBox = new System.Windows.Forms.CheckBox();
             this.buildButton = new System.Windows.Forms.Button();
             this.mergeCheckBox = new System.Windows.Forms.CheckBox();
-            this.mergeProgressBar = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -398,6 +398,15 @@
             this.addServerPgnsButton.UseVisualStyleBackColor = true;
             this.addServerPgnsButton.Click += new System.EventHandler(this.AddServerPgnsButton_Click);
             // 
+            // mergeProgressBar
+            // 
+            this.mergeProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mergeProgressBar.Location = new System.Drawing.Point(129, 12);
+            this.mergeProgressBar.Name = "mergeProgressBar";
+            this.mergeProgressBar.Size = new System.Drawing.Size(361, 17);
+            this.mergeProgressBar.TabIndex = 3;
+            // 
             // openCheckBox
             // 
             this.openCheckBox.AutoSize = true;
@@ -433,15 +442,6 @@
             this.mergeCheckBox.Text = "Merge after import";
             this.mergeCheckBox.UseVisualStyleBackColor = true;
             // 
-            // mergeProgressBar
-            // 
-            this.mergeProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mergeProgressBar.Location = new System.Drawing.Point(129, 12);
-            this.mergeProgressBar.Name = "mergeProgressBar";
-            this.mergeProgressBar.Size = new System.Drawing.Size(361, 17);
-            this.mergeProgressBar.TabIndex = 3;
-            // 
             // DatabaseCreationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -451,6 +451,7 @@
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "DatabaseCreationForm";
             this.Text = "DatabaseCreationForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DatabaseCreationForm_FormClosing);
             this.Load += new System.EventHandler(this.DatabaseCreationForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
