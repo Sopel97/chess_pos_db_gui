@@ -171,8 +171,27 @@ namespace chess_pos_db_gui
             var row = FindRowWithPgnFile(path);
             if (row != null)
             {
-                row.Cells[1].Value = ((int)(progress * 100)).ToString() + "%";
-                row.Selected = true;
+                if (InvokeRequired)
+                {
+                    Invoke(new Action<string, float>(SetFileProgress), path, progress);
+                }
+                else
+                {
+                    row.Cells[1].Value = ((int)(progress * 100)).ToString() + "%";
+                    row.Selected = true;
+                }
+            }
+        }
+
+        private void SetMergeProgress(int progress)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<int>(SetMergeProgress), progress);
+            }
+            else
+            {
+                mergeProgressBar.Value = progress;
             }
         }
 
@@ -194,34 +213,25 @@ namespace chess_pos_db_gui
             }
             else if (progressReport["operation"] == "merge")
             {
-                mergeProgressBar.Value = (int)(progressReport["overall_progress"] * 100.0);
+                SetMergeProgress((int)(progressReport["overall_progress"] * 100.0));
             }
             else
             {
                 return;
             }
 
-            Refresh();
+            if (InvokeRequired)
+            {
+                Invoke(new Action(Refresh));
+            }
+            else
+            {
+                Refresh();
+            }
         }
 
-        private void BuildDatabase()
+        private void BuildDatabase(JsonObject request)
         {
-            JsonObject request = new JsonObject
-            {
-                { "command", "create" },
-                { "destination_path", destinationFolderTextBox.Text },
-                { "merge", mergeCheckBox.Checked },
-                { "report_progress", true },
-                { "database_format", databaseFormatComboBox.Text },
-                { "human_pgns", new JsonArray(GetHumanPgns()) },
-                { "engine_pgns", new JsonArray(GetEnginePgns()) },
-                { "server_pgns", new JsonArray(GetServerPgns()) }
-            };
-            if (tempFolderTextBox.Text != "")
-            {
-                request.Add("temporary_path", tempFolderTextBox.Text);
-            }
-
             try
             {
                 database.Create(request, ProgressCallback);
@@ -240,16 +250,59 @@ namespace chess_pos_db_gui
                 MessageBox.Show("Finished with errors");
             }
 
-            Close();
-        }
-
-        private void BuildButton_Click(object sender, EventArgs e)
-        {
-            BuildDatabase();
             if (OpenAfterFinished)
             {
                 database.Open(DatabasePath);
             }
+
+            if (InvokeRequired)
+            {
+                Invoke(new Action(Close));
+            }
+            else
+            {
+                Close();
+            }
+        }
+
+        private void DisableInput()
+        {
+            setDestinationFolderButton.Enabled = false;
+            setTempFolderButton.Enabled = false;
+            clearTempFolderButton.Enabled = false;
+            buildButton.Enabled = false;
+            mergeCheckBox.Enabled = false;
+            openCheckBox.Enabled = false;
+            databaseFormatComboBox.Enabled = false;
+            humanPgnsDataGridView.Enabled = false;
+            enginePgnsDataGridView.Enabled = false;
+            serverPgnsDataGridView.Enabled = false;
+            addHumanPgnsButton.Enabled = false;
+            addEnginePgnsButton.Enabled = false;
+            addServerPgnsButton.Enabled = false;
+        }
+
+        private async void BuildButton_Click(object sender, EventArgs e)
+        {
+            DisableInput();
+
+            JsonObject request = new JsonObject
+            {
+                { "command", "create" },
+                { "destination_path", destinationFolderTextBox.Text },
+                { "merge", mergeCheckBox.Checked },
+                { "report_progress", true },
+                { "database_format", databaseFormatComboBox.Text },
+                { "human_pgns", new JsonArray(GetHumanPgns()) },
+                { "engine_pgns", new JsonArray(GetEnginePgns()) },
+                { "server_pgns", new JsonArray(GetServerPgns()) }
+            };
+            if (tempFolderTextBox.Text != "")
+            {
+                request.Add("temporary_path", tempFolderTextBox.Text);
+            }
+
+            await Task.Run(() => BuildDatabase(request));
         }
     }
 }
