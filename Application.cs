@@ -21,7 +21,7 @@ namespace chess_pos_db_gui
         private HashSet<Select> selects;
         private QueryResponse data;
         private DataTable tabulatedData;
-        private DatabaseWrapper database;
+        private DatabaseProxy database;
         private LRUCache<string, QueryResponse> queryCache;
         private bool isEntryDataUpToDate = false;
 
@@ -108,7 +108,7 @@ namespace chess_pos_db_gui
         {
             chessBoard.LoadImages("assets/graphics");
 
-            database = new DatabaseWrapper("127.0.0.1", 1234);
+            database = new DatabaseProxy("127.0.0.1", 1234);
 
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
             chessBoard.PositionChanged += OnPositionChanged;
@@ -118,6 +118,8 @@ namespace chess_pos_db_gui
 
         private void OnPositionChanged(object sender, EventArgs e)
         {
+            if (!database.IsOpen) return;
+
             if (autoQueryCheckbox.Checked)
             {
                 UpdateData();
@@ -386,6 +388,8 @@ namespace chess_pos_db_gui
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             database.Close();
+            queryCache.Clear();
+            UpdateDatabaseInfo();
         }
 
         private void EntriesGridView_DoubleClick(object sender, EventArgs e)

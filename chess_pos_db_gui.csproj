@@ -72,7 +72,7 @@
     <Compile Include="DatabaseCreationForm.Designer.cs">
       <DependentUpon>DatabaseCreationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseWrapper.cs" />
+    <Compile Include="DatabaseProxy.cs" />
     <Compile Include="Date.cs" />
     <Compile Include="Eco.cs" />
     <Compile Include="Entry.cs" />

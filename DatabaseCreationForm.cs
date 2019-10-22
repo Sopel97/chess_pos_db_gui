@@ -19,9 +19,9 @@ namespace chess_pos_db_gui
 
         public string DatabasePath { get { return destinationFolderTextBox.Text; } }
 
-        private readonly DatabaseWrapper database;
+        private readonly DatabaseProxy database;
 
-        public DatabaseCreationForm(DatabaseWrapper db)
+        public DatabaseCreationForm(DatabaseProxy db)
         {
             InitializeComponent();
 

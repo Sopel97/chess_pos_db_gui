@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    public class DatabaseWrapper
+    public class DatabaseProxy
     {
         private TcpClient client { get; set; }
         private Process process { get; set; }
@@ -20,7 +20,7 @@ namespace chess_pos_db_gui
 
         public string Path { get; private set; }
 
-        public DatabaseWrapper(string address, int port, int numTries = 3, int msBetweenTries = 1000)
+        public DatabaseProxy(string address, int port, int numTries = 3, int msBetweenTries = 1000)
         {
             IsOpen = false;
             Path = "";
@@ -89,14 +89,22 @@ namespace chess_pos_db_gui
             Path = path;
             path = path.Replace("\\", "\\\\"); // we stringify it naively to json so we need to escape manually
 
-            var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"open\", \"database_path\":\"" + path + "\"}");
+            var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"open\",\"database_path\":\"" + path + "\"}");
             var stream = client.GetStream();
             stream.Write(bytes, 0, bytes.Length);
 
-            var response = Read(stream);
-            if (JsonValue.Parse(response).ContainsKey("error"))
+            while (true)
             {
-                throw new InvalidDataException("Cannot open database.");
+                var response = Read(stream);
+                var json = JsonValue.Parse(response);
+                if (json.ContainsKey("error"))
+                {
+                    throw new InvalidDataException("Cannot open database.");
+                }
+                else if (json.ContainsKey("finished"))
+                {
+                    if (json["finished"] == true) break;
+                }
             }
 
             IsOpen = true;
@@ -134,19 +142,23 @@ namespace chess_pos_db_gui
         {
             if (!IsOpen) return;
             Path = "";
+            IsOpen = false;
 
             var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"close\"}");
             try
             {
                 var stream = client.GetStream();
                 stream.Write(bytes, 0, bytes.Length);
-                process.WaitForExit();
+
+                var responseJson = JsonValue.Parse(Read(stream));
+                if (responseJson.ContainsKey("error"))
+                {
+                    throw new InvalidDataException(responseJson["error"].ToString());
+                }
             }
             catch
             {
             }
-
-            IsOpen = false;
         }
 
         public void Dispose()
@@ -192,10 +204,31 @@ namespace chess_pos_db_gui
             var bytes = System.Text.Encoding.UTF8.GetBytes(json.ToString());
             stream.Write(bytes, 0, bytes.Length);
 
-            var responseJson = JsonValue.Parse(Read(stream));
-            if (responseJson.ContainsKey("error"))
+            while (true)
             {
-                throw new InvalidDataException(responseJson["error"].ToString());
+                var responseJson = JsonValue.Parse(Read(stream));
+                if (responseJson.ContainsKey("error"))
+                {
+                    throw new InvalidDataException(responseJson["error"].ToString());
+                }
+                else if (responseJson.ContainsKey("operation"))
+                {
+                    if (responseJson["operation"] == "import")
+                    {
+                        System.Diagnostics.Debug.WriteLine(responseJson["imported_file_path"]);
+                    }
+                    else if (responseJson["operation"] == "merge")
+                    {
+                        System.Diagnostics.Debug.WriteLine(responseJson["overall_progress"]);
+                    }
+                    else if (responseJson["operation"] == "create")
+                    {
+                        if (responseJson["finished"] == true)
+                        {
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
