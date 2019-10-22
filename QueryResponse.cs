@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    class QueryResponse
+    public class QueryResponse
     {
         public List<ResultForRoot> Results { get; set; }
 

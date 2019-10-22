@@ -101,12 +101,14 @@ namespace chess_pos_db_gui
 
         private void OnProcessExit(object sender, EventArgs e)
         {
-            database?.Close();
+            database?.Dispose();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             chessBoard.LoadImages("assets/graphics");
+
+            database = new DatabaseWrapper("127.0.0.1", 1234);
 
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
             chessBoard.PositionChanged += OnPositionChanged;
@@ -326,10 +328,18 @@ namespace chess_pos_db_gui
 
         private void CreateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new DatabaseCreationForm())
+            using (var form = new DatabaseCreationForm(database))
             {
                 form.ShowDialog();
             }
+        }
+
+        private void Open(string path)
+        {
+            database.Close();
+            database.Open(path);
+            queryCache.Clear();
+            OnPositionChanged(this, new EventArgs());
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -342,9 +352,7 @@ namespace chess_pos_db_gui
                     {
                         var path = browser.SelectedPath;
 
-                        database = new DatabaseWrapper(path, "127.0.0.1", 1234);
-
-                        OnPositionChanged(this, new EventArgs());
+                        Open(path);
                     }
                 }
             }
@@ -357,7 +365,6 @@ namespace chess_pos_db_gui
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             database.Close();
-            database = null;
         }
 
         private void EntriesGridView_DoubleClick(object sender, EventArgs e)

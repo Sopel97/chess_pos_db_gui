@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    enum Select { Continuations, Transpositions, All };
+    public enum Select { Continuations, Transpositions, All };
 
-    static class SelectHelper
+    public static class SelectHelper
     {
         public static Select[] Values = { Select.Continuations, Select.Transpositions, Select.All };
 

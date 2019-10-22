@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    class Entry
+    public class Entry
     {
         public ulong Count { get; set; }
         public Optional<GameHeader> FirstGame { get; set; }

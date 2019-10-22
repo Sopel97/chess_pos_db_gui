@@ -17,6 +17,12 @@ namespace chess_pos_db_gui
             this.capacity = capacity;
         }
 
+        public void Clear()
+        {
+            cacheMap.Clear();
+            lruList.Clear();
+        }
+
         public V Get(K key)
         {
             LinkedListNode<LRUCacheItem<K, V>> node;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    class SegregatedEntries
+    public class SegregatedEntries
     {
         private Dictionary<Origin, Entry> entries;
 

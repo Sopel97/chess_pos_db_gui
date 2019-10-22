@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    struct Date
+    public struct Date
     {
         public Optional<ushort> Year { get; set; }
         public Optional<byte> Month { get; set; }

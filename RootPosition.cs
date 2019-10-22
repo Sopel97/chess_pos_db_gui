@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    class RootPosition
+    public class RootPosition
     {
         public string Fen { get; set; }
         public Optional<string> Move { get; set; }

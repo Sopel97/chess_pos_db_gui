@@ -3,7 +3,7 @@ using System.Json;
 
 namespace chess_pos_db_gui
 {
-    struct Eco
+    public struct Eco
     {
         public char Category { get; set; }
         public byte Index { get; set; }

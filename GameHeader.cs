@@ -7,7 +7,7 @@ using System.Json;
 
 namespace chess_pos_db_gui
 {
-    class GameHeader
+    public class GameHeader
     {
         public uint GameId { get; set; }
         public GameResult Result { get; set; }

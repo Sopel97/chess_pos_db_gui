@@ -11,13 +11,17 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    class DatabaseWrapper
+    public class DatabaseWrapper
     {
         private TcpClient client { get; set; }
         private Process process { get; set; }
 
-        public DatabaseWrapper(string path, string address, int port, int numTries = 3, int msBetweenTries = 1000)
+        public bool IsOpen { get; private set; }
+
+        public DatabaseWrapper(string address, int port, int numTries = 3, int msBetweenTries = 1000)
         {
+            IsOpen = false;
+
             var processName = "chess_pos_db";
 
             {
@@ -28,8 +32,6 @@ namespace chess_pos_db_gui
                     process.Kill();
                 }
             }
-
-            path = path.Replace("\\", "\\\\"); // we stringify it naively to json so we need to escape manually
 
             process = new Process();
             process.StartInfo.FileName = processName + ".exe";
@@ -49,16 +51,6 @@ namespace chess_pos_db_gui
                 try
                 {
                     client = new TcpClient(address, port);
-
-                    var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"open\", \"database_path\":\"" + path + "\"}");
-                    var stream = client.GetStream();
-                    stream.Write(bytes, 0, bytes.Length);
-
-                    var response = Read(stream);
-                    if (JsonValue.Parse(response).ContainsKey("error"))
-                    {
-                        throw new InvalidDataException("Cannot open database.");
-                    }
 
                     break;
                 }
@@ -80,6 +72,25 @@ namespace chess_pos_db_gui
                     throw;
                 }
             }
+        }
+
+        public void Open(string path)
+        {
+            if (IsOpen) Close();
+
+            path = path.Replace("\\", "\\\\"); // we stringify it naively to json so we need to escape manually
+
+            var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"open\", \"database_path\":\"" + path + "\"}");
+            var stream = client.GetStream();
+            stream.Write(bytes, 0, bytes.Length);
+
+            var response = Read(stream);
+            if (JsonValue.Parse(response).ContainsKey("error"))
+            {
+                throw new InvalidDataException("Cannot open database.");
+            }
+
+            IsOpen = true;
         }
 
         private QueryResponse ExecuteQuery(string query)
@@ -112,6 +123,24 @@ namespace chess_pos_db_gui
 
         public void Close()
         {
+            if (!IsOpen) return;
+
+            var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"close\"}");
+            try
+            {
+                var stream = client.GetStream();
+                stream.Write(bytes, 0, bytes.Length);
+                process.WaitForExit();
+            }
+            catch
+            {
+            }
+
+            IsOpen = false;
+        }
+
+        public void Dispose()
+        {
             var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"exit\"}");
             try
             {
@@ -143,6 +172,20 @@ namespace chess_pos_db_gui
 
                 var response = Encoding.UTF8.GetString(writer.ToArray());
                 return response;
+            }
+        }
+
+        public void Create(JsonValue json)
+        {
+            var stream = client.GetStream();
+
+            var bytes = System.Text.Encoding.UTF8.GetBytes(json.ToString());
+            stream.Write(bytes, 0, bytes.Length);
+
+            var responseJson = JsonValue.Parse(Read(stream));
+            if (responseJson.ContainsKey("error"))
+            {
+                throw new InvalidDataException(responseJson["error"].ToString());
             }
         }
     }

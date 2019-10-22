@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    class ResultForRoot
+    public class ResultForRoot
     {
         public RootPosition Position { get; set; }
         public Dictionary<Select, SelectResult> ResultsBySelect { get; set; }
@@ -43,7 +43,7 @@ namespace chess_pos_db_gui
         }
     }
 
-    internal class SelectResult
+    public class SelectResult
     {
         public SegregatedEntries Root { get; set; }
         public Dictionary<string, SegregatedEntries> Children { get; set; }

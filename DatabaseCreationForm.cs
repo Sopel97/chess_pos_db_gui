@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Json;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,9 +13,19 @@ namespace chess_pos_db_gui
 {
     public partial class DatabaseCreationForm : Form
     {
-        public DatabaseCreationForm()
+        private bool finishedWithErrors = false;
+
+        public bool OpenAfterFinished { get { return openCheckBox.Checked && !finishedWithErrors; } }
+
+        public string DatabasePath { get { return destinationFolderTextBox.Text; } }
+
+        private readonly DatabaseWrapper database;
+
+        public DatabaseCreationForm(DatabaseWrapper db)
         {
             InitializeComponent();
+
+            database = db;
         }
 
         private void SetTempFolderButton_Click(object sender, EventArgs e)
@@ -99,6 +110,75 @@ namespace chess_pos_db_gui
         private void AddServerPgnsButton_Click(object sender, EventArgs e)
         {
             AddPgns(serverPgnsDataGridView);
+        }
+
+        private List<JsonValue> GetPgns(DataGridView dgv)
+        {
+            var list = new List<JsonValue>();
+
+            foreach(DataGridViewRow row in dgv.Rows)
+            {
+                list.Add(row.Cells[0].Value.ToString());
+            }
+
+            return list;
+        }
+
+        private List<JsonValue> GetHumanPgns()
+        {
+            return GetPgns(humanPgnsDataGridView);
+        }
+
+        private List<JsonValue> GetEnginePgns()
+        {
+            return GetPgns(enginePgnsDataGridView);
+        }
+
+        private List<JsonValue> GetServerPgns()
+        {
+            return GetPgns(serverPgnsDataGridView);
+        }
+
+        private void BuildDatabase()
+        {
+            JsonObject request = new JsonObject
+            {
+                { "command", "create" },
+                { "destination_path", destinationFolderTextBox.Text },
+                { "merge", mergeCheckBox.Checked },
+                { "report_progress", true },
+                { "database_format", databaseFormatComboBox.Text },
+                { "human_pgns", new JsonArray(GetHumanPgns()) },
+                { "engine_pgns", new JsonArray(GetEnginePgns()) },
+                { "server_pgns", new JsonArray(GetServerPgns()) }
+            };
+            if (tempFolderTextBox.Text != "")
+            {
+                request.Add("temporary_path", tempFolderTextBox.Text);
+            }
+
+            try
+            {
+                database.Create(request);
+                finishedWithErrors = false;
+                MessageBox.Show("Finished");
+            }
+            catch
+            {
+                finishedWithErrors = true;
+                MessageBox.Show("Finished with errors");
+            }
+
+            Close();
+        }
+
+        private void BuildButton_Click(object sender, EventArgs e)
+        {
+            BuildDatabase();
+            if (OpenAfterFinished)
+            {
+                database.Open(DatabasePath);
+            }
         }
     }
 }

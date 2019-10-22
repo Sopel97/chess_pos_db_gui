@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    enum GameResult { WhiteWin, BlackWin, Draw };
+    public enum GameResult { WhiteWin, BlackWin, Draw };
 
-    struct GameResultWordFormat { }
-    struct GameResultPgnFormat { }
-    struct GameResultLetterFormat { }
+    public struct GameResultWordFormat { }
+    public struct GameResultPgnFormat { }
+    public struct GameResultLetterFormat { }
 
-    static class GameResultHelper
+    public static class GameResultHelper
     {
         public static string Stringify(this GameResult result, GameResultWordFormat f)
         {

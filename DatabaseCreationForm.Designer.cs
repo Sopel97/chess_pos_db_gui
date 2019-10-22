@@ -415,6 +415,7 @@
             this.buildButton.TabIndex = 1;
             this.buildButton.Text = "Build";
             this.buildButton.UseVisualStyleBackColor = true;
+            this.buildButton.Click += new System.EventHandler(this.BuildButton_Click);
             // 
             // mergeCheckBox
             // 

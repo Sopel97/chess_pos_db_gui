@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    enum GameLevel { Human, Engine, Server };
+    public enum GameLevel { Human, Engine, Server };
 
-    static class GameLevelHelper
+    public static class GameLevelHelper
     {
         public static string Stringify(this GameLevel result)
         {
