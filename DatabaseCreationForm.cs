@@ -20,7 +20,7 @@ namespace chess_pos_db_gui
         public string DatabasePath { get { return destinationFolderTextBox.Text; } }
 
         public ulong NumGames { get; private set; }
-        public ulong NumPosition { get; private set; }
+        public ulong NumPositions { get; private set; }
         public ulong NumSkippedGames { get; private set; }
 
         private readonly DatabaseProxy database;
@@ -184,6 +184,13 @@ namespace chess_pos_db_gui
                 {
                     SetFileProgress(progressReport["imported_file_path"], 1.0f);
                 }
+
+                if (progressReport["finished"] == true)
+                {
+                    NumGames = progressReport["num_games"];
+                    NumPositions = progressReport["num_positions"];
+                    NumSkippedGames = progressReport["num_skipped_games"];
+                }
             }
             else if (progressReport["operation"] == "merge")
             {
@@ -219,7 +226,13 @@ namespace chess_pos_db_gui
             {
                 database.Create(request, ProgressCallback);
                 finishedWithErrors = false;
-                MessageBox.Show("Finished");
+                MessageBox.Show(
+                    string.Format("Finished.\nGames imported: {0}\nGames skipped: {1}\nPosition imported: {2}",
+                        NumGames,
+                        NumSkippedGames,
+                        NumPositions
+                    )
+                );
             }
             catch
             {
