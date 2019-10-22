@@ -401,6 +401,8 @@
             // openCheckBox
             // 
             this.openCheckBox.AutoSize = true;
+            this.openCheckBox.Checked = true;
+            this.openCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.openCheckBox.Location = new System.Drawing.Point(12, 35);
             this.openCheckBox.Name = "openCheckBox";
             this.openCheckBox.Size = new System.Drawing.Size(120, 17);
@@ -422,6 +424,8 @@
             // mergeCheckBox
             // 
             this.mergeCheckBox.AutoSize = true;
+            this.mergeCheckBox.Checked = true;
+            this.mergeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mergeCheckBox.Location = new System.Drawing.Point(12, 12);
             this.mergeCheckBox.Name = "mergeCheckBox";
             this.mergeCheckBox.Size = new System.Drawing.Size(111, 17);

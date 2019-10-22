@@ -310,6 +310,8 @@
             // autoQueryCheckbox
             // 
             this.autoQueryCheckbox.AutoSize = true;
+            this.autoQueryCheckbox.Checked = true;
+            this.autoQueryCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.autoQueryCheckbox.Location = new System.Drawing.Point(72, 19);
             this.autoQueryCheckbox.Name = "autoQueryCheckbox";
             this.autoQueryCheckbox.Size = new System.Drawing.Size(48, 17);
