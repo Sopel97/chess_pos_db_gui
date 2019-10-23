@@ -357,7 +357,6 @@ namespace chess_pos_db_gui
             using (var form = new DatabaseCreationForm(database))
             {
                 form.ShowDialog();
-                UpdateDatabaseInfo();
                 OnPositionChanged(this, new EventArgs());
             }
         }
@@ -379,7 +378,9 @@ namespace chess_pos_db_gui
             if (info.IsOpen)
             {
                 databaseInfoRichTextBox.Text =
-                    "Path: " + info.Path + Environment.NewLine;
+                    "Path: " + info.Path + Environment.NewLine
+                    + "Games: " + info.TotalNumGames().ToString() + Environment.NewLine
+                    + "Positions: " + info.TotalNumPositions().ToString();
             }
             else
             {

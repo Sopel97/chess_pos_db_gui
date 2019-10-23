@@ -80,6 +80,7 @@ namespace chess_pos_db_gui
         public DatabaseInfo GetInfo()
         {
             DatabaseInfo info = new DatabaseInfo(Path, IsOpen);
+
             if (IsOpen)
             {
                 var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"stats\"}");
@@ -268,6 +269,8 @@ namespace chess_pos_db_gui
 
         public void SetCounts(JsonValue json)
         {
+            System.Diagnostics.Debug.WriteLine(json.ToString());
+
             NumHumanGames = json["human"]["num_games"];
             NumEngineGames = json["engine"]["num_games"];
             NumServerGames = json["server"]["num_games"];
@@ -275,6 +278,16 @@ namespace chess_pos_db_gui
             NumHumanPositions = json["human"]["num_positions"];
             NumEnginePositions = json["engine"]["num_positions"];
             NumServerPositions = json["server"]["num_positions"];
+        }
+
+        internal ulong TotalNumGames()
+        {
+            return NumHumanGames + NumServerGames + NumEngineGames;
+        }
+
+        internal ulong TotalNumPositions()
+        {
+            return NumHumanPositions + NumServerPositions + NumEnginePositions;
         }
     }
 }
