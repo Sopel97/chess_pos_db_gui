@@ -24,6 +24,8 @@ namespace chess_pos_db_gui
         private DatabaseProxy database;
         private LRUCache<string, QueryResponse> queryCache;
         private bool isEntryDataUpToDate = false;
+        private string ip = "127.0.0.1";
+        private int port = 1234;
 
         public Application()
         {
@@ -96,6 +98,8 @@ namespace chess_pos_db_gui
 
             entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 
+            entriesGridView.Sort(entriesGridView.Columns["Count"], ListSortDirection.Descending);
+
             foreach (DataGridViewColumn column in entriesGridView.Columns)
             {
                 if (column.ValueType == typeof(ulong) || column.ValueType == typeof(uint))
@@ -124,7 +128,7 @@ namespace chess_pos_db_gui
         {
             chessBoard.LoadImages("assets/graphics");
 
-            database = new DatabaseProxy("127.0.0.1", 1234);
+            database = new DatabaseProxy(ip, port);
 
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
             chessBoard.PositionChanged += OnPositionChanged;
@@ -311,7 +315,7 @@ namespace chess_pos_db_gui
 
         private void UpdateData()
         {
-            if (database == null) return;
+            if (!database.IsOpen) return;
 
             var san = chessBoard.GetLastMoveSan();
             var fen = san == "--"
@@ -319,6 +323,7 @@ namespace chess_pos_db_gui
                 : chessBoard.GetPrevFen();
 
             var sig = fen + san;
+
             try
             {
                 var cached = queryCache.Get(sig);
@@ -341,9 +346,9 @@ namespace chess_pos_db_gui
                 }
                 Repopulate();
             }
-            catch (Exception ee)
+            catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ee.Message);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -396,9 +401,9 @@ namespace chess_pos_db_gui
                     }
                 }
             }
-            catch (Exception ee)
+            catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ee.Message);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -417,7 +422,6 @@ namespace chess_pos_db_gui
                 if (cell.ColumnIndex == 0)
                 {
                     var san = cell.Value.ToString();
-                    System.Diagnostics.Debug.WriteLine(san);
                     if (san != "--")
                         chessBoard.DoMove(san);
                 }

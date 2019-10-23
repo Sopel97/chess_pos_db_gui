@@ -243,8 +243,6 @@ namespace chess_pos_db_gui
 
             DrawBoard(g);
             DrawPieces(g);
-
-            System.Diagnostics.Debug.WriteLine("DRAW");
         }
 
         private static Bitmap CreateDefaultBitmap()
@@ -333,19 +331,10 @@ namespace chess_pos_db_gui
             // We only synch when te move was valid
             SynchronizeMoveListWithHistory();
 
-            if (History.DoMove(move))
-            {
-                AddMoveToMoveHistory(History.Current().Move);
-                moveHistoryGridView.Refresh();
-                chessBoardPanel.Refresh();
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Invalid move.");
-                System.Diagnostics.Debug.WriteLine(move.OriginalPosition);
-                System.Diagnostics.Debug.WriteLine(move.NewPosition);
-            }
-
+            History.DoMove(move);
+            AddMoveToMoveHistory(History.Current().Move);
+            moveHistoryGridView.Refresh();
+            chessBoardPanel.Refresh();
             return true;
         }
 
@@ -473,9 +462,6 @@ namespace chess_pos_db_gui
             string fen = History.Current().GetFen();
             UpdateFenTextBox(fen);
 
-            System.Diagnostics.Debug.WriteLine("SELECT");
-            System.Diagnostics.Debug.WriteLine(ply);
-
             chessBoardPanel.Refresh();
         }
 
@@ -513,15 +499,13 @@ namespace chess_pos_db_gui
         {
             if (LastFen != fenTextBox.Text)
             {
-                System.Diagnostics.Debug.WriteLine(fenTextBox.Text);
-
                 try
                 {
                     new ChessGame(fenTextBox.Text);
                 }
                 catch(Exception)
                 {
-                    MessageBox.Show("Invalid FEN.");
+                    MessageBox.Show("Invalid FEN.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
