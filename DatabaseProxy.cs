@@ -79,7 +79,25 @@ namespace chess_pos_db_gui
 
         public DatabaseInfo GetInfo()
         {
-            return new DatabaseInfo(Path, IsOpen);
+            DatabaseInfo info = new DatabaseInfo(Path, IsOpen);
+            if (IsOpen)
+            {
+                var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"stats\"}");
+                var stream = client.GetStream();
+                stream.Write(bytes, 0, bytes.Length);
+
+                var response = Read(stream);
+                var json = JsonValue.Parse(response);
+                if (json.ContainsKey("error"))
+                {
+                    throw new InvalidDataException("Cannot fetch database info.");
+                }
+                else
+                {
+                    info.SetCounts(json);
+                }
+            }
+            return info;
         }
 
         public void Open(string path)
@@ -235,10 +253,28 @@ namespace chess_pos_db_gui
         public bool IsOpen { get; private set; }
         public string Path { get; private set; }
 
+        public ulong NumHumanGames { get; private set; }
+        public ulong NumEngineGames { get; private set; }
+        public ulong NumServerGames { get; private set; }
+        public ulong NumHumanPositions { get; private set; }
+        public ulong NumEnginePositions { get; private set; }
+        public ulong NumServerPositions { get; private set; }
+
         public DatabaseInfo(string path, bool isOpen)
         {
             Path = path;
             IsOpen = isOpen;
+        }
+
+        public void SetCounts(JsonValue json)
+        {
+            NumHumanGames = json["human"]["num_games"];
+            NumEngineGames = json["engine"]["num_games"];
+            NumServerGames = json["server"]["num_games"];
+
+            NumHumanPositions = json["human"]["num_positions"];
+            NumEnginePositions = json["engine"]["num_positions"];
+            NumServerPositions = json["server"]["num_positions"];
         }
     }
 }
