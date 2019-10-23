@@ -159,7 +159,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Populate(string move, AggregatedEntry entry, AggregatedEntry humanEntry)
+        private void Populate(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry)
         {
             var row = tabulatedData.NewRow();
             row["Move"] = move;
@@ -169,7 +169,7 @@ namespace chess_pos_db_gui
             row["LossCount"] = entry.LossCount;
             row["Perf"] = (entry.Perf);
             row["DrawPct"] = (entry.DrawRate);
-            row["HumanPct"] = ((double)humanEntry.Count / (double)entry.Count);
+            row["HumanPct"] = ((double)nonEngineEntry.Count / (double)entry.Count);
 
             foreach (GameHeader header in entry.FirstGame)
             {
@@ -191,15 +191,19 @@ namespace chess_pos_db_gui
             return entry.Count == 0;
         }
 
-        private void Populate(Dictionary<string, AggregatedEntry> entries, Dictionary<string, AggregatedEntry> humanEntries)
+        private void Populate(Dictionary<string, AggregatedEntry> entries, Dictionary<string, AggregatedEntry> nonEngineEntries)
         {
             entriesGridView.SuspendLayout();
             Clear();
             foreach (KeyValuePair<string, AggregatedEntry> entry in entries)
             {
                 if (IsEmpty(entry.Value)) continue;
+                if (!nonEngineEntries.ContainsKey(entry.Key))
+                {
+                    nonEngineEntries.Add(entry.Key, new AggregatedEntry());
+                }
 
-                Populate(entry.Key, entry.Value, humanEntries[entry.Key]);
+                Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key]);
             }
             entriesGridView.ResumeLayout(false);
 
@@ -241,13 +245,19 @@ namespace chess_pos_db_gui
                 Gather(res, select, levels, ref aggregatedEntries);
             }
 
-            Dictionary<string, AggregatedEntry> aggregatedHumanEntries = new Dictionary<string, AggregatedEntry>();
-            foreach (Select select in selects)
+            Dictionary<string, AggregatedEntry> aggregatedNonEngineEntries = new Dictionary<string, AggregatedEntry>();
+            if (levels.Contains(GameLevel.Human) || levels.Contains(GameLevel.Server))
             {
-                Gather(res, select, new List<GameLevel> { GameLevel.Human }, ref aggregatedHumanEntries);
+                var nonEngineLevels = new List<GameLevel> {};
+                if (levels.Contains(GameLevel.Human)) nonEngineLevels.Add(GameLevel.Human);
+                if (levels.Contains(GameLevel.Server)) nonEngineLevels.Add(GameLevel.Server);
+                foreach (Select select in selects)
+                {
+                    Gather(res, select, nonEngineLevels, ref aggregatedNonEngineEntries);
+                }
             }
 
-            Populate(aggregatedEntries, aggregatedHumanEntries);
+            Populate(aggregatedEntries, aggregatedNonEngineEntries);
         }
 
         private void Clear()
