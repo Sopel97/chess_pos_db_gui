@@ -48,9 +48,9 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
-            tabulatedData.Columns.Add(new DataColumn("Perf", typeof(string)));
-            tabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(string)));
-            tabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
+            tabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
+            tabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("Date", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("White", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("Black", typeof(string)));
@@ -64,28 +64,44 @@ namespace chess_pos_db_gui
             entriesGridView.DataSource = tabulatedData;
 
             entriesGridView.Columns["Move"].Frozen = true;
-            entriesGridView.Columns["Move"].Width = 60;
-            entriesGridView.Columns["Count"].Width = 100;
-            entriesGridView.Columns["WinCount"].Width = 100;
-            entriesGridView.Columns["DrawCount"].Width = 100;
-            entriesGridView.Columns["LossCount"].Width = 100;
-            entriesGridView.Columns["Perf"].Width = 45;
-            entriesGridView.Columns["DrawPct"].Width = 45;
-            entriesGridView.Columns["HumanPct"].Width = 45;
-            entriesGridView.Columns["Date"].Width = 70;
-            entriesGridView.Columns["White"].Width = 100;
-            entriesGridView.Columns["Black"].Width = 100;
-            entriesGridView.Columns["Result"].Width = 25;
-            entriesGridView.Columns["Eco"].Width = 32;
-            entriesGridView.Columns["PlyCount"].Width = 32;
-            entriesGridView.Columns["Event"].Width = 100;
-            entriesGridView.Columns["GameId"].Width = 80;
+            //entriesGridView.Columns["Move"].Width = 60;
+            //entriesGridView.Columns["Count"].Width = 100;
+            entriesGridView.Columns["Count"].HeaderText = "N";
+            //entriesGridView.Columns["WinCount"].Width = 100;
+            entriesGridView.Columns["WinCount"].HeaderText = "W";
+            //entriesGridView.Columns["DrawCount"].Width = 100;
+            entriesGridView.Columns["DrawCount"].HeaderText = "D";
+            //entriesGridView.Columns["LossCount"].Width = 100;
+            entriesGridView.Columns["LossCount"].HeaderText = "L";
+            //entriesGridView.Columns["Perf"].Width = 45;
+            entriesGridView.Columns["Perf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            entriesGridView.Columns["Perf"].HeaderText = "W%";
+            //entriesGridView.Columns["DrawPct"].Width = 45;
+            entriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            entriesGridView.Columns["DrawPct"].HeaderText = "D%";
+            //entriesGridView.Columns["HumanPct"].Width = 45;
+            entriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            entriesGridView.Columns["HumanPct"].HeaderText = "H%";
+            //entriesGridView.Columns["Date"].Width = 70;
+            //entriesGridView.Columns["White"].Width = 100;
+            //entriesGridView.Columns["Black"].Width = 100;
+            //entriesGridView.Columns["Result"].Width = 25;
+            //entriesGridView.Columns["Eco"].Width = 32;
+            entriesGridView.Columns["Eco"].HeaderText = "ECO";
+            //entriesGridView.Columns["PlyCount"].Width = 32;
+            entriesGridView.Columns["PlyCount"].HeaderText = "Plies";
+            //entriesGridView.Columns["Event"].Width = 100;
+            //entriesGridView.Columns["GameId"].Width = 80;
+            entriesGridView.Columns["GameId"].HeaderText = "Game Id";
 
-            foreach (DataColumn column in tabulatedData.Columns)
+            entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
+            foreach (DataGridViewColumn column in entriesGridView.Columns)
             {
-                if (column.DataType == typeof(ulong) || column.DataType == typeof(uint))
+                if (column.ValueType == typeof(ulong) || column.ValueType == typeof(uint))
                 {
-                    entriesGridView.Columns[column.ColumnName].DefaultCellStyle.Format = "N0";
+                    column.DefaultCellStyle.Format = "N0";
+                    column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 }
             }
         }
@@ -131,12 +147,6 @@ namespace chess_pos_db_gui
             }
         }
 
-        private string PctToString(double pct)
-        {
-            if (double.IsNaN(pct) || double.IsPositiveInfinity(pct) || double.IsNegativeInfinity(pct)) return "-";
-            return (pct * 100).ToString("00.0") + "%";
-        }
-
         private void Populate(string move, AggregatedEntry entry, AggregatedEntry humanEntry)
         {
             var row = tabulatedData.NewRow();
@@ -145,9 +155,9 @@ namespace chess_pos_db_gui
             row["WinCount"] = entry.WinCount;
             row["DrawCount"] = entry.DrawCount;
             row["LossCount"] = entry.LossCount;
-            row["Perf"] = PctToString(entry.Perf);
-            row["DrawPct"] = PctToString(entry.DrawRate);
-            row["HumanPct"] = PctToString((double)humanEntry.Count / (double)entry.Count);
+            row["Perf"] = (entry.Perf);
+            row["DrawPct"] = (entry.DrawRate);
+            row["HumanPct"] = ((double)humanEntry.Count / (double)entry.Count);
 
             foreach (GameHeader header in entry.FirstGame)
             {
@@ -156,12 +166,17 @@ namespace chess_pos_db_gui
                 row["Event"] = header.Event;
                 row["White"] = header.White;
                 row["Black"] = header.Black;
-                row["Result"] = header.Result.Stringify(new GameResultLetterFormat());
+                row["Result"] = header.Result.Stringify(new GameResultPgnUnicodeFormat());
                 row["Eco"] = header.Eco.ToString();
                 row["PlyCount"] = header.PlyCount.FirstOrDefault();
             }
 
             tabulatedData.Rows.Add(row);
+        }
+
+        private bool IsEmpty(AggregatedEntry entry)
+        {
+            return entry.Count == 0;
         }
 
         private void Populate(Dictionary<string, AggregatedEntry> entries, Dictionary<string, AggregatedEntry> humanEntries)
@@ -170,6 +185,8 @@ namespace chess_pos_db_gui
             Clear();
             foreach (KeyValuePair<string, AggregatedEntry> entry in entries)
             {
+                if (IsEmpty(entry.Value)) continue;
+
                 Populate(entry.Key, entry.Value, humanEntries[entry.Key]);
             }
             entriesGridView.ResumeLayout(false);
@@ -404,6 +421,20 @@ namespace chess_pos_db_gui
                     if (san != "--")
                         chessBoard.DoMove(san);
                 }
+            }
+        }
+
+        private void EntriesGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (entriesGridView.Columns[e.ColumnIndex].HeaderText == "H%")
+            {
+                e.Value = (Double.Parse(e.Value.ToString()) * 100).ToString("0") + "%";
+                e.FormattingApplied = true;
+            }
+            else if (entriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("%"))
+            {
+                e.Value = (Double.Parse(e.Value.ToString())*100).ToString("0.0") + "%";
+                e.FormattingApplied = true;
             }
         }
     }

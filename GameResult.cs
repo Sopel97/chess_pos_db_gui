@@ -11,6 +11,7 @@ namespace chess_pos_db_gui
     public struct GameResultWordFormat { }
     public struct GameResultPgnFormat { }
     public struct GameResultLetterFormat { }
+    public struct GameResultPgnUnicodeFormat { }
 
     public static class GameResultHelper
     {
@@ -39,6 +40,21 @@ namespace chess_pos_db_gui
                     return "0-1";
                 case GameResult.Draw:
                     return "1/2-1/2";
+            }
+
+            throw new ArgumentException();
+        }
+
+        public static string Stringify(this GameResult result, GameResultPgnUnicodeFormat f)
+        {
+            switch (result)
+            {
+                case GameResult.WhiteWin:
+                    return "1-0";
+                case GameResult.BlackWin:
+                    return "0-1";
+                case GameResult.Draw:
+                    return "½-½";
             }
 
             throw new ArgumentException();

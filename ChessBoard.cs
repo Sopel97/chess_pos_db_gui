@@ -63,6 +63,8 @@ namespace chess_pos_db_gui
         {
             InitializeComponent();
 
+            copyFenButton.Text = "\u2702";
+
             History = new ChessBoardHistory();
 
             pieceImages = new Dictionary<Piece, Image>();
@@ -526,6 +528,11 @@ namespace chess_pos_db_gui
                 LastFen = fenTextBox.Text;
                 Reset(LastFen);
             }
+        }
+
+        private void CopyFenButton_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(fenTextBox.Text);
         }
     }
     internal class MoveHistoryDataRow : DataRow
