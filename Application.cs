@@ -128,7 +128,15 @@ namespace chess_pos_db_gui
         {
             chessBoard.LoadImages("assets/graphics");
 
-            database = new DatabaseProxy(ip, port);
+            try
+            {
+                database = new DatabaseProxy(ip, port);
+            }
+            catch
+            {
+                MessageBox.Show("Cannot establish communication with the database backend.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+            }
 
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
             chessBoard.PositionChanged += OnPositionChanged;
