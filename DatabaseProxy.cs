@@ -269,8 +269,6 @@ namespace chess_pos_db_gui
 
         public void SetCounts(JsonValue json)
         {
-            System.Diagnostics.Debug.WriteLine(json.ToString());
-
             NumHumanGames = json["human"]["num_games"];
             NumEngineGames = json["engine"]["num_games"];
             NumServerGames = json["server"]["num_games"];
