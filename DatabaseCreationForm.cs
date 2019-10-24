@@ -251,11 +251,6 @@ namespace chess_pos_db_gui
                 MessageBox.Show("Finished with errors");
             }
 
-            if (OpenAfterFinished)
-            {
-                database.Open(DatabasePath);
-            }
-
             KeepFormAlive = false;
 
             if (InvokeRequired)

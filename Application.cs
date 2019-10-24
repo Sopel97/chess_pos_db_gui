@@ -372,10 +372,18 @@ namespace chess_pos_db_gui
 
         private void CreateToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            bool open = false;
+            string path = "";
             using (var form = new DatabaseCreationForm(database))
             {
                 form.ShowDialog();
-                OnPositionChanged(this, new EventArgs());
+                open = form.OpenAfterFinished;
+                path = form.DatabasePath;
+            }
+
+            if (open)
+            {
+                Open(path);
             }
         }
 
@@ -397,8 +405,8 @@ namespace chess_pos_db_gui
             {
                 databaseInfoRichTextBox.Text =
                     "Path: " + info.Path + Environment.NewLine
-                    + "Games: " + info.TotalNumGames().ToString() + Environment.NewLine
-                    + "Positions: " + info.TotalNumPositions().ToString();
+                    + "Games: " + info.TotalNumGames().ToString("N0") + Environment.NewLine
+                    + "Positions: " + info.TotalNumPositions().ToString("N0");
             }
             else
             {
