@@ -258,7 +258,34 @@ namespace chess_pos_db_gui
             {
                 finishedWithErrors = true;
                 MessageBox.Show("Finished with errors. " + ex.Message);
+
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(EnableInput));
+                }
+                else
+                {
+                    EnableInput();
+                }
             }
+
+            KeepFormAlive = false;
+        }
+        private void EnableInput()
+        {
+            setDestinationFolderButton.Enabled = true;
+            setTempFolderButton.Enabled = true;
+            clearTempFolderButton.Enabled = true;
+            buildButton.Enabled = true;
+            mergeCheckBox.Enabled = true;
+            openCheckBox.Enabled = true;
+            databaseFormatComboBox.Enabled = true;
+            humanPgnsDataGridView.Enabled = true;
+            enginePgnsDataGridView.Enabled = true;
+            serverPgnsDataGridView.Enabled = true;
+            addHumanPgnsButton.Enabled = true;
+            addEnginePgnsButton.Enabled = true;
+            addServerPgnsButton.Enabled = true;
 
             KeepFormAlive = false;
         }
