@@ -13,7 +13,7 @@ namespace chess_pos_db_gui
 {
     public partial class DatabaseCreationForm : Form
     {
-        private bool finishedWithErrors = false;
+        private bool finishedWithErrors = true;
 
         public bool OpenAfterFinished { get { return openCheckBox.Checked && !finishedWithErrors; } }
 

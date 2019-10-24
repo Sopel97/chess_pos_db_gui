@@ -94,7 +94,7 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["PlyCount"].HeaderText = "Plies";
             //entriesGridView.Columns["Event"].Width = 100;
             //entriesGridView.Columns["GameId"].Width = 80;
-            entriesGridView.Columns["GameId"].HeaderText = "Game Id";
+            entriesGridView.Columns["GameId"].HeaderText = "Game ID";
 
             entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 
