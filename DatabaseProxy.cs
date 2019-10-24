@@ -116,7 +116,7 @@ namespace chess_pos_db_gui
                 var json = JsonValue.Parse(response);
                 if (json.ContainsKey("error"))
                 {
-                    throw new InvalidDataException("Cannot open database.");
+                    throw new InvalidDataException("Cannot open database. " + json["error"].ToString());
                 }
                 else if (json.ContainsKey("finished"))
                 {

@@ -244,23 +244,23 @@ namespace chess_pos_db_gui
                         NumPositions
                     )
                 );
+
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(Close));
+                }
+                else
+                {
+                    Close();
+                }
             }
-            catch
+            catch (Exception ex)
             {
                 finishedWithErrors = true;
-                MessageBox.Show("Finished with errors");
+                MessageBox.Show("Finished with errors. " + ex.Message);
             }
 
             KeepFormAlive = false;
-
-            if (InvokeRequired)
-            {
-                Invoke(new Action(Close));
-            }
-            else
-            {
-                Close();
-            }
         }
 
         private void DisableInput()
