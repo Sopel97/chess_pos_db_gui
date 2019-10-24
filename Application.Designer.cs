@@ -88,7 +88,7 @@
             this.entriesGridView.Location = new System.Drawing.Point(3, 53);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
-            this.entriesGridView.RowHeadersWidth = 5;
+            this.entriesGridView.RowHeadersWidth = 25;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.entriesGridView.Size = new System.Drawing.Size(560, 505);
             this.entriesGridView.TabIndex = 0;
