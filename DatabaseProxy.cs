@@ -83,11 +83,10 @@ namespace chess_pos_db_gui
 
             if (IsOpen)
             {
-                var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"stats\"}");
                 var stream = client.GetStream();
-                stream.Write(bytes, 0, bytes.Length);
+                SendMessage(stream, "{\"command\":\"stats\"}");
 
-                var response = Read(stream);
+                var response = ReceiveMessage(stream);
                 var json = JsonValue.Parse(response);
                 if (json.ContainsKey("error"))
                 {
@@ -108,13 +107,12 @@ namespace chess_pos_db_gui
             Path = path;
             path = path.Replace("\\", "\\\\"); // we stringify it naively to json so we need to escape manually
 
-            var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"open\",\"database_path\":\"" + path + "\"}");
             var stream = client.GetStream();
-            stream.Write(bytes, 0, bytes.Length);
+            SendMessage(stream, "{\"command\":\"open\",\"database_path\":\"" + path + "\"}");
 
             while (true)
             {
-                var response = Read(stream);
+                var response = ReceiveMessage(stream);
                 var json = JsonValue.Parse(response);
                 if (json.ContainsKey("error"))
                 {
@@ -133,10 +131,9 @@ namespace chess_pos_db_gui
         {
             var stream = client.GetStream();
 
-            var bytes = System.Text.Encoding.UTF8.GetBytes(query);
-            stream.Write(bytes, 0, bytes.Length);
+            SendMessage(stream, query);
 
-            var responseJson = JsonValue.Parse(Read(stream));
+            var responseJson = JsonValue.Parse(ReceiveMessage(stream));
             if (responseJson.ContainsKey("error"))
             {
                 throw new InvalidDataException(responseJson["error"].ToString());
@@ -162,13 +159,12 @@ namespace chess_pos_db_gui
             Path = "";
             IsOpen = false;
 
-            var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"close\"}");
             try
             {
                 var stream = client.GetStream();
-                stream.Write(bytes, 0, bytes.Length);
+                SendMessage(stream, "{\"command\":\"close\"}");
 
-                var responseJson = JsonValue.Parse(Read(stream));
+                var responseJson = JsonValue.Parse(ReceiveMessage(stream));
                 if (responseJson.ContainsKey("error"))
                 {
                     throw new InvalidDataException(responseJson["error"].ToString());
@@ -181,11 +177,10 @@ namespace chess_pos_db_gui
 
         public void Dispose()
         {
-            var bytes = System.Text.Encoding.UTF8.GetBytes("{\"command\":\"exit\"}");
             try
             {
                 var stream = client.GetStream();
-                stream.Write(bytes, 0, bytes.Length);
+                SendMessage(stream, "{\"command\":\"exit\"}");
                 process.WaitForExit();
             }
             catch
@@ -194,37 +189,86 @@ namespace chess_pos_db_gui
             client.Close();
         }
 
-        private string Read(NetworkStream stream)
+        private void SendMessage(NetworkStream stream, string message)
         {
-            using (var writer = new MemoryStream())
-            {
-                byte[] readBuffer = new byte[client.ReceiveBufferSize];
-                do
-                {
-                    int numberOfBytesRead = stream.Read(readBuffer, 0, readBuffer.Length);
-                    if (numberOfBytesRead <= 0)
-                    {
-                        break;
-                    }
-                    writer.Write(readBuffer, 0, numberOfBytesRead);
-                }
-                while (stream.DataAvailable);
+            uint xorValue = 3173045653u;
 
-                var response = Encoding.UTF8.GetString(writer.ToArray());
-                return response;
+            var bytes = System.Text.Encoding.UTF8.GetBytes(message);
+            uint size = (uint)bytes.Length;
+            uint xoredSize = size ^ xorValue;
+
+            byte[] sizeStr = new byte[8];
+            sizeStr[0] = (byte)(size % 256); size /= 256;
+            sizeStr[1] = (byte)(size % 256); size /= 256;
+            sizeStr[2] = (byte)(size % 256); size /= 256;
+            sizeStr[3] = (byte)(size);
+
+            sizeStr[4] = (byte)(xoredSize % 256); xoredSize /= 256;
+            sizeStr[5] = (byte)(xoredSize % 256); xoredSize /= 256;
+            sizeStr[6] = (byte)(xoredSize % 256); xoredSize /= 256;
+            sizeStr[7] = (byte)(xoredSize);
+
+            stream.Write(sizeStr, 0, 8);
+            stream.Write(bytes, 0, bytes.Length);
+        }
+
+        private string ReceiveMessage(NetworkStream stream)
+        {
+            uint maxMessageLength = 4 * 1024 * 1024;
+            uint xorValue = 3173045653u;
+
+            byte[] readLengthBuffer = new byte[8];
+            if(stream.Read(readLengthBuffer, 0, 8) != 8)
+            {
+                throw new InvalidDataException("Message length not received in one packet.");
             }
+            uint length = 0;
+            length += (uint)(readLengthBuffer[3]); length *= 256;
+            length += (uint)(readLengthBuffer[2]); length *= 256;
+            length += (uint)(readLengthBuffer[1]); length *= 256;
+            length += (uint)(readLengthBuffer[0]);
+            uint lengthXor = 0;
+            lengthXor += (uint)(readLengthBuffer[7]); lengthXor *= 256;
+            lengthXor += (uint)(readLengthBuffer[6]); lengthXor *= 256;
+            lengthXor += (uint)(readLengthBuffer[5]); lengthXor *= 256;
+            lengthXor += (uint)(readLengthBuffer[4]);
+            lengthXor ^= xorValue;
+
+            if (length != lengthXor)
+            {
+                throw new InvalidDataException("Length doesn't match length xor.");
+            }
+            else if (length == 0)
+            {
+                return "";
+            }
+
+            if (length > maxMessageLength)
+            {
+                throw new InvalidDataException("Message too long.");
+            }
+
+            byte[] readBuffer = new byte[length];
+            int totalRead = 0;
+            while(totalRead < length)
+            {
+                int leftToRead = (int)length - totalRead;
+                totalRead += stream.Read(readBuffer, totalRead, leftToRead);
+            }
+
+            var response = Encoding.UTF8.GetString(readBuffer);
+            return response;
         }
 
         public void Create(JsonValue json, Action<JsonValue> callback)
         {
             var stream = client.GetStream();
 
-            var bytes = System.Text.Encoding.UTF8.GetBytes(json.ToString());
-            stream.Write(bytes, 0, bytes.Length);
+            SendMessage(stream, json.ToString());
 
             while (true)
             {
-                var response = Read(stream);
+                var response = ReceiveMessage(stream);
                 var responseJson = JsonValue.Parse(response);
                 if (responseJson.ContainsKey("error"))
                 {
