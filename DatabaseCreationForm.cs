@@ -153,11 +153,12 @@ namespace chess_pos_db_gui
                 serverPgnsDataGridView
             };
 
+            var fullPath = System.IO.Path.GetFullPath(path);
             foreach (var dgv in dgvs)
             {
                 foreach (DataGridViewRow row in dgv.Rows)
                 {
-                    if ((string)row.Cells[0].Value == path)
+                    if (System.IO.Path.GetFullPath((string)row.Cells[0].Value).Equals(fullPath))
                     {
                         return row;
                     }
