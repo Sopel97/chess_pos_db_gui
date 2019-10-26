@@ -47,6 +47,15 @@ namespace chess_pos_db_gui
             });
         }
 
+        public string ToStringOmitUnknown()
+        {
+            return string.Join(".", new string[]{
+                Year.Select(y => y.ToString("D4")).DefaultIfEmpty("").First(),
+                Month.Select(y => y.ToString("D2")).DefaultIfEmpty("").First(),
+                Day.Select(y => y.ToString("D2")).DefaultIfEmpty("").First()
+            });
+        }
+
         public bool IsBefore(Date other)
         {
             // missing is less than 1

@@ -88,10 +88,12 @@ namespace chess_pos_db_gui
             //entriesGridView.Columns["White"].Width = 100;
             //entriesGridView.Columns["Black"].Width = 100;
             //entriesGridView.Columns["Result"].Width = 25;
+            entriesGridView.Columns["Result"].HeaderText = "";
             //entriesGridView.Columns["Eco"].Width = 32;
             entriesGridView.Columns["Eco"].HeaderText = "ECO";
             //entriesGridView.Columns["PlyCount"].Width = 32;
-            entriesGridView.Columns["PlyCount"].HeaderText = "Plies";
+            entriesGridView.Columns["PlyCount"].HeaderText = "Ply";
+            entriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             //entriesGridView.Columns["Event"].Width = 100;
             //entriesGridView.Columns["GameId"].Width = 80;
             entriesGridView.Columns["GameId"].HeaderText = "Game ID";
@@ -174,7 +176,7 @@ namespace chess_pos_db_gui
             foreach (GameHeader header in entry.FirstGame)
             {
                 row["GameId"] = header.GameId;
-                row["Date"] = header.Date.ToString();
+                row["Date"] = header.Date.ToStringOmitUnknown();
                 row["Event"] = header.Event;
                 row["White"] = header.White;
                 row["Black"] = header.Black;

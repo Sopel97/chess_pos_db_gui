@@ -194,6 +194,7 @@ namespace chess_pos_db_gui
             else
             {
                 mergeProgressBar.Value = progress;
+                mergeProgressLabel.Text = progress.ToString() + "%";
             }
         }
 

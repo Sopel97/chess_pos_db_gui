@@ -59,6 +59,7 @@
             this.openCheckBox = new System.Windows.Forms.CheckBox();
             this.buildButton = new System.Windows.Forms.Button();
             this.mergeCheckBox = new System.Windows.Forms.CheckBox();
+            this.mergeProgressLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -213,6 +214,7 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.mergeProgressLabel);
             this.splitContainer2.Panel2.Controls.Add(this.mergeProgressBar);
             this.splitContainer2.Panel2.Controls.Add(this.openCheckBox);
             this.splitContainer2.Panel2.Controls.Add(this.buildButton);
@@ -404,7 +406,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.mergeProgressBar.Location = new System.Drawing.Point(129, 12);
             this.mergeProgressBar.Name = "mergeProgressBar";
-            this.mergeProgressBar.Size = new System.Drawing.Size(361, 17);
+            this.mergeProgressBar.Size = new System.Drawing.Size(320, 17);
             this.mergeProgressBar.TabIndex = 3;
             // 
             // openCheckBox
@@ -441,6 +443,16 @@
             this.mergeCheckBox.TabIndex = 0;
             this.mergeCheckBox.Text = "Merge after import";
             this.mergeCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mergeProgressLabel
+            // 
+            this.mergeProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.mergeProgressLabel.AutoSize = true;
+            this.mergeProgressLabel.Location = new System.Drawing.Point(455, 13);
+            this.mergeProgressLabel.Name = "mergeProgressLabel";
+            this.mergeProgressLabel.Size = new System.Drawing.Size(21, 13);
+            this.mergeProgressLabel.TabIndex = 4;
+            this.mergeProgressLabel.Text = "0%";
             // 
             // DatabaseCreationForm
             // 
@@ -507,5 +519,6 @@
         private System.Windows.Forms.Button buildButton;
         private System.Windows.Forms.CheckBox openCheckBox;
         private System.Windows.Forms.ProgressBar mergeProgressBar;
+        private System.Windows.Forms.Label mergeProgressLabel;
     }
 }
