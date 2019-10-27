@@ -69,6 +69,7 @@ namespace chess_pos_db_gui
                     game
                 )
             };
+            Entries[0].Move = null;
         }
 
         public void SetCurrent(int i)

@@ -49,11 +49,28 @@ namespace chess_pos_db_gui
 
         public string ToStringOmitUnknown()
         {
-            return string.Join(".", new string[]{
-                Year.Select(y => y.ToString("D4")).DefaultIfEmpty("").First(),
-                Month.Select(y => y.ToString("D2")).DefaultIfEmpty("").First(),
-                Day.Select(y => y.ToString("D2")).DefaultIfEmpty("").First()
-            });
+            string str = "";
+            if (Year.Count() != 1)
+            {
+                return str;
+            }
+            str += Year.Select(y => y.ToString("D4")).First();
+
+            if (Month.Count() != 1)
+            {
+                return str;
+            }
+            str += ".";
+            str += Month.Select(y => y.ToString("D2")).First();
+
+            if (Day.Count() != 1)
+            {
+                return str;
+            }
+            str += ".";
+            str += Day.Select(y => y.ToString("D2")).First();
+
+            return str;
         }
 
         public bool IsBefore(Date other)

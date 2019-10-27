@@ -91,9 +91,11 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["Result"].HeaderText = "";
             //entriesGridView.Columns["Eco"].Width = 32;
             entriesGridView.Columns["Eco"].HeaderText = "ECO";
+            entriesGridView.Columns["Eco"].MinimumWidth = 35;
             //entriesGridView.Columns["PlyCount"].Width = 32;
             entriesGridView.Columns["PlyCount"].HeaderText = "Ply";
-            entriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            entriesGridView.Columns["PlyCount"].MinimumWidth = 35;
+            entriesGridView.Columns["PlyCount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             //entriesGridView.Columns["Event"].Width = 100;
             //entriesGridView.Columns["GameId"].Width = 80;
             entriesGridView.Columns["GameId"].HeaderText = "Game ID";
@@ -405,10 +407,13 @@ namespace chess_pos_db_gui
 
             if (info.IsOpen)
             {
+                int averageMovesPerGame = ((int)Math.Round((double)info.TotalNumPositions() / info.TotalNumGames() / 2.0));
+
                 databaseInfoRichTextBox.Text =
                     "Path: " + info.Path + Environment.NewLine
                     + "Games: " + info.TotalNumGames().ToString("N0") + Environment.NewLine
-                    + "Positions: " + info.TotalNumPositions().ToString("N0");
+                    + "Plies: " + info.TotalNumPositions().ToString("N0") + Environment.NewLine
+                    + "Avg game length: " + averageMovesPerGame.ToString("N0") + " moves";
             }
             else
             {
