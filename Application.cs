@@ -61,6 +61,7 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("PlyCount", typeof(ushort)));
             tabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("GameId", typeof(uint)));
+            tabulatedData.Columns.Add(new DataColumn("IsOnlyTransposition", typeof(bool)));
 
             MakeDoubleBuffered(entriesGridView);
             entriesGridView.DataSource = tabulatedData;
@@ -99,6 +100,7 @@ namespace chess_pos_db_gui
             //entriesGridView.Columns["Event"].Width = 100;
             //entriesGridView.Columns["GameId"].Width = 80;
             entriesGridView.Columns["GameId"].HeaderText = "Game ID";
+            entriesGridView.Columns["IsOnlyTransposition"].Visible = false;
 
             entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
@@ -163,7 +165,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Populate(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry)
+        private void Populate(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, bool isOnlyTransposition)
         {
             var row = tabulatedData.NewRow();
             row["Move"] = move;
@@ -187,6 +189,8 @@ namespace chess_pos_db_gui
                 row["PlyCount"] = header.PlyCount.FirstOrDefault();
             }
 
+            row["IsOnlyTransposition"] = isOnlyTransposition;
+
             tabulatedData.Rows.Add(row);
         }
 
@@ -195,7 +199,7 @@ namespace chess_pos_db_gui
             return entry.Count == 0;
         }
 
-        private void Populate(Dictionary<string, AggregatedEntry> entries, Dictionary<string, AggregatedEntry> nonEngineEntries)
+        private void Populate(Dictionary<string, AggregatedEntry> entries, IEnumerable<string> continuationMoves, Dictionary<string, AggregatedEntry> nonEngineEntries)
         {
             entriesGridView.SuspendLayout();
             Clear();
@@ -207,7 +211,7 @@ namespace chess_pos_db_gui
                     nonEngineEntries.Add(entry.Key, new AggregatedEntry());
                 }
 
-                Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key]);
+                Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key));
             }
             entriesGridView.ResumeLayout(false);
 
@@ -242,8 +246,11 @@ namespace chess_pos_db_gui
 
         private void Populate(QueryResponse res, List<Select> selects, List<GameLevel> levels)
         {
-            Dictionary<string, AggregatedEntry> aggregatedEntries = new Dictionary<string, AggregatedEntry>();
+            Dictionary<string, AggregatedEntry> aggregatedContinuationEntries = new Dictionary<string, AggregatedEntry>();
 
+            Gather(res, chess_pos_db_gui.Select.Continuations, levels, ref aggregatedContinuationEntries);
+
+            Dictionary<string, AggregatedEntry> aggregatedEntries = new Dictionary<string, AggregatedEntry>();
             foreach (Select select in selects)
             {
                 Gather(res, select, levels, ref aggregatedEntries);
@@ -261,7 +268,7 @@ namespace chess_pos_db_gui
                 }
             }
 
-            Populate(aggregatedEntries, aggregatedNonEngineEntries);
+            Populate(aggregatedEntries, aggregatedContinuationEntries.Where(p => p.Value.Count != 0).Select(p => p.Key), aggregatedNonEngineEntries);
         }
 
         private void Clear()
@@ -473,6 +480,15 @@ namespace chess_pos_db_gui
             {
                 e.Value = (Double.Parse(e.Value.ToString())*100).ToString("0.0") + "%";
                 e.FormattingApplied = true;
+            }
+        }
+
+        private void EntriesGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            var row = entriesGridView.Rows[e.RowIndex];
+            if (Convert.ToBoolean(row.Cells["IsOnlyTransposition"].Value))
+            {
+                row.DefaultCellStyle.BackColor = Color.LightGray;
             }
         }
     }

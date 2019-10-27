@@ -93,6 +93,7 @@
             this.entriesGridView.Size = new System.Drawing.Size(560, 505);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
+            this.entriesGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.EntriesGridView_RowPrePaint);
             this.entriesGridView.DoubleClick += new System.EventHandler(this.EntriesGridView_DoubleClick);
             // 
             // levelSelectionGroupBox
