@@ -46,10 +46,11 @@
             this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.queryGroupBox = new System.Windows.Forms.GroupBox();
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
+            this.totalEntriesGridView = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             this.typeSelectionGroupBox.SuspendLayout();
@@ -64,6 +65,7 @@
             this.databaseInfoGroupBox.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.queryGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -83,16 +85,17 @@
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.entriesGridView.Location = new System.Drawing.Point(3, 53);
+            this.entriesGridView.Location = new System.Drawing.Point(3, 104);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
-            this.entriesGridView.RowHeadersWidth = 25;
+            this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(560, 505);
+            this.entriesGridView.Size = new System.Drawing.Size(560, 454);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
+            this.entriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.EntriesGridView_ColumnWidthChanged);
             this.entriesGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.EntriesGridView_RowPrePaint);
             this.entriesGridView.DoubleClick += new System.EventHandler(this.EntriesGridView_DoubleClick);
             // 
@@ -190,6 +193,7 @@
             // 
             // splitChessAndData.Panel2
             // 
+            this.splitChessAndData.Panel2.Controls.Add(this.totalEntriesGridView);
             this.splitChessAndData.Panel2.Controls.Add(this.queryGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.typeSelectionGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.levelSelectionGroupBox);
@@ -288,16 +292,6 @@
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
             // 
-            // chessBoard
-            // 
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(346, 414);
-            this.chessBoard.TabIndex = 0;
-            // 
             // queryGroupBox
             // 
             this.queryGroupBox.Controls.Add(this.queryButton);
@@ -332,6 +326,36 @@
             this.autoQueryCheckbox.UseVisualStyleBackColor = true;
             this.autoQueryCheckbox.CheckedChanged += new System.EventHandler(this.AutoQueryCheckbox_CheckedChanged);
             // 
+            // chessBoard
+            // 
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.Size = new System.Drawing.Size(346, 414);
+            this.chessBoard.TabIndex = 0;
+            // 
+            // totalEntriesGridView
+            // 
+            this.totalEntriesGridView.AllowUserToAddRows = false;
+            this.totalEntriesGridView.AllowUserToDeleteRows = false;
+            this.totalEntriesGridView.AllowUserToResizeColumns = false;
+            this.totalEntriesGridView.AllowUserToResizeRows = false;
+            this.totalEntriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.totalEntriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.totalEntriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.totalEntriesGridView.Location = new System.Drawing.Point(4, 54);
+            this.totalEntriesGridView.Name = "totalEntriesGridView";
+            this.totalEntriesGridView.ReadOnly = true;
+            this.totalEntriesGridView.RowHeadersWidth = 20;
+            this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.totalEntriesGridView.Size = new System.Drawing.Size(559, 45);
+            this.totalEntriesGridView.TabIndex = 5;
+            this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
+            this.totalEntriesGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.TotalEntriesGridView_RowPrePaint);
+            // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -362,6 +386,7 @@
             this.menuStrip1.PerformLayout();
             this.queryGroupBox.ResumeLayout(false);
             this.queryGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -389,6 +414,7 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.RichTextBox databaseInfoRichTextBox;
+        private System.Windows.Forms.DataGridView totalEntriesGridView;
     }
 }
 
