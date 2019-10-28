@@ -8,6 +8,7 @@ using System.Json;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -28,8 +29,29 @@ namespace chess_pos_db_gui
         private string ip = "127.0.0.1";
         private int port = 1234;
 
+        private string nowQuery = null;
+        private string nowFen = null;
+        private string nowSan = null;
+        private string nextQuery = null;
+        private string nextFen = null;
+        private string nextSan = null;
+
+        private Mutex queryMutex;
+
+        private Thread queryThread;
+
+        private ManualResetEvent anyOutstandingQuery;
+
+        private volatile bool endQueryThread;
+
         public Application()
         {
+            endQueryThread = false;
+            queryMutex = new Mutex();
+            anyOutstandingQuery = new ManualResetEvent(false);
+            queryThread = new Thread(new ThreadStart(QueryThread));
+            queryThread.Start();
+
             levels = new HashSet<GameLevel>();
             selects = new HashSet<Select>();
             data = null;
@@ -394,9 +416,157 @@ namespace chess_pos_db_gui
             UpdateData();
         }
 
+        private bool TryUpdateDataFromCache()
+        {
+            if (!database.IsOpen) return false;
+
+            var san = chessBoard.GetLastMoveSan();
+            var fen = san == "--"
+                ? chessBoard.GetFen()
+                : chessBoard.GetPrevFen();
+
+            var sig = fen + san;
+
+            try
+            {
+                var cached = queryCache.Get(sig);
+                if (cached == null)
+                {
+                    tabulatedData.Clear();
+                    totalTabulatedData.Clear();
+                    return false;
+                }
+                else
+                {
+                    data = cached;
+                }
+                Repopulate();
+
+                return true;
+            }
+            catch
+            {
+            }
+
+            tabulatedData.Clear();
+            totalTabulatedData.Clear();
+            return false;
+        }
+
+        private void QueryAsyncToCache(string sig, string fen, string san)
+        {
+            if (!database.IsOpen) return;
+
+            try
+            {
+                if (san == "--")
+                {
+                    data = database.Query(fen);
+                    queryMutex.WaitOne();
+                    queryCache.Add(sig, data);
+                    queryMutex.ReleaseMutex();
+                }
+                else
+                {
+                    data = database.Query(fen, san);
+                    queryMutex.WaitOne();
+                    queryCache.Add(sig, data);
+                    queryMutex.ReleaseMutex();
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private void QueryAsyncToCacheAndUpdate(string sig, string fen, string san)
+        {
+            QueryAsyncToCache(sig, fen, san);
+
+            queryMutex.WaitOne();
+
+            if (InvokeRequired)
+            {
+                Invoke(new Func<bool>(TryUpdateDataFromCache));
+            }
+            else
+            {
+                TryUpdateDataFromCache();
+            }
+            queryMutex.ReleaseMutex();
+        }
+
+        private void ScheduleUpdateDataAsync()
+        {
+            queryMutex.WaitOne();
+
+            var san = chessBoard.GetLastMoveSan();
+            var fen = san == "--"
+                ? chessBoard.GetFen()
+                : chessBoard.GetPrevFen();
+
+            var sig = fen + san;
+
+            if (TryUpdateDataFromCache())
+            {
+                queryMutex.ReleaseMutex();
+                return;
+            }
+
+            if (nowQuery == null)
+            {
+                nowQuery = sig;
+                nowFen = fen;
+                nowSan = san;
+                anyOutstandingQuery.Set();
+            }
+            else
+            {
+                nextQuery = sig;
+                nextFen = fen;
+                nextSan = san;
+            }
+
+            queryMutex.ReleaseMutex();
+        }
+        
+        private void QueryThread()
+        {
+            for(; ; )
+            {
+                anyOutstandingQuery.WaitOne();
+
+                if (endQueryThread) break;
+                if (nowQuery == null) continue;
+
+                QueryAsyncToCacheAndUpdate(nowQuery, nowFen, nowSan);
+
+                queryMutex.WaitOne();
+
+                nowQuery = nextQuery;
+                nowFen = nextFen;
+                nowSan = nextSan;
+                nextQuery = null;
+                nextFen = null;
+                nextSan = null;
+                if (nowQuery != null)
+                {
+                    anyOutstandingQuery.Set();
+                }
+                else
+                {
+                    anyOutstandingQuery.Reset();
+                }
+
+                queryMutex.ReleaseMutex();
+            }
+        }
+
         private void UpdateData()
         {
             if (!database.IsOpen) return;
+            ScheduleUpdateDataAsync();
+            return;
 
             var san = chessBoard.GetLastMoveSan();
             var fen = san == "--"
@@ -569,6 +739,13 @@ namespace chess_pos_db_gui
             {
                 totalEntriesGridView.Columns[e.Column.Index].Width = e.Column.Width;
             }
+        }
+
+        private void Application_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            endQueryThread = true;
+            anyOutstandingQuery.Set();
+            queryThread.Join();
         }
     }
 }
