@@ -14,91 +14,6 @@ using System.Windows.Forms;
 
 namespace chess_pos_db_gui
 {
-    class QueryQueueEntry
-    {
-        public string Sig { get; private set; }
-        public string Fen { get; private set; }
-        public string San { get; private set; }
-
-        public QueryQueueEntry(ChessBoard chessBoard)
-        {
-            San = chessBoard.GetLastMoveSan();
-            Fen = San == "--"
-                ? chessBoard.GetFen()
-                : chessBoard.GetPrevFen();
-
-            Sig = Fen + San;
-        }
-
-        public override int GetHashCode()
-        {
-            return Sig.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj.GetType() == this.GetType())
-            {
-                return Sig.Equals(((QueryQueueEntry)obj).Sig);
-            }
-            return false;
-        }
-    }
-
-    class QueryQueue
-    {
-        private QueryQueueEntry Current { get; set; }
-        private QueryQueueEntry Next { get; set; }
-
-        private object Lock;
-
-        public QueryQueue()
-        {
-            Current = null;
-            Next = null;
-
-            Lock = new object();
-        }
-
-        public void Enqueue(QueryQueueEntry e)
-        {
-            lock (Lock)
-            {
-                if (Current == null)
-                {
-                    Current = e;
-                }
-                else
-                {
-                    Next = e;
-                }
-            }
-        }
-
-        public bool IsEmpty()
-        {
-            return Current == null;
-        }
-
-        public QueryQueueEntry Pop()
-        {
-            lock (Lock)
-            {
-                if (Current != null)
-                {
-                    var ret = Current;
-                    Current = Next;
-                    Next = null;
-                    return ret;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-    }
-
     public partial class Application : Form
     {
         private static readonly int queryCacheSize = 128;
@@ -199,7 +114,7 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["HumanPct"].HeaderText = "H%";
 
-            totalEntriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            totalEntriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
             entriesGridView.Columns["Move"].Frozen = true;
             entriesGridView.Columns["Move"].MinimumWidth = 40;
@@ -747,17 +662,9 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void TotalEntriesGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        private void TotalEntriesGridView_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
-            totalEntriesGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
-        }
-
-        private void EntriesGridView_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
-        {
-            if (e.Column.Index < totalEntriesGridView.Columns.Count)
-            {
-                totalEntriesGridView.Columns[e.Column.Index].Width = e.Column.Width;
-            }
+            totalEntriesGridView.Columns[e.Column.Index].Width = e.Column.Width;
         }
 
         private void Application_FormClosing(object sender, FormClosingEventArgs e)
@@ -767,4 +674,90 @@ namespace chess_pos_db_gui
             queryThread.Join();
         }
     }
+
+    class QueryQueueEntry
+    {
+        public string Sig { get; private set; }
+        public string Fen { get; private set; }
+        public string San { get; private set; }
+
+        public QueryQueueEntry(ChessBoard chessBoard)
+        {
+            San = chessBoard.GetLastMoveSan();
+            Fen = San == "--"
+                ? chessBoard.GetFen()
+                : chessBoard.GetPrevFen();
+
+            Sig = Fen + San;
+        }
+
+        public override int GetHashCode()
+        {
+            return Sig.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj.GetType() == this.GetType())
+            {
+                return Sig.Equals(((QueryQueueEntry)obj).Sig);
+            }
+            return false;
+        }
+    }
+
+    class QueryQueue
+    {
+        private QueryQueueEntry Current { get; set; }
+        private QueryQueueEntry Next { get; set; }
+
+        private object Lock;
+
+        public QueryQueue()
+        {
+            Current = null;
+            Next = null;
+
+            Lock = new object();
+        }
+
+        public void Enqueue(QueryQueueEntry e)
+        {
+            lock (Lock)
+            {
+                if (Current == null)
+                {
+                    Current = e;
+                }
+                else
+                {
+                    Next = e;
+                }
+            }
+        }
+
+        public bool IsEmpty()
+        {
+            return Current == null;
+        }
+
+        public QueryQueueEntry Pop()
+        {
+            lock (Lock)
+            {
+                if (Current != null)
+                {
+                    var ret = Current;
+                    Current = Next;
+                    Next = null;
+                    return ret;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+    }
+
 }

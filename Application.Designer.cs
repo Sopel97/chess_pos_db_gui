@@ -72,7 +72,6 @@
             // 
             this.entriesGridView.AllowUserToAddRows = false;
             this.entriesGridView.AllowUserToDeleteRows = false;
-            this.entriesGridView.AllowUserToOrderColumns = true;
             this.entriesGridView.AllowUserToResizeRows = false;
             this.entriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -87,15 +86,14 @@
             this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.entriesGridView.Location = new System.Drawing.Point(3, 104);
+            this.entriesGridView.Location = new System.Drawing.Point(3, 105);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(560, 454);
+            this.entriesGridView.Size = new System.Drawing.Size(560, 453);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
-            this.entriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.EntriesGridView_ColumnWidthChanged);
             this.entriesGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.EntriesGridView_RowPrePaint);
             this.entriesGridView.DoubleClick += new System.EventHandler(this.EntriesGridView_DoubleClick);
             // 
@@ -312,15 +310,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.totalEntriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.totalEntriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.totalEntriesGridView.Location = new System.Drawing.Point(4, 54);
+            this.totalEntriesGridView.Location = new System.Drawing.Point(3, 54);
             this.totalEntriesGridView.Name = "totalEntriesGridView";
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(559, 45);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(560, 45);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
-            this.totalEntriesGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.TotalEntriesGridView_RowPrePaint);
+            this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
             // 
             // queryGroupBox
             // 
