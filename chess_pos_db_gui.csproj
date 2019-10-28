@@ -66,6 +66,7 @@
       <DependentUpon>ChessBoard.cs</DependentUpon>
     </Compile>
     <Compile Include="ChessBoardHistory.cs" />
+    <Compile Include="ConditionVariable.cs" />
     <Compile Include="DatabaseCreationForm.cs">
       <SubType>Form</SubType>
     </Compile>

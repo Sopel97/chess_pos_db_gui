@@ -14,6 +14,91 @@ using System.Windows.Forms;
 
 namespace chess_pos_db_gui
 {
+    class QueryQueueEntry
+    {
+        public string Sig { get; private set; }
+        public string Fen { get; private set; }
+        public string San { get; private set; }
+
+        public QueryQueueEntry(ChessBoard chessBoard)
+        {
+            San = chessBoard.GetLastMoveSan();
+            Fen = San == "--"
+                ? chessBoard.GetFen()
+                : chessBoard.GetPrevFen();
+
+            Sig = Fen + San;
+        }
+
+        public override int GetHashCode()
+        {
+            return Sig.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj.GetType() == this.GetType())
+            {
+                return Sig.Equals(((QueryQueueEntry)obj).Sig);
+            }
+            return false;
+        }
+    }
+
+    class QueryQueue
+    {
+        private QueryQueueEntry Current { get; set; }
+        private QueryQueueEntry Next { get; set; }
+
+        private object Lock;
+
+        public QueryQueue()
+        {
+            Current = null;
+            Next = null;
+
+            Lock = new object();
+        }
+
+        public void Enqueue(QueryQueueEntry e)
+        {
+            lock (Lock)
+            {
+                if (Current == null)
+                {
+                    Current = e;
+                }
+                else
+                {
+                    Next = e;
+                }
+            }
+        }
+
+        public bool IsEmpty()
+        {
+            return Current == null;
+        }
+
+        public QueryQueueEntry Pop()
+        {
+            lock (Lock)
+            {
+                if (Current != null)
+                {
+                    var ret = Current;
+                    Current = Next;
+                    Next = null;
+                    return ret;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+    }
+
     public partial class Application : Form
     {
         private static readonly int queryCacheSize = 128;
@@ -24,31 +109,30 @@ namespace chess_pos_db_gui
         private DataTable tabulatedData;
         private DataTable totalTabulatedData;
         private DatabaseProxy database;
-        private LRUCache<string, QueryResponse> queryCache;
+        private LRUCache<QueryQueueEntry, QueryResponse> queryCache;
         private bool isEntryDataUpToDate = false;
         private string ip = "127.0.0.1";
         private int port = 1234;
 
-        private string nowQuery = null;
-        private string nowFen = null;
-        private string nowSan = null;
-        private string nextQuery = null;
-        private string nextFen = null;
-        private string nextSan = null;
+        private QueryQueue queryQueue;
 
-        private Mutex queryMutex;
+        private object cacheLock;
 
         private Thread queryThread;
 
-        private ManualResetEvent anyOutstandingQuery;
+        private ConditionVariable anyOutstandingQuery;
 
         private volatile bool endQueryThread;
 
+        private Mutex queueMutex;
+
         public Application()
         {
+            queueMutex = new Mutex();
+            queryQueue = new QueryQueue();
+            cacheLock = new object();
             endQueryThread = false;
-            queryMutex = new Mutex();
-            anyOutstandingQuery = new ManualResetEvent(false);
+            anyOutstandingQuery = new ConditionVariable();
             queryThread = new Thread(new ThreadStart(QueryThread));
             queryThread.Start();
 
@@ -57,7 +141,7 @@ namespace chess_pos_db_gui
             data = null;
             tabulatedData = new DataTable();
             totalTabulatedData = new DataTable();
-            queryCache = new LRUCache<string, QueryResponse>(queryCacheSize);
+            queryCache = new LRUCache<QueryQueueEntry, QueryResponse>(queryCacheSize);
 
             InitializeComponent();
 
@@ -420,16 +504,16 @@ namespace chess_pos_db_gui
         {
             if (!database.IsOpen) return false;
 
-            var san = chessBoard.GetLastMoveSan();
-            var fen = san == "--"
-                ? chessBoard.GetFen()
-                : chessBoard.GetPrevFen();
-
-            var sig = fen + san;
+            var e = new QueryQueueEntry(chessBoard);
 
             try
             {
-                var cached = queryCache.Get(sig);
+                QueryResponse cached = null;
+                lock (cacheLock)
+                {
+                    cached = queryCache.Get(e);
+                }
+
                 if (cached == null)
                 {
                     tabulatedData.Clear();
@@ -453,25 +537,27 @@ namespace chess_pos_db_gui
             return false;
         }
 
-        private void QueryAsyncToCache(string sig, string fen, string san)
+        private void QueryAsyncToCache(QueryQueueEntry sig)
         {
             if (!database.IsOpen) return;
 
             try
             {
-                if (san == "--")
+                if (sig.San == "--")
                 {
-                    data = database.Query(fen);
-                    queryMutex.WaitOne();
-                    queryCache.Add(sig, data);
-                    queryMutex.ReleaseMutex();
+                    data = database.Query(sig.Fen);
+                    lock (cacheLock)
+                    {
+                        queryCache.Add(sig, data);
+                    }
                 }
                 else
                 {
-                    data = database.Query(fen, san);
-                    queryMutex.WaitOne();
-                    queryCache.Add(sig, data);
-                    queryMutex.ReleaseMutex();
+                    data = database.Query(sig.Fen, sig.San);
+                    lock (cacheLock)
+                    {
+                        queryCache.Add(sig, data);
+                    }
                 }
             }
             catch
@@ -479,11 +565,9 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void QueryAsyncToCacheAndUpdate(string sig, string fen, string san)
+        private void QueryAsyncToCacheAndUpdate(QueryQueueEntry sig)
         {
-            QueryAsyncToCache(sig, fen, san);
-
-            queryMutex.WaitOne();
+            QueryAsyncToCache(sig);
 
             if (InvokeRequired)
             {
@@ -493,72 +577,42 @@ namespace chess_pos_db_gui
             {
                 TryUpdateDataFromCache();
             }
-            queryMutex.ReleaseMutex();
         }
 
         private void ScheduleUpdateDataAsync()
         {
-            queryMutex.WaitOne();
-
-            var san = chessBoard.GetLastMoveSan();
-            var fen = san == "--"
-                ? chessBoard.GetFen()
-                : chessBoard.GetPrevFen();
-
-            var sig = fen + san;
-
             if (TryUpdateDataFromCache())
             {
-                queryMutex.ReleaseMutex();
                 return;
             }
 
-            if (nowQuery == null)
-            {
-                nowQuery = sig;
-                nowFen = fen;
-                nowSan = san;
-                anyOutstandingQuery.Set();
-            }
-            else
-            {
-                nextQuery = sig;
-                nextFen = fen;
-                nextSan = san;
-            }
-
-            queryMutex.ReleaseMutex();
+            var sig = new QueryQueueEntry(chessBoard);
+            queueMutex.WaitOne();
+            queryQueue.Enqueue(sig);
+            queueMutex.ReleaseMutex();
+            anyOutstandingQuery.Signal();
         }
         
         private void QueryThread()
         {
             for(; ; )
             {
-                anyOutstandingQuery.WaitOne();
-
-                if (endQueryThread) break;
-                if (nowQuery == null) continue;
-
-                QueryAsyncToCacheAndUpdate(nowQuery, nowFen, nowSan);
-
-                queryMutex.WaitOne();
-
-                nowQuery = nextQuery;
-                nowFen = nextFen;
-                nowSan = nextSan;
-                nextQuery = null;
-                nextFen = null;
-                nextSan = null;
-                if (nowQuery != null)
+                queueMutex.WaitOne();
+                while(queryQueue.IsEmpty() && !endQueryThread)
                 {
-                    anyOutstandingQuery.Set();
-                }
-                else
-                {
-                    anyOutstandingQuery.Reset();
+                    anyOutstandingQuery.Wait(queueMutex);
                 }
 
-                queryMutex.ReleaseMutex();
+                if (endQueryThread)
+                {
+                    queueMutex.ReleaseMutex();
+                    break;
+                }
+
+                var sig = queryQueue.Pop();
+                queueMutex.ReleaseMutex();
+
+                QueryAsyncToCacheAndUpdate(sig);
             }
         }
 
@@ -566,41 +620,6 @@ namespace chess_pos_db_gui
         {
             if (!database.IsOpen) return;
             ScheduleUpdateDataAsync();
-            return;
-
-            var san = chessBoard.GetLastMoveSan();
-            var fen = san == "--"
-                ? chessBoard.GetFen()
-                : chessBoard.GetPrevFen();
-
-            var sig = fen + san;
-
-            try
-            {
-                var cached = queryCache.Get(sig);
-                if (cached == null)
-                {
-                    if (san == "--")
-                    {
-                        data = database.Query(fen);
-                        queryCache.Add(sig, data);
-                    }
-                    else
-                    {
-                        data = database.Query(fen, san);
-                        queryCache.Add(sig, data);
-                    }
-                }
-                else
-                {
-                    data = cached;
-                }
-                Repopulate();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         private void CreateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -744,7 +763,7 @@ namespace chess_pos_db_gui
         private void Application_FormClosing(object sender, FormClosingEventArgs e)
         {
             endQueryThread = true;
-            anyOutstandingQuery.Set();
+            anyOutstandingQuery.Signal();
             queryThread.Join();
         }
     }
