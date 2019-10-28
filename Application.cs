@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessDotNet;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,6 +7,8 @@ using System.Drawing;
 using System.IO;
 using System.Json;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -20,11 +23,11 @@ namespace chess_pos_db_gui
 
         private HashSet<GameLevel> levels;
         private HashSet<Select> selects;
-        private QueryResponse data;
+        private CacheEntry data;
         private DataTable tabulatedData;
         private DataTable totalTabulatedData;
         private DatabaseProxy database;
-        private LRUCache<QueryQueueEntry, QueryResponse> queryCache;
+        private LRUCache<QueryQueueEntry, CacheEntry> queryCache;
         private bool isEntryDataUpToDate = false;
         private string ip = "127.0.0.1";
         private int port = 1234;
@@ -41,6 +44,9 @@ namespace chess_pos_db_gui
 
         private Mutex queueMutex;
 
+        private const string URL = "http://www.chessdb.cn/cdb.php";
+        private HttpClient chessdbcn;
+
         public Application()
         {
             queueMutex = new Mutex();
@@ -56,7 +62,7 @@ namespace chess_pos_db_gui
             data = null;
             tabulatedData = new DataTable();
             totalTabulatedData = new DataTable();
-            queryCache = new LRUCache<QueryQueueEntry, QueryResponse>(queryCacheSize);
+            queryCache = new LRUCache<QueryQueueEntry, CacheEntry>(queryCacheSize);
 
             InitializeComponent();
 
@@ -68,7 +74,7 @@ namespace chess_pos_db_gui
 
             DoubleBuffered = true;
 
-            tabulatedData.Columns.Add(new DataColumn("Move", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("Move", typeof(MoveWithSan)));
             tabulatedData.Columns.Add(new DataColumn("Count", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
@@ -84,6 +90,8 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("PlyCount", typeof(ushort)));
             tabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("GameId", typeof(uint)));
+            tabulatedData.Columns.Add(new DataColumn("Eval", typeof(int)));
+            tabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("IsOnlyTransposition", typeof(bool)));
 
             totalTabulatedData.Columns.Add(new DataColumn("Move", typeof(string)));
@@ -135,6 +143,10 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["PlyCount"].MinimumWidth = 35;
             entriesGridView.Columns["PlyCount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["GameId"].HeaderText = "Game\u00A0ID";
+            entriesGridView.Columns["Eval"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            entriesGridView.Columns["Eval"].HeaderText = "Eval";
+            entriesGridView.Columns["EvalPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            entriesGridView.Columns["EvalPct"].HeaderText = "Eval%";
             entriesGridView.Columns["IsOnlyTransposition"].Visible = false;
 
             entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
@@ -174,6 +186,43 @@ namespace chess_pos_db_gui
             database?.Dispose();
         }
 
+        private Dictionary<Move, Score> GetChessdbcnScores(string fen)
+        {
+            const string urlParameters = "?action=queryall&board={0}";
+
+            Dictionary<Move, Score> scores = new Dictionary<Move, Score>();
+
+            HttpResponseMessage response = chessdbcn.GetAsync(String.Format(urlParameters, fen)).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var responseStr = response.Content.ReadAsStringAsync().Result;
+                Console.WriteLine("{0}", responseStr);
+                string[] byMoveStrs = responseStr.Split('|');
+                foreach (var byMoveStr in byMoveStrs)
+                {
+                    string[] parts = byMoveStr.Split(',');
+
+                    Dictionary<string, string> values = new Dictionary<string, string>();
+                    foreach (var part in parts)
+                    {
+                        string[] kv = part.Split(':');
+                        values.Add(kv[0], kv[1]);
+                    }
+                    string moveStr = values["move"];
+                    string scoreStr = values["score"];
+                    string winrateStr = values["winrate"];
+
+                    scores.Add(chessBoard.LanToMove(moveStr), new Score(scoreStr, winrateStr));
+                }
+            }
+            else
+            {
+                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+            }
+
+            return scores;
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             chessBoard.LoadImages("assets/graphics");
@@ -190,6 +239,13 @@ namespace chess_pos_db_gui
 
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
             chessBoard.PositionChanged += OnPositionChanged;
+
+            chessdbcn = new HttpClient();
+            chessdbcn.BaseAddress = new Uri(URL);
+
+            // Add an Accept header for JSON format.
+            chessdbcn.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
 
             UpdateDatabaseInfo();
         }
@@ -209,10 +265,17 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Populate(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, bool isOnlyTransposition)
+        private void Populate(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, bool isOnlyTransposition, Score score)
         {
             var row = tabulatedData.NewRow();
-            row["Move"] = move;
+            if (move == "--")
+            {
+                row["Move"] = new MoveWithSan(null, move);
+            }
+            else
+            {
+                row["Move"] = new MoveWithSan(chessBoard.SanToMove(move), move);
+            }
             row["Count"] = entry.Count;
             row["WinCount"] = entry.WinCount;
             row["DrawCount"] = entry.DrawCount;
@@ -220,6 +283,13 @@ namespace chess_pos_db_gui
             row["Perf"] = (entry.Perf);
             row["DrawPct"] = (entry.DrawRate);
             row["HumanPct"] = ((double)nonEngineEntry.Count / (double)entry.Count);
+
+            // score is always for side to move
+            if (score != null)
+            {
+                row["Eval"] = score.Value;
+                row["EvalPct"] = score.WinPct;
+            }
 
             foreach (GameHeader header in entry.FirstGame)
             {
@@ -260,7 +330,25 @@ namespace chess_pos_db_gui
             totalTabulatedData.Rows.InsertAt(row, 0);
         }
 
-        private void Populate(Dictionary<string, AggregatedEntry> entries, IEnumerable<string> continuationMoves, Dictionary<string, AggregatedEntry> nonEngineEntries)
+        private Score GetBestScore(Dictionary<Move, Score> scores)
+        {
+            Score best = null;
+            foreach(KeyValuePair<Move, Score> entry in scores)
+            {
+                if (best == null || (entry.Value.Value > best.Value))
+                {
+                    best = entry.Value;
+                }
+            }
+            return best;
+        }
+
+        private void Populate(
+            Dictionary<string, AggregatedEntry> entries, 
+            IEnumerable<string> continuationMoves, 
+            Dictionary<string, AggregatedEntry> nonEngineEntries, 
+            Dictionary<Move, Score> scores
+            )
         {
             entriesGridView.SuspendLayout();
             Clear();
@@ -275,7 +363,17 @@ namespace chess_pos_db_gui
                     nonEngineEntries.Add(entry.Key, new AggregatedEntry());
                 }
 
-                Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key));
+                if (entry.Key == "--")
+                {
+                    Score score = GetBestScore(scores);
+                    Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), score);
+                }
+                else
+                {
+                    Score score = null;
+                    scores.TryGetValue(chessBoard.SanToMove(entry.Key), out score);
+                    Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), score);
+                }
 
                 if (entry.Key != "--")
                 {
@@ -291,10 +389,10 @@ namespace chess_pos_db_gui
             entriesGridView.Refresh();
         }
 
-        private void Gather(QueryResponse res, Select select, List<GameLevel> levels, ref Dictionary<string, AggregatedEntry> aggregatedEntries)
+        private void Gather(CacheEntry res, Select select, List<GameLevel> levels, ref Dictionary<string, AggregatedEntry> aggregatedEntries)
         {
-            var rootEntries = res.Results[0].ResultsBySelect[select].Root;
-            var childrenEntries = res.Results[0].ResultsBySelect[select].Children;
+            var rootEntries = res.Stats.Results[0].ResultsBySelect[select].Root;
+            var childrenEntries = res.Stats.Results[0].ResultsBySelect[select].Children;
 
             if (aggregatedEntries.ContainsKey("--"))
             {
@@ -317,7 +415,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Populate(QueryResponse res, List<Select> selects, List<GameLevel> levels)
+        private void Populate(CacheEntry res, List<Select> selects, List<GameLevel> levels)
         {
             Dictionary<string, AggregatedEntry> aggregatedContinuationEntries = new Dictionary<string, AggregatedEntry>();
 
@@ -341,7 +439,7 @@ namespace chess_pos_db_gui
                 }
             }
 
-            Populate(aggregatedEntries, aggregatedContinuationEntries.Where(p => p.Value.Count != 0).Select(p => p.Key), aggregatedNonEngineEntries);
+            Populate(aggregatedEntries, aggregatedContinuationEntries.Where(p => p.Value.Count != 0).Select(p => p.Key), aggregatedNonEngineEntries, data.Scores);
         }
 
         private void Clear()
@@ -423,7 +521,7 @@ namespace chess_pos_db_gui
 
             try
             {
-                QueryResponse cached = null;
+                CacheEntry cached = null;
                 lock (cacheLock)
                 {
                     cached = queryCache.Get(e);
@@ -458,9 +556,13 @@ namespace chess_pos_db_gui
 
             try
             {
+                var data = new CacheEntry(null, null);
+                var scores = GetChessdbcnScores(sig.CurrentFen);
+                data.Scores = scores;
+
                 if (sig.San == "--")
                 {
-                    data = database.Query(sig.Fen);
+                    data.Stats = database.Query(sig.Fen);
                     lock (cacheLock)
                     {
                         queryCache.Add(sig, data);
@@ -468,12 +570,13 @@ namespace chess_pos_db_gui
                 }
                 else
                 {
-                    data = database.Query(sig.Fen, sig.San);
+                    data.Stats = database.Query(sig.Fen, sig.San);
                     lock (cacheLock)
                     {
                         queryCache.Add(sig, data);
                     }
                 }
+
             }
             catch
             {
@@ -627,14 +730,26 @@ namespace chess_pos_db_gui
 
         private void EntriesGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (entriesGridView.Columns[e.ColumnIndex].HeaderText == "H%")
+            if (e.ColumnIndex == 0)
+            {
+                e.Value = e.Value.ToString();
+            }
+            else if (entriesGridView.Columns[e.ColumnIndex].HeaderText == "H%")
             {
                 e.Value = (Double.Parse(e.Value.ToString()) * 100).ToString("0") + "%";
                 e.FormattingApplied = true;
             }
             else if (entriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("%"))
             {
-                e.Value = (Double.Parse(e.Value.ToString())*100).ToString("0.0") + "%";
+                var str = e.Value.ToString();
+                if (str != "")
+                {
+                    e.Value = (Double.Parse(e.Value.ToString()) * 100).ToString("0.0") + "%";
+                }
+                else
+                {
+                    e.Value = "";
+                }
                 e.FormattingApplied = true;
             }
         }
@@ -680,6 +795,7 @@ namespace chess_pos_db_gui
         public string Sig { get; private set; }
         public string Fen { get; private set; }
         public string San { get; private set; }
+        public string CurrentFen { get; private set; }
 
         public QueryQueueEntry(ChessBoard chessBoard)
         {
@@ -687,6 +803,8 @@ namespace chess_pos_db_gui
             Fen = San == "--"
                 ? chessBoard.GetFen()
                 : chessBoard.GetPrevFen();
+
+            CurrentFen = chessBoard.GetFen();
 
             Sig = Fen + San;
         }
@@ -757,6 +875,35 @@ namespace chess_pos_db_gui
                     return null;
                 }
             }
+        }
+    }
+
+    class MoveWithSan
+    {
+        public Move Move { get; set; }
+        public string San { get; set; }
+
+        public MoveWithSan(Move move, string san)
+        {
+            Move = move;
+            San = san;
+        }
+
+        public override string ToString()
+        {
+            return San;
+        }
+    }
+
+    class CacheEntry
+    {
+        public QueryResponse Stats { get; set; }
+        public Dictionary<Move, Score> Scores { get; set; }
+
+        public CacheEntry(QueryResponse stats, Dictionary<Move, Score> scores)
+        {
+            Stats = stats;
+            Scores = scores;
         }
     }
 

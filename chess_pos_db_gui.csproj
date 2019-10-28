@@ -88,6 +88,7 @@
     <Compile Include="ResultForRoot.cs" />
     <Compile Include="RootPosition.cs" />
     <Compile Include="San.cs" />
+    <Compile Include="Score.cs" />
     <Compile Include="SegregatedEntries.cs" />
     <Compile Include="Select.cs" />
     <EmbeddedResource Include="Application.resx">

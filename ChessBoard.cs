@@ -324,6 +324,18 @@ namespace chess_pos_db_gui
             return DoMove(move);
         }
 
+        public Move LanToMove(string lan)
+        {
+            Move move = San.ParseLan(new ChessGame(History.Current().GCD), lan);
+            return move;
+        }
+
+        public Move SanToMove(string san)
+        {
+            Move move = San.ParseSan(new ChessGame(History.Current().GCD), san);
+            return move;
+        }
+
         private bool DoMove(Move move)
         {
             if (!History.IsMoveValid(move)) return false;
@@ -463,6 +475,11 @@ namespace chess_pos_db_gui
             UpdateFenTextBox(fen);
 
             chessBoardPanel.Refresh();
+        }
+
+        internal Player CurrentPlayer()
+        {
+            return History.Current().GCD.WhoseTurn;
         }
 
         private void UpdateFenTextBox(string fen)
