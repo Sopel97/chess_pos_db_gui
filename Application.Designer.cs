@@ -46,11 +46,14 @@
             this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.totalEntriesGridView = new System.Windows.Forms.DataGridView();
             this.queryGroupBox = new System.Windows.Forms.GroupBox();
+            this.queryEvalCheckBox = new System.Windows.Forms.CheckBox();
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
+            this.displayGroupBox = new System.Windows.Forms.GroupBox();
+            this.hideNeverPlayedCheckBox = new System.Windows.Forms.CheckBox();
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             this.typeSelectionGroupBox.SuspendLayout();
@@ -66,6 +69,7 @@
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).BeginInit();
             this.queryGroupBox.SuspendLayout();
+            this.displayGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -86,12 +90,12 @@
             this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.entriesGridView.Location = new System.Drawing.Point(3, 105);
+            this.entriesGridView.Location = new System.Drawing.Point(3, 154);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(560, 453);
+            this.entriesGridView.Size = new System.Drawing.Size(560, 404);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
             this.entriesGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.EntriesGridView_RowPrePaint);
@@ -99,11 +103,10 @@
             // 
             // levelSelectionGroupBox
             // 
-            this.levelSelectionGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.levelSelectionGroupBox.Controls.Add(this.levelServerCheckBox);
             this.levelSelectionGroupBox.Controls.Add(this.levelEngineCheckBox);
             this.levelSelectionGroupBox.Controls.Add(this.levelHumanCheckBox);
-            this.levelSelectionGroupBox.Location = new System.Drawing.Point(136, 3);
+            this.levelSelectionGroupBox.Location = new System.Drawing.Point(3, 53);
             this.levelSelectionGroupBox.Name = "levelSelectionGroupBox";
             this.levelSelectionGroupBox.Size = new System.Drawing.Size(206, 44);
             this.levelSelectionGroupBox.TabIndex = 1;
@@ -145,10 +148,9 @@
             // 
             // typeSelectionGroupBox
             // 
-            this.typeSelectionGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.typeSelectionGroupBox.Controls.Add(this.typeTranspositionsCheckBox);
             this.typeSelectionGroupBox.Controls.Add(this.typeContinuationsCheckBox);
-            this.typeSelectionGroupBox.Location = new System.Drawing.Point(348, 3);
+            this.typeSelectionGroupBox.Location = new System.Drawing.Point(215, 53);
             this.typeSelectionGroupBox.Name = "typeSelectionGroupBox";
             this.typeSelectionGroupBox.Size = new System.Drawing.Size(206, 44);
             this.typeSelectionGroupBox.TabIndex = 4;
@@ -191,6 +193,7 @@
             // 
             // splitChessAndData.Panel2
             // 
+            this.splitChessAndData.Panel2.Controls.Add(this.displayGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.totalEntriesGridView);
             this.splitChessAndData.Panel2.Controls.Add(this.queryGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.typeSelectionGroupBox);
@@ -227,12 +230,11 @@
             // 
             this.databaseInfoGroupBox.Controls.Add(this.databaseInfoRichTextBox);
             this.databaseInfoGroupBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.databaseInfoGroupBox.Location = new System.Drawing.Point(0, 30);
+            this.databaseInfoGroupBox.Location = new System.Drawing.Point(0, 22);
             this.databaseInfoGroupBox.Name = "databaseInfoGroupBox";
-            this.databaseInfoGroupBox.Size = new System.Drawing.Size(346, 110);
+            this.databaseInfoGroupBox.Size = new System.Drawing.Size(346, 118);
             this.databaseInfoGroupBox.TabIndex = 0;
             this.databaseInfoGroupBox.TabStop = false;
-            this.databaseInfoGroupBox.Text = "Database";
             // 
             // databaseInfoRichTextBox
             // 
@@ -242,7 +244,7 @@
             this.databaseInfoRichTextBox.Location = new System.Drawing.Point(3, 16);
             this.databaseInfoRichTextBox.Name = "databaseInfoRichTextBox";
             this.databaseInfoRichTextBox.ReadOnly = true;
-            this.databaseInfoRichTextBox.Size = new System.Drawing.Size(340, 91);
+            this.databaseInfoRichTextBox.Size = new System.Drawing.Size(340, 99);
             this.databaseInfoRichTextBox.TabIndex = 0;
             this.databaseInfoRichTextBox.Text = "";
             this.databaseInfoRichTextBox.WordWrap = false;
@@ -290,16 +292,6 @@
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
             // 
-            // chessBoard
-            // 
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(346, 414);
-            this.chessBoard.TabIndex = 0;
-            // 
             // totalEntriesGridView
             // 
             this.totalEntriesGridView.AllowUserToAddRows = false;
@@ -310,7 +302,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.totalEntriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.totalEntriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.totalEntriesGridView.Location = new System.Drawing.Point(3, 54);
+            this.totalEntriesGridView.Location = new System.Drawing.Point(3, 103);
             this.totalEntriesGridView.Name = "totalEntriesGridView";
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
@@ -322,14 +314,27 @@
             // 
             // queryGroupBox
             // 
+            this.queryGroupBox.Controls.Add(this.queryEvalCheckBox);
             this.queryGroupBox.Controls.Add(this.queryButton);
             this.queryGroupBox.Controls.Add(this.autoQueryCheckbox);
             this.queryGroupBox.Location = new System.Drawing.Point(3, 3);
             this.queryGroupBox.Name = "queryGroupBox";
-            this.queryGroupBox.Size = new System.Drawing.Size(126, 44);
+            this.queryGroupBox.Size = new System.Drawing.Size(206, 44);
             this.queryGroupBox.TabIndex = 3;
             this.queryGroupBox.TabStop = false;
             this.queryGroupBox.Text = "Query";
+            // 
+            // queryEvalCheckBox
+            // 
+            this.queryEvalCheckBox.AutoSize = true;
+            this.queryEvalCheckBox.Checked = true;
+            this.queryEvalCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.queryEvalCheckBox.Location = new System.Drawing.Point(139, 19);
+            this.queryEvalCheckBox.Name = "queryEvalCheckBox";
+            this.queryEvalCheckBox.Size = new System.Drawing.Size(47, 17);
+            this.queryEvalCheckBox.TabIndex = 2;
+            this.queryEvalCheckBox.Text = "Eval";
+            this.queryEvalCheckBox.UseVisualStyleBackColor = true;
             // 
             // queryButton
             // 
@@ -346,13 +351,44 @@
             this.autoQueryCheckbox.AutoSize = true;
             this.autoQueryCheckbox.Checked = true;
             this.autoQueryCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.autoQueryCheckbox.Location = new System.Drawing.Point(72, 19);
+            this.autoQueryCheckbox.Location = new System.Drawing.Point(73, 19);
             this.autoQueryCheckbox.Name = "autoQueryCheckbox";
             this.autoQueryCheckbox.Size = new System.Drawing.Size(48, 17);
             this.autoQueryCheckbox.TabIndex = 0;
             this.autoQueryCheckbox.Text = "Auto";
             this.autoQueryCheckbox.UseVisualStyleBackColor = true;
             this.autoQueryCheckbox.CheckedChanged += new System.EventHandler(this.AutoQueryCheckbox_CheckedChanged);
+            // 
+            // displayGroupBox
+            // 
+            this.displayGroupBox.Controls.Add(this.hideNeverPlayedCheckBox);
+            this.displayGroupBox.Location = new System.Drawing.Point(215, 3);
+            this.displayGroupBox.Name = "displayGroupBox";
+            this.displayGroupBox.Size = new System.Drawing.Size(206, 44);
+            this.displayGroupBox.TabIndex = 5;
+            this.displayGroupBox.TabStop = false;
+            this.displayGroupBox.Text = "Display";
+            // 
+            // hideNeverPlayedCheckBox
+            // 
+            this.hideNeverPlayedCheckBox.AutoSize = true;
+            this.hideNeverPlayedCheckBox.Location = new System.Drawing.Point(6, 19);
+            this.hideNeverPlayedCheckBox.Name = "hideNeverPlayedCheckBox";
+            this.hideNeverPlayedCheckBox.Size = new System.Drawing.Size(71, 17);
+            this.hideNeverPlayedCheckBox.TabIndex = 0;
+            this.hideNeverPlayedCheckBox.Text = "Hide N=0";
+            this.hideNeverPlayedCheckBox.UseVisualStyleBackColor = true;
+            this.hideNeverPlayedCheckBox.CheckedChanged += new System.EventHandler(this.HideNeverPlayedCheckBox_CheckedChanged);
+            // 
+            // chessBoard
+            // 
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.Size = new System.Drawing.Size(346, 414);
+            this.chessBoard.TabIndex = 0;
             // 
             // Application
             // 
@@ -386,6 +422,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).EndInit();
             this.queryGroupBox.ResumeLayout(false);
             this.queryGroupBox.PerformLayout();
+            this.displayGroupBox.ResumeLayout(false);
+            this.displayGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -414,6 +452,9 @@
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.RichTextBox databaseInfoRichTextBox;
         private System.Windows.Forms.DataGridView totalEntriesGridView;
+        private System.Windows.Forms.CheckBox queryEvalCheckBox;
+        private System.Windows.Forms.GroupBox displayGroupBox;
+        private System.Windows.Forms.CheckBox hideNeverPlayedCheckBox;
     }
 }
 

@@ -32,20 +32,26 @@ namespace chess_pos_db_gui
 
         public Score(string value, string winpct)
         {
-            try
+            if (value != null)
             {
-                Value = int.Parse(value.Split(' ')[0]);
-            }
-            catch
-            {
+                try
+                {
+                    Value = int.Parse(value.Split(' ')[0]);
+                }
+                catch
+                {
+                }
             }
 
-            try
+            if (winpct != null)
             {
-                WinPct = double.Parse(winpct, CultureInfo.InvariantCulture) / 100.0;
-            }
-            catch
-            {
+                try
+                {
+                    WinPct = double.Parse(winpct, CultureInfo.InvariantCulture) / 100.0;
+                }
+                catch
+                {
+                }
             }
         }
 

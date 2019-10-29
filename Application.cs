@@ -370,11 +370,14 @@ namespace chess_pos_db_gui
             entriesGridView.SuspendLayout();
             Clear();
 
+            bool hideEmpty = hideNeverPlayedCheckBox.Checked;
+
             AggregatedEntry total = new AggregatedEntry();
             AggregatedEntry totalNonEngine = new AggregatedEntry();
             foreach (KeyValuePair<string, AggregatedEntry> entry in entries)
             {
-                if (IsEmpty(entry.Value)) continue;
+                if (hideEmpty && IsEmpty(entry.Value)) continue;
+
                 if (!nonEngineEntries.ContainsKey(entry.Key))
                 {
                     nonEngineEntries.Add(entry.Key, new AggregatedEntry());
@@ -574,7 +577,10 @@ namespace chess_pos_db_gui
             try
             {
                 var data = new CacheEntry(null, null);
-                var scores = Task.Run(() => GetChessdbcnScores(sig.CurrentFen));
+                ;
+                var scores = queryEvalCheckBox.Checked
+                    ? Task.Run(() => GetChessdbcnScores(sig.CurrentFen))
+                    : Task.FromResult(new Dictionary<Move, Score>());
 
                 if (sig.San == "--")
                 {
@@ -753,19 +759,25 @@ namespace chess_pos_db_gui
             }
             else if (entriesGridView.Columns[e.ColumnIndex].HeaderText == "H%")
             {
-                e.Value = (Double.Parse(e.Value.ToString()) * 100).ToString("0") + "%";
+                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
+                {
+                    e.Value = "";
+                }
+                else
+                {
+                    e.Value = ((double)e.Value * 100).ToString("0") + "%";
+                }
                 e.FormattingApplied = true;
             }
             else if (entriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("%"))
             {
-                var str = e.Value.ToString();
-                if (str != "")
+                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
                 {
-                    e.Value = (Double.Parse(e.Value.ToString()) * 100).ToString("0.0") + "%";
+                    e.Value = "";
                 }
                 else
                 {
-                    e.Value = "";
+                    e.Value = ((double)e.Value * 100).ToString("0.0") + "%";
                 }
                 e.FormattingApplied = true;
             }
@@ -775,12 +787,26 @@ namespace chess_pos_db_gui
         {
             if (totalEntriesGridView.Columns[e.ColumnIndex].HeaderText == "H%")
             {
-                e.Value = (Double.Parse(e.Value.ToString()) * 100).ToString("0") + "%";
+                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
+                {
+                    e.Value = "";
+                }
+                else
+                {
+                    e.Value = ((double)e.Value * 100).ToString("0") + "%";
+                }
                 e.FormattingApplied = true;
             }
             else if (totalEntriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("%"))
             {
-                e.Value = (Double.Parse(e.Value.ToString()) * 100).ToString("0.0") + "%";
+                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
+                {
+                    e.Value = "";
+                }
+                else
+                {
+                    e.Value = ((double)e.Value * 100).ToString("0.0") + "%";
+                }
                 e.FormattingApplied = true;
             }
         }
@@ -804,6 +830,11 @@ namespace chess_pos_db_gui
             endQueryThread = true;
             anyOutstandingQuery.Signal();
             queryThread.Join();
+        }
+
+        private void HideNeverPlayedCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Repopulate();
         }
     }
 

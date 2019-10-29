@@ -18,6 +18,7 @@ namespace chess_pos_db_gui
     {
         private static readonly Bitmap DefaultBitmap = CreateDefaultBitmap();
 
+        private static readonly string StartPosFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         private ChessBoardHistory History { get; set; }
 
         private Image boardImage { get; set; }
@@ -274,7 +275,7 @@ namespace chess_pos_db_gui
 
             UpdatePieceImagesDictionary();
 
-            Reset("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            Reset(StartPosFen);
         }
 
         private void ChessBoard_SizeChanged(object sender, EventArgs e)
@@ -540,6 +541,11 @@ namespace chess_pos_db_gui
         private void CopyFenButton_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(fenTextBox.Text);
+        }
+
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
+            Reset(StartPosFen);
         }
     }
     internal class MoveHistoryDataRow : DataRow

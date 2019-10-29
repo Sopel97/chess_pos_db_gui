@@ -38,6 +38,7 @@
             this.splitBoardAndMoves = new System.Windows.Forms.SplitContainer();
             this.splitFenAndControls = new System.Windows.Forms.SplitContainer();
             this.copyFenButton = new System.Windows.Forms.Button();
+            this.resetButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.moveHistoryGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitBoardAndMoves)).BeginInit();
             this.splitBoardAndMoves.Panel1.SuspendLayout();
@@ -67,7 +68,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fenTextBox.Location = new System.Drawing.Point(3, 3);
             this.fenTextBox.Name = "fenTextBox";
-            this.fenTextBox.Size = new System.Drawing.Size(383, 20);
+            this.fenTextBox.Size = new System.Drawing.Size(307, 20);
             this.fenTextBox.TabIndex = 5;
             this.fenTextBox.TextChanged += new System.EventHandler(this.FenTextBox_TextChanged);
             // 
@@ -173,6 +174,7 @@
             // 
             // splitFenAndControls.Panel1
             // 
+            this.splitFenAndControls.Panel1.Controls.Add(this.resetButton);
             this.splitFenAndControls.Panel1.Controls.Add(this.copyFenButton);
             this.splitFenAndControls.Panel1.Controls.Add(this.fenTextBox);
             // 
@@ -187,13 +189,26 @@
             // 
             this.copyFenButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.copyFenButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.copyFenButton.Location = new System.Drawing.Point(392, 3);
+            this.copyFenButton.Location = new System.Drawing.Point(316, 3);
             this.copyFenButton.Name = "copyFenButton";
             this.copyFenButton.Size = new System.Drawing.Size(32, 20);
             this.copyFenButton.TabIndex = 6;
             this.copyFenButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.copyFenButton.UseVisualStyleBackColor = true;
             this.copyFenButton.Click += new System.EventHandler(this.CopyFenButton_Click);
+            // 
+            // resetButton
+            // 
+            this.resetButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.resetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.resetButton.Location = new System.Drawing.Point(354, 3);
+            this.resetButton.Name = "resetButton";
+            this.resetButton.Size = new System.Drawing.Size(70, 20);
+            this.resetButton.TabIndex = 7;
+            this.resetButton.Text = "Reset";
+            this.resetButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.Click += new System.EventHandler(this.ResetButton_Click);
             // 
             // ChessBoard
             // 
@@ -232,5 +247,6 @@
         private System.Windows.Forms.SplitContainer splitBoardAndMoves;
         private System.Windows.Forms.SplitContainer splitFenAndControls;
         private System.Windows.Forms.Button copyFenButton;
+        private System.Windows.Forms.Button resetButton;
     }
 }
