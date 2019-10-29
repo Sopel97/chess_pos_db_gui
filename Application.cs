@@ -810,7 +810,11 @@ namespace chess_pos_db_gui
         private void EntriesGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             var row = entriesGridView.Rows[e.RowIndex];
-            if (Convert.ToBoolean(row.Cells["IsOnlyTransposition"].Value))
+            if ((ulong)row.Cells["Count"].Value == 0)
+            {
+                row.DefaultCellStyle.BackColor = Color.FromArgb(0xAA, 0xAA, 0xAA);
+            }
+            else if (Convert.ToBoolean(row.Cells["IsOnlyTransposition"].Value))
             {
                 row.DefaultCellStyle.BackColor = Color.LightGray;
             }
