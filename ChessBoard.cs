@@ -100,8 +100,6 @@ namespace chess_pos_db_gui
 
         private void Reset(string fen)
         {
-            UpdateFenTextBox(fen);
-            LastFen = fen;
             History.Reset(fen);
             MoveHistory.Clear();
             Plies = 0;
@@ -115,6 +113,8 @@ namespace chess_pos_db_gui
                 SetSelection(1);
             }
             FirstPly = Plies;
+
+            UpdateFenTextBox(fen);
         }
 
         private static void MakeDoubleBuffered(Panel chessBoardPanel)
@@ -533,8 +533,7 @@ namespace chess_pos_db_gui
                     return;
                 }
 
-                LastFen = fenTextBox.Text;
-                Reset(LastFen);
+                Reset(fenTextBox.Text);
             }
         }
 

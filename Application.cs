@@ -90,7 +90,7 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("PlyCount", typeof(ushort)));
             tabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("GameId", typeof(uint)));
-            tabulatedData.Columns.Add(new DataColumn("Eval", typeof(int)));
+            tabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
             tabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("IsOnlyTransposition", typeof(bool)));
 
@@ -304,7 +304,7 @@ namespace chess_pos_db_gui
             // score is always for side to move
             if (score != null)
             {
-                row["Eval"] = score.Value;
+                row["Eval"] = score;
                 row["EvalPct"] = score.WinPct;
             }
 
@@ -753,11 +753,7 @@ namespace chess_pos_db_gui
 
         private void EntriesGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.ColumnIndex == 0)
-            {
-                e.Value = e.Value.ToString();
-            }
-            else if (entriesGridView.Columns[e.ColumnIndex].HeaderText == "H%")
+            if (entriesGridView.Columns[e.ColumnIndex].HeaderText == "H%")
             {
                 if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
                 {
