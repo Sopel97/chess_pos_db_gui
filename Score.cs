@@ -32,8 +32,21 @@ namespace chess_pos_db_gui
 
         public Score(string value, string winpct)
         {
-            Value = int.Parse(value.Split(' ')[0]);
-            WinPct = double.Parse(winpct, CultureInfo.InvariantCulture) / 100.0;
+            try
+            {
+                Value = int.Parse(value.Split(' ')[0]);
+            }
+            catch
+            {
+            }
+
+            try
+            {
+                WinPct = double.Parse(winpct, CultureInfo.InvariantCulture) / 100.0;
+            }
+            catch
+            {
+            }
         }
 
         public override string ToString()

@@ -192,32 +192,49 @@ namespace chess_pos_db_gui
 
             Dictionary<Move, Score> scores = new Dictionary<Move, Score>();
 
-            HttpResponseMessage response = chessdbcn.GetAsync(String.Format(urlParameters, fen)).Result;
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var responseStr = response.Content.ReadAsStringAsync().Result;
-                Console.WriteLine("{0}", responseStr);
-                string[] byMoveStrs = responseStr.Split('|');
-                foreach (var byMoveStr in byMoveStrs)
+                HttpResponseMessage response = chessdbcn.GetAsync(String.Format(urlParameters, fen)).Result;
+                if (response.IsSuccessStatusCode)
                 {
-                    string[] parts = byMoveStr.Split(',');
-
-                    Dictionary<string, string> values = new Dictionary<string, string>();
-                    foreach (var part in parts)
+                    var responseStr = response.Content.ReadAsStringAsync().Result;
+                    Console.WriteLine("{0}", responseStr);
+                    string[] byMoveStrs = responseStr.Split('|');
+                    foreach (var byMoveStr in byMoveStrs)
                     {
-                        string[] kv = part.Split(':');
-                        values.Add(kv[0], kv[1]);
-                    }
-                    string moveStr = values["move"];
-                    string scoreStr = values["score"];
-                    string winrateStr = values["winrate"];
+                        string[] parts = byMoveStr.Split(',');
 
-                    scores.Add(chessBoard.LanToMove(moveStr), new Score(scoreStr, winrateStr));
+                        Dictionary<string, string> values = new Dictionary<string, string>();
+                        foreach (var part in parts)
+                        {
+                            string[] kv = part.Split(':');
+                            values.Add(kv[0], kv[1]);
+                        }
+
+                        values.TryGetValue("move", out string moveStr);
+                        values.TryGetValue("score", out string scoreStr);
+                        values.TryGetValue("winrate", out string winrateStr);
+
+                        if (moveStr != null)
+                        {
+                            try
+                            {
+                                scores.Add(chessBoard.LanToMove(fen, moveStr), new Score(scoreStr, winrateStr));
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+                Console.WriteLine(ex.Message);
             }
 
             return scores;
@@ -557,12 +574,12 @@ namespace chess_pos_db_gui
             try
             {
                 var data = new CacheEntry(null, null);
-                var scores = GetChessdbcnScores(sig.CurrentFen);
-                data.Scores = scores;
+                var scores = Task.Run(() => GetChessdbcnScores(sig.CurrentFen));
 
                 if (sig.San == "--")
                 {
                     data.Stats = database.Query(sig.Fen);
+                    data.Scores = scores.Result;
                     lock (cacheLock)
                     {
                         queryCache.Add(sig, data);
@@ -571,12 +588,12 @@ namespace chess_pos_db_gui
                 else
                 {
                     data.Stats = database.Query(sig.Fen, sig.San);
+                    data.Scores = scores.Result;
                     lock (cacheLock)
                     {
                         queryCache.Add(sig, data);
                     }
                 }
-
             }
             catch
             {

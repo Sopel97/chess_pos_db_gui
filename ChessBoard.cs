@@ -330,6 +330,12 @@ namespace chess_pos_db_gui
             return move;
         }
 
+        public Move LanToMove(string fen, string lan)
+        {
+            Move move = San.ParseLan(new ChessGame(fen), lan);
+            return move;
+        }
+
         public Move SanToMove(string san)
         {
             Move move = San.ParseSan(new ChessGame(History.Current().GCD), san);
