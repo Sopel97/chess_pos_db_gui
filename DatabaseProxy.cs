@@ -260,6 +260,55 @@ namespace chess_pos_db_gui
             return response;
         }
 
+        public void Dump(List<string> pgns, string outPath, string tempPath, int minCount, Action<JsonValue> callback)
+        {
+            var stream = client.GetStream();
+
+            var json = new JsonObject();
+            json.Add("command", "dump");
+            json.Add("output_path", outPath);
+            if (tempPath != null)
+            {
+                json.Add("temporary_path", tempPath);
+            }
+            json.Add("min_count", minCount);
+            json.Add("report_progress", true);
+
+            var pgnsJson = new JsonArray();
+            foreach(string pgn in pgns)
+            {
+                pgnsJson.Add(pgn);
+            }
+            json.Add("pgns", pgnsJson);
+
+            SendMessage(stream, json.ToString());
+
+            while (true)
+            {
+                var response = ReceiveMessage(stream);
+                var responseJson = JsonValue.Parse(response);
+                if (responseJson.ContainsKey("error"))
+                {
+                    throw new InvalidDataException(responseJson["error"].ToString());
+                }
+                else if (responseJson.ContainsKey("operation"))
+                {
+                    if (responseJson["operation"] == "import"
+                        || responseJson["operation"] == "dump")
+                    {
+                        callback.Invoke(responseJson);
+                    }
+                    if (responseJson["operation"] == "dump")
+                    {
+                        if (responseJson["finished"] == true)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         public void Create(JsonValue json, Action<JsonValue> callback)
         {
             var stream = client.GetStream();

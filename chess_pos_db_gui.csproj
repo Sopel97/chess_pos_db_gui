@@ -67,6 +67,12 @@
     </Compile>
     <Compile Include="ChessBoardHistory.cs" />
     <Compile Include="ConditionVariable.cs" />
+    <Compile Include="EpdDumpForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EpdDumpForm.Designer.cs">
+      <DependentUpon>EpdDumpForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DatabaseCreationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,6 +102,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ChessBoard.resx">
       <DependentUpon>ChessBoard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EpdDumpForm.resx">
+      <DependentUpon>EpdDumpForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DatabaseCreationForm.resx">
       <DependentUpon>DatabaseCreationForm.cs</DependentUpon>

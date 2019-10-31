@@ -680,6 +680,14 @@ namespace chess_pos_db_gui
             }
         }
 
+        private void EpdDumpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new EpdDumpForm(database))
+            {
+                form.ShowDialog();
+            }
+        }
+
         private void Open(string path)
         {
             database.Close();

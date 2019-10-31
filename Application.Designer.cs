@@ -46,14 +46,16 @@
             this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
+            this.displayGroupBox = new System.Windows.Forms.GroupBox();
+            this.hideNeverPlayedCheckBox = new System.Windows.Forms.CheckBox();
             this.totalEntriesGridView = new System.Windows.Forms.DataGridView();
             this.queryGroupBox = new System.Windows.Forms.GroupBox();
             this.queryEvalCheckBox = new System.Windows.Forms.CheckBox();
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
-            this.displayGroupBox = new System.Windows.Forms.GroupBox();
-            this.hideNeverPlayedCheckBox = new System.Windows.Forms.CheckBox();
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.epdDumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             this.typeSelectionGroupBox.SuspendLayout();
@@ -67,9 +69,9 @@
             this.splitContainer1.SuspendLayout();
             this.databaseInfoGroupBox.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.displayGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).BeginInit();
             this.queryGroupBox.SuspendLayout();
-            this.displayGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -252,7 +254,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.databaseToolStripMenuItem});
+            this.databaseToolStripMenuItem,
+            this.toolsToolStripMenuItem});
             this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -274,23 +277,54 @@
             // createToolStripMenuItem
             // 
             this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-            this.createToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.createToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.createToolStripMenuItem.Text = "Create";
             this.createToolStripMenuItem.Click += new System.EventHandler(this.CreateToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
+            // 
+            // chessBoard
+            // 
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.Size = new System.Drawing.Size(346, 414);
+            this.chessBoard.TabIndex = 0;
+            // 
+            // displayGroupBox
+            // 
+            this.displayGroupBox.Controls.Add(this.hideNeverPlayedCheckBox);
+            this.displayGroupBox.Location = new System.Drawing.Point(215, 3);
+            this.displayGroupBox.Name = "displayGroupBox";
+            this.displayGroupBox.Size = new System.Drawing.Size(206, 44);
+            this.displayGroupBox.TabIndex = 5;
+            this.displayGroupBox.TabStop = false;
+            this.displayGroupBox.Text = "Display";
+            // 
+            // hideNeverPlayedCheckBox
+            // 
+            this.hideNeverPlayedCheckBox.AutoSize = true;
+            this.hideNeverPlayedCheckBox.Location = new System.Drawing.Point(6, 19);
+            this.hideNeverPlayedCheckBox.Name = "hideNeverPlayedCheckBox";
+            this.hideNeverPlayedCheckBox.Size = new System.Drawing.Size(71, 17);
+            this.hideNeverPlayedCheckBox.TabIndex = 0;
+            this.hideNeverPlayedCheckBox.Text = "Hide N=0";
+            this.hideNeverPlayedCheckBox.UseVisualStyleBackColor = true;
+            this.hideNeverPlayedCheckBox.CheckedChanged += new System.EventHandler(this.HideNeverPlayedCheckBox_CheckedChanged);
             // 
             // totalEntriesGridView
             // 
@@ -359,36 +393,20 @@
             this.autoQueryCheckbox.UseVisualStyleBackColor = true;
             this.autoQueryCheckbox.CheckedChanged += new System.EventHandler(this.AutoQueryCheckbox_CheckedChanged);
             // 
-            // displayGroupBox
+            // toolsToolStripMenuItem
             // 
-            this.displayGroupBox.Controls.Add(this.hideNeverPlayedCheckBox);
-            this.displayGroupBox.Location = new System.Drawing.Point(215, 3);
-            this.displayGroupBox.Name = "displayGroupBox";
-            this.displayGroupBox.Size = new System.Drawing.Size(206, 44);
-            this.displayGroupBox.TabIndex = 5;
-            this.displayGroupBox.TabStop = false;
-            this.displayGroupBox.Text = "Display";
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.epdDumpToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
             // 
-            // hideNeverPlayedCheckBox
+            // epdDumpToolStripMenuItem
             // 
-            this.hideNeverPlayedCheckBox.AutoSize = true;
-            this.hideNeverPlayedCheckBox.Location = new System.Drawing.Point(6, 19);
-            this.hideNeverPlayedCheckBox.Name = "hideNeverPlayedCheckBox";
-            this.hideNeverPlayedCheckBox.Size = new System.Drawing.Size(71, 17);
-            this.hideNeverPlayedCheckBox.TabIndex = 0;
-            this.hideNeverPlayedCheckBox.Text = "Hide N=0";
-            this.hideNeverPlayedCheckBox.UseVisualStyleBackColor = true;
-            this.hideNeverPlayedCheckBox.CheckedChanged += new System.EventHandler(this.HideNeverPlayedCheckBox_CheckedChanged);
-            // 
-            // chessBoard
-            // 
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(346, 414);
-            this.chessBoard.TabIndex = 0;
+            this.epdDumpToolStripMenuItem.Name = "epdDumpToolStripMenuItem";
+            this.epdDumpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.epdDumpToolStripMenuItem.Text = "Epd dump";
+            this.epdDumpToolStripMenuItem.Click += new System.EventHandler(this.EpdDumpToolStripMenuItem_Click);
             // 
             // Application
             // 
@@ -419,11 +437,11 @@
             this.databaseInfoGroupBox.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.displayGroupBox.ResumeLayout(false);
+            this.displayGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).EndInit();
             this.queryGroupBox.ResumeLayout(false);
             this.queryGroupBox.PerformLayout();
-            this.displayGroupBox.ResumeLayout(false);
-            this.displayGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -455,6 +473,8 @@
         private System.Windows.Forms.CheckBox queryEvalCheckBox;
         private System.Windows.Forms.GroupBox displayGroupBox;
         private System.Windows.Forms.CheckBox hideNeverPlayedCheckBox;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem epdDumpToolStripMenuItem;
     }
 }
 
