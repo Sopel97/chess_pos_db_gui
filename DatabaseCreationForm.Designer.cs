@@ -55,11 +55,11 @@
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.addServerPgnsButton = new System.Windows.Forms.Button();
+            this.mergeProgressLabel = new System.Windows.Forms.Label();
             this.mergeProgressBar = new System.Windows.Forms.ProgressBar();
             this.openCheckBox = new System.Windows.Forms.CheckBox();
             this.buildButton = new System.Windows.Forms.Button();
             this.mergeCheckBox = new System.Windows.Forms.CheckBox();
-            this.mergeProgressLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -275,6 +275,7 @@
             this.humanPgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.humanPgnsDataGridView.Size = new System.Drawing.Size(604, 335);
             this.humanPgnsDataGridView.TabIndex = 0;
+            this.humanPgnsDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.HumanPgnsDataGridView_RowPrePaint);
             // 
             // Path
             // 
@@ -320,6 +321,7 @@
             this.enginePgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.enginePgnsDataGridView.Size = new System.Drawing.Size(604, 335);
             this.enginePgnsDataGridView.TabIndex = 4;
+            this.enginePgnsDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.EnginePgnsDataGridView_RowPrePaint);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -375,6 +377,7 @@
             this.serverPgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.serverPgnsDataGridView.Size = new System.Drawing.Size(604, 335);
             this.serverPgnsDataGridView.TabIndex = 4;
+            this.serverPgnsDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.ServerPgnsDataGridView_RowPrePaint);
             // 
             // dataGridViewTextBoxColumn3
             // 
@@ -399,6 +402,16 @@
             this.addServerPgnsButton.Text = "Add PGN Files";
             this.addServerPgnsButton.UseVisualStyleBackColor = true;
             this.addServerPgnsButton.Click += new System.EventHandler(this.AddServerPgnsButton_Click);
+            // 
+            // mergeProgressLabel
+            // 
+            this.mergeProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.mergeProgressLabel.AutoSize = true;
+            this.mergeProgressLabel.Location = new System.Drawing.Point(455, 13);
+            this.mergeProgressLabel.Name = "mergeProgressLabel";
+            this.mergeProgressLabel.Size = new System.Drawing.Size(21, 13);
+            this.mergeProgressLabel.TabIndex = 4;
+            this.mergeProgressLabel.Text = "0%";
             // 
             // mergeProgressBar
             // 
@@ -443,16 +456,6 @@
             this.mergeCheckBox.TabIndex = 0;
             this.mergeCheckBox.Text = "Merge after import";
             this.mergeCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // mergeProgressLabel
-            // 
-            this.mergeProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.mergeProgressLabel.AutoSize = true;
-            this.mergeProgressLabel.Location = new System.Drawing.Point(455, 13);
-            this.mergeProgressLabel.Name = "mergeProgressLabel";
-            this.mergeProgressLabel.Size = new System.Drawing.Size(21, 13);
-            this.mergeProgressLabel.TabIndex = 4;
-            this.mergeProgressLabel.Text = "0%";
             // 
             // DatabaseCreationForm
             // 

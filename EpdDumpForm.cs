@@ -258,7 +258,9 @@ namespace chess_pos_db_gui
             setTempFolderButton.Enabled = true;
             clearTempFolderButton.Enabled = true;
             dumpButton.Enabled = true;
-            pgnsDataGridView.Enabled = true;
+            pgnsDataGridView.AllowUserToAddRows = true;
+            pgnsDataGridView.AllowUserToDeleteRows = true;
+            pgnsDataGridView.ReadOnly = false;
             addPgnsButton.Enabled = true;
 
             KeepFormAlive = false;
@@ -270,7 +272,9 @@ namespace chess_pos_db_gui
             setTempFolderButton.Enabled = false;
             clearTempFolderButton.Enabled = false;
             dumpButton.Enabled = false;
-            pgnsDataGridView.Enabled = false;
+            pgnsDataGridView.AllowUserToAddRows = false;
+            pgnsDataGridView.AllowUserToDeleteRows = false;
+            pgnsDataGridView.ReadOnly = true;
             addPgnsButton.Enabled = false;
 
             KeepFormAlive = true;
@@ -292,6 +296,15 @@ namespace chess_pos_db_gui
             if (KeepFormAlive)
             {
                 e.Cancel = true;
+            }
+        }
+
+        private void PgnsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            var row = pgnsDataGridView.Rows[e.RowIndex];
+            if (row.Cells[1].Value.Equals("100%"))
+            {
+                row.DefaultCellStyle.BackColor = Color.LimeGreen;
             }
         }
     }

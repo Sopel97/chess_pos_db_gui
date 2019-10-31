@@ -32,6 +32,8 @@
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Progress = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.minCountLabel = new System.Windows.Forms.Label();
+            this.minCountInput = new System.Windows.Forms.NumericUpDown();
             this.clearTempFolderButton = new System.Windows.Forms.Button();
             this.tempFolderLabel = new System.Windows.Forms.Label();
             this.outputPathLabel = new System.Windows.Forms.Label();
@@ -44,18 +46,16 @@
             this.dumpProgressLabel = new System.Windows.Forms.Label();
             this.dumpProgressBar = new System.Windows.Forms.ProgressBar();
             this.dumpButton = new System.Windows.Forms.Button();
-            this.minCountInput = new System.Windows.Forms.NumericUpDown();
-            this.minCountLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pgnsDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.minCountInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.minCountInput)).BeginInit();
             this.SuspendLayout();
             // 
             // pgnsDataGridView
@@ -76,6 +76,7 @@
             this.pgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.pgnsDataGridView.Size = new System.Drawing.Size(618, 368);
             this.pgnsDataGridView.TabIndex = 2;
+            this.pgnsDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.PgnsDataGridView_RowPrePaint);
             // 
             // Path
             // 
@@ -119,6 +120,37 @@
             this.splitContainer1.Size = new System.Drawing.Size(624, 602);
             this.splitContainer1.SplitterDistance = 90;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // minCountLabel
+            // 
+            this.minCountLabel.AutoSize = true;
+            this.minCountLabel.Location = new System.Drawing.Point(35, 66);
+            this.minCountLabel.Name = "minCountLabel";
+            this.minCountLabel.Size = new System.Drawing.Size(54, 13);
+            this.minCountLabel.TabIndex = 10;
+            this.minCountLabel.Text = "Min count";
+            // 
+            // minCountInput
+            // 
+            this.minCountInput.Location = new System.Drawing.Point(95, 64);
+            this.minCountInput.Maximum = new decimal(new int[] {
+            276447231,
+            23283,
+            0,
+            0});
+            this.minCountInput.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.minCountInput.Name = "minCountInput";
+            this.minCountInput.Size = new System.Drawing.Size(120, 20);
+            this.minCountInput.TabIndex = 9;
+            this.minCountInput.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // clearTempFolderButton
             // 
@@ -257,37 +289,6 @@
             this.dumpButton.UseVisualStyleBackColor = true;
             this.dumpButton.Click += new System.EventHandler(this.DumpButton_Click);
             // 
-            // minCountInput
-            // 
-            this.minCountInput.Location = new System.Drawing.Point(95, 64);
-            this.minCountInput.Maximum = new decimal(new int[] {
-            276447231,
-            23283,
-            0,
-            0});
-            this.minCountInput.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.minCountInput.Name = "minCountInput";
-            this.minCountInput.Size = new System.Drawing.Size(120, 20);
-            this.minCountInput.TabIndex = 9;
-            this.minCountInput.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // minCountLabel
-            // 
-            this.minCountLabel.AutoSize = true;
-            this.minCountLabel.Location = new System.Drawing.Point(35, 66);
-            this.minCountLabel.Name = "minCountLabel";
-            this.minCountLabel.Size = new System.Drawing.Size(54, 13);
-            this.minCountLabel.TabIndex = 10;
-            this.minCountLabel.Text = "Min count";
-            // 
             // EpdDumpForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -305,12 +306,12 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.minCountInput)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.minCountInput)).EndInit();
             this.ResumeLayout(false);
 
         }

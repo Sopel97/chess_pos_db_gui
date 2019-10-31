@@ -282,9 +282,15 @@ namespace chess_pos_db_gui
             mergeCheckBox.Enabled = true;
             openCheckBox.Enabled = true;
             databaseFormatComboBox.Enabled = true;
-            humanPgnsDataGridView.Enabled = true;
-            enginePgnsDataGridView.Enabled = true;
-            serverPgnsDataGridView.Enabled = true;
+            humanPgnsDataGridView.AllowUserToAddRows = true;
+            humanPgnsDataGridView.AllowUserToDeleteRows = true;
+            humanPgnsDataGridView.ReadOnly = false;
+            enginePgnsDataGridView.AllowUserToAddRows = true;
+            enginePgnsDataGridView.AllowUserToDeleteRows = true;
+            enginePgnsDataGridView.ReadOnly = false;
+            serverPgnsDataGridView.AllowUserToAddRows = true;
+            serverPgnsDataGridView.AllowUserToDeleteRows = true;
+            serverPgnsDataGridView.ReadOnly = false;
             addHumanPgnsButton.Enabled = true;
             addEnginePgnsButton.Enabled = true;
             addServerPgnsButton.Enabled = true;
@@ -301,9 +307,15 @@ namespace chess_pos_db_gui
             mergeCheckBox.Enabled = false;
             openCheckBox.Enabled = false;
             databaseFormatComboBox.Enabled = false;
-            humanPgnsDataGridView.Enabled = false;
-            enginePgnsDataGridView.Enabled = false;
-            serverPgnsDataGridView.Enabled = false;
+            humanPgnsDataGridView.AllowUserToAddRows = false;
+            humanPgnsDataGridView.AllowUserToDeleteRows = false;
+            humanPgnsDataGridView.ReadOnly = true;
+            enginePgnsDataGridView.AllowUserToAddRows = false;
+            enginePgnsDataGridView.AllowUserToDeleteRows = false;
+            enginePgnsDataGridView.ReadOnly = true;
+            serverPgnsDataGridView.AllowUserToAddRows = false;
+            serverPgnsDataGridView.AllowUserToDeleteRows = false;
+            serverPgnsDataGridView.ReadOnly = true;
             addHumanPgnsButton.Enabled = false;
             addEnginePgnsButton.Enabled = false;
             addServerPgnsButton.Enabled = false;
@@ -339,6 +351,33 @@ namespace chess_pos_db_gui
             if (KeepFormAlive)
             {
                 e.Cancel = true;
+            }
+        }
+
+        private void HumanPgnsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            var row = humanPgnsDataGridView.Rows[e.RowIndex];
+            if (row.Cells[1].Value.Equals("100%"))
+            {
+                row.DefaultCellStyle.BackColor = Color.LimeGreen;
+            }
+        }
+
+        private void EnginePgnsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            var row = enginePgnsDataGridView.Rows[e.RowIndex];
+            if (row.Cells[1].Value.Equals("100%"))
+            {
+                row.DefaultCellStyle.BackColor = Color.LimeGreen;
+            }
+        }
+
+        private void ServerPgnsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            var row = serverPgnsDataGridView.Rows[e.RowIndex];
+            if (row.Cells[1].Value.Equals("100%"))
+            {
+                row.DefaultCellStyle.BackColor = Color.LimeGreen;
             }
         }
     }
