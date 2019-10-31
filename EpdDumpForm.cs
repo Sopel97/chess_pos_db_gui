@@ -15,6 +15,10 @@ namespace chess_pos_db_gui
     {
         private bool finishedWithErrors = true;
 
+        private ulong NumGames;
+        private ulong NumPosIn;
+        private ulong NumPosOut;
+
         public bool KeepFormAlive { get; private set; }
 
         private readonly DatabaseProxy database;
@@ -184,6 +188,13 @@ namespace chess_pos_db_gui
             else if (progressReport["operation"] == "dump")
             {
                 SetDumpProgress((int)(progressReport["overall_progress"] * 100.0));
+
+                if (progressReport["finished"] == true)
+                {
+                    NumGames = progressReport["num_games"];
+                    NumPosIn = progressReport["num_in_positions"];
+                    NumPosOut = progressReport["num_out_positions"];
+                }
             }
             else
             {
@@ -206,7 +217,14 @@ namespace chess_pos_db_gui
             {
                 database.Dump(pgns, outPath, tempPath, minCount, ProgressCallback);
                 finishedWithErrors = false;
-                MessageBox.Show("Finished.");
+                MessageBox.Show(
+                    String.Format(
+                        "Finished.\nGames processed: {0}\nPositions processed: {1}\nPositions dumped: {2}",
+                        NumGames,
+                        NumPosIn,
+                        NumPosOut
+                    )
+                );
 
                 if (InvokeRequired)
                 {
