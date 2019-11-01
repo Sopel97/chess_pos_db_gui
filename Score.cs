@@ -9,6 +9,10 @@ namespace chess_pos_db_gui
 {
     class Score : IComparable
     {
+        private static readonly int knownResultThreashold = 18000;
+        private static readonly int cursedDtz0 = 20000;
+        private static readonly int dtz0 = 30000;
+
         public int Value { get; set; }
         public double WinPct { get; set; }
 
@@ -55,6 +59,16 @@ namespace chess_pos_db_gui
             return Double.NaN;
         }
 
+        private static double WinPctFromEval(int eval)
+        {
+            if (Math.Abs(eval) >= knownResultThreashold)
+            {
+                return eval < 0 ? 0.0 : 1.0;
+            }
+
+            return 1.0 / (1.0 + Math.Exp((double)-eval / 100));
+        }
+
         public Score(int v)
         {
             Value = v;
@@ -64,7 +78,7 @@ namespace chess_pos_db_gui
         public Score(string str)
         {
             Value = ValueFromString(str);
-            WinPct = Double.NaN;
+            WinPct = WinPctFromEval(Value);
         }
         public Score(int v, double pct)
         {
@@ -82,14 +96,14 @@ namespace chess_pos_db_gui
         {
             int abs = Math.Abs(Value);
             string sign = Value < 0 ? "-" : "";
-            if (abs > 20000)
+            if (abs > cursedDtz0)
             {
-                return "DTZ " + sign + (30000 - abs).ToString();
+                return "DTZ " + sign + (dtz0 - abs).ToString();
             }
-            else if (abs > 18000)
+            else if (abs > knownResultThreashold)
             {
                 // cursed win/loss
-                return "DTZ " + sign + (20000 - abs).ToString();
+                return "DTZ " + sign + (cursedDtz0 - abs).ToString();
             }
 
             return Value.ToString();

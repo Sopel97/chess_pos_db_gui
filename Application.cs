@@ -112,11 +112,11 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["Move"].Frozen = true;
             totalEntriesGridView.Columns["Move"].HeaderText = "";
             totalEntriesGridView.Columns["Count"].HeaderText = "N";
-            totalEntriesGridView.Columns["WinCount"].HeaderText = "W";
-            totalEntriesGridView.Columns["DrawCount"].HeaderText = "D";
-            totalEntriesGridView.Columns["LossCount"].HeaderText = "L";
+            totalEntriesGridView.Columns["WinCount"].HeaderText = "+";
+            totalEntriesGridView.Columns["DrawCount"].HeaderText = "=";
+            totalEntriesGridView.Columns["LossCount"].HeaderText = "-";
             totalEntriesGridView.Columns["Perf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            totalEntriesGridView.Columns["Perf"].HeaderText = "W%";
+            totalEntriesGridView.Columns["Perf"].HeaderText = "Wh%";
             totalEntriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["DrawPct"].HeaderText = "D%";
             totalEntriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -127,11 +127,11 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["Move"].Frozen = true;
             entriesGridView.Columns["Move"].MinimumWidth = 40;
             entriesGridView.Columns["Count"].HeaderText = "N";
-            entriesGridView.Columns["WinCount"].HeaderText = "W";
-            entriesGridView.Columns["DrawCount"].HeaderText = "D";
-            entriesGridView.Columns["LossCount"].HeaderText = "L";
+            entriesGridView.Columns["WinCount"].HeaderText = "+";
+            entriesGridView.Columns["DrawCount"].HeaderText = "=";
+            entriesGridView.Columns["LossCount"].HeaderText = "-";
             entriesGridView.Columns["Perf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            entriesGridView.Columns["Perf"].HeaderText = "W%";
+            entriesGridView.Columns["Perf"].HeaderText = "Wh%";
             entriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["DrawPct"].HeaderText = "D%";
             entriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -213,13 +213,12 @@ namespace chess_pos_db_gui
 
                         values.TryGetValue("move", out string moveStr);
                         values.TryGetValue("score", out string scoreStr);
-                        values.TryGetValue("winrate", out string winrateStr);
 
                         if (moveStr != null)
                         {
                             try
                             {
-                                scores.Add(chessBoard.LanToMove(fen, moveStr), new Score(scoreStr, winrateStr));
+                                scores.Add(chessBoard.LanToMove(fen, moveStr), new Score(scoreStr));
                             }
                             catch
                             {
@@ -761,19 +760,7 @@ namespace chess_pos_db_gui
 
         private void EntriesGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (entriesGridView.Columns[e.ColumnIndex].HeaderText == "H%")
-            {
-                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
-                {
-                    e.Value = "";
-                }
-                else
-                {
-                    e.Value = ((double)e.Value * 100).ToString("0") + "%";
-                }
-                e.FormattingApplied = true;
-            }
-            else if (entriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("%"))
+            if (entriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("%"))
             {
                 if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
                 {
@@ -789,19 +776,7 @@ namespace chess_pos_db_gui
 
         private void TotalEntriesGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (totalEntriesGridView.Columns[e.ColumnIndex].HeaderText == "H%")
-            {
-                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
-                {
-                    e.Value = "";
-                }
-                else
-                {
-                    e.Value = ((double)e.Value * 100).ToString("0") + "%";
-                }
-                e.FormattingApplied = true;
-            }
-            else if (totalEntriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("%"))
+            if (totalEntriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("%"))
             {
                 if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
                 {
