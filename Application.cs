@@ -82,6 +82,8 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
+            tabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
+            tabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("Date", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("White", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("Black", typeof(string)));
@@ -90,8 +92,6 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("PlyCount", typeof(ushort)));
             tabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("GameId", typeof(uint)));
-            tabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
-            tabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("IsOnlyTransposition", typeof(bool)));
 
             totalTabulatedData.Columns.Add(new DataColumn("Move", typeof(string)));
@@ -144,9 +144,9 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["PlyCount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["GameId"].HeaderText = "Game\u00A0ID";
             entriesGridView.Columns["Eval"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            entriesGridView.Columns["Eval"].HeaderText = "Eval";
+            entriesGridView.Columns["Eval"].HeaderText = "Ev";
             entriesGridView.Columns["EvalPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            entriesGridView.Columns["EvalPct"].HeaderText = "Eval%";
+            entriesGridView.Columns["EvalPct"].HeaderText = "Ev%";
             entriesGridView.Columns["IsOnlyTransposition"].Visible = false;
 
             entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
