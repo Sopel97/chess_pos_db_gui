@@ -102,6 +102,8 @@ namespace chess_pos_db_gui
             totalTabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
+            totalTabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
+            totalTabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
 
             MakeDoubleBuffered(entriesGridView);
             entriesGridView.DataSource = tabulatedData;
@@ -121,6 +123,10 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["DrawPct"].HeaderText = "D%";
             totalEntriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["HumanPct"].HeaderText = "H%";
+            totalEntriesGridView.Columns["Eval"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            totalEntriesGridView.Columns["Eval"].HeaderText = "Ev";
+            totalEntriesGridView.Columns["EvalPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            totalEntriesGridView.Columns["EvalPct"].HeaderText = "Ev%";
 
             totalEntriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
@@ -329,7 +335,7 @@ namespace chess_pos_db_gui
             return entry.Count == 0;
         }
 
-        private void PopulateTotal(AggregatedEntry total, AggregatedEntry totalNonEngine)
+        private void PopulateTotal(AggregatedEntry total, AggregatedEntry totalNonEngine, Score totalScore)
         {
             totalTabulatedData.Clear();
 
@@ -342,6 +348,12 @@ namespace chess_pos_db_gui
             row["Perf"] = (total.Perf);
             row["DrawPct"] = (total.DrawRate);
             row["HumanPct"] = ((double)totalNonEngine.Count / (double)total.Count);
+            // score is always for side to move
+            if (totalScore != null)
+            {
+                row["Eval"] = totalScore;
+                row["EvalPct"] = totalScore.WinPct;
+            }
 
             totalTabulatedData.Rows.InsertAt(row, 0);
         }
@@ -373,6 +385,7 @@ namespace chess_pos_db_gui
 
             AggregatedEntry total = new AggregatedEntry();
             AggregatedEntry totalNonEngine = new AggregatedEntry();
+            Score bestScore = GetBestScore(scores);
             foreach (KeyValuePair<string, AggregatedEntry> entry in entries)
             {
                 if (hideEmpty && IsEmpty(entry.Value)) continue;
@@ -384,8 +397,7 @@ namespace chess_pos_db_gui
 
                 if (entry.Key == "--")
                 {
-                    Score score = GetBestScore(scores);
-                    Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), score);
+                    Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), bestScore);
                 }
                 else
                 {
@@ -401,7 +413,7 @@ namespace chess_pos_db_gui
                 }
             }
 
-            PopulateTotal(total, totalNonEngine);
+            PopulateTotal(total, totalNonEngine, bestScore);
 
             entriesGridView.ResumeLayout(false);
 
