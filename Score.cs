@@ -78,7 +78,7 @@ namespace chess_pos_db_gui
         public Score(string str)
         {
             Value = ValueFromString(str);
-            WinPct = WinPctFromEval(Value);
+            WinPct = str == null ? Double.NaN : WinPctFromEval(Value);
         }
         public Score(int v, double pct)
         {
