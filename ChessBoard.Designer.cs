@@ -37,8 +37,9 @@
             this.goToEndButton = new System.Windows.Forms.Button();
             this.splitBoardAndMoves = new System.Windows.Forms.SplitContainer();
             this.splitFenAndControls = new System.Windows.Forms.SplitContainer();
-            this.copyFenButton = new System.Windows.Forms.Button();
             this.resetButton = new System.Windows.Forms.Button();
+            this.copyFenButton = new System.Windows.Forms.Button();
+            this.flipBoardButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.moveHistoryGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitBoardAndMoves)).BeginInit();
             this.splitBoardAndMoves.Panel1.SuspendLayout();
@@ -68,7 +69,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fenTextBox.Location = new System.Drawing.Point(3, 3);
             this.fenTextBox.Name = "fenTextBox";
-            this.fenTextBox.Size = new System.Drawing.Size(307, 20);
+            this.fenTextBox.Size = new System.Drawing.Size(383, 20);
             this.fenTextBox.TabIndex = 5;
             this.fenTextBox.TextChanged += new System.EventHandler(this.FenTextBox_TextChanged);
             // 
@@ -78,31 +79,31 @@
             this.moveHistoryGridView.AllowUserToDeleteRows = false;
             this.moveHistoryGridView.AllowUserToResizeColumns = false;
             this.moveHistoryGridView.AllowUserToResizeRows = false;
-            this.moveHistoryGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
             this.moveHistoryGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.moveHistoryGridView.BackgroundColor = System.Drawing.SystemColors.Window;
             this.moveHistoryGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
             this.moveHistoryGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.moveHistoryGridView.ColumnHeadersVisible = false;
+            this.moveHistoryGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.moveHistoryGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.moveHistoryGridView.GridColor = System.Drawing.SystemColors.Window;
-            this.moveHistoryGridView.Location = new System.Drawing.Point(4, 41);
+            this.moveHistoryGridView.Location = new System.Drawing.Point(0, 0);
             this.moveHistoryGridView.MinimumSize = new System.Drawing.Size(146, 0);
             this.moveHistoryGridView.MultiSelect = false;
             this.moveHistoryGridView.Name = "moveHistoryGridView";
             this.moveHistoryGridView.ReadOnly = true;
             this.moveHistoryGridView.RowHeadersVisible = false;
             this.moveHistoryGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.moveHistoryGridView.Size = new System.Drawing.Size(146, 266);
+            this.moveHistoryGridView.Size = new System.Drawing.Size(154, 283);
             this.moveHistoryGridView.TabIndex = 0;
             this.moveHistoryGridView.SelectionChanged += new System.EventHandler(this.MoveHistoryGridView_SelectionChanged);
             // 
             // goToStartButton
             // 
-            this.goToStartButton.Location = new System.Drawing.Point(3, 3);
+            this.goToStartButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.goToStartButton.Location = new System.Drawing.Point(278, 28);
             this.goToStartButton.Name = "goToStartButton";
-            this.goToStartButton.Size = new System.Drawing.Size(32, 32);
+            this.goToStartButton.Size = new System.Drawing.Size(32, 20);
             this.goToStartButton.TabIndex = 1;
             this.goToStartButton.Text = "<<";
             this.goToStartButton.UseVisualStyleBackColor = true;
@@ -110,9 +111,10 @@
             // 
             // goToPrevButton
             // 
-            this.goToPrevButton.Location = new System.Drawing.Point(41, 3);
+            this.goToPrevButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.goToPrevButton.Location = new System.Drawing.Point(316, 28);
             this.goToPrevButton.Name = "goToPrevButton";
-            this.goToPrevButton.Size = new System.Drawing.Size(32, 32);
+            this.goToPrevButton.Size = new System.Drawing.Size(32, 20);
             this.goToPrevButton.TabIndex = 2;
             this.goToPrevButton.Text = "<";
             this.goToPrevButton.UseVisualStyleBackColor = true;
@@ -120,9 +122,10 @@
             // 
             // goToNextButton
             // 
-            this.goToNextButton.Location = new System.Drawing.Point(79, 3);
+            this.goToNextButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.goToNextButton.Location = new System.Drawing.Point(354, 28);
             this.goToNextButton.Name = "goToNextButton";
-            this.goToNextButton.Size = new System.Drawing.Size(32, 32);
+            this.goToNextButton.Size = new System.Drawing.Size(32, 20);
             this.goToNextButton.TabIndex = 3;
             this.goToNextButton.Text = ">";
             this.goToNextButton.UseVisualStyleBackColor = true;
@@ -130,9 +133,10 @@
             // 
             // goToEndButton
             // 
-            this.goToEndButton.Location = new System.Drawing.Point(117, 3);
+            this.goToEndButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.goToEndButton.Location = new System.Drawing.Point(392, 28);
             this.goToEndButton.Name = "goToEndButton";
-            this.goToEndButton.Size = new System.Drawing.Size(32, 32);
+            this.goToEndButton.Size = new System.Drawing.Size(32, 20);
             this.goToEndButton.TabIndex = 4;
             this.goToEndButton.Text = ">>";
             this.goToEndButton.UseVisualStyleBackColor = true;
@@ -153,12 +157,8 @@
             // 
             // splitBoardAndMoves.Panel2
             // 
-            this.splitBoardAndMoves.Panel2.Controls.Add(this.goToEndButton);
-            this.splitBoardAndMoves.Panel2.Controls.Add(this.goToPrevButton);
-            this.splitBoardAndMoves.Panel2.Controls.Add(this.goToNextButton);
             this.splitBoardAndMoves.Panel2.Controls.Add(this.moveHistoryGridView);
-            this.splitBoardAndMoves.Panel2.Controls.Add(this.goToStartButton);
-            this.splitBoardAndMoves.Size = new System.Drawing.Size(429, 310);
+            this.splitBoardAndMoves.Size = new System.Drawing.Size(429, 283);
             this.splitBoardAndMoves.SplitterDistance = 271;
             this.splitBoardAndMoves.TabIndex = 6;
             // 
@@ -174,22 +174,40 @@
             // 
             // splitFenAndControls.Panel1
             // 
+            this.splitFenAndControls.Panel1.Controls.Add(this.flipBoardButton);
+            this.splitFenAndControls.Panel1.Controls.Add(this.goToEndButton);
             this.splitFenAndControls.Panel1.Controls.Add(this.resetButton);
+            this.splitFenAndControls.Panel1.Controls.Add(this.goToPrevButton);
+            this.splitFenAndControls.Panel1.Controls.Add(this.goToNextButton);
             this.splitFenAndControls.Panel1.Controls.Add(this.copyFenButton);
             this.splitFenAndControls.Panel1.Controls.Add(this.fenTextBox);
+            this.splitFenAndControls.Panel1.Controls.Add(this.goToStartButton);
+            this.splitFenAndControls.Panel1MinSize = 52;
             // 
             // splitFenAndControls.Panel2
             // 
             this.splitFenAndControls.Panel2.Controls.Add(this.splitBoardAndMoves);
             this.splitFenAndControls.Size = new System.Drawing.Size(429, 339);
-            this.splitFenAndControls.SplitterDistance = 25;
+            this.splitFenAndControls.SplitterDistance = 52;
             this.splitFenAndControls.TabIndex = 7;
+            // 
+            // resetButton
+            // 
+            this.resetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.resetButton.Location = new System.Drawing.Point(3, 28);
+            this.resetButton.Name = "resetButton";
+            this.resetButton.Size = new System.Drawing.Size(58, 20);
+            this.resetButton.TabIndex = 7;
+            this.resetButton.Text = "Reset";
+            this.resetButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.Click += new System.EventHandler(this.ResetButton_Click);
             // 
             // copyFenButton
             // 
             this.copyFenButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.copyFenButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.copyFenButton.Location = new System.Drawing.Point(316, 3);
+            this.copyFenButton.Location = new System.Drawing.Point(392, 3);
             this.copyFenButton.Name = "copyFenButton";
             this.copyFenButton.Size = new System.Drawing.Size(32, 20);
             this.copyFenButton.TabIndex = 6;
@@ -197,18 +215,17 @@
             this.copyFenButton.UseVisualStyleBackColor = true;
             this.copyFenButton.Click += new System.EventHandler(this.CopyFenButton_Click);
             // 
-            // resetButton
+            // flipBoardButton
             // 
-            this.resetButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.resetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.resetButton.Location = new System.Drawing.Point(354, 3);
-            this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(70, 20);
-            this.resetButton.TabIndex = 7;
-            this.resetButton.Text = "Reset";
-            this.resetButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.resetButton.UseVisualStyleBackColor = true;
-            this.resetButton.Click += new System.EventHandler(this.ResetButton_Click);
+            this.flipBoardButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.flipBoardButton.Location = new System.Drawing.Point(67, 28);
+            this.flipBoardButton.Name = "flipBoardButton";
+            this.flipBoardButton.Size = new System.Drawing.Size(58, 20);
+            this.flipBoardButton.TabIndex = 8;
+            this.flipBoardButton.Text = "Flip";
+            this.flipBoardButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.flipBoardButton.UseVisualStyleBackColor = true;
+            this.flipBoardButton.Click += new System.EventHandler(this.FlipBoardButton_Click);
             // 
             // ChessBoard
             // 
@@ -248,5 +265,6 @@
         private System.Windows.Forms.SplitContainer splitFenAndControls;
         private System.Windows.Forms.Button copyFenButton;
         private System.Windows.Forms.Button resetButton;
+        private System.Windows.Forms.Button flipBoardButton;
     }
 }

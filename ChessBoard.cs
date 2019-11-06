@@ -566,6 +566,12 @@ namespace chess_pos_db_gui
         {
             Reset(StartPosFen);
         }
+
+        private void FlipBoardButton_Click(object sender, EventArgs e)
+        {
+            IsBoardFlipped = !IsBoardFlipped;
+            Refresh();
+        }
     }
     internal class MoveHistoryDataRow : DataRow
     {
