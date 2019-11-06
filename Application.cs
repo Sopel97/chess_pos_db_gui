@@ -860,11 +860,13 @@ namespace chess_pos_db_gui
             UpdateDatabaseInfo();
         }
 
-        private void EntriesGridView_DoubleClick(object sender, EventArgs e)
+        private void EntriesGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (isEntryDataUpToDate && entriesGridView.SelectedCells.Count > 0)
+            if (e.RowIndex < 0 || e.RowIndex >= entriesGridView.Rows.Count || e.ColumnIndex != 0) return;
+
+            if (isEntryDataUpToDate)
             {
-                var cell = entriesGridView.SelectedCells[0];
+                var cell = entriesGridView[e.ColumnIndex, e.RowIndex];
                 if (cell.ColumnIndex == 0)
                 {
                     var san = cell.Value.ToString();
