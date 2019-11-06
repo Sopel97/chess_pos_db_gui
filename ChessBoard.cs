@@ -22,6 +22,8 @@ namespace chess_pos_db_gui
         private ChessBoardHistory History { get; set; }
 
         private Image boardImage { get; set; }
+        private Image boardImageWhite { get; set; }
+        private Image boardImageBlack { get; set; }
         private Image boardLightSquare { get; set; }
         private Image boardDarkSquare { get; set; }
         private Image whitePawn { get; set; }
@@ -40,6 +42,8 @@ namespace chess_pos_db_gui
         private Dictionary<Piece, Image> pieceImages;
         private Point? MouseFrom { get; set; }
         private Point? MouseTo { get; set; }
+
+        private bool IsBoardFlipped { get; set; }
 
         private MoveHistoryTable MoveHistory { get; set; }
         private int Plies { get; set; }
@@ -81,6 +85,8 @@ namespace chess_pos_db_gui
             MakeDoubleBuffered(chessBoardPanel);
 
             LastFen = "";
+
+            IsBoardFlipped = false;
         }
 
         public string GetFen()
@@ -128,6 +134,8 @@ namespace chess_pos_db_gui
         public void LoadImages(string path)
         {
             boardImage = Image.FromFile(path + "/board.png");
+            boardImageWhite = Image.FromFile(path + "/board_w.png");
+            boardImageBlack = Image.FromFile(path + "/board_b.png");
             boardLightSquare = Image.FromFile(path + "/board_light.png");
             boardDarkSquare = Image.FromFile(path + "/board_dark.png");
 
@@ -171,12 +179,18 @@ namespace chess_pos_db_gui
 
         private void DrawBoard(Graphics g)
         {
-            // TODO: maybe from single squares?
-            g.DrawImage(boardImage, 0, 0, chessBoardPanel.Width, chessBoardPanel.Height);
+            var img = IsBoardFlipped ? boardImageBlack : boardImageWhite;
+            g.DrawImage(img, 0, 0, chessBoardPanel.Width, chessBoardPanel.Height);
         }
 
         private Rectangle GetSquareRectangle(int file, int rank)
         {
+            if (IsBoardFlipped)
+            {
+                file = 7 - file;
+                rank = 7 - rank;
+            }
+
             float w = chessBoardPanel.Width;
             float h = chessBoardPanel.Height;
 
@@ -205,6 +219,12 @@ namespace chess_pos_db_gui
 
             y = Math.Min(y, 7);
             y = Math.Max(y, 0);
+
+            if (IsBoardFlipped)
+            {
+                x = 7 - x;
+                y = 7 - y;
+            }
 
             return new Position((File)x, 8 - y); //y is in range 1-8
         }
