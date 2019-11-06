@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
@@ -46,6 +46,8 @@
             this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.epdDumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.displayGroupBox = new System.Windows.Forms.GroupBox();
             this.hideNeverPlayedCheckBox = new System.Windows.Forms.CheckBox();
@@ -54,8 +56,6 @@
             this.queryEvalCheckBox = new System.Windows.Forms.CheckBox();
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
-            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.epdDumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             this.typeSelectionGroupBox.SuspendLayout();
@@ -82,14 +82,14 @@
             this.entriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.entriesGridView.Location = new System.Drawing.Point(3, 154);
@@ -97,7 +97,7 @@
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(560, 404);
+            this.entriesGridView.Size = new System.Drawing.Size(509, 404);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
             this.entriesGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.EntriesGridView_RowPrePaint);
@@ -191,7 +191,7 @@
             // splitChessAndData.Panel1
             // 
             this.splitChessAndData.Panel1.Controls.Add(this.splitContainer1);
-            this.splitChessAndData.Panel1MinSize = 200;
+            this.splitChessAndData.Panel1MinSize = 400;
             // 
             // splitChessAndData.Panel2
             // 
@@ -201,9 +201,9 @@
             this.splitChessAndData.Panel2.Controls.Add(this.typeSelectionGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.levelSelectionGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.entriesGridView);
-            this.splitChessAndData.Panel2MinSize = 570;
+            this.splitChessAndData.Panel2MinSize = 420;
             this.splitChessAndData.Size = new System.Drawing.Size(924, 562);
-            this.splitChessAndData.SplitterDistance = 350;
+            this.splitChessAndData.SplitterDistance = 400;
             this.splitChessAndData.SplitterWidth = 5;
             this.splitChessAndData.TabIndex = 6;
             // 
@@ -224,7 +224,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.chessBoard);
-            this.splitContainer1.Size = new System.Drawing.Size(346, 558);
+            this.splitContainer1.Size = new System.Drawing.Size(396, 558);
             this.splitContainer1.SplitterDistance = 140;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -234,7 +234,7 @@
             this.databaseInfoGroupBox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.databaseInfoGroupBox.Location = new System.Drawing.Point(0, 22);
             this.databaseInfoGroupBox.Name = "databaseInfoGroupBox";
-            this.databaseInfoGroupBox.Size = new System.Drawing.Size(346, 118);
+            this.databaseInfoGroupBox.Size = new System.Drawing.Size(396, 118);
             this.databaseInfoGroupBox.TabIndex = 0;
             this.databaseInfoGroupBox.TabStop = false;
             // 
@@ -246,7 +246,7 @@
             this.databaseInfoRichTextBox.Location = new System.Drawing.Point(3, 16);
             this.databaseInfoRichTextBox.Name = "databaseInfoRichTextBox";
             this.databaseInfoRichTextBox.ReadOnly = true;
-            this.databaseInfoRichTextBox.Size = new System.Drawing.Size(340, 99);
+            this.databaseInfoRichTextBox.Size = new System.Drawing.Size(390, 99);
             this.databaseInfoRichTextBox.TabIndex = 0;
             this.databaseInfoRichTextBox.Text = "";
             this.databaseInfoRichTextBox.WordWrap = false;
@@ -260,7 +260,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.menuStrip1.Size = new System.Drawing.Size(346, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(396, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "Menu";
             // 
@@ -277,23 +277,38 @@
             // createToolStripMenuItem
             // 
             this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-            this.createToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
             this.createToolStripMenuItem.Text = "Create";
             this.createToolStripMenuItem.Click += new System.EventHandler(this.CreateToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.epdDumpToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // epdDumpToolStripMenuItem
+            // 
+            this.epdDumpToolStripMenuItem.Name = "epdDumpToolStripMenuItem";
+            this.epdDumpToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.epdDumpToolStripMenuItem.Text = "Epd dump";
+            this.epdDumpToolStripMenuItem.Click += new System.EventHandler(this.EpdDumpToolStripMenuItem_Click);
             // 
             // chessBoard
             // 
@@ -302,7 +317,7 @@
             this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
             this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
             this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(346, 414);
+            this.chessBoard.Size = new System.Drawing.Size(396, 414);
             this.chessBoard.TabIndex = 0;
             // 
             // displayGroupBox
@@ -341,7 +356,7 @@
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(560, 45);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(509, 45);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -392,21 +407,6 @@
             this.autoQueryCheckbox.Text = "Auto";
             this.autoQueryCheckbox.UseVisualStyleBackColor = true;
             this.autoQueryCheckbox.CheckedChanged += new System.EventHandler(this.AutoQueryCheckbox_CheckedChanged);
-            // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.epdDumpToolStripMenuItem});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.toolsToolStripMenuItem.Text = "Tools";
-            // 
-            // epdDumpToolStripMenuItem
-            // 
-            this.epdDumpToolStripMenuItem.Name = "epdDumpToolStripMenuItem";
-            this.epdDumpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.epdDumpToolStripMenuItem.Text = "Epd dump";
-            this.epdDumpToolStripMenuItem.Click += new System.EventHandler(this.EpdDumpToolStripMenuItem_Click);
             // 
             // Application
             // 

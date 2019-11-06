@@ -68,8 +68,6 @@ namespace chess_pos_db_gui
         {
             InitializeComponent();
 
-            copyFenButton.Text = "\u2702";
-
             History = new ChessBoardHistory();
 
             pieceImages = new Dictionary<Piece, Image>();
@@ -300,7 +298,7 @@ namespace chess_pos_db_gui
 
         private void ChessBoard_SizeChanged(object sender, EventArgs e)
         {
-            splitFenAndControls.Height = Height - splitFenAndControls.Panel1.Height;
+            splitFenAndControls.Height = Height;
         }
 
         private void SplitContainer1_Panel1_SizeChanged(object sender, EventArgs e)
