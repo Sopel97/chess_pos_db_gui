@@ -20,6 +20,8 @@ namespace chess_pos_db_gui
 
         public string Path { get; private set; }
 
+        private object Lock = new object();
+
         public DatabaseProxy(string address, int port, int numTries = 3, int msBetweenTries = 1000)
         {
             IsOpen = false;
@@ -79,67 +81,76 @@ namespace chess_pos_db_gui
 
         public DatabaseInfo GetInfo()
         {
-            DatabaseInfo info = new DatabaseInfo(Path, IsOpen);
-
-            if (IsOpen)
+            lock (Lock)
             {
-                var stream = client.GetStream();
-                SendMessage(stream, "{\"command\":\"stats\"}");
+                DatabaseInfo info = new DatabaseInfo(Path, IsOpen);
 
-                var response = ReceiveMessage(stream);
-                var json = JsonValue.Parse(response);
-                if (json.ContainsKey("error"))
+                if (IsOpen)
                 {
-                    throw new InvalidDataException("Cannot fetch database info.");
+                    var stream = client.GetStream();
+                    SendMessage(stream, "{\"command\":\"stats\"}");
+
+                    var response = ReceiveMessage(stream);
+                    var json = JsonValue.Parse(response);
+                    if (json.ContainsKey("error"))
+                    {
+                        throw new InvalidDataException("Cannot fetch database info.");
+                    }
+                    else
+                    {
+                        info.SetCounts(json);
+                    }
                 }
-                else
-                {
-                    info.SetCounts(json);
-                }
+                return info;
             }
-            return info;
         }
 
         public void Open(string path)
         {
-            if (IsOpen) Close();
-
-            Path = path;
-            path = path.Replace("\\", "\\\\"); // we stringify it naively to json so we need to escape manually
-
-            var stream = client.GetStream();
-            SendMessage(stream, "{\"command\":\"open\",\"database_path\":\"" + path + "\"}");
-
-            while (true)
+            lock (Lock)
             {
-                var response = ReceiveMessage(stream);
-                var json = JsonValue.Parse(response);
-                if (json.ContainsKey("error"))
-                {
-                    throw new InvalidDataException("Cannot open database. " + json["error"].ToString());
-                }
-                else if (json.ContainsKey("finished"))
-                {
-                    if (json["finished"] == true) break;
-                }
-            }
+                if (IsOpen) Close();
 
-            IsOpen = true;
+                Path = path;
+                path = path.Replace("\\", "\\\\"); // we stringify it naively to json so we need to escape manually
+
+                var stream = client.GetStream();
+                SendMessage(stream, "{\"command\":\"open\",\"database_path\":\"" + path + "\"}");
+
+                while (true)
+                {
+                    var response = ReceiveMessage(stream);
+                    var json = JsonValue.Parse(response);
+                    if (json.ContainsKey("error"))
+                    {
+                        throw new InvalidDataException("Cannot open database. " + json["error"].ToString());
+                    }
+                    else if (json.ContainsKey("finished"))
+                    {
+                        if (json["finished"] == true) break;
+                    }
+                }
+
+                IsOpen = true;
+            }
         }
 
         private QueryResponse ExecuteQuery(string query)
         {
-            var stream = client.GetStream();
-
-            SendMessage(stream, query);
-
-            var responseJson = JsonValue.Parse(ReceiveMessage(stream));
-            if (responseJson.ContainsKey("error"))
+            lock (Lock)
             {
-                throw new InvalidDataException(responseJson["error"].ToString());
-            }
+                var stream = client.GetStream();
 
-            return QueryResponse.FromJson(responseJson);
+                SendMessage(stream, query);
+
+                var responseJson = JsonValue.Parse(ReceiveMessage(stream));
+                if (responseJson.ContainsKey("error"))
+                {
+                    throw new InvalidDataException(responseJson["error"].ToString());
+                }
+
+                return QueryResponse.FromJson(responseJson);
+            }
         }
 
         public QueryResponse Query(string fen)
@@ -155,38 +166,44 @@ namespace chess_pos_db_gui
 
         public void Close()
         {
-            if (!IsOpen) return;
-            Path = "";
-            IsOpen = false;
-
-            try
+            lock (Lock)
             {
-                var stream = client.GetStream();
-                SendMessage(stream, "{\"command\":\"close\"}");
+                if (!IsOpen) return;
+                Path = "";
+                IsOpen = false;
 
-                var responseJson = JsonValue.Parse(ReceiveMessage(stream));
-                if (responseJson.ContainsKey("error"))
+                try
                 {
-                    throw new InvalidDataException(responseJson["error"].ToString());
+                    var stream = client.GetStream();
+                    SendMessage(stream, "{\"command\":\"close\"}");
+
+                    var responseJson = JsonValue.Parse(ReceiveMessage(stream));
+                    if (responseJson.ContainsKey("error"))
+                    {
+                        throw new InvalidDataException(responseJson["error"].ToString());
+                    }
                 }
-            }
-            catch
-            {
+                catch
+                {
+                }
             }
         }
 
         public void Dispose()
         {
-            try
+            lock (Lock)
             {
-                var stream = client.GetStream();
-                SendMessage(stream, "{\"command\":\"exit\"}");
-                process.WaitForExit();
+                try
+                {
+                    var stream = client.GetStream();
+                    SendMessage(stream, "{\"command\":\"exit\"}");
+                    process.WaitForExit();
+                }
+                catch
+                {
+                }
+                client.Close();
             }
-            catch
-            {
-            }
-            client.Close();
         }
 
         private void SendMessage(NetworkStream stream, string message)
@@ -262,47 +279,50 @@ namespace chess_pos_db_gui
 
         public void Dump(List<string> pgns, string outPath, string tempPath, int minCount, Action<JsonValue> callback)
         {
-            var stream = client.GetStream();
-
-            var json = new JsonObject();
-            json.Add("command", "dump");
-            json.Add("output_path", outPath);
-            if (tempPath != null)
+            lock (Lock)
             {
-                json.Add("temporary_path", tempPath);
-            }
-            json.Add("min_count", minCount);
-            json.Add("report_progress", true);
+                var stream = client.GetStream();
 
-            var pgnsJson = new JsonArray();
-            foreach(string pgn in pgns)
-            {
-                pgnsJson.Add(pgn);
-            }
-            json.Add("pgns", pgnsJson);
-
-            SendMessage(stream, json.ToString());
-
-            while (true)
-            {
-                var response = ReceiveMessage(stream);
-                var responseJson = JsonValue.Parse(response);
-                if (responseJson.ContainsKey("error"))
+                var json = new JsonObject();
+                json.Add("command", "dump");
+                json.Add("output_path", outPath);
+                if (tempPath != null)
                 {
-                    throw new InvalidDataException(responseJson["error"].ToString());
+                    json.Add("temporary_path", tempPath);
                 }
-                else if (responseJson.ContainsKey("operation"))
+                json.Add("min_count", minCount);
+                json.Add("report_progress", true);
+
+                var pgnsJson = new JsonArray();
+                foreach (string pgn in pgns)
                 {
-                    if (responseJson["operation"] == "import"
-                        || responseJson["operation"] == "dump")
+                    pgnsJson.Add(pgn);
+                }
+                json.Add("pgns", pgnsJson);
+
+                SendMessage(stream, json.ToString());
+
+                while (true)
+                {
+                    var response = ReceiveMessage(stream);
+                    var responseJson = JsonValue.Parse(response);
+                    if (responseJson.ContainsKey("error"))
                     {
-                        callback.Invoke(responseJson);
+                        throw new InvalidDataException(responseJson["error"].ToString());
                     }
-                    if (responseJson["operation"] == "dump")
+                    else if (responseJson.ContainsKey("operation"))
                     {
-                        if (responseJson["finished"] == true)
+                        if (responseJson["operation"] == "import"
+                            || responseJson["operation"] == "dump")
                         {
-                            break;
+                            callback.Invoke(responseJson);
+                        }
+                        if (responseJson["operation"] == "dump")
+                        {
+                            if (responseJson["finished"] == true)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
@@ -311,30 +331,33 @@ namespace chess_pos_db_gui
 
         public void Create(JsonValue json, Action<JsonValue> callback)
         {
-            var stream = client.GetStream();
-
-            SendMessage(stream, json.ToString());
-
-            while (true)
+            lock (Lock)
             {
-                var response = ReceiveMessage(stream);
-                var responseJson = JsonValue.Parse(response);
-                if (responseJson.ContainsKey("error"))
+                var stream = client.GetStream();
+
+                SendMessage(stream, json.ToString());
+
+                while (true)
                 {
-                    throw new InvalidDataException(responseJson["error"].ToString());
-                }
-                else if (responseJson.ContainsKey("operation"))
-                {
-                    if (responseJson["operation"] == "import"
-                        || responseJson["operation"] == "merge")
+                    var response = ReceiveMessage(stream);
+                    var responseJson = JsonValue.Parse(response);
+                    if (responseJson.ContainsKey("error"))
                     {
-                        callback.Invoke(responseJson);
+                        throw new InvalidDataException(responseJson["error"].ToString());
                     }
-                    else if (responseJson["operation"] == "create")
+                    else if (responseJson.ContainsKey("operation"))
                     {
-                        if (responseJson["finished"] == true)
+                        if (responseJson["operation"] == "import"
+                            || responseJson["operation"] == "merge")
                         {
-                            break;
+                            callback.Invoke(responseJson);
+                        }
+                        else if (responseJson["operation"] == "create")
+                        {
+                            if (responseJson["finished"] == true)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
