@@ -302,7 +302,14 @@ namespace chess_pos_db_gui
             row["WinCount"] = entry.WinCount;
             row["DrawCount"] = entry.DrawCount;
             row["LossCount"] = entry.LossCount;
-            row["Perf"] = (entry.Perf);
+            if (chessBoard.CurrentPlayer() == Player.White)
+            {
+                row["Perf"] = (entry.Perf);
+            }
+            else
+            {
+                row["Perf"] = 1.0 - (entry.Perf);
+            }
             row["DrawPct"] = (entry.DrawRate);
             row["HumanPct"] = ((double)nonEngineEntry.Count / (double)entry.Count);
 
@@ -345,7 +352,14 @@ namespace chess_pos_db_gui
             row["WinCount"] = total.WinCount;
             row["DrawCount"] = total.DrawCount;
             row["LossCount"] = total.LossCount;
-            row["Perf"] = (total.Perf);
+            if (chessBoard.CurrentPlayer() == Player.White)
+            {
+                row["Perf"] = (total.Perf);
+            }
+            else
+            {
+                row["Perf"] = 1.0 - (total.Perf);
+            }
             row["DrawPct"] = (total.DrawRate);
             row["HumanPct"] = ((double)totalNonEngine.Count / (double)total.Count);
             // score is always for side to move
@@ -487,6 +501,14 @@ namespace chess_pos_db_gui
             }
             else
             {
+                if (chessBoard.CurrentPlayer() == Player.White)
+                {
+                    entriesGridView.Columns["Perf"].HeaderText = "Wh%";
+                }
+                else
+                {
+                    entriesGridView.Columns["Perf"].HeaderText = "Bl%";
+                }
                 Populate(data, selects.ToList(), levels.ToList());
             }
         }
