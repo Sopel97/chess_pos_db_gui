@@ -14,7 +14,7 @@ namespace chess_pos_db_gui
         private static readonly int dtz0 = 30000;
 
         public int Value { get; set; }
-        public double WinPct { get; set; }
+        public double Perf { get; set; }
 
         private static int ValueFromString(string str)
         {
@@ -72,24 +72,24 @@ namespace chess_pos_db_gui
         public Score(int v)
         {
             Value = v;
-            WinPct = 0;
+            Perf = 0;
         }
 
         public Score(string str)
         {
             Value = ValueFromString(str);
-            WinPct = str == null ? Double.NaN : WinPctFromEval(Value);
+            Perf = str == null ? Double.NaN : WinPctFromEval(Value);
         }
         public Score(int v, double pct)
         {
             Value = v;
-            WinPct = pct;
+            Perf = pct;
         }
 
         public Score(string value, string winpct)
         {
             Value = ValueFromString(value);
-            WinPct = WinPctFromString(winpct);
+            Perf = WinPctFromString(winpct);
         }
 
         public override string ToString()
