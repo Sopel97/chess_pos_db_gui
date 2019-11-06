@@ -66,7 +66,7 @@ namespace chess_pos_db_gui
                 return eval < 0 ? 0.0 : 1.0;
             }
 
-            return 1.0 / (1.0 + Math.Exp((double)-eval / 100));
+            return 1.0 / (1.0 + Math.Exp((double)-eval / 90.0));
         }
 
         public Score(int v)
