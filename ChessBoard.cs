@@ -296,6 +296,18 @@ namespace chess_pos_db_gui
             Reset(StartPosFen);
         }
 
+        public string NextMoveNumber()
+        {
+            int c = History.Plies;
+            int move = (c - 1) / 2 + 1;
+            bool isWhite = c % 2 == 1;
+
+            return 
+                isWhite 
+                ? (move.ToString() + ".")
+                : (move.ToString() + "...");
+        }
+
         private void ChessBoard_SizeChanged(object sender, EventArgs e)
         {
             splitFenAndControls.Height = Height;

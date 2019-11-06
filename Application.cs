@@ -794,7 +794,12 @@ namespace chess_pos_db_gui
 
         private void EntriesGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (entriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("%"))
+            if (e.ColumnIndex == 0)
+            {
+                e.Value = chessBoard.NextMoveNumber() + " " + e.Value.ToString();
+                e.FormattingApplied = true;
+            }
+            else if (entriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("%"))
             {
                 if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
                 {
