@@ -300,7 +300,7 @@ namespace chess_pos_db_gui
         {
             int c = History.Plies;
             int move = (c - 1) / 2 + 1;
-            bool isWhite = c % 2 == 1;
+            bool isWhite = c % 2 == 0;
 
             return 
                 isWhite 
