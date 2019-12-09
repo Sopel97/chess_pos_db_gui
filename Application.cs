@@ -586,10 +586,12 @@ namespace chess_pos_db_gui
                 if (chessBoard.CurrentPlayer() == Player.White)
                 {
                     entriesGridView.Columns["Perf"].HeaderText = "Wh%";
+                    totalEntriesGridView.Columns["Perf"].HeaderText = "Wh%";
                 }
                 else
                 {
                     entriesGridView.Columns["Perf"].HeaderText = "Bl%";
+                    totalEntriesGridView.Columns["Perf"].HeaderText = "Bl%";
                 }
                 Populate(data, selects.ToList(), levels.ToList());
             }
