@@ -49,6 +49,7 @@ namespace chess_pos_db_gui
         private int Plies { get; set; }
         private int FirstPly { get; set; }
         private string LastFen { get; set; }
+        private int BaseMoveNumber;
 
         private EventHandler onPositionChanged { get; set; }
         public event EventHandler PositionChanged
@@ -84,6 +85,9 @@ namespace chess_pos_db_gui
 
             LastFen = "";
 
+            BaseMoveNumber = 1;
+            MoveHistory.BaseMoveNumber = 1;
+
             IsBoardFlipped = false;
         }
 
@@ -117,6 +121,16 @@ namespace chess_pos_db_gui
                 SetSelection(1);
             }
             FirstPly = Plies;
+
+            if (int.TryParse(fen.Split(' ').Last(), out int n))
+            {
+                BaseMoveNumber = n;
+                MoveHistory.BaseMoveNumber = n;
+                foreach (MoveHistoryDataRow row in MoveHistory.Rows)
+                {
+                    row.UpdateBaseMoveNumber(n);
+                }
+            }
 
             UpdateFenTextBox(fen);
         }
@@ -299,7 +313,7 @@ namespace chess_pos_db_gui
         public string NextMoveNumber()
         {
             int c = History.Plies;
-            int move = c / 2 + 1;
+            int move = c / 2 + BaseMoveNumber;
             bool isWhite = c % 2 == 0;
 
             return 
@@ -585,12 +599,13 @@ namespace chess_pos_db_gui
     }
     internal class MoveHistoryDataRow : DataRow
     {
+        public int BaseMoveNumber = 1;
         private int _No { get; set; }
         private DetailedMove _WhiteDetailedMove { get; set; }
         private DetailedMove _BlackDetailedMove { get; set; }
         public int No {
             get { return _No; }
-            set { _No = value; base["No"] = value.ToString() + "."; }
+            set { _No = value; base["No"] = (value + BaseMoveNumber - 1).ToString() + "."; }
         }
         public DetailedMove WhiteDetailedMove {
             get { return _WhiteDetailedMove; }
@@ -609,14 +624,23 @@ namespace chess_pos_db_gui
             } 
         }
 
-        public MoveHistoryDataRow(DataRowBuilder builder) :
+        public MoveHistoryDataRow(DataRowBuilder builder, int n) :
             base(builder)
         {
+            BaseMoveNumber = n;
+        }
+
+        public void UpdateBaseMoveNumber(int n)
+        {
+            BaseMoveNumber = n;
+            No = _No;
         }
     }
 
     internal class MoveHistoryTable : DataTable
     {
+        public int BaseMoveNumber = 1;
+
         public MoveHistoryTable()
         {
             Columns.Add(new DataColumn("No", typeof(string)));
@@ -640,7 +664,7 @@ namespace chess_pos_db_gui
 
         protected override DataRow NewRowFromBuilder(DataRowBuilder builder)
         {
-            return new MoveHistoryDataRow(builder);
+            return new MoveHistoryDataRow(builder, BaseMoveNumber);
         }
         public void Add(MoveHistoryDataRow row)
         {
