@@ -299,7 +299,7 @@ namespace chess_pos_db_gui
         public string NextMoveNumber()
         {
             int c = History.Plies;
-            int move = (c - 1) / 2 + 1;
+            int move = c / 2 + 1;
             bool isWhite = c % 2 == 0;
 
             return 
