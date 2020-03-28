@@ -69,7 +69,8 @@ namespace chess_pos_db_gui
         {
             databaseFormatComboBox.Items.Add("db_alpha");
             databaseFormatComboBox.Items.Add("db_beta");
-            databaseFormatComboBox.SelectedItem = "db_beta";
+            databaseFormatComboBox.Items.Add("db_delta");
+            databaseFormatComboBox.SelectedItem = "db_delta";
         }
 
         private void AddPath(DataGridView dgv, string path)
