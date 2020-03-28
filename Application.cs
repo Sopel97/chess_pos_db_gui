@@ -82,6 +82,7 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
+            tabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
             tabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("Goodness", typeof(double)));
@@ -103,6 +104,7 @@ namespace chess_pos_db_gui
             totalTabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
+            totalTabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
             totalTabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("Goodness", typeof(double)));
@@ -125,6 +127,8 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["DrawPct"].HeaderText = "D%";
             totalEntriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["HumanPct"].HeaderText = "H%";
+            totalEntriesGridView.Columns["AvgEloDiff"].HeaderText = "ΔE";
+            totalEntriesGridView.Columns["AvgEloDiff"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["Eval"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["Eval"].HeaderText = "Ev";
             totalEntriesGridView.Columns["EvalPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -144,6 +148,8 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["DrawPct"].HeaderText = "D%";
             entriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["HumanPct"].HeaderText = "H%";
+            entriesGridView.Columns["AvgEloDiff"].HeaderText = "ΔE";
+            entriesGridView.Columns["AvgEloDiff"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["Result"].HeaderText = "";
             entriesGridView.Columns["Eco"].HeaderText = "ECO";
             entriesGridView.Columns["Eco"].MinimumWidth = 35;
@@ -390,6 +396,15 @@ namespace chess_pos_db_gui
             }
             row["DrawPct"] = (entry.DrawRate);
             row["HumanPct"] = ((double)nonEngineEntry.Count / (double)entry.Count);
+
+            if (entry.Count > 0)
+            {
+                row["AvgEloDiff"] = entry.EloDiff / (long)entry.Count;
+            }
+            else
+            {
+                row["AvgEloDiff"] = 0;
+            }
 
             // score is always for side to move
             if (score != null)
