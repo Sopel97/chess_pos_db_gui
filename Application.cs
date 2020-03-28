@@ -81,6 +81,7 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("ExpectedPerf", typeof(double)));
+            tabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
@@ -104,6 +105,7 @@ namespace chess_pos_db_gui
             totalTabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
             totalTabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("ExpectedPerf", typeof(double)));
+            totalTabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
@@ -127,6 +129,8 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["Perf"].HeaderText = "Wh%";
             totalEntriesGridView.Columns["ExpectedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["ExpectedPerf"].HeaderText = "EWh%";
+            totalEntriesGridView.Columns["AdjustedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            totalEntriesGridView.Columns["AdjustedPerf"].HeaderText = "AWh%";
             totalEntriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["DrawPct"].HeaderText = "D%";
             totalEntriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -150,6 +154,8 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["Perf"].HeaderText = "Wh%";
             entriesGridView.Columns["ExpectedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["ExpectedPerf"].HeaderText = "EWh%";
+            entriesGridView.Columns["AdjustedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            entriesGridView.Columns["AdjustedPerf"].HeaderText = "AWh%";
             entriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["DrawPct"].HeaderText = "D%";
             entriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -190,6 +196,11 @@ namespace chess_pos_db_gui
                     column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 }
             }
+        }
+
+        private static double GetAdjustedPerformanceWithCubic(double actualPerf, double expectedPerf)
+        {
+            return actualPerf - ((expectedPerf - 0.5) * (actualPerf - 1.0) * actualPerf) / (expectedPerf * (expectedPerf - 1.0));
         }
 
         private static void MakeDoubleBuffered(DataGridView dgv)
@@ -394,15 +405,19 @@ namespace chess_pos_db_gui
             row["LossCount"] = entry.LossCount;
 
             var averageEloDiff = entry.Count > 0 ? (double)entry.EloDiff / (double)entry.Count : 0.0;
+            var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
+            var adjustedPerf = GetAdjustedPerformanceWithCubic(entry.Perf, expectedPerf);
             if (chessBoard.CurrentPlayer() == Player.White)
             {
                 row["Perf"] = entry.Perf;
-                row["ExpectedPerf"] = EloCalculator.GetExpectedPerformance(averageEloDiff);
+                row["ExpectedPerf"] = expectedPerf;
+                row["AdjustedPerf"] = adjustedPerf;
             }
             else
             {
                 row["Perf"] = 1.0 - entry.Perf;
-                row["ExpectedPerf"] = 1.0 - EloCalculator.GetExpectedPerformance(averageEloDiff);
+                row["ExpectedPerf"] = 1.0 - expectedPerf;
+                row["AdjustedPerf"] = 1.0 - adjustedPerf;
             }
             row["DrawPct"] = (entry.DrawRate);
             row["HumanPct"] = ((double)nonEngineEntry.Count / (double)entry.Count);
@@ -450,15 +465,19 @@ namespace chess_pos_db_gui
             row["LossCount"] = total.LossCount;
 
             var averageEloDiff = total.Count > 0 ? (double)total.EloDiff / (double)total.Count : 0.0;
+            var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
+            var adjustedPerf = GetAdjustedPerformanceWithCubic(total.Perf, expectedPerf);
             if (chessBoard.CurrentPlayer() == Player.White)
             {
                 row["Perf"] = total.Perf;
-                row["ExpectedPerf"] = EloCalculator.GetExpectedPerformance(averageEloDiff);
+                row["ExpectedPerf"] = expectedPerf;
+                row["AdjustedPerf"] = adjustedPerf;
             }
             else
             {
                 row["Perf"] = 1.0 - total.Perf;
-                row["ExpectedPerf"] = 1.0 - EloCalculator.GetExpectedPerformance(averageEloDiff);
+                row["ExpectedPerf"] = 1.0 - expectedPerf;
+                row["AdjustedPerf"] = 1.0 - adjustedPerf;
             }
             row["DrawPct"] = (total.DrawRate);
             row["HumanPct"] = ((double)totalNonEngine.Count / (double)total.Count);
@@ -621,6 +640,8 @@ namespace chess_pos_db_gui
                     totalEntriesGridView.Columns["Perf"].HeaderText = "Bl%";
                     entriesGridView.Columns["ExpectedPerf"].HeaderText = "EBl%";
                     totalEntriesGridView.Columns["ExpectedPerf"].HeaderText = "EBl%";
+                    entriesGridView.Columns["AdjustedPerf"].HeaderText = "ABl%";
+                    totalEntriesGridView.Columns["AdjustedPerf"].HeaderText = "ABl%";
                 }
                 Populate(data, selects.ToList(), levels.ToList());
             }
