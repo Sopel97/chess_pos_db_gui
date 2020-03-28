@@ -327,9 +327,10 @@ namespace chess_pos_db_gui
                 ulong engineWins = entry.WinCount - nonEngineEntry.WinCount;
                 ulong engineDraws = entry.DrawCount - nonEngineEntry.DrawCount;
                 double enginePerf = ((double)engineWins + (double)engineDraws * 0.5) / (double)engineCount;
+                double adjustedEnginePerf = GetAdjustedPerformanceWithCubic(enginePerf, EloCalculator.GetExpectedPerformance(entry.EloDiff));
                 if (chessBoard.CurrentPlayer() == Player.Black)
                 {
-                    enginePerf = 1.0 - enginePerf;
+                    enginePerf = 1.0 - adjustedEnginePerf;
                 }
 
                 goodness += (Math.Log(Math.Log(engineCount) + 1) * enginePerf * engineWeight);
@@ -341,9 +342,10 @@ namespace chess_pos_db_gui
                 ulong humanWins = nonEngineEntry.WinCount;
                 ulong humanDraws = nonEngineEntry.DrawCount;
                 double humanPerf = ((double)humanWins + (double)humanDraws * 0.5) / (double)humanCount;
+                double adjustedHumanPerf = GetAdjustedPerformanceWithCubic(humanPerf, EloCalculator.GetExpectedPerformance(entry.EloDiff));
                 if (chessBoard.CurrentPlayer() == Player.Black)
                 {
-                    humanPerf = 1.0 - humanPerf;
+                    humanPerf = 1.0 - adjustedHumanPerf;
                 }
                 goodness += (Math.Log(Math.Log(humanCount) + 1) * humanPerf * humanWeight);
             }
