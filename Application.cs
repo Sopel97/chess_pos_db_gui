@@ -80,6 +80,7 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
+            tabulatedData.Columns.Add(new DataColumn("ExpectedPerf", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
@@ -102,6 +103,7 @@ namespace chess_pos_db_gui
             totalTabulatedData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
             totalTabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
             totalTabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
+            totalTabulatedData.Columns.Add(new DataColumn("ExpectedPerf", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
@@ -123,6 +125,8 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["LossCount"].HeaderText = "-";
             totalEntriesGridView.Columns["Perf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["Perf"].HeaderText = "Wh%";
+            totalEntriesGridView.Columns["ExpectedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            totalEntriesGridView.Columns["ExpectedPerf"].HeaderText = "EWh%";
             totalEntriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["DrawPct"].HeaderText = "D%";
             totalEntriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -144,6 +148,8 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["LossCount"].HeaderText = "-";
             entriesGridView.Columns["Perf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["Perf"].HeaderText = "Wh%";
+            entriesGridView.Columns["ExpectedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            entriesGridView.Columns["ExpectedPerf"].HeaderText = "EWh%";
             entriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["DrawPct"].HeaderText = "D%";
             entriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -386,25 +392,22 @@ namespace chess_pos_db_gui
             row["WinCount"] = entry.WinCount;
             row["DrawCount"] = entry.DrawCount;
             row["LossCount"] = entry.LossCount;
+
+            var averageEloDiff = entry.Count > 0 ? (double)entry.EloDiff / (double)entry.Count : 0.0;
             if (chessBoard.CurrentPlayer() == Player.White)
             {
-                row["Perf"] = (entry.Perf);
+                row["Perf"] = entry.Perf;
+                row["ExpectedPerf"] = EloCalculator.GetExpectedPerformance(averageEloDiff);
             }
             else
             {
-                row["Perf"] = 1.0 - (entry.Perf);
+                row["Perf"] = 1.0 - entry.Perf;
+                row["ExpectedPerf"] = 1.0 - EloCalculator.GetExpectedPerformance(averageEloDiff);
             }
             row["DrawPct"] = (entry.DrawRate);
             row["HumanPct"] = ((double)nonEngineEntry.Count / (double)entry.Count);
 
-            if (entry.Count > 0)
-            {
-                row["AvgEloDiff"] = entry.EloDiff / (long)entry.Count;
-            }
-            else
-            {
-                row["AvgEloDiff"] = 0;
-            }
+            row["AvgEloDiff"] = (long)Math.Round(averageEloDiff);
 
             // score is always for side to move
             if (score != null)
@@ -445,16 +448,23 @@ namespace chess_pos_db_gui
             row["WinCount"] = total.WinCount;
             row["DrawCount"] = total.DrawCount;
             row["LossCount"] = total.LossCount;
+
+            var averageEloDiff = total.Count > 0 ? (double)total.EloDiff / (double)total.Count : 0.0;
             if (chessBoard.CurrentPlayer() == Player.White)
             {
-                row["Perf"] = (total.Perf);
+                row["Perf"] = total.Perf;
+                row["ExpectedPerf"] = EloCalculator.GetExpectedPerformance(averageEloDiff);
             }
             else
             {
-                row["Perf"] = 1.0 - (total.Perf);
+                row["Perf"] = 1.0 - total.Perf;
+                row["ExpectedPerf"] = 1.0 - EloCalculator.GetExpectedPerformance(averageEloDiff);
             }
             row["DrawPct"] = (total.DrawRate);
             row["HumanPct"] = ((double)totalNonEngine.Count / (double)total.Count);
+
+            row["AvgEloDiff"] = (long)Math.Round(averageEloDiff);
+
             // score is always for side to move
             if (totalScore != null)
             {
@@ -602,11 +612,15 @@ namespace chess_pos_db_gui
                 {
                     entriesGridView.Columns["Perf"].HeaderText = "Wh%";
                     totalEntriesGridView.Columns["Perf"].HeaderText = "Wh%";
+                    entriesGridView.Columns["ExpectedPerf"].HeaderText = "EWh%";
+                    totalEntriesGridView.Columns["ExpectedPerf"].HeaderText = "EWh%";
                 }
                 else
                 {
                     entriesGridView.Columns["Perf"].HeaderText = "Bl%";
                     totalEntriesGridView.Columns["Perf"].HeaderText = "Bl%";
+                    entriesGridView.Columns["ExpectedPerf"].HeaderText = "EBl%";
+                    totalEntriesGridView.Columns["ExpectedPerf"].HeaderText = "EBl%";
                 }
                 Populate(data, selects.ToList(), levels.ToList());
             }

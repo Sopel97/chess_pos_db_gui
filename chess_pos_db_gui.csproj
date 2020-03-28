@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="ChessBoardHistory.cs" />
     <Compile Include="ConditionVariable.cs" />
+    <Compile Include="EloCalculator.cs" />
     <Compile Include="EpdDumpForm.cs">
       <SubType>Form</SubType>
     </Compile>
