@@ -80,13 +80,13 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
-            tabulatedData.Columns.Add(new DataColumn("ExpectedPerf", typeof(double)));
-            tabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
             tabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
+            tabulatedData.Columns.Add(new DataColumn("ExpectedPerf", typeof(double)));
+            tabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("Goodness", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("Date", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("White", typeof(string)));
@@ -104,13 +104,13 @@ namespace chess_pos_db_gui
             totalTabulatedData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
             totalTabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
             totalTabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
-            totalTabulatedData.Columns.Add(new DataColumn("ExpectedPerf", typeof(double)));
-            totalTabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
             totalTabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
+            totalTabulatedData.Columns.Add(new DataColumn("ExpectedPerf", typeof(double)));
+            totalTabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("Goodness", typeof(double)));
 
             MakeDoubleBuffered(entriesGridView);
