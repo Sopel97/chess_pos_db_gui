@@ -83,10 +83,9 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
+            tabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
             tabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
-            tabulatedData.Columns.Add(new DataColumn("ExpectedPerf", typeof(double)));
-            tabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("Goodness", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("Date", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("White", typeof(string)));
@@ -107,10 +106,9 @@ namespace chess_pos_db_gui
             totalTabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
+            totalTabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
             totalTabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
-            totalTabulatedData.Columns.Add(new DataColumn("ExpectedPerf", typeof(double)));
-            totalTabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("Goodness", typeof(double)));
 
             MakeDoubleBuffered(entriesGridView);
@@ -127,8 +125,6 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["LossCount"].HeaderText = "-";
             totalEntriesGridView.Columns["Perf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["Perf"].HeaderText = "Wh%";
-            totalEntriesGridView.Columns["ExpectedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            totalEntriesGridView.Columns["ExpectedPerf"].HeaderText = "EWh%";
             totalEntriesGridView.Columns["AdjustedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["AdjustedPerf"].HeaderText = "AWh%";
             totalEntriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -152,8 +148,6 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["LossCount"].HeaderText = "-";
             entriesGridView.Columns["Perf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["Perf"].HeaderText = "Wh%";
-            entriesGridView.Columns["ExpectedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            entriesGridView.Columns["ExpectedPerf"].HeaderText = "EWh%";
             entriesGridView.Columns["AdjustedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["AdjustedPerf"].HeaderText = "AWh%";
             entriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -412,13 +406,11 @@ namespace chess_pos_db_gui
             if (chessBoard.CurrentPlayer() == Player.White)
             {
                 row["Perf"] = entry.Perf;
-                row["ExpectedPerf"] = expectedPerf;
                 row["AdjustedPerf"] = adjustedPerf;
             }
             else
             {
                 row["Perf"] = 1.0 - entry.Perf;
-                row["ExpectedPerf"] = 1.0 - expectedPerf;
                 row["AdjustedPerf"] = 1.0 - adjustedPerf;
             }
             row["DrawPct"] = (entry.DrawRate);
@@ -472,13 +464,11 @@ namespace chess_pos_db_gui
             if (chessBoard.CurrentPlayer() == Player.White)
             {
                 row["Perf"] = total.Perf;
-                row["ExpectedPerf"] = expectedPerf;
                 row["AdjustedPerf"] = adjustedPerf;
             }
             else
             {
                 row["Perf"] = 1.0 - total.Perf;
-                row["ExpectedPerf"] = 1.0 - expectedPerf;
                 row["AdjustedPerf"] = 1.0 - adjustedPerf;
             }
             row["DrawPct"] = (total.DrawRate);
@@ -633,15 +623,13 @@ namespace chess_pos_db_gui
                 {
                     entriesGridView.Columns["Perf"].HeaderText = "Wh%";
                     totalEntriesGridView.Columns["Perf"].HeaderText = "Wh%";
-                    entriesGridView.Columns["ExpectedPerf"].HeaderText = "EWh%";
-                    totalEntriesGridView.Columns["ExpectedPerf"].HeaderText = "EWh%";
+                    entriesGridView.Columns["AdjustedPerf"].HeaderText = "AWh%";
+                    totalEntriesGridView.Columns["AdjustedPerf"].HeaderText = "AWh%";
                 }
                 else
                 {
                     entriesGridView.Columns["Perf"].HeaderText = "Bl%";
                     totalEntriesGridView.Columns["Perf"].HeaderText = "Bl%";
-                    entriesGridView.Columns["ExpectedPerf"].HeaderText = "EBl%";
-                    totalEntriesGridView.Columns["ExpectedPerf"].HeaderText = "EBl%";
                     entriesGridView.Columns["AdjustedPerf"].HeaderText = "ABl%";
                     totalEntriesGridView.Columns["AdjustedPerf"].HeaderText = "ABl%";
                 }
