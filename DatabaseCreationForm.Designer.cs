@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.databaseFormatLabel = new System.Windows.Forms.Label();
             this.databaseFormatComboBox = new System.Windows.Forms.ComboBox();
@@ -60,6 +61,7 @@
             this.openCheckBox = new System.Windows.Forms.CheckBox();
             this.buildButton = new System.Windows.Forms.Button();
             this.mergeCheckBox = new System.Windows.Forms.CheckBox();
+            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -114,6 +116,8 @@
             this.databaseFormatLabel.Size = new System.Drawing.Size(85, 13);
             this.databaseFormatLabel.TabIndex = 10;
             this.databaseFormatLabel.Text = "Database format";
+            this.tooltip.SetToolTip(this.databaseFormatLabel, "The database format to use. Descriptions can be found on project\'s github page in" +
+        " the documentation. Default is best for uninformed users.");
             // 
             // databaseFormatComboBox
             // 
@@ -145,6 +149,9 @@
             this.tempFolderLabel.Size = new System.Drawing.Size(63, 13);
             this.tempFolderLabel.TabIndex = 7;
             this.tempFolderLabel.Text = "Temp folder";
+            this.tooltip.SetToolTip(this.tempFolderLabel, "The temporary folder used for intermediate when creating the database. Best to be" +
+        " a separate phsical drive. If left empty then no temporary folder will be used b" +
+        "ut it may slow down the process.");
             // 
             // destinationFolderLabel
             // 
@@ -154,6 +161,7 @@
             this.destinationFolderLabel.Size = new System.Drawing.Size(89, 13);
             this.destinationFolderLabel.TabIndex = 6;
             this.destinationFolderLabel.Text = "Destination folder";
+            this.tooltip.SetToolTip(this.destinationFolderLabel, "The folder in which the database will be created. The folder must exist.");
             // 
             // setDestinationFolderButton
             // 
@@ -275,6 +283,7 @@
             this.humanPgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.humanPgnsDataGridView.Size = new System.Drawing.Size(604, 335);
             this.humanPgnsDataGridView.TabIndex = 0;
+            this.tooltip.SetToolTip(this.humanPgnsDataGridView, "The list of PGN files to collect games from into Human category.");
             this.humanPgnsDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.HumanPgnsDataGridView_RowPrePaint);
             // 
             // Path
@@ -321,6 +330,7 @@
             this.enginePgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.enginePgnsDataGridView.Size = new System.Drawing.Size(604, 335);
             this.enginePgnsDataGridView.TabIndex = 4;
+            this.tooltip.SetToolTip(this.enginePgnsDataGridView, "The list of PGN files to collect games from into Engine category.");
             this.enginePgnsDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.EnginePgnsDataGridView_RowPrePaint);
             // 
             // dataGridViewTextBoxColumn1
@@ -377,6 +387,7 @@
             this.serverPgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.serverPgnsDataGridView.Size = new System.Drawing.Size(604, 335);
             this.serverPgnsDataGridView.TabIndex = 4;
+            this.tooltip.SetToolTip(this.serverPgnsDataGridView, "The list of PGN files to collect games from into Server category.");
             this.serverPgnsDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.ServerPgnsDataGridView_RowPrePaint);
             // 
             // dataGridViewTextBoxColumn3
@@ -421,6 +432,7 @@
             this.mergeProgressBar.Name = "mergeProgressBar";
             this.mergeProgressBar.Size = new System.Drawing.Size(320, 17);
             this.mergeProgressBar.TabIndex = 3;
+            this.tooltip.SetToolTip(this.mergeProgressBar, "Merge (optimization) progress");
             // 
             // openCheckBox
             // 
@@ -432,6 +444,8 @@
             this.openCheckBox.Size = new System.Drawing.Size(120, 17);
             this.openCheckBox.TabIndex = 2;
             this.openCheckBox.Text = "Open when finished";
+            this.tooltip.SetToolTip(this.openCheckBox, "When enabled the database will automatically open after the process is finished. " +
+        "This will allow queries to be made instantly after closing this window.");
             this.openCheckBox.UseVisualStyleBackColor = true;
             // 
             // buildButton
@@ -442,6 +456,7 @@
             this.buildButton.Size = new System.Drawing.Size(128, 98);
             this.buildButton.TabIndex = 1;
             this.buildButton.Text = "Build";
+            this.tooltip.SetToolTip(this.buildButton, "Create the database.");
             this.buildButton.UseVisualStyleBackColor = true;
             this.buildButton.Click += new System.EventHandler(this.BuildButton_Click);
             // 
@@ -455,6 +470,7 @@
             this.mergeCheckBox.Size = new System.Drawing.Size(111, 17);
             this.mergeCheckBox.TabIndex = 0;
             this.mergeCheckBox.Text = "Merge after import";
+            this.tooltip.SetToolTip(this.mergeCheckBox, "When enabled the database will optimize itself before completion.");
             this.mergeCheckBox.UseVisualStyleBackColor = true;
             // 
             // DatabaseCreationForm
@@ -523,5 +539,6 @@
         private System.Windows.Forms.CheckBox openCheckBox;
         private System.Windows.Forms.ProgressBar mergeProgressBar;
         private System.Windows.Forms.Label mergeProgressLabel;
+        private System.Windows.Forms.ToolTip tooltip;
     }
 }
