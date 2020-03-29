@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pgnsDataGridView = new System.Windows.Forms.DataGridView();
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Progress = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -46,6 +47,7 @@
             this.dumpProgressLabel = new System.Windows.Forms.Label();
             this.dumpProgressBar = new System.Windows.Forms.ProgressBar();
             this.dumpButton = new System.Windows.Forms.Button();
+            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pgnsDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -76,6 +78,7 @@
             this.pgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.pgnsDataGridView.Size = new System.Drawing.Size(618, 368);
             this.pgnsDataGridView.TabIndex = 2;
+            this.tooltip.SetToolTip(this.pgnsDataGridView, "The PGN files to be scanned.");
             this.pgnsDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.PgnsDataGridView_RowPrePaint);
             // 
             // Path
@@ -129,6 +132,8 @@
             this.minCountLabel.Size = new System.Drawing.Size(54, 13);
             this.minCountLabel.TabIndex = 10;
             this.minCountLabel.Text = "Min count";
+            this.tooltip.SetToolTip(this.minCountLabel, "The minimal number of times the position needs to be seen to include it in the ou" +
+        "tput epd. If 1 then all positions are included.");
             // 
             // minCountInput
             // 
@@ -172,6 +177,7 @@
             this.tempFolderLabel.Size = new System.Drawing.Size(63, 13);
             this.tempFolderLabel.TabIndex = 7;
             this.tempFolderLabel.Text = "Temp folder";
+            this.tooltip.SetToolTip(this.tempFolderLabel, "The temporary folder used for intermediate data.");
             // 
             // outputPathLabel
             // 
@@ -181,6 +187,7 @@
             this.outputPathLabel.Size = new System.Drawing.Size(63, 13);
             this.outputPathLabel.TabIndex = 6;
             this.outputPathLabel.Text = "Output path";
+            this.tooltip.SetToolTip(this.outputPathLabel, "The path to the resulting epd file.");
             // 
             // setOutputPathButton
             // 
@@ -277,6 +284,7 @@
             this.dumpProgressBar.Name = "dumpProgressBar";
             this.dumpProgressBar.Size = new System.Drawing.Size(437, 17);
             this.dumpProgressBar.TabIndex = 3;
+            this.tooltip.SetToolTip(this.dumpProgressBar, "Dumping progress.");
             // 
             // dumpButton
             // 
@@ -286,6 +294,7 @@
             this.dumpButton.Size = new System.Drawing.Size(128, 98);
             this.dumpButton.TabIndex = 1;
             this.dumpButton.Text = "Dump";
+            this.tooltip.SetToolTip(this.dumpButton, "Perform dump.");
             this.dumpButton.UseVisualStyleBackColor = true;
             this.dumpButton.Click += new System.EventHandler(this.DumpButton_Click);
             // 
@@ -336,5 +345,6 @@
         private System.Windows.Forms.Button dumpButton;
         private System.Windows.Forms.Label minCountLabel;
         private System.Windows.Forms.NumericUpDown minCountInput;
+        private System.Windows.Forms.ToolTip tooltip;
     }
 }
