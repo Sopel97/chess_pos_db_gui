@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
@@ -56,6 +57,7 @@
             this.queryEvalCheckBox = new System.Windows.Forms.CheckBox();
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
+            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             this.typeSelectionGroupBox.SuspendLayout();
@@ -97,7 +99,7 @@
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(508, 404);
+            this.entriesGridView.Size = new System.Drawing.Size(505, 404);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -123,6 +125,7 @@
             this.levelServerCheckBox.Size = new System.Drawing.Size(57, 17);
             this.levelServerCheckBox.TabIndex = 2;
             this.levelServerCheckBox.Text = "Server";
+            this.tooltip.SetToolTip(this.levelServerCheckBox, "When enabled the statistics will include data from games from Server category.");
             this.levelServerCheckBox.UseVisualStyleBackColor = true;
             this.levelServerCheckBox.CheckedChanged += new System.EventHandler(this.LevelServerCheckBox_CheckedChanged);
             // 
@@ -134,6 +137,7 @@
             this.levelEngineCheckBox.Size = new System.Drawing.Size(59, 17);
             this.levelEngineCheckBox.TabIndex = 1;
             this.levelEngineCheckBox.Text = "Engine";
+            this.tooltip.SetToolTip(this.levelEngineCheckBox, "When enabled the statistics will include data from games from Engine category.");
             this.levelEngineCheckBox.UseVisualStyleBackColor = true;
             this.levelEngineCheckBox.CheckedChanged += new System.EventHandler(this.LevelEngineCheckBox_CheckedChanged);
             // 
@@ -145,6 +149,7 @@
             this.levelHumanCheckBox.Size = new System.Drawing.Size(60, 17);
             this.levelHumanCheckBox.TabIndex = 0;
             this.levelHumanCheckBox.Text = "Human";
+            this.tooltip.SetToolTip(this.levelHumanCheckBox, "When enabled the statistics will include data from games from Human category.");
             this.levelHumanCheckBox.UseVisualStyleBackColor = true;
             this.levelHumanCheckBox.CheckedChanged += new System.EventHandler(this.LevelHumanCheckBox_CheckedChanged);
             // 
@@ -167,6 +172,9 @@
             this.typeTranspositionsCheckBox.Size = new System.Drawing.Size(94, 17);
             this.typeTranspositionsCheckBox.TabIndex = 1;
             this.typeTranspositionsCheckBox.Text = "Transpositions";
+            this.tooltip.SetToolTip(this.typeTranspositionsCheckBox, "When enabled the statistics will include data from positions that arise by by tra" +
+        "nsposition (ie. the exact move was not played, but the position after it has hap" +
+        "pened before).");
             this.typeTranspositionsCheckBox.UseVisualStyleBackColor = true;
             this.typeTranspositionsCheckBox.CheckedChanged += new System.EventHandler(this.TypeTranspositionsCheckBox_CheckedChanged);
             // 
@@ -178,6 +186,8 @@
             this.typeContinuationsCheckBox.Size = new System.Drawing.Size(90, 17);
             this.typeContinuationsCheckBox.TabIndex = 0;
             this.typeContinuationsCheckBox.Text = "Continuations";
+            this.tooltip.SetToolTip(this.typeContinuationsCheckBox, "When enabled the statistics will include data from positions that arise by perfor" +
+        "ming the exact move (ie. not transpositions).");
             this.typeContinuationsCheckBox.UseVisualStyleBackColor = true;
             this.typeContinuationsCheckBox.CheckedChanged += new System.EventHandler(this.TypeContinuationsCheckBox_CheckedChanged);
             // 
@@ -338,6 +348,7 @@
             this.hideNeverPlayedCheckBox.Size = new System.Drawing.Size(71, 17);
             this.hideNeverPlayedCheckBox.TabIndex = 0;
             this.hideNeverPlayedCheckBox.Text = "Hide N=0";
+            this.tooltip.SetToolTip(this.hideNeverPlayedCheckBox, "When enabled moves with no position instances will not be shown in the table.");
             this.hideNeverPlayedCheckBox.UseVisualStyleBackColor = true;
             this.hideNeverPlayedCheckBox.CheckedChanged += new System.EventHandler(this.HideNeverPlayedCheckBox_CheckedChanged);
             // 
@@ -356,7 +367,7 @@
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(508, 45);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(505, 45);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -383,6 +394,8 @@
             this.queryEvalCheckBox.Size = new System.Drawing.Size(47, 17);
             this.queryEvalCheckBox.TabIndex = 2;
             this.queryEvalCheckBox.Text = "Eval";
+            this.tooltip.SetToolTip(this.queryEvalCheckBox, "When enabled it allows querying evaluation data from chessdb.cn. This can reduce " +
+        "responsivness due to network latency.");
             this.queryEvalCheckBox.UseVisualStyleBackColor = true;
             // 
             // queryButton
@@ -392,6 +405,7 @@
             this.queryButton.Size = new System.Drawing.Size(60, 23);
             this.queryButton.TabIndex = 1;
             this.queryButton.Text = "Query";
+            this.tooltip.SetToolTip(this.queryButton, "Manually queries the statistics for the current position.");
             this.queryButton.UseVisualStyleBackColor = true;
             this.queryButton.Click += new System.EventHandler(this.QueryButton_Click);
             // 
@@ -405,6 +419,8 @@
             this.autoQueryCheckbox.Size = new System.Drawing.Size(48, 17);
             this.autoQueryCheckbox.TabIndex = 0;
             this.autoQueryCheckbox.Text = "Auto";
+            this.tooltip.SetToolTip(this.autoQueryCheckbox, "If enabled it will automatically perform an evaluation query the statistics for e" +
+        "ach position.");
             this.autoQueryCheckbox.UseVisualStyleBackColor = true;
             this.autoQueryCheckbox.CheckedChanged += new System.EventHandler(this.AutoQueryCheckbox_CheckedChanged);
             // 
@@ -475,6 +491,7 @@
         private System.Windows.Forms.CheckBox hideNeverPlayedCheckBox;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem epdDumpToolStripMenuItem;
+        private System.Windows.Forms.ToolTip tooltip;
     }
 }
 

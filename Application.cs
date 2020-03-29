@@ -72,6 +72,8 @@ namespace chess_pos_db_gui
             typeContinuationsCheckBox.Checked = true;
             typeTranspositionsCheckBox.Checked = true;
 
+            queryButton.Enabled = false;
+
             DoubleBuffered = true;
 
             tabulatedData.Columns.Add(new DataColumn("Move", typeof(MoveWithSan)));
