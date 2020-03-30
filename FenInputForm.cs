@@ -23,13 +23,13 @@ namespace chess_pos_db_gui
             Fen = "";
         }
 
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             WasCancelled = true;
             Close();
         }
 
-        private void okButton_Click(object sender, EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
         {
             WasCancelled = false;
             Fen = fenTextBox.Text;

@@ -579,7 +579,7 @@ namespace chess_pos_db_gui
             Refresh();
         }
 
-        private void setFenButton_Click(object sender, EventArgs e)
+        private void SetFenButton_Click(object sender, EventArgs e)
         {
             using (var form = new FenInputForm())
             {

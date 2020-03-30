@@ -241,7 +241,7 @@
             this.setFenButton.Text = "Set FEN";
             this.setFenButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.setFenButton.UseVisualStyleBackColor = true;
-            this.setFenButton.Click += new System.EventHandler(this.setFenButton_Click);
+            this.setFenButton.Click += new System.EventHandler(this.SetFenButton_Click);
             // 
             // setPgnButton
             // 
