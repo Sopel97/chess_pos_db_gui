@@ -563,24 +563,6 @@ namespace chess_pos_db_gui
             SetSelection(History.Count - 1);
         }
 
-        private void FenTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (LastFen != fenTextBox.Text)
-            {
-                try
-                {
-                    new ChessGame(fenTextBox.Text);
-                }
-                catch(Exception)
-                {
-                    MessageBox.Show("Invalid FEN.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                Reset(fenTextBox.Text);
-            }
-        }
-
         private void CopyFenButton_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(fenTextBox.Text);
@@ -595,6 +577,32 @@ namespace chess_pos_db_gui
         {
             IsBoardFlipped = !IsBoardFlipped;
             Refresh();
+        }
+
+        private void setFenButton_Click(object sender, EventArgs e)
+        {
+            using (var form = new FenInputForm())
+            {
+                form.ShowDialog();
+                if (!form.WasCancelled)
+                {
+                    var newFen = form.Fen;
+                    if (LastFen != newFen)
+                    {
+                        try
+                        {
+                            new ChessGame(newFen);
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Invalid FEN.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        Reset(newFen);
+                    }
+                }
+            }
         }
     }
     internal class MoveHistoryDataRow : DataRow

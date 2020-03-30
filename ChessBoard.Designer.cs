@@ -69,11 +69,11 @@
             // 
             this.fenTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.fenTextBox.Enabled = false;
             this.fenTextBox.Location = new System.Drawing.Point(3, 3);
             this.fenTextBox.Name = "fenTextBox";
             this.fenTextBox.Size = new System.Drawing.Size(421, 20);
             this.fenTextBox.TabIndex = 5;
-            this.fenTextBox.TextChanged += new System.EventHandler(this.FenTextBox_TextChanged);
             // 
             // moveHistoryGridView
             // 
@@ -241,6 +241,7 @@
             this.setFenButton.Text = "Set FEN";
             this.setFenButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.setFenButton.UseVisualStyleBackColor = true;
+            this.setFenButton.Click += new System.EventHandler(this.setFenButton_Click);
             // 
             // setPgnButton
             // 
