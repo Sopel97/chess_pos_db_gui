@@ -40,6 +40,8 @@
             this.flipBoardButton = new System.Windows.Forms.Button();
             this.resetButton = new System.Windows.Forms.Button();
             this.copyFenButton = new System.Windows.Forms.Button();
+            this.setFenButton = new System.Windows.Forms.Button();
+            this.setPgnButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.moveHistoryGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitBoardAndMoves)).BeginInit();
             this.splitBoardAndMoves.Panel1.SuspendLayout();
@@ -94,14 +96,14 @@
             this.moveHistoryGridView.ReadOnly = true;
             this.moveHistoryGridView.RowHeadersVisible = false;
             this.moveHistoryGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.moveHistoryGridView.Size = new System.Drawing.Size(154, 283);
+            this.moveHistoryGridView.Size = new System.Drawing.Size(154, 259);
             this.moveHistoryGridView.TabIndex = 0;
             this.moveHistoryGridView.SelectionChanged += new System.EventHandler(this.MoveHistoryGridView_SelectionChanged);
             // 
             // goToStartButton
             // 
             this.goToStartButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.goToStartButton.Location = new System.Drawing.Point(278, 28);
+            this.goToStartButton.Location = new System.Drawing.Point(278, 53);
             this.goToStartButton.Name = "goToStartButton";
             this.goToStartButton.Size = new System.Drawing.Size(32, 20);
             this.goToStartButton.TabIndex = 1;
@@ -112,7 +114,7 @@
             // goToPrevButton
             // 
             this.goToPrevButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.goToPrevButton.Location = new System.Drawing.Point(316, 28);
+            this.goToPrevButton.Location = new System.Drawing.Point(316, 53);
             this.goToPrevButton.Name = "goToPrevButton";
             this.goToPrevButton.Size = new System.Drawing.Size(32, 20);
             this.goToPrevButton.TabIndex = 2;
@@ -123,7 +125,7 @@
             // goToNextButton
             // 
             this.goToNextButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.goToNextButton.Location = new System.Drawing.Point(354, 28);
+            this.goToNextButton.Location = new System.Drawing.Point(354, 53);
             this.goToNextButton.Name = "goToNextButton";
             this.goToNextButton.Size = new System.Drawing.Size(32, 20);
             this.goToNextButton.TabIndex = 3;
@@ -134,7 +136,7 @@
             // goToEndButton
             // 
             this.goToEndButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.goToEndButton.Location = new System.Drawing.Point(392, 28);
+            this.goToEndButton.Location = new System.Drawing.Point(392, 53);
             this.goToEndButton.Name = "goToEndButton";
             this.goToEndButton.Size = new System.Drawing.Size(32, 20);
             this.goToEndButton.TabIndex = 4;
@@ -158,7 +160,7 @@
             // splitBoardAndMoves.Panel2
             // 
             this.splitBoardAndMoves.Panel2.Controls.Add(this.moveHistoryGridView);
-            this.splitBoardAndMoves.Size = new System.Drawing.Size(429, 283);
+            this.splitBoardAndMoves.Size = new System.Drawing.Size(429, 259);
             this.splitBoardAndMoves.SplitterDistance = 271;
             this.splitBoardAndMoves.TabIndex = 6;
             // 
@@ -174,6 +176,8 @@
             // 
             // splitFenAndControls.Panel1
             // 
+            this.splitFenAndControls.Panel1.Controls.Add(this.setPgnButton);
+            this.splitFenAndControls.Panel1.Controls.Add(this.setFenButton);
             this.splitFenAndControls.Panel1.Controls.Add(this.flipBoardButton);
             this.splitFenAndControls.Panel1.Controls.Add(this.goToEndButton);
             this.splitFenAndControls.Panel1.Controls.Add(this.resetButton);
@@ -188,13 +192,13 @@
             // 
             this.splitFenAndControls.Panel2.Controls.Add(this.splitBoardAndMoves);
             this.splitFenAndControls.Size = new System.Drawing.Size(429, 339);
-            this.splitFenAndControls.SplitterDistance = 52;
+            this.splitFenAndControls.SplitterDistance = 76;
             this.splitFenAndControls.TabIndex = 7;
             // 
             // flipBoardButton
             // 
             this.flipBoardButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.flipBoardButton.Location = new System.Drawing.Point(73, 28);
+            this.flipBoardButton.Location = new System.Drawing.Point(73, 53);
             this.flipBoardButton.Name = "flipBoardButton";
             this.flipBoardButton.Size = new System.Drawing.Size(64, 20);
             this.flipBoardButton.TabIndex = 8;
@@ -206,7 +210,7 @@
             // resetButton
             // 
             this.resetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.resetButton.Location = new System.Drawing.Point(3, 28);
+            this.resetButton.Location = new System.Drawing.Point(3, 53);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(64, 20);
             this.resetButton.TabIndex = 7;
@@ -218,7 +222,7 @@
             // copyFenButton
             // 
             this.copyFenButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.copyFenButton.Location = new System.Drawing.Point(143, 28);
+            this.copyFenButton.Location = new System.Drawing.Point(3, 29);
             this.copyFenButton.Name = "copyFenButton";
             this.copyFenButton.Size = new System.Drawing.Size(64, 20);
             this.copyFenButton.TabIndex = 6;
@@ -226,6 +230,28 @@
             this.copyFenButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.copyFenButton.UseVisualStyleBackColor = true;
             this.copyFenButton.Click += new System.EventHandler(this.CopyFenButton_Click);
+            // 
+            // setFenButton
+            // 
+            this.setFenButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.setFenButton.Location = new System.Drawing.Point(73, 29);
+            this.setFenButton.Name = "setFenButton";
+            this.setFenButton.Size = new System.Drawing.Size(64, 20);
+            this.setFenButton.TabIndex = 9;
+            this.setFenButton.Text = "Set FEN";
+            this.setFenButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.setFenButton.UseVisualStyleBackColor = true;
+            // 
+            // setPgnButton
+            // 
+            this.setPgnButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.setPgnButton.Location = new System.Drawing.Point(143, 29);
+            this.setPgnButton.Name = "setPgnButton";
+            this.setPgnButton.Size = new System.Drawing.Size(64, 20);
+            this.setPgnButton.TabIndex = 10;
+            this.setPgnButton.Text = "Set PGN";
+            this.setPgnButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.setPgnButton.UseVisualStyleBackColor = true;
             // 
             // ChessBoard
             // 
@@ -266,5 +292,7 @@
         private System.Windows.Forms.Button copyFenButton;
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Button flipBoardButton;
+        private System.Windows.Forms.Button setPgnButton;
+        private System.Windows.Forms.Button setFenButton;
     }
 }
