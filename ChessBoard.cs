@@ -106,6 +106,15 @@ namespace chess_pos_db_gui
             return History.Current().GetSan();
         }
 
+        private void Reset(ChessGame game)
+        {
+            Reset(StartPosFen);
+            foreach (var move in game.Moves)
+            {
+                DoMove(move.SAN, true);
+            }
+        }
+
         private void Reset(string fen)
         {
             History.Reset(fen);
@@ -363,10 +372,10 @@ namespace chess_pos_db_gui
             }
         }
 
-        public bool DoMove(string san)
+        public bool DoMove(string san, bool silent = false)
         {
             Move move = San.ParseSan(new ChessGame(History.Current().GCD), san);
-            return DoMove(move);
+            return DoMove(move, silent);
         }
 
         public Move LanToMove(string lan)
@@ -387,17 +396,17 @@ namespace chess_pos_db_gui
             return move;
         }
 
-        private bool DoMove(Move move)
+        private bool DoMove(Move move, bool silent = false)
         {
             if (!History.IsMoveValid(move)) return false;
 
             // We only synch when te move was valid
-            SynchronizeMoveListWithHistory();
+            if (!silent) SynchronizeMoveListWithHistory();
 
             History.DoMove(move);
-            AddMoveToMoveHistory(History.Current().Move);
-            moveHistoryGridView.Refresh();
-            chessBoardPanel.Refresh();
+            AddMoveToMoveHistory(History.Current().Move, silent);
+            if (!silent) moveHistoryGridView.Refresh();
+            if (!silent) chessBoardPanel.Refresh();
             return true;
         }
 
@@ -472,7 +481,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void AddMoveToMoveHistory(DetailedMove move)
+        private void AddMoveToMoveHistory(DetailedMove move, bool silent = false)
         {
             Player shouldBePlayer = Plies % 2 == 0 ? Player.White : Player.Black;
             if (move.Player != shouldBePlayer)
@@ -496,7 +505,7 @@ namespace chess_pos_db_gui
                 MoveHistory.Last().BlackDetailedMove = move;
             }
 
-            SetSelection(Plies);
+            if (!silent) SetSelection(Plies);
         }
 
         private void ChessBoardPanel_MouseDown(object sender, MouseEventArgs e)
@@ -580,7 +589,7 @@ namespace chess_pos_db_gui
         }
 
         private void SetFenButton_Click(object sender, EventArgs e)
-        {
+        { 
             using (var form = new FenInputForm())
             {
                 form.ShowDialog();
@@ -601,6 +610,30 @@ namespace chess_pos_db_gui
 
                         Reset(newFen);
                     }
+                }
+            }
+        }
+
+        private void SetPgnButton_Click(object sender, EventArgs e)
+        {
+            using (var form = new PgnInputForm())
+            {
+                form.ShowDialog();
+                if (!form.WasCancelled)
+                {
+                    var movetext = form.MoveText;
+                    var pgnReader = new PgnReader<ChessGame>();
+                    try
+                    {
+                        pgnReader.ReadPgnFromString(movetext);
+                    }
+                    catch(Exception)
+                    {
+                        MessageBox.Show("Invalid PGN.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    Reset(pgnReader.Game);
                 }
             }
         }
