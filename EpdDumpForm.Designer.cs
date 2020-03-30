@@ -306,7 +306,7 @@
             this.Controls.Add(this.splitContainer1);
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "EpdDumpForm";
-            this.Text = "EpdDumpForm";
+            this.Text = "Position dump";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DatabaseCreationForm_FormClosing);
             this.Load += new System.EventHandler(this.DatabaseCreationForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pgnsDataGridView)).EndInit();

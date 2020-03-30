@@ -70,7 +70,7 @@
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.pgnTextBox);
             this.Name = "PgnInputForm";
-            this.Text = "PgnInputform";
+            this.Text = "Set PGN";
             this.ResumeLayout(false);
 
         }

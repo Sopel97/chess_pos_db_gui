@@ -481,7 +481,7 @@
             this.Controls.Add(this.splitContainer1);
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "DatabaseCreationForm";
-            this.Text = "DatabaseCreationForm";
+            this.Text = "Create database";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DatabaseCreationForm_FormClosing);
             this.Load += new System.EventHandler(this.DatabaseCreationForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
