@@ -1020,6 +1020,13 @@ namespace chess_pos_db_gui
             {
                 row.DefaultCellStyle.BackColor = Color.LightGray;
             }
+
+            var nextSan = chessBoard.GetNextMoveSan();
+            // we replace # as a workaround for now.
+            if (nextSan != null && ((MoveWithSan)row.Cells["Move"].Value).San == nextSan.Replace('#', '+'))
+            {
+                row.DefaultCellStyle.Font = new Font(entriesGridView.Font, FontStyle.Bold);
+            }
         }
 
         private void TotalEntriesGridView_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)

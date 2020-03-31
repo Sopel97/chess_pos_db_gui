@@ -637,6 +637,13 @@ namespace chess_pos_db_gui
                 }
             }
         }
+
+        public String GetNextMoveSan()
+        {
+            var e = History.Next();
+            if (e == null) return null;
+            return e.Move.SAN;
+        }
     }
     internal class MoveHistoryDataRow : DataRow
     {
