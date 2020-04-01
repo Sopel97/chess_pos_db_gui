@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
@@ -87,14 +87,14 @@
             this.entriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.entriesGridView.Location = new System.Drawing.Point(3, 154);
@@ -333,7 +333,7 @@
             this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
             this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
             this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(396, 351);
+            this.chessBoard.Size = new System.Drawing.Size(396, 361);
             this.chessBoard.TabIndex = 0;
             // 
             // displayGroupBox
@@ -434,9 +434,9 @@
             // 
             this.firstGameInfoGroupBox.Controls.Add(this.firstGameInfoRichTextBox);
             this.firstGameInfoGroupBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.firstGameInfoGroupBox.Location = new System.Drawing.Point(0, 354);
+            this.firstGameInfoGroupBox.Location = new System.Drawing.Point(0, 364);
             this.firstGameInfoGroupBox.Name = "firstGameInfoGroupBox";
-            this.firstGameInfoGroupBox.Size = new System.Drawing.Size(396, 60);
+            this.firstGameInfoGroupBox.Size = new System.Drawing.Size(396, 50);
             this.firstGameInfoGroupBox.TabIndex = 2;
             this.firstGameInfoGroupBox.TabStop = false;
             // 
@@ -448,7 +448,7 @@
             this.firstGameInfoRichTextBox.Location = new System.Drawing.Point(3, 16);
             this.firstGameInfoRichTextBox.Name = "firstGameInfoRichTextBox";
             this.firstGameInfoRichTextBox.ReadOnly = true;
-            this.firstGameInfoRichTextBox.Size = new System.Drawing.Size(390, 41);
+            this.firstGameInfoRichTextBox.Size = new System.Drawing.Size(390, 31);
             this.firstGameInfoRichTextBox.TabIndex = 0;
             this.firstGameInfoRichTextBox.Text = "";
             this.firstGameInfoRichTextBox.WordWrap = false;
