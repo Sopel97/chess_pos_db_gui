@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
@@ -58,6 +58,8 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.firstGameInfoGroupBox = new System.Windows.Forms.GroupBox();
+            this.firstGameInfoRichTextBox = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             this.typeSelectionGroupBox.SuspendLayout();
@@ -74,6 +76,7 @@
             this.displayGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).BeginInit();
             this.queryGroupBox.SuspendLayout();
+            this.firstGameInfoGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -84,14 +87,14 @@
             this.entriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.entriesGridView.Location = new System.Drawing.Point(3, 154);
@@ -99,7 +102,7 @@
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(503, 404);
+            this.entriesGridView.Size = new System.Drawing.Size(502, 404);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -233,6 +236,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.firstGameInfoGroupBox);
             this.splitContainer1.Panel2.Controls.Add(this.chessBoard);
             this.splitContainer1.Size = new System.Drawing.Size(396, 558);
             this.splitContainer1.SplitterDistance = 140;
@@ -322,12 +326,14 @@
             // 
             // chessBoard
             // 
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.chessBoard.Location = new System.Drawing.Point(0, 0);
             this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
             this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
             this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(396, 414);
+            this.chessBoard.Size = new System.Drawing.Size(396, 351);
             this.chessBoard.TabIndex = 0;
             // 
             // displayGroupBox
@@ -367,7 +373,7 @@
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(503, 45);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(502, 45);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -424,6 +430,29 @@
             this.autoQueryCheckbox.UseVisualStyleBackColor = true;
             this.autoQueryCheckbox.CheckedChanged += new System.EventHandler(this.AutoQueryCheckbox_CheckedChanged);
             // 
+            // firstGameInfoGroupBox
+            // 
+            this.firstGameInfoGroupBox.Controls.Add(this.firstGameInfoRichTextBox);
+            this.firstGameInfoGroupBox.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.firstGameInfoGroupBox.Location = new System.Drawing.Point(0, 354);
+            this.firstGameInfoGroupBox.Name = "firstGameInfoGroupBox";
+            this.firstGameInfoGroupBox.Size = new System.Drawing.Size(396, 60);
+            this.firstGameInfoGroupBox.TabIndex = 2;
+            this.firstGameInfoGroupBox.TabStop = false;
+            // 
+            // firstGameInfoRichTextBox
+            // 
+            this.firstGameInfoRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.firstGameInfoRichTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.firstGameInfoRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.firstGameInfoRichTextBox.Location = new System.Drawing.Point(3, 16);
+            this.firstGameInfoRichTextBox.Name = "firstGameInfoRichTextBox";
+            this.firstGameInfoRichTextBox.ReadOnly = true;
+            this.firstGameInfoRichTextBox.Size = new System.Drawing.Size(390, 41);
+            this.firstGameInfoRichTextBox.TabIndex = 0;
+            this.firstGameInfoRichTextBox.Text = "";
+            this.firstGameInfoRichTextBox.WordWrap = false;
+            // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -458,6 +487,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).EndInit();
             this.queryGroupBox.ResumeLayout(false);
             this.queryGroupBox.PerformLayout();
+            this.firstGameInfoGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -492,6 +522,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem epdDumpToolStripMenuItem;
         private System.Windows.Forms.ToolTip tooltip;
+        private System.Windows.Forms.GroupBox firstGameInfoGroupBox;
+        private System.Windows.Forms.RichTextBox firstGameInfoRichTextBox;
     }
 }
 

@@ -412,6 +412,26 @@ namespace chess_pos_db_gui
             }
         }
 
+        private void PopulateFirstGameInfo(AggregatedEntry entry)
+        {
+            foreach (GameHeader header in entry.FirstGame)
+            {
+                firstGameInfoRichTextBox.Text = string.Format(
+                    "{0} - {1} {2}\n[{3}] ({4}) {5} {6}",
+                    new object[]
+                    {
+                        header.White,
+                        header.Black,
+                        header.Result.Stringify(new GameResultPgnFormat()),
+                        header.Eco,
+                        header.PlyCount.Or(0) / 2,
+                        header.Event,
+                        header.Date
+                    }
+                );
+            }
+        }
+
         private void Populate(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, bool isOnlyTransposition, Score score)
         {
             var row = tabulatedData.NewRow();
@@ -419,6 +439,8 @@ namespace chess_pos_db_gui
             {
                 row["Move"] = new MoveWithSan(null, move);
                 row["Goodness"] = 1.0;
+
+                PopulateFirstGameInfo(entry);
             }
             else
             {
@@ -639,6 +661,8 @@ namespace chess_pos_db_gui
         {
             tabulatedData.Clear();
             entriesGridView.Refresh();
+
+            firstGameInfoRichTextBox.Clear();
         }
 
         private void Repopulate()
