@@ -588,6 +588,25 @@ namespace chess_pos_db_gui
             Refresh();
         }
 
+        private void TrySetFen(string fen)
+        {
+            var newFen = fen;
+            if (LastFen != newFen)
+            {
+                try
+                {
+                    new ChessGame(newFen);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Invalid FEN.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                Reset(newFen);
+            }
+        }
+
         private void SetFenButton_Click(object sender, EventArgs e)
         { 
             using (var form = new FenInputForm())
@@ -595,21 +614,7 @@ namespace chess_pos_db_gui
                 form.ShowDialog();
                 if (!form.WasCancelled)
                 {
-                    var newFen = form.Fen;
-                    if (LastFen != newFen)
-                    {
-                        try
-                        {
-                            new ChessGame(newFen);
-                        }
-                        catch (Exception)
-                        {
-                            MessageBox.Show("Invalid FEN.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-
-                        Reset(newFen);
-                    }
+                    TrySetFen(form.Fen);
                 }
             }
         }
@@ -643,6 +648,18 @@ namespace chess_pos_db_gui
             var e = History.Next();
             if (e == null) return null;
             return e.Move.SAN;
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            if (Clipboard.ContainsText())
+            {
+                TrySetFen(Clipboard.GetText());
+            }
+            else
+            {
+                MessageBox.Show("No text in clipboard.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
     internal class MoveHistoryDataRow : DataRow
