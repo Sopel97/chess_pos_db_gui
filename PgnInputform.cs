@@ -22,6 +22,10 @@ namespace chess_pos_db_gui
 
             WasCancelled = false;
             Pgn = "";
+            if (Clipboard.ContainsText())
+            {
+                pgnTextBox.Text = Clipboard.GetText();
+            }
         }
 
         private void OkButton_Click(object sender, EventArgs e)

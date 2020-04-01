@@ -21,6 +21,10 @@ namespace chess_pos_db_gui
 
             WasCancelled = false;
             Fen = "";
+            if (Clipboard.ContainsText())
+            {
+                fenTextBox.Text = Clipboard.GetText();
+            }
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
