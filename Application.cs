@@ -222,9 +222,12 @@ namespace chess_pos_db_gui
             }
         }
 
-        private static double GetAdjustedPerformanceWithCubic(double actualPerf, double expectedPerf)
+        private static double GetAdjustedPerformance(double actualPerf, double expectedPerf)
         {
-            return actualPerf - ((expectedPerf - 0.5) * (actualPerf - 1.0) * actualPerf) / (expectedPerf * (expectedPerf - 1.0));
+            var actualElo = EloCalculator.GetEloFromPerformance(actualPerf);
+            var expectedElo = EloCalculator.GetEloFromPerformance(expectedPerf);
+            var diff = expectedElo - actualElo;
+            return EloCalculator.GetExpectedPerformance(actualElo - diff);
         }
 
         private static void MakeDoubleBuffered(DataGridView dgv)
