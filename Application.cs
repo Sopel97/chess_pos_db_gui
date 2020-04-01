@@ -111,7 +111,6 @@ namespace chess_pos_db_gui
             totalTabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
             totalTabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
             totalTabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
-            totalTabulatedData.Columns.Add(new DataColumn("Goodness", typeof(double)));
 
             MakeDoubleBuffered(entriesGridView);
             entriesGridView.DataSource = tabulatedData;
@@ -534,8 +533,6 @@ namespace chess_pos_db_gui
                 row["Eval"] = totalScore;
                 row["EvalPct"] = totalScore.Perf;
             }
-
-            row["Goodness"] = 1.0;
 
             totalTabulatedData.Rows.InsertAt(row, 0);
         }
