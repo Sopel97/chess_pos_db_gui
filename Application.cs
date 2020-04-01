@@ -339,48 +339,114 @@ namespace chess_pos_db_gui
             }
         }
 
-        // An arbitrary goodness formula.
+        /*
+         * W - number of wins
+         * D - number of draws
+         * L - number of losses
+         *
+         * Ev_Perf - performance estimate based on eval (between 0 and 1)
+         * H_Perf - human performance (between 0 and 1)
+         * E_Perf - engine performance (between 0 and 1)
+         * 
+         * expected_perf - performance expected from elo diff
+         *
+         * H_weight - weight for human games
+         * E_weight - weight for engine games
+         * Eval_weight - weight for eval
+         * Count_confidence - whether elo_error is to be used (boolean)
+         *
+         * elo error formula: http://talkchess.com/forum3/viewtopic.php?p=645304#p645304
+         *
+         * N = W+D+L
+         * draw_ratio = D/N
+         * s(p) = sqrt([p*(1 - p) - draw_ratio/4]/(N - 1))
+         * z = 2,58 (for 99% confidence) (would be 2 for 95% confidence)
+         *
+         * H_elo_error = 1600 * z * s(H_Perf) / ln(10)
+         * E_elo_error = 1600 * z * s(E_Perf) / ln(10)
+         *
+         * if eval not provided:
+         *     Eval_weight = 0
+         *
+         * if Count_confidence:
+         *     H_Perf = Perf(Elo(H_Perf) - H_elo_error)
+         *     E_Perf = Perf(Elo(E_Perf) - E_elo_error)
+         *     
+         * H_APerf = AdjustPerf(H_Perf, expected_perf)
+         * E_APerf = AdjustPerf(E_Perf, expected_perf)
+         *
+         * weight_sum = H_weight + E_weight + Eval_weight
+         * a = pow(H_APerf, H_weight)
+         * b = pow(E_APerf, A_weight)
+         * c = pow(Ev_Perf, Eval_weight)
+         * goodness = pow(a*b*c, 1.0/weight_sum)
+         */
         private double CalculateGoodness(AggregatedEntry entry, AggregatedEntry nonEngineEntry, Score score)
         {
+            ulong minGamesToConsiderPerf = 10;
+
+            bool countConfidence = true;
             double engineWeight = 1.0;
             double humanWeight = 0.3;
-            double evalWeight = 2.0;
+            double evalWeight = score == null ? 0.0 : 2.0;
 
-            double goodness = 0.0;
-
+            double adjustedEnginePerf = 1.0f;
             ulong engineCount = entry.Count - nonEngineEntry.Count;
-            if (engineCount > 0)
+            if (engineCount >= minGamesToConsiderPerf)
             {
                 ulong engineWins = entry.WinCount - nonEngineEntry.WinCount;
                 ulong engineDraws = entry.DrawCount - nonEngineEntry.DrawCount;
+                ulong engineLosses = engineCount - engineWins - engineDraws;
                 double enginePerf = ((double)engineWins + (double)engineDraws * 0.5) / (double)engineCount;
-                double adjustedEnginePerf = GetAdjustedPerformanceWithCubic(enginePerf, EloCalculator.GetExpectedPerformance(entry.EloDiff / (double)entry.Count));
+                double engineEloError = EloCalculator.EloError99pct(engineWins, engineDraws, engineLosses);
+                double expectedEnginePerf = EloCalculator.GetExpectedPerformance((entry.EloDiff - nonEngineEntry.EloDiff) / (double)engineCount);
+                if (countConfidence)
+                {
+                    enginePerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(enginePerf) - engineEloError);
+                }
+                adjustedEnginePerf = GetAdjustedPerformance(enginePerf, expectedEnginePerf);
                 if (chessBoard.CurrentPlayer() == Player.Black)
                 {
                     adjustedEnginePerf = 1.0 - adjustedEnginePerf;
                 }
-
-                goodness += (Math.Log(Math.Log(engineCount) + 1) * adjustedEnginePerf * engineWeight);
+            }
+            else
+            {
+                engineWeight = 0.0;
             }
 
+            double adjustedHumanPerf = 1.0f;
             ulong humanCount = nonEngineEntry.Count;
-            if (humanCount > 0)
+            if (humanCount >= minGamesToConsiderPerf)
             {
                 ulong humanWins = nonEngineEntry.WinCount;
                 ulong humanDraws = nonEngineEntry.DrawCount;
+                ulong humanLosses = humanCount - humanWins - humanDraws;
                 double humanPerf = ((double)humanWins + (double)humanDraws * 0.5) / (double)humanCount;
-                double adjustedHumanPerf = GetAdjustedPerformanceWithCubic(humanPerf, EloCalculator.GetExpectedPerformance(entry.EloDiff / (double)entry.Count));
+                double humanEloError = EloCalculator.EloError99pct(humanWins, humanDraws, humanLosses);
+                double expectedHumanPerf = EloCalculator.GetExpectedPerformance(nonEngineEntry.EloDiff / (double)humanCount);
+                if (countConfidence)
+                {
+                    humanPerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(humanPerf) - humanEloError);
+                }
+                adjustedHumanPerf = GetAdjustedPerformance(humanPerf, expectedHumanPerf);
                 if (chessBoard.CurrentPlayer() == Player.Black)
                 {
                     adjustedHumanPerf = 1.0 - adjustedHumanPerf;
                 }
-                goodness += (Math.Log(Math.Log(humanCount) + 1) * adjustedHumanPerf * humanWeight);
+            }
+            else
+            {
+                humanWeight = 0.0;
             }
 
-            if (score != null)
-            {
-                goodness *= 1.0 - ((0.5 - score.Perf) * evalWeight);
-            }
+            double engineGoodness = engineCount >= minGamesToConsiderPerf ? Math.Pow(adjustedEnginePerf, engineWeight) : 1.0;
+            double humanGoodness = humanCount >= minGamesToConsiderPerf ? Math.Pow(adjustedHumanPerf, humanWeight) : 1.0;
+            double evalGoodness = score != null ? Math.Pow(score.Perf, evalWeight) : 1.0;
+
+            double totalWeight = engineWeight + humanWeight + evalWeight;
+
+            double goodness = Math.Pow(engineGoodness * humanGoodness * evalGoodness, 1.0 / totalWeight);
 
             return goodness;
         }
@@ -457,7 +523,7 @@ namespace chess_pos_db_gui
 
             var averageEloDiff = entry.Count > 0 ? (double)entry.EloDiff / (double)entry.Count : 0.0;
             var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
-            var adjustedPerf = GetAdjustedPerformanceWithCubic(entry.Perf, expectedPerf);
+            var adjustedPerf = GetAdjustedPerformance(entry.Perf, expectedPerf);
             if (chessBoard.CurrentPlayer() == Player.White)
             {
                 row["Perf"] = entry.Perf;
@@ -515,7 +581,7 @@ namespace chess_pos_db_gui
 
             var averageEloDiff = total.Count > 0 ? (double)total.EloDiff / (double)total.Count : 0.0;
             var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
-            var adjustedPerf = GetAdjustedPerformanceWithCubic(total.Perf, expectedPerf);
+            var adjustedPerf = GetAdjustedPerformance(total.Perf, expectedPerf);
             if (chessBoard.CurrentPlayer() == Player.White)
             {
                 row["Perf"] = total.Perf;
