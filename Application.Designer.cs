@@ -29,13 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
             this.levelEngineCheckBox = new System.Windows.Forms.CheckBox();
             this.levelHumanCheckBox = new System.Windows.Forms.CheckBox();
-            this.typeSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.typeTranspositionsCheckBox = new System.Windows.Forms.CheckBox();
             this.typeContinuationsCheckBox = new System.Windows.Forms.CheckBox();
             this.splitChessAndData = new System.Windows.Forms.SplitContainer();
@@ -67,9 +66,10 @@
             this.engineWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.evalWeightLabel = new System.Windows.Forms.Label();
             this.evalWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.goodnessUseCountCheckbox = new System.Windows.Forms.CheckBox();
+            this.goodnessNormalizeCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
-            this.typeSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
             this.splitChessAndData.Panel1.SuspendLayout();
             this.splitChessAndData.Panel2.SuspendLayout();
@@ -98,14 +98,14 @@
             this.entriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.entriesGridView.Location = new System.Drawing.Point(3, 154);
@@ -167,21 +167,10 @@
             this.levelHumanCheckBox.UseVisualStyleBackColor = true;
             this.levelHumanCheckBox.CheckedChanged += new System.EventHandler(this.LevelHumanCheckBox_CheckedChanged);
             // 
-            // typeSelectionGroupBox
-            // 
-            this.typeSelectionGroupBox.Controls.Add(this.typeTranspositionsCheckBox);
-            this.typeSelectionGroupBox.Controls.Add(this.typeContinuationsCheckBox);
-            this.typeSelectionGroupBox.Location = new System.Drawing.Point(215, 53);
-            this.typeSelectionGroupBox.Name = "typeSelectionGroupBox";
-            this.typeSelectionGroupBox.Size = new System.Drawing.Size(206, 44);
-            this.typeSelectionGroupBox.TabIndex = 4;
-            this.typeSelectionGroupBox.TabStop = false;
-            this.typeSelectionGroupBox.Text = "Select";
-            // 
             // typeTranspositionsCheckBox
             // 
             this.typeTranspositionsCheckBox.AutoSize = true;
-            this.typeTranspositionsCheckBox.Location = new System.Drawing.Point(102, 19);
+            this.typeTranspositionsCheckBox.Location = new System.Drawing.Point(6, 67);
             this.typeTranspositionsCheckBox.Name = "typeTranspositionsCheckBox";
             this.typeTranspositionsCheckBox.Size = new System.Drawing.Size(94, 17);
             this.typeTranspositionsCheckBox.TabIndex = 1;
@@ -195,7 +184,7 @@
             // typeContinuationsCheckBox
             // 
             this.typeContinuationsCheckBox.AutoSize = true;
-            this.typeContinuationsCheckBox.Location = new System.Drawing.Point(6, 19);
+            this.typeContinuationsCheckBox.Location = new System.Drawing.Point(6, 43);
             this.typeContinuationsCheckBox.Name = "typeContinuationsCheckBox";
             this.typeContinuationsCheckBox.Size = new System.Drawing.Size(90, 17);
             this.typeContinuationsCheckBox.TabIndex = 0;
@@ -223,7 +212,6 @@
             this.splitChessAndData.Panel2.Controls.Add(this.displayGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.totalEntriesGridView);
             this.splitChessAndData.Panel2.Controls.Add(this.queryGroupBox);
-            this.splitChessAndData.Panel2.Controls.Add(this.typeSelectionGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.levelSelectionGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.entriesGridView);
             this.splitChessAndData.Panel2MinSize = 580;
@@ -373,10 +361,12 @@
             // 
             // displayGroupBox
             // 
+            this.displayGroupBox.Controls.Add(this.typeTranspositionsCheckBox);
             this.displayGroupBox.Controls.Add(this.hideNeverPlayedCheckBox);
+            this.displayGroupBox.Controls.Add(this.typeContinuationsCheckBox);
             this.displayGroupBox.Location = new System.Drawing.Point(215, 3);
             this.displayGroupBox.Name = "displayGroupBox";
-            this.displayGroupBox.Size = new System.Drawing.Size(206, 44);
+            this.displayGroupBox.Size = new System.Drawing.Size(101, 94);
             this.displayGroupBox.TabIndex = 5;
             this.displayGroupBox.TabStop = false;
             this.displayGroupBox.Text = "Display";
@@ -467,15 +457,17 @@
             // 
             // goodnessGroupBox
             // 
+            this.goodnessGroupBox.Controls.Add(this.goodnessNormalizeCheckbox);
+            this.goodnessGroupBox.Controls.Add(this.goodnessUseCountCheckbox);
             this.goodnessGroupBox.Controls.Add(this.evalWeightLabel);
             this.goodnessGroupBox.Controls.Add(this.evalWeightNumericUpDown);
             this.goodnessGroupBox.Controls.Add(this.engineWeightLabel);
             this.goodnessGroupBox.Controls.Add(this.engineWeightNumericUpDown);
             this.goodnessGroupBox.Controls.Add(this.humanWeightLabel);
             this.goodnessGroupBox.Controls.Add(this.humanWeightNumericUpDown);
-            this.goodnessGroupBox.Location = new System.Drawing.Point(427, 3);
+            this.goodnessGroupBox.Location = new System.Drawing.Point(322, 3);
             this.goodnessGroupBox.Name = "goodnessGroupBox";
-            this.goodnessGroupBox.Size = new System.Drawing.Size(146, 94);
+            this.goodnessGroupBox.Size = new System.Drawing.Size(251, 94);
             this.goodnessGroupBox.TabIndex = 6;
             this.goodnessGroupBox.TabStop = false;
             this.goodnessGroupBox.Text = "Goodness";
@@ -546,6 +538,29 @@
             0,
             0});
             // 
+            // goodnessUseCountCheckbox
+            // 
+            this.goodnessUseCountCheckbox.AutoSize = true;
+            this.goodnessUseCountCheckbox.Location = new System.Drawing.Point(154, 14);
+            this.goodnessUseCountCheckbox.Name = "goodnessUseCountCheckbox";
+            this.goodnessUseCountCheckbox.Size = new System.Drawing.Size(75, 17);
+            this.goodnessUseCountCheckbox.TabIndex = 2;
+            this.goodnessUseCountCheckbox.Text = "Use count";
+            this.tooltip.SetToolTip(this.goodnessUseCountCheckbox, "When enabled the number of postion instances will affect the goodness. The less m" +
+        "ore positions the more confidence - more confidence means better goodness.");
+            this.goodnessUseCountCheckbox.UseVisualStyleBackColor = true;
+            // 
+            // goodnessNormalizeCheckbox
+            // 
+            this.goodnessNormalizeCheckbox.AutoSize = true;
+            this.goodnessNormalizeCheckbox.Location = new System.Drawing.Point(154, 41);
+            this.goodnessNormalizeCheckbox.Name = "goodnessNormalizeCheckbox";
+            this.goodnessNormalizeCheckbox.Size = new System.Drawing.Size(72, 17);
+            this.goodnessNormalizeCheckbox.TabIndex = 6;
+            this.goodnessNormalizeCheckbox.Text = "Normalize";
+            this.tooltip.SetToolTip(this.goodnessNormalizeCheckbox, "When enabled the goodness value will be normalized to be in range 0..100");
+            this.goodnessNormalizeCheckbox.UseVisualStyleBackColor = true;
+            // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -561,8 +576,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).EndInit();
             this.levelSelectionGroupBox.ResumeLayout(false);
             this.levelSelectionGroupBox.PerformLayout();
-            this.typeSelectionGroupBox.ResumeLayout(false);
-            this.typeSelectionGroupBox.PerformLayout();
             this.splitChessAndData.Panel1.ResumeLayout(false);
             this.splitChessAndData.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).EndInit();
@@ -597,7 +610,6 @@
         private System.Windows.Forms.CheckBox levelServerCheckBox;
         private System.Windows.Forms.CheckBox levelEngineCheckBox;
         private System.Windows.Forms.CheckBox levelHumanCheckBox;
-        private System.Windows.Forms.GroupBox typeSelectionGroupBox;
         private System.Windows.Forms.CheckBox typeTranspositionsCheckBox;
         private System.Windows.Forms.CheckBox typeContinuationsCheckBox;
         private System.Windows.Forms.SplitContainer splitChessAndData;
@@ -629,6 +641,8 @@
         private System.Windows.Forms.Label engineWeightLabel;
         private System.Windows.Forms.NumericUpDown engineWeightNumericUpDown;
         private System.Windows.Forms.Label humanWeightLabel;
+        private System.Windows.Forms.CheckBox goodnessNormalizeCheckbox;
+        private System.Windows.Forms.CheckBox goodnessUseCountCheckbox;
     }
 }
 
