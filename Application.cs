@@ -119,6 +119,7 @@ namespace chess_pos_db_gui
             totalEntriesGridView.DataSource = totalTabulatedData;
 
             totalEntriesGridView.Columns["Move"].Frozen = true;
+            totalEntriesGridView.Columns["Move"].MinimumWidth = 50;
             totalEntriesGridView.Columns["Move"].HeaderText = "";
             totalEntriesGridView.Columns["Move"].ToolTipText = "The move leading to the position for which stats are displayed. \"--\" means the root position.";
             totalEntriesGridView.Columns["Count"].HeaderText = "N";
@@ -154,7 +155,7 @@ namespace chess_pos_db_gui
             totalEntriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
             entriesGridView.Columns["Move"].Frozen = true;
-            entriesGridView.Columns["Move"].MinimumWidth = 40;
+            entriesGridView.Columns["Move"].MinimumWidth = 50;
             entriesGridView.Columns["Move"].ToolTipText = "The move leading to the position for which stats are displayed. \"--\" means the root position.";
             entriesGridView.Columns["Count"].HeaderText = "N";
             entriesGridView.Columns["Count"].ToolTipText = "The total number of instances for this position.";
@@ -197,6 +198,7 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["EvalPct"].HeaderText = "Ev%";
             entriesGridView.Columns["EvalPct"].ToolTipText = "The expected performance based on evaluation. Also sometimes reported by chessdbcn.";
             entriesGridView.Columns["Goodness"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            entriesGridView.Columns["Goodness"].MinimumWidth = 35;
             entriesGridView.Columns["IsOnlyTransposition"].Visible = false;
 
             entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
@@ -1065,7 +1067,7 @@ namespace chess_pos_db_gui
                 }
                 else
                 {
-                    e.Value = ((double)e.Value * 100).ToString("0");
+                    e.Value = ((double)e.Value * 100.0).ToString("0.0");
                 }
                 e.FormattingApplied = true;
             }
