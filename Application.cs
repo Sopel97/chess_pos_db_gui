@@ -385,7 +385,7 @@ namespace chess_pos_db_gui
             // if there's less than this amount of games then the goodness contribution will be penalized.
             ulong penaltyFromCountThreshold = 100;
 
-            bool countConfidence = goodnessUseCountCheckbox.Checked;
+            bool useCount = goodnessUseCountCheckbox.Checked;
             double engineWeight = (double)engineWeightNumericUpDown.Value;
             double humanWeight = (double)humanWeightNumericUpDown.Value;
             double evalWeight = score == null ? 0.0 : (double)evalWeightNumericUpDown.Value;
@@ -405,7 +405,7 @@ namespace chess_pos_db_gui
                     enginePerf = 1.0 - enginePerf;
                     expectedEnginePerf = 1.0 - expectedEnginePerf;
                 }
-                if (countConfidence)
+                if (useCount)
                 {
                     enginePerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(enginePerf) - engineEloError);
                 }
@@ -427,7 +427,7 @@ namespace chess_pos_db_gui
                     humanPerf = 1.0 - humanPerf;
                     expectedHumanPerf = 1.0 - expectedHumanPerf;
                 }
-                if (countConfidence)
+                if (useCount)
                 {
                     humanPerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(humanPerf) - humanEloError);
                 }
@@ -444,8 +444,11 @@ namespace chess_pos_db_gui
                 return perf / penalty;
             };
 
-            adjustedEnginePerf = penalizePerf(adjustedEnginePerf, engineCount);
-            adjustedHumanPerf = penalizePerf(adjustedHumanPerf, humanCount);
+            if (useCount)
+            {
+                adjustedEnginePerf = penalizePerf(adjustedEnginePerf, engineCount);
+                adjustedHumanPerf = penalizePerf(adjustedHumanPerf, humanCount);
+            }
             double engineGoodness = Math.Pow(adjustedEnginePerf, engineWeight);
             double humanGoodness = Math.Pow(adjustedHumanPerf, humanWeight);
             double evalGoodness = score != null ? Math.Pow(score.Perf, evalWeight) : 1.0;
@@ -464,7 +467,10 @@ namespace chess_pos_db_gui
             {
                 if (row["Goodness"] != null)
                 {
-                    highest = Math.Max(highest, (double)row["Goodness"]);
+                    if (((MoveWithSan)row[0]).San != "--")
+                    {
+                        highest = Math.Max(highest, (double)row["Goodness"]);
+                    }
                 }
             }
 
@@ -476,7 +482,7 @@ namespace chess_pos_db_gui
                     {
                         if (((MoveWithSan)row[0]).San == "--")
                         {
-                            row["Goodness"] = 1.0;
+                            row["Goodness"] = double.PositiveInfinity;
                         }
                         else
                         {
@@ -670,7 +676,10 @@ namespace chess_pos_db_gui
 
             PopulateTotal(total, totalNonEngine, bestScore);
 
-            NormalizeGoodnessValues();
+            if (goodnessNormalizeCheckbox.Checked)
+            {
+                NormalizeGoodnessValues();
+            }
 
             entriesGridView.ResumeLayout(false);
 
