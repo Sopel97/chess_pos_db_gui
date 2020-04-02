@@ -382,7 +382,7 @@ namespace chess_pos_db_gui
          */
         private double CalculateGoodness(AggregatedEntry entry, AggregatedEntry nonEngineEntry, Score score)
         {
-            ulong minGamesToConsiderPerf = 10;
+            ulong minGamesToConsiderPerf = 1;
 
             bool countConfidence = true;
             double engineWeight = 1.0;
@@ -399,15 +399,15 @@ namespace chess_pos_db_gui
                 double enginePerf = ((double)engineWins + (double)engineDraws * 0.5) / (double)engineCount;
                 double engineEloError = EloCalculator.EloError99pct(engineWins, engineDraws, engineLosses);
                 double expectedEnginePerf = EloCalculator.GetExpectedPerformance((entry.EloDiff - nonEngineEntry.EloDiff) / (double)engineCount);
+                if (chessBoard.CurrentPlayer() == Player.Black)
+                {
+                    enginePerf = 1.0 - enginePerf;
+                }
                 if (countConfidence)
                 {
                     enginePerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(enginePerf) - engineEloError);
                 }
                 adjustedEnginePerf = GetAdjustedPerformance(enginePerf, expectedEnginePerf);
-                if (chessBoard.CurrentPlayer() == Player.Black)
-                {
-                    adjustedEnginePerf = 1.0 - adjustedEnginePerf;
-                }
             }
             else
             {
@@ -424,15 +424,15 @@ namespace chess_pos_db_gui
                 double humanPerf = ((double)humanWins + (double)humanDraws * 0.5) / (double)humanCount;
                 double humanEloError = EloCalculator.EloError99pct(humanWins, humanDraws, humanLosses);
                 double expectedHumanPerf = EloCalculator.GetExpectedPerformance(nonEngineEntry.EloDiff / (double)humanCount);
+                if (chessBoard.CurrentPlayer() == Player.Black)
+                {
+                    humanPerf = 1.0 - humanPerf;
+                }
                 if (countConfidence)
                 {
                     humanPerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(humanPerf) - humanEloError);
                 }
                 adjustedHumanPerf = GetAdjustedPerformance(humanPerf, expectedHumanPerf);
-                if (chessBoard.CurrentPlayer() == Player.Black)
-                {
-                    adjustedHumanPerf = 1.0 - adjustedHumanPerf;
-                }
             }
             else
             {
