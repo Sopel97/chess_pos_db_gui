@@ -8,6 +8,8 @@ namespace chess_pos_db_gui
 {
     class EloCalculator
     {
+        private static readonly double maxElo = 800.0;
+
         public static double GetExpectedPerformance(double eloDiff)
         {
             return 1.0 / (1.0 + Math.Pow(10.0, -eloDiff / 400.0));
@@ -20,7 +22,7 @@ namespace chess_pos_db_gui
 
         public static double GetEloFromPerformance(double perf)
         {
-            return -400.0 * Math.Log((1.0 - perf) / perf) / Math.Log(10.0);
+            return Math.Max(-maxElo, Math.Min(maxElo, -400.0 * Math.Log((1.0 - perf) / perf) / Math.Log(10.0)));
         }
 
         /*
@@ -40,18 +42,16 @@ namespace chess_pos_db_gui
 
         public static double EloError99pct(ulong engineWins, ulong engineDraws, ulong engineLosses)
         {
-            double maxError = 400.0;
-
             double total = (double)(engineWins + engineDraws + engineLosses);
 
-            if (total < 2) return maxError;
+            if (total < 2) return maxElo;
 
             double drawRatio = (double)engineDraws / total;
            
             double z = 2.58;
             double perf = ((double)engineWins + (double)engineDraws * 0.5) / total;
 
-            return Math.Min(1600.0 * z * s(perf, drawRatio, total) / Math.Log(10), maxError);
+            return Math.Min(1600.0 * z * s(perf, drawRatio, total) / Math.Log(10), maxElo);
         }
     }
 }

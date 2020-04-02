@@ -382,7 +382,8 @@ namespace chess_pos_db_gui
          */
         private double CalculateGoodness(AggregatedEntry entry, AggregatedEntry nonEngineEntry, Score score)
         {
-            ulong minGamesToConsiderPerf = 1;
+            // if there's less than this amount of games then the goodness contribution will be penalized.
+            ulong penaltyFromCountThreshold = 100;
 
             bool countConfidence = goodnessUseCountCheckbox.Checked;
             double engineWeight = (double)engineWeightNumericUpDown.Value;
@@ -391,7 +392,7 @@ namespace chess_pos_db_gui
 
             double adjustedEnginePerf = 1.0f;
             ulong engineCount = entry.Count - nonEngineEntry.Count;
-            if (engineCount >= minGamesToConsiderPerf)
+            if (engineCount > 0)
             {
                 ulong engineWins = entry.WinCount - nonEngineEntry.WinCount;
                 ulong engineDraws = entry.DrawCount - nonEngineEntry.DrawCount;
@@ -410,14 +411,10 @@ namespace chess_pos_db_gui
                 }
                 adjustedEnginePerf = GetAdjustedPerformance(enginePerf, expectedEnginePerf);
             }
-            else
-            {
-                engineWeight = 0.0;
-            }
 
             double adjustedHumanPerf = 1.0f;
             ulong humanCount = nonEngineEntry.Count;
-            if (humanCount >= minGamesToConsiderPerf)
+            if (humanCount > 0)
             {
                 ulong humanWins = nonEngineEntry.WinCount;
                 ulong humanDraws = nonEngineEntry.DrawCount;
@@ -436,13 +433,21 @@ namespace chess_pos_db_gui
                 }
                 adjustedHumanPerf = GetAdjustedPerformance(humanPerf, expectedHumanPerf);
             }
-            else
-            {
-                humanWeight = 0.0;
-            }
 
-            double engineGoodness = engineCount >= minGamesToConsiderPerf ? Math.Pow(adjustedEnginePerf, engineWeight) : 1.0;
-            double humanGoodness = humanCount >= minGamesToConsiderPerf ? Math.Pow(adjustedHumanPerf, humanWeight) : 1.0;
+            Func<double, double, double> penalizePerf = (perf, numGames) =>
+            {
+                if (numGames >= penaltyFromCountThreshold) return perf;
+                if (numGames == 0) return 0.0;
+
+                double r = ((numGames+1.0) / (penaltyFromCountThreshold+1));
+                double penalty = 1 - Math.Log(r);
+                return perf / penalty;
+            };
+
+            adjustedEnginePerf = penalizePerf(adjustedEnginePerf, engineCount);
+            adjustedHumanPerf = penalizePerf(adjustedHumanPerf, humanCount);
+            double engineGoodness = Math.Pow(adjustedEnginePerf, engineWeight);
+            double humanGoodness = Math.Pow(adjustedHumanPerf, humanWeight);
             double evalGoodness = score != null ? Math.Pow(score.Perf, evalWeight) : 1.0;
 
             double totalWeight = engineWeight + humanWeight + evalWeight;
