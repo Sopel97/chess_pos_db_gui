@@ -384,10 +384,10 @@ namespace chess_pos_db_gui
         {
             ulong minGamesToConsiderPerf = 1;
 
-            bool countConfidence = true;
-            double engineWeight = 1.0;
-            double humanWeight = 0.3;
-            double evalWeight = score == null ? 0.0 : 2.0;
+            bool countConfidence = goodnessUseCountCheckbox.Checked;
+            double engineWeight = (double)engineWeightNumericUpDown.Value;
+            double humanWeight = (double)humanWeightNumericUpDown.Value;
+            double evalWeight = score == null ? 0.0 : (double)evalWeightNumericUpDown.Value;
 
             double adjustedEnginePerf = 1.0f;
             ulong engineCount = entry.Count - nonEngineEntry.Count;
@@ -402,6 +402,7 @@ namespace chess_pos_db_gui
                 if (chessBoard.CurrentPlayer() == Player.Black)
                 {
                     enginePerf = 1.0 - enginePerf;
+                    expectedEnginePerf = 1.0 - expectedEnginePerf;
                 }
                 if (countConfidence)
                 {
@@ -427,6 +428,7 @@ namespace chess_pos_db_gui
                 if (chessBoard.CurrentPlayer() == Player.Black)
                 {
                     humanPerf = 1.0 - humanPerf;
+                    expectedHumanPerf = 1.0 - expectedHumanPerf;
                 }
                 if (countConfidence)
                 {
