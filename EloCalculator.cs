@@ -31,8 +31,9 @@ namespace chess_pos_db_gui
          */
         private static double s(double p, double drawRatio, double total)
         {
-            double safeVariance = 0.15;
-            var v = Math.Max(safeVariance, Math.Min(1.0 - safeVariance, (p * (1.0 - p))));
+            double safePerf = 0.15;
+            p = Math.Max(safePerf, Math.Min(1.0 - safePerf, p));
+            var v = p * (1.0 - p);
             return Math.Sqrt((v - drawRatio / 4.0) / (total - 1.0));
 
         }

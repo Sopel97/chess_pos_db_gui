@@ -226,7 +226,7 @@ namespace chess_pos_db_gui
         {
             var actualElo = EloCalculator.GetEloFromPerformance(actualPerf);
             var expectedElo = EloCalculator.GetEloFromPerformance(expectedPerf);
-            return EloCalculator.GetExpectedPerformance(actualElo - expectedElo) ;
+            return EloCalculator.GetExpectedPerformance(actualElo - expectedElo);
         }
 
         private static void MakeDoubleBuffered(DataGridView dgv)
