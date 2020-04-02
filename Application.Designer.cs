@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
@@ -98,14 +98,14 @@
             this.entriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.entriesGridView.Location = new System.Drawing.Point(3, 154);
@@ -113,7 +113,7 @@
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(572, 404);
+            this.entriesGridView.Size = new System.Drawing.Size(571, 404);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -388,6 +388,7 @@
             this.goodnessNormalizeCheckbox.Text = "Normalize";
             this.tooltip.SetToolTip(this.goodnessNormalizeCheckbox, "When enabled the goodness value will be normalized to be in range 0..100");
             this.goodnessNormalizeCheckbox.UseVisualStyleBackColor = true;
+            this.goodnessNormalizeCheckbox.CheckedChanged += new System.EventHandler(this.GoodnessNormalizeCheckbox_CheckedChanged);
             // 
             // goodnessUseCountCheckbox
             // 
@@ -402,6 +403,7 @@
             this.tooltip.SetToolTip(this.goodnessUseCountCheckbox, "When enabled the number of postion instances will affect the goodness. The less m" +
         "ore positions the more confidence - more confidence means better goodness.");
             this.goodnessUseCountCheckbox.UseVisualStyleBackColor = true;
+            this.goodnessUseCountCheckbox.CheckedChanged += new System.EventHandler(this.GoodnessUseCountCheckbox_CheckedChanged);
             // 
             // evalWeightLabel
             // 
@@ -424,6 +426,7 @@
             0,
             0,
             0});
+            this.evalWeightNumericUpDown.ValueChanged += new System.EventHandler(this.EvalWeightNumericUpDown_ValueChanged);
             // 
             // engineWeightLabel
             // 
@@ -446,6 +449,7 @@
             0,
             0,
             0});
+            this.engineWeightNumericUpDown.ValueChanged += new System.EventHandler(this.EngineWeightNumericUpDown_ValueChanged);
             // 
             // humanWeightLabel
             // 
@@ -468,6 +472,7 @@
             0,
             0,
             0});
+            this.humanWeightNumericUpDown.ValueChanged += new System.EventHandler(this.HumanWeightNumericUpDown_ValueChanged);
             // 
             // displayGroupBox
             // 
@@ -508,7 +513,7 @@
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(572, 45);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(571, 45);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);

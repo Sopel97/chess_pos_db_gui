@@ -480,11 +480,7 @@ namespace chess_pos_db_gui
                 {
                     if (row["Goodness"] != null)
                     {
-                        if (((MoveWithSan)row[0]).San == "--")
-                        {
-                            row["Goodness"] = double.PositiveInfinity;
-                        }
-                        else
+                        if (((MoveWithSan)row[0]).San != "--")
                         {
                             row["Goodness"] = (double)row["Goodness"] / highest;
                         }
@@ -519,7 +515,7 @@ namespace chess_pos_db_gui
             if (move == "--")
             {
                 row["Move"] = new MoveWithSan(null, move);
-                row["Goodness"] = 1.0;
+                row["Goodness"] = double.PositiveInfinity;
 
                 PopulateFirstGameInfo(entry);
             }
@@ -1148,6 +1144,31 @@ namespace chess_pos_db_gui
         }
 
         private void HideNeverPlayedCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Repopulate();
+        }
+
+        private void HumanWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            Repopulate();
+        }
+
+        private void EngineWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            Repopulate();
+        }
+
+        private void EvalWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            Repopulate();
+        }
+
+        private void GoodnessUseCountCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Repopulate();
+        }
+
+        private void GoodnessNormalizeCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             Repopulate();
         }
