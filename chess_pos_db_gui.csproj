@@ -59,6 +59,7 @@
     <Compile Include="Application.Designer.cs">
       <DependentUpon>Application.cs</DependentUpon>
     </Compile>
+    <Compile Include="BlockingQueue.cs" />
     <Compile Include="ChessBoard.cs">
       <SubType>UserControl</SubType>
     </Compile>

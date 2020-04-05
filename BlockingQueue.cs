@@ -46,7 +46,7 @@ namespace chess_pos_db_gui
                     }
                     if (!System.Threading.Monitor.Wait(q, timeout))
                     {
-                        return default(T);
+                        return default;
                     }
                 }
             }

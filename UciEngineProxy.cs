@@ -10,9 +10,11 @@ namespace chess_pos_db_gui
 {
     class UciEngineProxy
     {
+
         public string Path { get; private set; }
         private Process EngineProcess { get; set; }
         private BlockingQueue<string> MessageQueue { get; set; }
+        private Action<UciInfoResponse> UciInfoHandler { get; set; }
 
         public UciEngineProxy(string path)
         {
@@ -50,7 +52,15 @@ namespace chess_pos_db_gui
         {
             System.Diagnostics.Debug.WriteLine("Message: " + e.Data);
 
-            MessageQueue.Enqueue(e.Data);
+            if (UciInfoHandler != null && e.Data.StartsWith("info"))
+            {
+                var infoResponse = ParseInfoResponse(e.Data);
+                UciInfoHandler.Invoke(infoResponse);
+            }
+            else
+            {
+                MessageQueue.Enqueue(e.Data);
+            }
         }
 
         private void SendMessage(string message)
@@ -94,5 +104,30 @@ namespace chess_pos_db_gui
                 throw new TimeoutException("Engine didn't respond with \"uciok\" within the set timeout");
             }
         }
+
+        private void GoInfinite(Action<UciInfoResponse> handler)
+        {
+            UciInfoHandler = handler;
+            SendMessage("go infinite");
+        }
+
+        private void Stop()
+        {
+            SendMessage("stop");
+            WaitForMessage("bestmove");
+            UciInfoHandler = null;
+        }
+
+        private UciInfoResponse ParseInfoResponse(string msg)
+        {
+            var r = new UciInfoResponse();
+
+            return r;
+        }
+    }
+
+    public class UciInfoResponse : EventArgs
+    {
+
     }
 }
