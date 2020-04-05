@@ -50,6 +50,7 @@ namespace chess_pos_db_gui
         public Application()
         {
             UciEngineProxy engine = new UciEngineProxy("stockfish.exe");
+            engine.GoInfinite(delegate(UciInfoResponse e) { });
 
             queueMutex = new Mutex();
             queryQueue = new QueryQueue();

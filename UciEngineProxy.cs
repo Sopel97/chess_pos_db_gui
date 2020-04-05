@@ -105,13 +105,13 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void GoInfinite(Action<UciInfoResponse> handler)
+        public void GoInfinite(Action<UciInfoResponse> handler)
         {
             UciInfoHandler = handler;
             SendMessage("go infinite");
         }
 
-        private void Stop()
+        public void Stop()
         {
             SendMessage("stop");
             WaitForMessage("bestmove");
@@ -214,13 +214,32 @@ namespace chess_pos_db_gui
 
                         case "score":
                             {
-                                r.Score = NextInt(parts);
-                                break;
-                            }
+                                switch (parts.Dequeue())
+                                {
+                                    case "cp":
+                                        {
+                                            r.Cp = NextInt(parts);
+                                            break;
+                                        }
 
-                        case "mate":
-                            {
-                                r.Mate = NextInt(parts);
+                                    case "mate":
+                                        {
+                                            r.Mate = NextInt(parts);
+                                            break;
+                                        }
+
+                                    case "lowerbound":
+                                        {
+                                            r.LowerBound = NextInt(parts);
+                                            break;
+                                        }
+
+                                    case "upperbound":
+                                        {
+                                            r.UpperBound = NextInt(parts);
+                                            break;
+                                        }
+                                }
                                 break;
                             }
 
@@ -301,8 +320,10 @@ namespace chess_pos_db_gui
         public Optional<long> Nodes { get; set; }
         public Optional<IList<string>> PV { get; set; }
         public Optional<int> MultiPV { get; set; }
-        public Optional<int> Score { get; set; }
+        public Optional<int> Cp { get; set; }
         public Optional<int> Mate { get; set; }
+        public Optional<int> LowerBound { get; set; }
+        public Optional<int> UpperBound { get; set; }
         public Optional<string> CurrMove { get; set; }
         public Optional<int> CurrMoveNumber { get; set; }
         public Optional<int> HashFull { get; set; }
@@ -317,8 +338,10 @@ namespace chess_pos_db_gui
             Nodes = Optional<long>.CreateEmpty();
             PV = Optional<IList<string>>.CreateEmpty();
             MultiPV = Optional<int>.CreateEmpty();
-            Score = Optional<int>.CreateEmpty();
+            Cp = Optional<int>.CreateEmpty();
             Mate = Optional<int>.CreateEmpty();
+            LowerBound = Optional<int>.CreateEmpty();
+            UpperBound = Optional<int>.CreateEmpty();
             CurrMove = Optional<string>.CreateEmpty();
             CurrMoveNumber = Optional<int>.CreateEmpty();
             HashFull = Optional<int>.CreateEmpty();
