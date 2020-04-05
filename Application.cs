@@ -540,7 +540,7 @@ namespace chess_pos_db_gui
                         header.Eco,
                         header.PlyCount.Or(0) / 2,
                         header.Event,
-                        header.Date
+                        header.Date.ToStringOmitUnknown()
                     }
                 );
             }
