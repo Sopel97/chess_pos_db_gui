@@ -110,6 +110,7 @@
     <Compile Include="Score.cs" />
     <Compile Include="SegregatedEntries.cs" />
     <Compile Include="Select.cs" />
+    <Compile Include="UciEngineProxy.cs" />
     <EmbeddedResource Include="Application.resx">
       <DependentUpon>Application.cs</DependentUpon>
     </EmbeddedResource>

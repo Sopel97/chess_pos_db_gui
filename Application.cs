@@ -49,6 +49,8 @@ namespace chess_pos_db_gui
 
         public Application()
         {
+            UciEngineProxy engine = new UciEngineProxy("stockfish.exe");
+
             queueMutex = new Mutex();
             queryQueue = new QueryQueue();
             cacheLock = new object();
