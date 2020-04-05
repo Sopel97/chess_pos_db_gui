@@ -10,7 +10,6 @@ namespace chess_pos_db_gui
 {
     class UciEngineProxy
     {
-
         public string Path { get; private set; }
         private Process EngineProcess { get; set; }
         private BlockingQueue<string> MessageQueue { get; set; }

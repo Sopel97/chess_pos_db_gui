@@ -69,6 +69,18 @@
     <Compile Include="ChessBoardHistory.cs" />
     <Compile Include="ConditionVariable.cs" />
     <Compile Include="EloCalculator.cs" />
+    <Compile Include="EngineAnalysisForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EngineAnalysisForm.Designer.cs">
+      <DependentUpon>EngineAnalysisForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EngineOptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EngineOptionsForm.Designer.cs">
+      <DependentUpon>EngineOptionsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EpdDumpForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +129,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ChessBoard.resx">
       <DependentUpon>ChessBoard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EngineAnalysisForm.resx">
+      <DependentUpon>EngineAnalysisForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EngineOptionsForm.resx">
+      <DependentUpon>EngineOptionsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EpdDumpForm.resx">
       <DependentUpon>EpdDumpForm.cs</DependentUpon>
