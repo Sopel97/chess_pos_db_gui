@@ -32,6 +32,7 @@
             this.engineIdLabel = new System.Windows.Forms.Label();
             this.engineOptionsDataGridView = new System.Windows.Forms.DataGridView();
             this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.engineOptionsDataGridView)).BeginInit();
@@ -60,11 +61,12 @@
             this.engineOptionsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.engineOptionsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Edit,
+            this.Name,
             this.Type,
             this.Value});
             this.engineOptionsDataGridView.Location = new System.Drawing.Point(15, 38);
             this.engineOptionsDataGridView.Name = "engineOptionsDataGridView";
-            this.engineOptionsDataGridView.Size = new System.Drawing.Size(294, 183);
+            this.engineOptionsDataGridView.Size = new System.Drawing.Size(394, 249);
             this.engineOptionsDataGridView.TabIndex = 5;
             // 
             // Edit
@@ -73,6 +75,11 @@
             this.Edit.Name = "Edit";
             this.Edit.Text = "Edit";
             this.Edit.Width = 50;
+            // 
+            // Name
+            // 
+            this.Name.HeaderText = "Name";
+            this.Name.Name = "Name";
             // 
             // Type
             // 
@@ -106,6 +113,7 @@
         private System.Windows.Forms.Label engineIdLabel;
         private System.Windows.Forms.DataGridView engineOptionsDataGridView;
         private System.Windows.Forms.DataGridViewButtonColumn Edit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Name;
         private System.Windows.Forms.DataGridViewTextBoxColumn Type;
         private System.Windows.Forms.DataGridViewTextBoxColumn Value;
     }
