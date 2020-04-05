@@ -124,7 +124,7 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["Move"].Frozen = true;
             totalEntriesGridView.Columns["Move"].MinimumWidth = 50;
             totalEntriesGridView.Columns["Move"].HeaderText = "";
-            totalEntriesGridView.Columns["Move"].ToolTipText = "The move leading to the position for which stats are displayed. \"--\" means the root position.";
+            totalEntriesGridView.Columns["Move"].ToolTipText = "The total stats for all the moves from this position (ie. total excluding root).";
             totalEntriesGridView.Columns["Count"].HeaderText = "N";
             totalEntriesGridView.Columns["Count"].ToolTipText = "The total number of instances for this position.";
             totalEntriesGridView.Columns["WinCount"].HeaderText = "+";
@@ -135,10 +135,12 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["LossCount"].ToolTipText = "The number of times white has lost a game from this position.";
             totalEntriesGridView.Columns["Perf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["Perf"].HeaderText = "Wh%";
-            totalEntriesGridView.Columns["Perf"].HeaderText = "The performance (success rate) for the side to move. Equal to (W+D/2)/(W+D+L).";
+            totalEntriesGridView.Columns["Perf"].ToolTipText = "The performance (success rate) for the side to move. Equal to (W+D/2)/(W+D+L).";
+            totalEntriesGridView.Columns["Perf"].MinimumWidth = 42;
             totalEntriesGridView.Columns["AdjustedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["AdjustedPerf"].HeaderText = "AWh%";
-            totalEntriesGridView.Columns["AdjustedPerf"].HeaderText = "The performance (success rate) adjusted for average elo difference of the players. It is adjusted such that it is 50% if performance is equal to the performance expected from the average elo difference.";
+            totalEntriesGridView.Columns["AdjustedPerf"].ToolTipText = "The performance (success rate) adjusted for average elo difference of the players. It is adjusted such that it is 50% if performance is equal to the performance expected from the average elo difference.";
+            totalEntriesGridView.Columns["AdjustedPerf"].MinimumWidth = 48;
             totalEntriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["DrawPct"].HeaderText = "D%";
             totalEntriesGridView.Columns["DrawPct"].ToolTipText = "The % of games that ended in a draw.";
@@ -170,10 +172,12 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["LossCount"].ToolTipText = "The number of times white has lost a game from this position.";
             entriesGridView.Columns["Perf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["Perf"].HeaderText = "Wh%";
-            entriesGridView.Columns["Perf"].HeaderText = "The performance (success rate) for the side to move. Equal to (W+D/2)/(W+D+L).";
+            entriesGridView.Columns["Perf"].ToolTipText = "The performance (success rate) for the side to move. Equal to (W+D/2)/(W+D+L).";
+            entriesGridView.Columns["Perf"].MinimumWidth = 42;
             entriesGridView.Columns["AdjustedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["AdjustedPerf"].HeaderText = "AWh%";
-            entriesGridView.Columns["AdjustedPerf"].HeaderText = "The performance (success rate) adjusted for average elo difference of the players. It is adjusted such that it is 50% if performance is equal to the performance expected from the average elo difference.";
+            entriesGridView.Columns["AdjustedPerf"].ToolTipText = "The performance (success rate) adjusted for average elo difference of the players. It is adjusted such that it is 50% if performance is equal to the performance expected from the average elo difference.";
+            entriesGridView.Columns["AdjustedPerf"].MinimumWidth = 48;
             entriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["DrawPct"].HeaderText = "D%";
             entriesGridView.Columns["DrawPct"].ToolTipText = "The % of games that ended in a draw.";
@@ -188,9 +192,10 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["Eco"].HeaderText = "ECO";
             entriesGridView.Columns["Eco"].ToolTipText = "The ECO code reported in the first game with this position.";
             entriesGridView.Columns["Eco"].MinimumWidth = 35;
-            entriesGridView.Columns["PlyCount"].HeaderText = "Ply";
+            entriesGridView.Columns["Eco"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            entriesGridView.Columns["PlyCount"].HeaderText = "Plies";
             entriesGridView.Columns["PlyCount"].ToolTipText = "The length in plies of the first game with this position.";
-            entriesGridView.Columns["PlyCount"].MinimumWidth = 35;
+            entriesGridView.Columns["PlyCount"].MinimumWidth = 40;
             entriesGridView.Columns["PlyCount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["GameId"].HeaderText = "Game\u00A0ID";
             entriesGridView.Columns["GameId"].ToolTipText = "The internal game id of the first game with this position.";
@@ -202,7 +207,7 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["EvalPct"].ToolTipText = "The expected performance based on evaluation. Also sometimes reported by chessdbcn.";
             entriesGridView.Columns["Goodness"].HeaderText = "QI";
             entriesGridView.Columns["Goodness"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            entriesGridView.Columns["Goodness"].MinimumWidth = 35;
+            entriesGridView.Columns["Goodness"].MinimumWidth = 40;
             entriesGridView.Columns["Goodness"].ToolTipText = "The quality of the move calculated from various empirical factors extracted from the data";
             entriesGridView.Columns["IsOnlyTransposition"].Visible = false;
 
