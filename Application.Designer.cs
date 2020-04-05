@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
@@ -102,14 +102,14 @@
             this.entriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.entriesGridView.Location = new System.Drawing.Point(3, 154);
@@ -381,7 +381,7 @@
             this.goodnessGroupBox.Size = new System.Drawing.Size(293, 94);
             this.goodnessGroupBox.TabIndex = 6;
             this.goodnessGroupBox.TabStop = false;
-            this.goodnessGroupBox.Text = "Goodness";
+            this.goodnessGroupBox.Text = "Quality Index";
             // 
             // gamesWeightNumericUpDown
             // 
@@ -401,12 +401,12 @@
             this.gamesWeightCheckbox.AutoSize = true;
             this.gamesWeightCheckbox.Checked = true;
             this.gamesWeightCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.gamesWeightCheckbox.Location = new System.Drawing.Point(6, 19);
+            this.gamesWeightCheckbox.Location = new System.Drawing.Point(6, 20);
             this.gamesWeightCheckbox.Name = "gamesWeightCheckbox";
             this.gamesWeightCheckbox.Size = new System.Drawing.Size(93, 17);
             this.gamesWeightCheckbox.TabIndex = 11;
             this.gamesWeightCheckbox.Text = "Games weight";
-            this.tooltip.SetToolTip(this.gamesWeightCheckbox, "When enabled the goodness value will be normalized to be in range 0..100");
+            this.tooltip.SetToolTip(this.gamesWeightCheckbox, "When enabled the quality index calculation will include all games");
             this.gamesWeightCheckbox.UseVisualStyleBackColor = true;
             this.gamesWeightCheckbox.CheckedChanged += new System.EventHandler(this.GamesWeightCheckbox_CheckedChanged);
             // 
@@ -420,7 +420,7 @@
             this.humanWeightCheckbox.Size = new System.Drawing.Size(94, 17);
             this.humanWeightCheckbox.TabIndex = 10;
             this.humanWeightCheckbox.Text = "Human weight";
-            this.tooltip.SetToolTip(this.humanWeightCheckbox, "When enabled the goodness value will be normalized to be in range 0..100");
+            this.tooltip.SetToolTip(this.humanWeightCheckbox, "When enabled the quality index calculation will include human games");
             this.humanWeightCheckbox.UseVisualStyleBackColor = true;
             this.humanWeightCheckbox.CheckedChanged += new System.EventHandler(this.humanWeightCheckbox_CheckedChanged);
             // 
@@ -434,7 +434,7 @@
             this.engineWeightCheckbox.Size = new System.Drawing.Size(93, 17);
             this.engineWeightCheckbox.TabIndex = 9;
             this.engineWeightCheckbox.Text = "Engine weight";
-            this.tooltip.SetToolTip(this.engineWeightCheckbox, "When enabled the goodness value will be normalized to be in range 0..100");
+            this.tooltip.SetToolTip(this.engineWeightCheckbox, "When enabled the quality index calculation will include engine games");
             this.engineWeightCheckbox.UseVisualStyleBackColor = true;
             this.engineWeightCheckbox.CheckedChanged += new System.EventHandler(this.EngineWeightCheckbox_CheckedChanged);
             // 
@@ -448,7 +448,7 @@
             this.evaluationWeightCheckbox.Size = new System.Drawing.Size(110, 17);
             this.evaluationWeightCheckbox.TabIndex = 8;
             this.evaluationWeightCheckbox.Text = "Evaluation weight";
-            this.tooltip.SetToolTip(this.evaluationWeightCheckbox, "When enabled the goodness value will be normalized to be in range 0..100");
+            this.tooltip.SetToolTip(this.evaluationWeightCheckbox, "When enabled the quality index calculation will include engine evaluation");
             this.evaluationWeightCheckbox.UseVisualStyleBackColor = true;
             this.evaluationWeightCheckbox.CheckedChanged += new System.EventHandler(this.EvaluationWeightCheckbox_CheckedChanged);
             // 
@@ -460,8 +460,8 @@
             this.combineHECheckbox.Size = new System.Drawing.Size(101, 17);
             this.combineHECheckbox.TabIndex = 7;
             this.combineHECheckbox.Text = "Combine games";
-            this.tooltip.SetToolTip(this.combineHECheckbox, "When enabled the number of postion instances will affect the goodness. The less m" +
-        "ore positions the more confidence - more confidence means better goodness.");
+            this.tooltip.SetToolTip(this.combineHECheckbox, "When enabled all games will be included as one factor for the quality index calcu" +
+        "lation");
             this.combineHECheckbox.UseVisualStyleBackColor = true;
             this.combineHECheckbox.CheckedChanged += new System.EventHandler(this.CombineHECheckbox_CheckedChanged);
             // 
@@ -475,7 +475,7 @@
             this.goodnessNormalizeCheckbox.Size = new System.Drawing.Size(72, 17);
             this.goodnessNormalizeCheckbox.TabIndex = 6;
             this.goodnessNormalizeCheckbox.Text = "Normalize";
-            this.tooltip.SetToolTip(this.goodnessNormalizeCheckbox, "When enabled the goodness value will be normalized to be in range 0..100");
+            this.tooltip.SetToolTip(this.goodnessNormalizeCheckbox, "When enabled the quality index will be normalized to be in range 0..100");
             this.goodnessNormalizeCheckbox.UseVisualStyleBackColor = true;
             this.goodnessNormalizeCheckbox.CheckedChanged += new System.EventHandler(this.GoodnessNormalizeCheckbox_CheckedChanged);
             // 
@@ -489,8 +489,9 @@
             this.goodnessUseCountCheckbox.Size = new System.Drawing.Size(75, 17);
             this.goodnessUseCountCheckbox.TabIndex = 2;
             this.goodnessUseCountCheckbox.Text = "Use count";
-            this.tooltip.SetToolTip(this.goodnessUseCountCheckbox, "When enabled the number of postion instances will affect the goodness. The less m" +
-        "ore positions the more confidence - more confidence means better goodness.");
+            this.tooltip.SetToolTip(this.goodnessUseCountCheckbox, "When enabled the number of postion instances will affect the quality index. The l" +
+        "ess more positions the more confidence - more confidence means better quality in" +
+        "dex.");
             this.goodnessUseCountCheckbox.UseVisualStyleBackColor = true;
             this.goodnessUseCountCheckbox.CheckedChanged += new System.EventHandler(this.GoodnessUseCountCheckbox_CheckedChanged);
             // 

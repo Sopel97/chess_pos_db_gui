@@ -200,8 +200,10 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["EvalPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["EvalPct"].HeaderText = "Ev%";
             entriesGridView.Columns["EvalPct"].ToolTipText = "The expected performance based on evaluation. Also sometimes reported by chessdbcn.";
+            entriesGridView.Columns["Goodness"].HeaderText = "QI";
             entriesGridView.Columns["Goodness"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["Goodness"].MinimumWidth = 35;
+            entriesGridView.Columns["Goodness"].ToolTipText = "The quality of the move calculated from various empirical factors extracted from the data";
             entriesGridView.Columns["IsOnlyTransposition"].Visible = false;
 
             entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
@@ -1092,7 +1094,7 @@ namespace chess_pos_db_gui
                 e.Value = chessBoard.NextMoveNumber() + " " + e.Value.ToString();
                 e.FormattingApplied = true;
             }
-            else if (entriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("Goodness"))
+            else if (entriesGridView.Columns[e.ColumnIndex].Name == "Goodness")
             {
                 if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
                 {
