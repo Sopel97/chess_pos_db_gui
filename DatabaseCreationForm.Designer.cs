@@ -473,6 +473,13 @@
             this.tooltip.SetToolTip(this.mergeCheckBox, "When enabled the database will optimize itself before completion.");
             this.mergeCheckBox.UseVisualStyleBackColor = true;
             // 
+            // tooltip
+            // 
+            this.tooltip.AutomaticDelay = 200;
+            this.tooltip.AutoPopDelay = 10000;
+            this.tooltip.InitialDelay = 200;
+            this.tooltip.ReshowDelay = 40;
+            // 
             // DatabaseCreationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
