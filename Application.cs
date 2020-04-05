@@ -76,6 +76,9 @@ namespace chess_pos_db_gui
 
             DoubleBuffered = true;
 
+            gamesWeightCheckbox.Visible = false;
+            gamesWeightNumericUpDown.Visible = false;
+
             tabulatedData.Columns.Add(new DataColumn("Move", typeof(MoveWithSan)));
             tabulatedData.Columns.Add(new DataColumn("Count", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
@@ -1171,6 +1174,36 @@ namespace chess_pos_db_gui
         }
 
         private void GoodnessNormalizeCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Repopulate();
+        }
+
+        private void CombineHECheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Repopulate();
+
+            gamesWeightCheckbox.Visible = combineHECheckbox.Checked;
+            gamesWeightNumericUpDown.Visible = combineHECheckbox.Checked;
+            engineWeightCheckbox.Visible = !combineHECheckbox.Checked;
+            engineWeightNumericUpDown.Visible = !combineHECheckbox.Checked;
+        }
+
+        private void GamesWeightCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Repopulate();
+        }
+
+        private void EngineWeightCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Repopulate();
+        }
+
+        private void EvaluationWeightCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Repopulate();
+        }
+
+        private void humanWeightCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             Repopulate();
         }
