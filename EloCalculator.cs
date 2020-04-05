@@ -44,14 +44,14 @@ namespace chess_pos_db_gui
         {
             double total = (double)(engineWins + engineDraws + engineLosses);
 
-            if (total < 2) return maxElo;
+            if (total < 2) return maxElo * 2;
 
             double drawRatio = (double)engineDraws / total;
            
             double z = 2.58;
             double perf = ((double)engineWins + (double)engineDraws * 0.5) / total;
 
-            return Math.Min(1600.0 * z * s(perf, drawRatio, total) / Math.Log(10), maxElo);
+            return Math.Min(1600.0 * z * s(perf, drawRatio, total) / Math.Log(10), maxElo * 2);
         }
     }
 }

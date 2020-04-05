@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
@@ -71,8 +71,6 @@
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.chessBoard = new chess_pos_db_gui.ChessBoard();
-            this.meanTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -104,22 +102,22 @@
             this.entriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.entriesGridView.Location = new System.Drawing.Point(3, 179);
+            this.entriesGridView.Location = new System.Drawing.Point(3, 153);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(609, 379);
+            this.entriesGridView.Size = new System.Drawing.Size(609, 405);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -132,7 +130,7 @@
             this.levelSelectionGroupBox.Controls.Add(this.levelHumanCheckBox);
             this.levelSelectionGroupBox.Location = new System.Drawing.Point(3, 53);
             this.levelSelectionGroupBox.Name = "levelSelectionGroupBox";
-            this.levelSelectionGroupBox.Size = new System.Drawing.Size(206, 69);
+            this.levelSelectionGroupBox.Size = new System.Drawing.Size(206, 43);
             this.levelSelectionGroupBox.TabIndex = 1;
             this.levelSelectionGroupBox.TabStop = false;
             this.levelSelectionGroupBox.Text = "Level";
@@ -355,8 +353,6 @@
             // 
             // goodnessGroupBox
             // 
-            this.goodnessGroupBox.Controls.Add(this.label1);
-            this.goodnessGroupBox.Controls.Add(this.meanTypeComboBox);
             this.goodnessGroupBox.Controls.Add(this.gamesWeightNumericUpDown);
             this.goodnessGroupBox.Controls.Add(this.gamesWeightCheckbox);
             this.goodnessGroupBox.Controls.Add(this.humanWeightCheckbox);
@@ -370,7 +366,7 @@
             this.goodnessGroupBox.Controls.Add(this.humanWeightNumericUpDown);
             this.goodnessGroupBox.Location = new System.Drawing.Point(322, 3);
             this.goodnessGroupBox.Name = "goodnessGroupBox";
-            this.goodnessGroupBox.Size = new System.Drawing.Size(293, 119);
+            this.goodnessGroupBox.Size = new System.Drawing.Size(293, 93);
             this.goodnessGroupBox.TabIndex = 6;
             this.goodnessGroupBox.TabStop = false;
             this.goodnessGroupBox.Text = "Quality Index";
@@ -536,7 +532,7 @@
             this.displayGroupBox.Controls.Add(this.typeContinuationsCheckBox);
             this.displayGroupBox.Location = new System.Drawing.Point(215, 3);
             this.displayGroupBox.Name = "displayGroupBox";
-            this.displayGroupBox.Size = new System.Drawing.Size(101, 119);
+            this.displayGroupBox.Size = new System.Drawing.Size(101, 93);
             this.displayGroupBox.TabIndex = 5;
             this.displayGroupBox.TabStop = false;
             this.displayGroupBox.Text = "Display";
@@ -563,7 +559,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.totalEntriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.totalEntriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.totalEntriesGridView.Location = new System.Drawing.Point(3, 128);
+            this.totalEntriesGridView.Location = new System.Drawing.Point(3, 102);
             this.totalEntriesGridView.Name = "totalEntriesGridView";
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
@@ -643,30 +639,6 @@
             this.chessBoard.Name = "chessBoard";
             this.chessBoard.Size = new System.Drawing.Size(424, 361);
             this.chessBoard.TabIndex = 0;
-            // 
-            // meanTypeComboBox
-            // 
-            this.meanTypeComboBox.FormattingEnabled = true;
-            this.meanTypeComboBox.Items.AddRange(new object[] {
-            "Arithmetic",
-            "Geometric"});
-            this.meanTypeComboBox.Location = new System.Drawing.Point(70, 88);
-            this.meanTypeComboBox.Name = "meanTypeComboBox";
-            this.meanTypeComboBox.Size = new System.Drawing.Size(97, 21);
-            this.meanTypeComboBox.TabIndex = 14;
-            this.tooltip.SetToolTip(this.meanTypeComboBox, "Specifies the type of mean to use for averaging different QI factors. Geometric m" +
-        "ean is more statistically sound but can zero out the data if it\'s not available." +
-        "");
-            this.meanTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.meanTypeComboBox_SelectedIndexChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 91);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
-            this.label1.TabIndex = 15;
-            this.label1.Text = "Mean type:";
             // 
             // Application
             // 
@@ -754,8 +726,6 @@
         private System.Windows.Forms.CheckBox combineHECheckbox;
         private System.Windows.Forms.NumericUpDown gamesWeightNumericUpDown;
         private System.Windows.Forms.CheckBox gamesWeightCheckbox;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox meanTypeComboBox;
     }
 }
 

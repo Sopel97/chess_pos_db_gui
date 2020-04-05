@@ -79,8 +79,6 @@ namespace chess_pos_db_gui
             gamesWeightCheckbox.Visible = false;
             gamesWeightNumericUpDown.Visible = false;
 
-            meanTypeComboBox.SelectedItem = "Geometric";
-
             tabulatedData.Columns.Add(new DataColumn("Move", typeof(MoveWithSan)));
             tabulatedData.Columns.Add(new DataColumn("Count", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
@@ -397,7 +395,7 @@ namespace chess_pos_db_gui
         private double CalculateGoodness(AggregatedEntry entry, AggregatedEntry nonEngineEntry, Score score)
         {
             // if there's less than this amount of games then the goodness contribution will be penalized.
-            ulong penaltyFromCountThreshold = 100;
+            ulong penaltyFromCountThreshold = 1;
 
             bool useHumanWeight = humanWeightCheckbox.Checked && !combineHECheckbox.Checked;
             bool useEngineWeight = engineWeightCheckbox.Checked && !combineHECheckbox.Checked;
@@ -476,14 +474,16 @@ namespace chess_pos_db_gui
                 adjustedHumanPerf = GetAdjustedPerformance(humanPerf, expectedHumanPerf);
             }
 
+            double minPerf = 0.01;
+
             Func<double, double, double> penalizePerf = (perf, numGames) =>
             {
                 if (numGames >= penaltyFromCountThreshold) return perf;
-                if (numGames == 0) return 0.0;
+                if (numGames == 0) return minPerf;
 
                 double r = ((numGames+1.0) / (penaltyFromCountThreshold+1));
                 double penalty = 1 - Math.Log(r);
-                return perf / penalty;
+                return Math.Max(minPerf, perf / penalty);
             };
 
             if (useCount)
@@ -493,36 +493,16 @@ namespace chess_pos_db_gui
                 adjustedTotalPerf = penalizePerf(adjustedTotalPerf, totalCount);
             }
 
-            if (meanTypeComboBox.Text == "Geometric")
-            {
-                double engineGoodness = Math.Pow(adjustedEnginePerf, engineWeight);
-                double humanGoodness = Math.Pow(adjustedHumanPerf, humanWeight);
-                double totalGoodness = Math.Pow(adjustedTotalPerf, totalWeight);
-                double evalGoodness = score != null ? Math.Pow(score.Perf, evalWeight) : 1.0;
+            double engineGoodness = Math.Pow(adjustedEnginePerf, engineWeight);
+            double humanGoodness = Math.Pow(adjustedHumanPerf, humanWeight);
+            double totalGoodness = Math.Pow(adjustedTotalPerf, totalWeight);
+            double evalGoodness = score != null ? Math.Pow(score.Perf, evalWeight) : 1.0;
 
-                double weightSum = engineWeight + humanWeight + totalWeight + evalWeight;
+            double weightSum = engineWeight + humanWeight + totalWeight + evalWeight;
 
-                double goodness = Math.Pow(engineGoodness * humanGoodness * totalGoodness * evalGoodness, 1.0 / weightSum);
+            double goodness = Math.Pow(engineGoodness * humanGoodness * totalGoodness * evalGoodness, 1.0 / weightSum);
 
-                return goodness;
-            }
-            else if (meanTypeComboBox.Text == "Arithmetic")
-            {
-                double engineGoodness = adjustedEnginePerf * engineWeight;
-                double humanGoodness = adjustedHumanPerf * humanWeight;
-                double totalGoodness = adjustedTotalPerf * totalWeight;
-                double evalGoodness = score != null ? score.Perf * evalWeight : 1.0;
-
-                double weightSum = engineWeight + humanWeight + totalWeight + evalWeight;
-
-                double goodness = (engineGoodness + humanGoodness + totalGoodness + evalGoodness) / weightSum;
-
-                return goodness;
-            }
-            else
-            {
-                return Double.NaN;
-            }
+            return goodness;
         }
 
         private void NormalizeGoodnessValues()
