@@ -57,10 +57,19 @@ namespace chess_pos_db_gui
                 var infoResponse = ParseInfoResponse(e.Data);
                 UciInfoHandler.Invoke(infoResponse);
             }
+            else if (e.Data.StartsWith("option"))
+            {
+                AddOption(e.Data);
+            }
             else
             {
                 MessageQueue.Enqueue(e.Data);
             }
+        }
+
+        private void AddOption(string line)
+        {
+            Options.Add(new UciOptionFactory().FromString(line));
         }
 
         private void SendMessage(string message)
