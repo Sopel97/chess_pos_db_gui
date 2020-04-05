@@ -79,6 +79,8 @@ namespace chess_pos_db_gui
             gamesWeightCheckbox.Visible = false;
             gamesWeightNumericUpDown.Visible = false;
 
+            meanTypeComboBox.SelectedItem = "Geometric";
+
             tabulatedData.Columns.Add(new DataColumn("Move", typeof(MoveWithSan)));
             tabulatedData.Columns.Add(new DataColumn("Count", typeof(ulong)));
             tabulatedData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
@@ -124,7 +126,7 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["Move"].Frozen = true;
             totalEntriesGridView.Columns["Move"].MinimumWidth = 50;
             totalEntriesGridView.Columns["Move"].HeaderText = "";
-            totalEntriesGridView.Columns["Move"].ToolTipText = "The total stats for all the moves from this position (ie. total excluding root).";
+            totalEntriesGridView.Columns["Move"].ToolTipText = "The total stats for all the moves from this position (i.e. total excluding root).";
             totalEntriesGridView.Columns["Count"].HeaderText = "N";
             totalEntriesGridView.Columns["Count"].ToolTipText = "The total number of instances for this position.";
             totalEntriesGridView.Columns["WinCount"].HeaderText = "+";
@@ -490,16 +492,37 @@ namespace chess_pos_db_gui
                 adjustedHumanPerf = penalizePerf(adjustedHumanPerf, humanCount);
                 adjustedTotalPerf = penalizePerf(adjustedTotalPerf, totalCount);
             }
-            double engineGoodness = Math.Pow(adjustedEnginePerf, engineWeight);
-            double humanGoodness = Math.Pow(adjustedHumanPerf, humanWeight);
-            double totalGoodness = Math.Pow(adjustedTotalPerf, totalWeight);
-            double evalGoodness = score != null ? Math.Pow(score.Perf, evalWeight) : 1.0;
 
-            double weightSum = engineWeight + humanWeight + totalWeight + evalWeight;
+            if (meanTypeComboBox.Text == "Geometric")
+            {
+                double engineGoodness = Math.Pow(adjustedEnginePerf, engineWeight);
+                double humanGoodness = Math.Pow(adjustedHumanPerf, humanWeight);
+                double totalGoodness = Math.Pow(adjustedTotalPerf, totalWeight);
+                double evalGoodness = score != null ? Math.Pow(score.Perf, evalWeight) : 1.0;
 
-            double goodness = Math.Pow(engineGoodness * humanGoodness * totalGoodness * evalGoodness, 1.0 / weightSum);
+                double weightSum = engineWeight + humanWeight + totalWeight + evalWeight;
 
-            return goodness;
+                double goodness = Math.Pow(engineGoodness * humanGoodness * totalGoodness * evalGoodness, 1.0 / weightSum);
+
+                return goodness;
+            }
+            else if (meanTypeComboBox.Text == "Arithmetic")
+            {
+                double engineGoodness = adjustedEnginePerf * engineWeight;
+                double humanGoodness = adjustedHumanPerf * humanWeight;
+                double totalGoodness = adjustedTotalPerf * totalWeight;
+                double evalGoodness = score != null ? score.Perf * evalWeight : 1.0;
+
+                double weightSum = engineWeight + humanWeight + totalWeight + evalWeight;
+
+                double goodness = (engineGoodness + humanGoodness + totalGoodness + evalGoodness) / weightSum;
+
+                return goodness;
+            }
+            else
+            {
+                return Double.NaN;
+            }
         }
 
         private void NormalizeGoodnessValues()
@@ -1241,6 +1264,11 @@ namespace chess_pos_db_gui
         }
 
         private void humanWeightCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Repopulate();
+        }
+
+        private void meanTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             Repopulate();
         }

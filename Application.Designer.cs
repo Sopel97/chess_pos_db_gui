@@ -50,7 +50,6 @@
             this.epdDumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstGameInfoGroupBox = new System.Windows.Forms.GroupBox();
             this.firstGameInfoRichTextBox = new System.Windows.Forms.RichTextBox();
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.goodnessGroupBox = new System.Windows.Forms.GroupBox();
             this.gamesWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.gamesWeightCheckbox = new System.Windows.Forms.CheckBox();
@@ -71,6 +70,9 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
+            this.meanTypeComboBox = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -112,12 +114,12 @@
             this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.entriesGridView.Location = new System.Drawing.Point(3, 154);
+            this.entriesGridView.Location = new System.Drawing.Point(3, 179);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(610, 404);
+            this.entriesGridView.Size = new System.Drawing.Size(609, 379);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -130,7 +132,7 @@
             this.levelSelectionGroupBox.Controls.Add(this.levelHumanCheckBox);
             this.levelSelectionGroupBox.Location = new System.Drawing.Point(3, 53);
             this.levelSelectionGroupBox.Name = "levelSelectionGroupBox";
-            this.levelSelectionGroupBox.Size = new System.Drawing.Size(206, 44);
+            this.levelSelectionGroupBox.Size = new System.Drawing.Size(206, 69);
             this.levelSelectionGroupBox.TabIndex = 1;
             this.levelSelectionGroupBox.TabStop = false;
             this.levelSelectionGroupBox.Text = "Level";
@@ -180,8 +182,8 @@
             this.typeTranspositionsCheckBox.TabIndex = 1;
             this.typeTranspositionsCheckBox.Text = "Transpositions";
             this.tooltip.SetToolTip(this.typeTranspositionsCheckBox, "When enabled the statistics will include data from positions that arise by transp" +
-        "osition (ie. the exact move was not played, but the position after it has happen" +
-        "ed before).");
+        "osition (i.e. the exact move was not played, but the position after it has happe" +
+        "ned before).");
             this.typeTranspositionsCheckBox.UseVisualStyleBackColor = true;
             this.typeTranspositionsCheckBox.CheckedChanged += new System.EventHandler(this.TypeTranspositionsCheckBox_CheckedChanged);
             // 
@@ -194,7 +196,7 @@
             this.typeContinuationsCheckBox.TabIndex = 0;
             this.typeContinuationsCheckBox.Text = "Continuations";
             this.tooltip.SetToolTip(this.typeContinuationsCheckBox, "When enabled the statistics will include data from positions that arise by perfor" +
-        "ming the exact move (ie. not transpositions).");
+        "ming the exact move (i.e. not transpositions).");
             this.typeContinuationsCheckBox.UseVisualStyleBackColor = true;
             this.typeContinuationsCheckBox.CheckedChanged += new System.EventHandler(this.TypeContinuationsCheckBox_CheckedChanged);
             // 
@@ -351,20 +353,10 @@
             this.firstGameInfoRichTextBox.Text = "";
             this.firstGameInfoRichTextBox.WordWrap = false;
             // 
-            // chessBoard
-            // 
-            this.chessBoard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(424, 361);
-            this.chessBoard.TabIndex = 0;
-            // 
             // goodnessGroupBox
             // 
+            this.goodnessGroupBox.Controls.Add(this.label1);
+            this.goodnessGroupBox.Controls.Add(this.meanTypeComboBox);
             this.goodnessGroupBox.Controls.Add(this.gamesWeightNumericUpDown);
             this.goodnessGroupBox.Controls.Add(this.gamesWeightCheckbox);
             this.goodnessGroupBox.Controls.Add(this.humanWeightCheckbox);
@@ -378,7 +370,7 @@
             this.goodnessGroupBox.Controls.Add(this.humanWeightNumericUpDown);
             this.goodnessGroupBox.Location = new System.Drawing.Point(322, 3);
             this.goodnessGroupBox.Name = "goodnessGroupBox";
-            this.goodnessGroupBox.Size = new System.Drawing.Size(293, 94);
+            this.goodnessGroupBox.Size = new System.Drawing.Size(293, 119);
             this.goodnessGroupBox.TabIndex = 6;
             this.goodnessGroupBox.TabStop = false;
             this.goodnessGroupBox.Text = "Quality Index";
@@ -489,9 +481,9 @@
             this.goodnessUseCountCheckbox.Size = new System.Drawing.Size(75, 17);
             this.goodnessUseCountCheckbox.TabIndex = 2;
             this.goodnessUseCountCheckbox.Text = "Use count";
-            this.tooltip.SetToolTip(this.goodnessUseCountCheckbox, "When enabled the number of postion instances will affect the quality index. The l" +
-        "ess more positions the more confidence - more confidence means better quality in" +
-        "dex.");
+            this.tooltip.SetToolTip(this.goodnessUseCountCheckbox, "When enabled the number of position instances will affect the quality index. The " +
+        "less more positions the more confidence - more confidence means better quality i" +
+        "ndex.");
             this.goodnessUseCountCheckbox.UseVisualStyleBackColor = true;
             this.goodnessUseCountCheckbox.CheckedChanged += new System.EventHandler(this.GoodnessUseCountCheckbox_CheckedChanged);
             // 
@@ -544,7 +536,7 @@
             this.displayGroupBox.Controls.Add(this.typeContinuationsCheckBox);
             this.displayGroupBox.Location = new System.Drawing.Point(215, 3);
             this.displayGroupBox.Name = "displayGroupBox";
-            this.displayGroupBox.Size = new System.Drawing.Size(101, 94);
+            this.displayGroupBox.Size = new System.Drawing.Size(101, 119);
             this.displayGroupBox.TabIndex = 5;
             this.displayGroupBox.TabStop = false;
             this.displayGroupBox.Text = "Display";
@@ -571,12 +563,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.totalEntriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.totalEntriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.totalEntriesGridView.Location = new System.Drawing.Point(3, 103);
+            this.totalEntriesGridView.Location = new System.Drawing.Point(3, 128);
             this.totalEntriesGridView.Name = "totalEntriesGridView";
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(610, 45);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(609, 45);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -639,6 +631,42 @@
             this.tooltip.AutoPopDelay = 10000;
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
+            // 
+            // chessBoard
+            // 
+            this.chessBoard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.Size = new System.Drawing.Size(424, 361);
+            this.chessBoard.TabIndex = 0;
+            // 
+            // meanTypeComboBox
+            // 
+            this.meanTypeComboBox.FormattingEnabled = true;
+            this.meanTypeComboBox.Items.AddRange(new object[] {
+            "Arithmetic",
+            "Geometric"});
+            this.meanTypeComboBox.Location = new System.Drawing.Point(70, 88);
+            this.meanTypeComboBox.Name = "meanTypeComboBox";
+            this.meanTypeComboBox.Size = new System.Drawing.Size(97, 21);
+            this.meanTypeComboBox.TabIndex = 14;
+            this.tooltip.SetToolTip(this.meanTypeComboBox, "Specifies the type of mean to use for averaging different QI factors. Geometric m" +
+        "ean is more statistically sound but can zero out the data if it\'s not available." +
+        "");
+            this.meanTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.meanTypeComboBox_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(4, 91);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(60, 13);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "Mean type:";
             // 
             // Application
             // 
@@ -726,6 +754,8 @@
         private System.Windows.Forms.CheckBox combineHECheckbox;
         private System.Windows.Forms.NumericUpDown gamesWeightNumericUpDown;
         private System.Windows.Forms.CheckBox gamesWeightCheckbox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox meanTypeComboBox;
     }
 }
 
