@@ -20,6 +20,7 @@ namespace chess_pos_db_gui
         {
             Path = path;
             MessageQueue = new BlockingQueue<string>();
+            Options = new List<UciOption>();
 
             EngineProcess = new Process();
             EngineProcess.StartInfo.FileName = path;
@@ -41,6 +42,17 @@ namespace chess_pos_db_gui
             EngineProcess.BeginErrorReadLine();
 
             PerformUciHandshake();
+        }
+
+        private void CreateUciOptionsSnapshot()
+        {
+            // TODO:
+        }
+
+        private IList<UciOption> GetChangedOptions()
+        {
+            // TODO:
+            return new List<UciOption>();
         }
 
         private void ErrorReceived(Object sender, DataReceivedEventArgs e)
@@ -114,9 +126,34 @@ namespace chess_pos_db_gui
             }
         }
 
-        public void GoInfinite(Action<UciInfoResponse> handler)
+        private void EnsureReady()
+        {
+            SendMessage("isready");
+            WaitForMessage("readyok");
+        }
+
+        private void EnsureUpToDateOptions()
+        {
+            foreach(var opt in GetChangedOptions())
+            {
+                SendMessage(opt.GetSetOptionString());
+            }
+        }
+
+        public void GoInfinite(Action<UciInfoResponse> handler, string fen = null)
         {
             UciInfoHandler = handler;
+            EnsureReady();
+            SendMessage("setoption name UCI_AnalyseMode value true");
+            EnsureUpToDateOptions();
+            if (fen == null)
+            {
+                SendMessage("position startpos");
+            }
+            else
+            {
+                SendMessage("position fen " + fen);
+            }
             SendMessage("go infinite");
         }
 
@@ -473,6 +510,11 @@ namespace chess_pos_db_gui
         abstract public UciOptionType GetOptionType();
         // TODO: pass some parent as parameter
         abstract public System.Windows.Forms.Control CreateControl();
+        abstract public string GetName();
+        public string GetSetOptionString()
+        {
+            return string.Format("setoption name {0} value {1}", GetName(), this);
+        }
     }
 
     public class CheckUciOption : UciOption
@@ -504,6 +546,11 @@ namespace chess_pos_db_gui
         {
             return Value ? "true" : "false";
         }
+
+        public override string GetName()
+        {
+            return Name;
+        }
     }
 
     public class SpinUciOption : UciOption
@@ -519,9 +566,16 @@ namespace chess_pos_db_gui
         {
             Name = name;
             Control = null;
-            DefaultValue = Value = long.Parse(defaultValue);
             Min = min == null ? Optional<long>.CreateEmpty() : Optional<long>.Create(long.Parse(min));
             Max = max == null ? Optional<long>.CreateEmpty() : Optional<long>.Create(long.Parse(max));
+            if (defaultValue == null)
+            {
+                DefaultValue = Value = Min.Or(0);
+            }
+            else
+            {
+                DefaultValue = Value = long.Parse(defaultValue);
+            }
         }
 
         public override UciOptionType GetOptionType()
@@ -538,6 +592,11 @@ namespace chess_pos_db_gui
         public override string ToString()
         {
             return Value.ToString();
+        }
+
+        public override string GetName()
+        {
+            return Name;
         }
     }
 
@@ -572,6 +631,11 @@ namespace chess_pos_db_gui
         {
             return Value;
         }
+
+        public override string GetName()
+        {
+            return Name;
+        }
     }
 
     public class StringUciOption : UciOption
@@ -604,6 +668,11 @@ namespace chess_pos_db_gui
         public override string ToString()
         {
             return Value;
+        }
+
+        public override string GetName()
+        {
+            return Name;
         }
     }
 }
