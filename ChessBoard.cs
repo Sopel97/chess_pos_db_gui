@@ -548,8 +548,9 @@ namespace chess_pos_db_gui
             {
                 LastFen = fen;
                 fenTextBox.Text = fen;
-                onPositionChanged?.Invoke(this, new EventArgs());
             }
+
+            onPositionChanged?.Invoke(this, new EventArgs());
         }
 
         private void GoToStartButton_Click(object sender, EventArgs e)
