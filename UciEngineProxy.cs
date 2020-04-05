@@ -14,6 +14,7 @@ namespace chess_pos_db_gui
         private Process EngineProcess { get; set; }
         private BlockingQueue<string> MessageQueue { get; set; }
         private Action<UciInfoResponse> UciInfoHandler { get; set; }
+        private IList<UciOption> Options { get; set; }
 
         public UciEngineProxy(string path)
         {
@@ -346,6 +347,254 @@ namespace chess_pos_db_gui
             HashFull = Optional<int>.CreateEmpty();
             Nps = Optional<long>.CreateEmpty();
             TBHits = Optional<long>.CreateEmpty();
+        }
+    }
+
+    public class UciOptionFactory
+    {
+        public UciOptionFactory()
+        {
+
+        }
+
+        private string NextString(Queue<string> parts)
+        {
+            return parts.Dequeue();
+        }
+
+        private string NextName(Queue<string> parts)
+        {
+            var breakers = new string[] { "type", "default", "min", "max", "var" };
+
+            string name = parts.Dequeue();
+
+            while (breakers.Contains(parts.Peek()))
+            {
+                name += " " + parts.Dequeue();
+            }
+
+            return name;
+        }
+
+        public UciOption FromString(string str)
+        {
+            string name = null;
+            string type = null;
+            string defaultValue = null;
+            IList<string> vars = new List<string>();
+            string min = null;
+            string max = null;
+
+            try
+            {
+                Queue<string> parts = new Queue<string>(str.Split(new char[] { ' ' }));
+                while (parts.Count > 0)
+                {
+                    string cmd = parts.Dequeue();
+                    switch (cmd)
+                    {
+                        case "name":
+                            {
+                                name = NextName(parts);
+                                break;
+                            }
+
+                        case "type":
+                            {
+                                type = NextString(parts);
+                                break;
+                            }
+
+                        case "min":
+                            {
+                                min = NextString(parts);
+                                break;
+                            }
+
+                        case "max":
+                            {
+                                max = NextString(parts);
+                                break;
+                            }
+
+                        case "var":
+                            {
+                                vars.Add(NextString(parts));
+                                break;
+                            }
+
+                        default:
+                            {
+                                break;
+                            }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            if (type == null)
+            {
+                return null;
+            }
+
+            switch (type)
+            {
+                case "check": return new CheckUciOption(name, defaultValue, min, max, vars);
+                case "spin": return new SpinUciOption(name, defaultValue, min, max, vars);
+                case "combo": return new ComboUciOption(name, defaultValue, min, max, vars);
+                case "string": return new StringUciOption(name, defaultValue, min, max, vars);
+                default: return null;
+            }
+        }
+    }
+
+    public enum UciOptionType
+    {
+        Check,
+        Spin,
+        Combo,
+        String
+    }
+
+    public abstract class UciOption
+    {
+        abstract public UciOptionType GetOptionType();
+        // TODO: pass some parent as parameter
+        abstract public System.Windows.Forms.Control CreateControl();
+    }
+
+    public class CheckUciOption : UciOption
+    {
+        public string Name { get; private set; }
+        public System.Windows.Forms.CheckBox Control { get; private set; }
+        public bool DefaultValue { get; private set; }
+        public bool Value { get; private set; }
+
+        public CheckUciOption(string name, string defaultValue, string min, string max, IList<string> var)
+        {
+            Name = name;
+            Control = null;
+            DefaultValue = Value = (defaultValue == "true");
+        }
+
+        public override UciOptionType GetOptionType()
+        {
+            return UciOptionType.Check;
+        }
+
+        public override System.Windows.Forms.Control CreateControl()
+        {
+            Control = new System.Windows.Forms.CheckBox();
+            return Control;
+        }
+
+        public override string ToString()
+        {
+            return Value ? "true" : "false";
+        }
+    }
+
+    public class SpinUciOption : UciOption
+    {
+        public string Name { get; private set; }
+        public System.Windows.Forms.NumericUpDown Control { get; private set; }
+        public long DefaultValue { get; private set; }
+        public long Value { get; private set; }
+        public Optional<long> Min { get; private set; }
+        public Optional<long> Max { get; private set; }
+
+        public SpinUciOption(string name, string defaultValue, string min, string max, IList<string> var)
+        {
+            Name = name;
+            Control = null;
+            DefaultValue = Value = long.Parse(defaultValue);
+            Min = min == null ? Optional<long>.CreateEmpty() : Optional<long>.Create(long.Parse(min));
+            Max = max == null ? Optional<long>.CreateEmpty() : Optional<long>.Create(long.Parse(max));
+        }
+
+        public override UciOptionType GetOptionType()
+        {
+            return UciOptionType.Spin;
+        }
+
+        public override System.Windows.Forms.Control CreateControl()
+        {
+            Control = new System.Windows.Forms.NumericUpDown();
+            return Control;
+        }
+
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+    }
+
+    public class ComboUciOption : UciOption
+    {
+        public string Name { get; private set; }
+        public System.Windows.Forms.ComboBox Control { get; private set; }
+        public string DefaultValue { get; private set; }
+        public string Value { get; private set; }
+        public IList<string> Vars { get; private set; }
+
+        public ComboUciOption(string name, string defaultValue, string min, string max, IList<string> var)
+        {
+            Name = name;
+            Control = null;
+            DefaultValue = Value = defaultValue;
+            Vars = var;
+        }
+
+        public override UciOptionType GetOptionType()
+        {
+            return UciOptionType.Combo;
+        }
+
+        public override System.Windows.Forms.Control CreateControl()
+        {
+            Control = new System.Windows.Forms.ComboBox();
+            return Control;
+        }
+
+        public override string ToString()
+        {
+            return Value;
+        }
+    }
+
+    public class StringUciOption : UciOption
+    {
+        public string Name { get; private set; }
+        public System.Windows.Forms.TextBox Control { get; private set; }
+        public string DefaultValue { get; private set; }
+        public string Value { get; private set; }
+
+        public StringUciOption(string name, string defaultValue, string min, string max, IList<string> var)
+        {
+            if (defaultValue == null) defaultValue = "";
+
+            Name = name;
+            Control = null;
+            DefaultValue = Value = defaultValue;
+        }
+
+        public override UciOptionType GetOptionType()
+        {
+            return UciOptionType.String;
+        }
+
+        public override System.Windows.Forms.Control CreateControl()
+        {
+            Control = new System.Windows.Forms.TextBox();
+            return Control;
+        }
+
+        public override string ToString()
+        {
+            return Value;
         }
     }
 }
