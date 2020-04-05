@@ -390,10 +390,38 @@ namespace chess_pos_db_gui
             // if there's less than this amount of games then the goodness contribution will be penalized.
             ulong penaltyFromCountThreshold = 100;
 
+            bool useHumanWeight = humanWeightCheckbox.Checked && !combineHECheckbox.Checked;
+            bool useEngineWeight = engineWeightCheckbox.Checked && !combineHECheckbox.Checked;
+            bool useTotalWeight = gamesWeightCheckbox.Checked && combineHECheckbox.Checked;
+            bool useEvalWeight = score != null && evaluationWeightCheckbox.Checked;
             bool useCount = goodnessUseCountCheckbox.Checked;
-            double engineWeight = (double)engineWeightNumericUpDown.Value;
-            double humanWeight = (double)humanWeightNumericUpDown.Value;
-            double evalWeight = score == null ? 0.0 : (double)evalWeightNumericUpDown.Value;
+
+            double engineWeight = useHumanWeight ? (double)engineWeightNumericUpDown.Value : 0.0;
+            double humanWeight = useEngineWeight ? (double)humanWeightNumericUpDown.Value : 0.0;
+            double totalWeight = useTotalWeight ? (double)gamesWeightNumericUpDown.Value : 0.0;
+            double evalWeight = useEvalWeight ? (double)evalWeightNumericUpDown.Value : 0.0;
+
+            double adjustedTotalPerf = 1.0f;
+            ulong totalCount = entry.Count;
+            if (totalCount > 0)
+            {
+                ulong totalWins = entry.WinCount;
+                ulong totalDraws = entry.DrawCount;
+                ulong totalLosses = totalCount - totalWins - totalDraws;
+                double totalPerf = ((double)totalWins + (double)totalDraws * 0.5) / (double)totalCount;
+                double totalEloError = EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses);
+                double expectedTotalPerf = EloCalculator.GetExpectedPerformance((entry.EloDiff) / (double)totalCount);
+                if (chessBoard.CurrentPlayer() == Player.Black)
+                {
+                    totalPerf = 1.0 - totalPerf;
+                    expectedTotalPerf = 1.0 - expectedTotalPerf;
+                }
+                if (useCount)
+                {
+                    totalPerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(totalPerf) - totalEloError);
+                }
+                adjustedTotalPerf = GetAdjustedPerformance(totalPerf, expectedTotalPerf);
+            }
 
             double adjustedEnginePerf = 1.0f;
             ulong engineCount = entry.Count - nonEngineEntry.Count;
@@ -453,14 +481,16 @@ namespace chess_pos_db_gui
             {
                 adjustedEnginePerf = penalizePerf(adjustedEnginePerf, engineCount);
                 adjustedHumanPerf = penalizePerf(adjustedHumanPerf, humanCount);
+                adjustedTotalPerf = penalizePerf(adjustedTotalPerf, totalCount);
             }
             double engineGoodness = Math.Pow(adjustedEnginePerf, engineWeight);
             double humanGoodness = Math.Pow(adjustedHumanPerf, humanWeight);
+            double totalGoodness = Math.Pow(adjustedTotalPerf, totalWeight);
             double evalGoodness = score != null ? Math.Pow(score.Perf, evalWeight) : 1.0;
 
-            double totalWeight = engineWeight + humanWeight + evalWeight;
+            double weightSum = engineWeight + humanWeight + totalWeight + evalWeight;
 
-            double goodness = Math.Pow(engineGoodness * humanGoodness * evalGoodness, 1.0 / totalWeight);
+            double goodness = Math.Pow(engineGoodness * humanGoodness * totalGoodness * evalGoodness, 1.0 / weightSum);
 
             return goodness;
         }
