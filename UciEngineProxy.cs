@@ -579,6 +579,7 @@ namespace chess_pos_db_gui
     public class CheckUciOption : UciOption
     {
         public string Name { get; private set; }
+        public System.Windows.Forms.TableLayoutPanel Panel { get; private set; }
         public System.Windows.Forms.CheckBox Control { get; private set; }
         public bool DefaultValue { get; private set; }
         public bool Value { get; private set; }
@@ -597,8 +598,25 @@ namespace chess_pos_db_gui
 
         public override System.Windows.Forms.Control CreateControl()
         {
+            Panel = new System.Windows.Forms.TableLayoutPanel();
+            Panel.ColumnCount = 2;
+            Panel.RowCount = 1;
+            Panel.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            Panel.AutoSize = true;
+
             Control = new System.Windows.Forms.CheckBox();
-            return Control;
+            Control.Checked = DefaultValue;
+            Control.Enabled = true;
+            Control.Visible = true;
+
+            var label = new System.Windows.Forms.Label();
+            label.Text = Name;
+            label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+
+            Panel.Controls.Add(label);
+            Panel.Controls.Add(Control);
+
+            return Panel;
         }
 
         public override string ToString()
@@ -615,6 +633,7 @@ namespace chess_pos_db_gui
     public class SpinUciOption : UciOption
     {
         public string Name { get; private set; }
+        public System.Windows.Forms.TableLayoutPanel Panel { get; private set; }
         public System.Windows.Forms.NumericUpDown Control { get; private set; }
         public long DefaultValue { get; private set; }
         public long Value { get; private set; }
@@ -644,8 +663,28 @@ namespace chess_pos_db_gui
 
         public override System.Windows.Forms.Control CreateControl()
         {
+            Panel = new System.Windows.Forms.TableLayoutPanel();
+            Panel.ColumnCount = 2;
+            Panel.RowCount = 1;
+            Panel.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            Panel.AutoSize = true;
+
             Control = new System.Windows.Forms.NumericUpDown();
-            return Control;
+            Control.Minimum = Min.Or(DefaultValue);
+            Control.Maximum = Max.Or(DefaultValue);
+            Control.Value = DefaultValue;
+            Control.DecimalPlaces = 0;
+            Control.Increment = 1;
+            Control.AutoSize = true;
+
+            var label = new System.Windows.Forms.Label();
+            label.Text = Name;
+            label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+
+            Panel.Controls.Add(label);
+            Panel.Controls.Add(Control);
+
+            return Panel;
         }
 
         public override string ToString()
@@ -662,6 +701,7 @@ namespace chess_pos_db_gui
     public class ComboUciOption : UciOption
     {
         public string Name { get; private set; }
+        public System.Windows.Forms.TableLayoutPanel Panel { get; private set; }
         public System.Windows.Forms.ComboBox Control { get; private set; }
         public string DefaultValue { get; private set; }
         public string Value { get; private set; }
@@ -682,8 +722,27 @@ namespace chess_pos_db_gui
 
         public override System.Windows.Forms.Control CreateControl()
         {
+            Panel = new System.Windows.Forms.TableLayoutPanel();
+            Panel.ColumnCount = 2;
+            Panel.RowCount = 1;
+            Panel.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            Panel.AutoSize = true;
+
             Control = new System.Windows.Forms.ComboBox();
-            return Control;
+            foreach (var var in Vars)
+            {
+                Control.Items.Add(var);
+            }
+            Control.SelectedItem = DefaultValue;
+
+            var label = new System.Windows.Forms.Label();
+            label.Text = Name;
+            label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+
+            Panel.Controls.Add(label);
+            Panel.Controls.Add(Control);
+
+            return Panel;
         }
 
         public override string ToString()
@@ -700,6 +759,7 @@ namespace chess_pos_db_gui
     public class StringUciOption : UciOption
     {
         public string Name { get; private set; }
+        public System.Windows.Forms.TableLayoutPanel Panel { get; private set; }
         public System.Windows.Forms.TextBox Control { get; private set; }
         public string DefaultValue { get; private set; }
         public string Value { get; private set; }
@@ -720,8 +780,24 @@ namespace chess_pos_db_gui
 
         public override System.Windows.Forms.Control CreateControl()
         {
+            Panel = new System.Windows.Forms.TableLayoutPanel();
+            Panel.ColumnCount = 2;
+            Panel.RowCount = 1;
+            Panel.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            Panel.AutoSize = true;
+
             Control = new System.Windows.Forms.TextBox();
-            return Control;
+            Control.Text = DefaultValue;
+            Control.Width = 100;
+
+            var label = new System.Windows.Forms.Label();
+            label.Text = Name;
+            label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+
+            Panel.Controls.Add(label);
+            Panel.Controls.Add(Control);
+
+            return Panel;
         }
 
         public override string ToString()
