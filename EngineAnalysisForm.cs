@@ -46,24 +46,52 @@ namespace chess_pos_db_gui
             analysisDataGridView.Columns["SelDepth"].HeaderText = "SD";
             analysisDataGridView.Columns["Score"].MinimumWidth = 60;
             analysisDataGridView.Columns["Score"].HeaderText = "Score";
-            analysisDataGridView.Columns["Time"].MinimumWidth = 80;
-            analysisDataGridView.Columns["Time"].HeaderText = "Time";
+            analysisDataGridView.Columns["Time"].MinimumWidth = 110;
+            analysisDataGridView.Columns["Time"].HeaderText = "Time [hh:mm:ss]";
             analysisDataGridView.Columns["Nodes"].HeaderText = "Nodes";
+            analysisDataGridView.Columns["Nodes"].MinimumWidth = 60;
             analysisDataGridView.Columns["NPS"].HeaderText = "NPS";
+            analysisDataGridView.Columns["NPS"].MinimumWidth = 60;
             analysisDataGridView.Columns["MultiPV"].HeaderText = "MultiPV";
+            analysisDataGridView.Columns["MultiPV"].MinimumWidth = 40;
             analysisDataGridView.Columns["TBHits"].HeaderText = "TBHits";
+            analysisDataGridView.Columns["TBHits"].MinimumWidth = 60;
             analysisDataGridView.Columns["PV"].HeaderText = "PV";
 
             analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
+
+            foreach (DataGridViewColumn column in analysisDataGridView.Columns)
+            {
+                if (column.ValueType == typeof(long) || column.ValueType == typeof(int))
+                {
+                    column.DefaultCellStyle.Format = "N0";
+                    column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                }
+            }
 
             SetToggleButtonName();
             closeToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Enabled = false;
             toggleAnalyzeButton.Enabled = false;
 
-            Fen = null;
+            Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-            ClearnIdInfo();
+            ClearIdInfo();
+
+
+            var row = AnalysisData.NewRow();
+            row["Move"] = LanToMoveWithSan("e2e4");
+            row["Depth"] = 12;
+            row["SelDepth"] = 14;
+            row["Score"] = new UciScore(100, UciScoreType.Cp, UciScoreBoundType.Exact);
+            row["Time"] = TimeSpan.FromSeconds(1000);
+            row["Nodes"] = 12314214123;
+            row["NPS"] = 12314214;
+            row["MultiPV"] = 1;
+            row["TBHits"] = 0;
+            row["PV"] = StringifyPV(new List<string>() { "e2e4", "e7e5", "d2d4" });
+
+            AnalysisData.Rows.Add(row);
         }
 
         private MoveWithSan LanToMoveWithSan(string lan)
@@ -81,7 +109,7 @@ namespace chess_pos_db_gui
 
         private string StringifyPV(IList<string> lans)
         {
-            return lans.Aggregate((a, b) => a + " " + LanToMoveWithSan(b).San);
+            return lans.Select(s => LanToMoveWithSan(s).San).Aggregate((a, b) => a + " " + b);
         }
 
         private static void MakeDoubleBuffered(DataGridView dgv)
@@ -116,7 +144,7 @@ namespace chess_pos_db_gui
             engineIdAuthorLabel.Text = "Author: " + Engine.Author;
         }
 
-        private void ClearnIdInfo()
+        private void ClearIdInfo()
         {
             enginePathLabel.Text = "Path: ";
             engineIdNameLabel.Text = "Name: ";
@@ -155,7 +183,7 @@ namespace chess_pos_db_gui
             optionsToolStripMenuItem.Enabled = false;
             closeToolStripMenuItem.Enabled = false;
 
-            ClearnIdInfo();
+            ClearIdInfo();
 
             OptionsForm = null;
         }
@@ -214,7 +242,8 @@ namespace chess_pos_db_gui
 
         private void analysisDataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            
+            var columnName = analysisDataGridView.Columns[e.ColumnIndex].Name;
+
         }
     }
 }
