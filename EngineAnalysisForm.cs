@@ -1,9 +1,11 @@
-﻿using System;
+﻿using ChessDotNet;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,11 +16,45 @@ namespace chess_pos_db_gui
     {
         private EngineOptionsForm OptionsForm { get; set; }
         private UciEngineProxy Engine { get; set; }
+        private DataTable AnalysisData { get; set; }
         private string Fen { get; set; }
 
         public EngineAnalysisForm()
         {
             InitializeComponent();
+
+            AnalysisData = new DataTable();
+            AnalysisData.Columns.Add(new DataColumn("Move", typeof(MoveWithSan)));
+            AnalysisData.Columns.Add(new DataColumn("Depth", typeof(int)));
+            AnalysisData.Columns.Add(new DataColumn("SelDepth", typeof(int)));
+            AnalysisData.Columns.Add(new DataColumn("Score", typeof(UciScore)));
+            AnalysisData.Columns.Add(new DataColumn("Time", typeof(TimeSpan)));
+            AnalysisData.Columns.Add(new DataColumn("Nodes", typeof(long)));
+            AnalysisData.Columns.Add(new DataColumn("NPS", typeof(long)));
+            AnalysisData.Columns.Add(new DataColumn("MultiPV", typeof(int)));
+            AnalysisData.Columns.Add(new DataColumn("TBHits", typeof(long)));
+            AnalysisData.Columns.Add(new DataColumn("PV", typeof(string)));
+
+            MakeDoubleBuffered(analysisDataGridView);
+            analysisDataGridView.DataSource = AnalysisData;
+
+            analysisDataGridView.Columns["Move"].MinimumWidth = 50;
+            analysisDataGridView.Columns["Move"].HeaderText = "Move";
+            analysisDataGridView.Columns["Depth"].MinimumWidth = 40;
+            analysisDataGridView.Columns["Depth"].HeaderText = "D";
+            analysisDataGridView.Columns["SelDepth"].MinimumWidth = 40;
+            analysisDataGridView.Columns["SelDepth"].HeaderText = "SD";
+            analysisDataGridView.Columns["Score"].MinimumWidth = 60;
+            analysisDataGridView.Columns["Score"].HeaderText = "Score";
+            analysisDataGridView.Columns["Time"].MinimumWidth = 80;
+            analysisDataGridView.Columns["Time"].HeaderText = "Time";
+            analysisDataGridView.Columns["Nodes"].HeaderText = "Nodes";
+            analysisDataGridView.Columns["NPS"].HeaderText = "NPS";
+            analysisDataGridView.Columns["MultiPV"].HeaderText = "MultiPV";
+            analysisDataGridView.Columns["TBHits"].HeaderText = "TBHits";
+            analysisDataGridView.Columns["PV"].HeaderText = "PV";
+
+            analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
             SetToggleButtonName();
             closeToolStripMenuItem.Enabled = false;
@@ -28,6 +64,33 @@ namespace chess_pos_db_gui
             Fen = null;
 
             ClearnIdInfo();
+        }
+
+        private MoveWithSan LanToMoveWithSan(string lan)
+        {
+            ChessGame game = new ChessGame(Fen);
+            var from = lan.Substring(0, 2);
+            var to = lan.Substring(2, 2);
+            Player player = game.WhoseTurn;
+            var move = lan.Length == 5 ? new ChessDotNet.Move(from, to, player, lan[4]) : new ChessDotNet.Move(from, to, player);
+            game.MakeMove(move, true);
+
+            var detailedMove = game.Moves.Last();
+            return new MoveWithSan(move, detailedMove.SAN);
+        }
+
+        private string StringifyPV(IList<string> lans)
+        {
+            return lans.Aggregate((a, b) => a + " " + LanToMoveWithSan(b).San);
+        }
+
+        private static void MakeDoubleBuffered(DataGridView dgv)
+        {
+            Type dgvType = dgv.GetType();
+            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
+                  BindingFlags.Instance | BindingFlags.NonPublic);
+
+            pi.SetValue(dgv, true, null);
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -147,6 +210,11 @@ namespace chess_pos_db_gui
         {
             Fen = fen;
             Engine.SetPosition(Fen);
+        }
+
+        private void analysisDataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            
         }
     }
 }
