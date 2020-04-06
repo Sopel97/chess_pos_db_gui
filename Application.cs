@@ -47,11 +47,10 @@ namespace chess_pos_db_gui
         private const string URL = "http://www.chessdb.cn/cdb.php";
         private HttpClient chessdbcn;
 
+        private EngineAnalysisForm AnalysisForm { get; set; }
+
         public Application()
         {
-            UciEngineProxy engine = new UciEngineProxy("stockfish.exe");
-            engine.GoInfinite(delegate(UciInfoResponse e) { });
-
             queueMutex = new Mutex();
             queryQueue = new QueryQueue();
             cacheLock = new object();
@@ -1254,6 +1253,15 @@ namespace chess_pos_db_gui
         private void meanTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             Repopulate();
+        }
+
+        private void setupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (AnalysisForm == null)
+            {
+                AnalysisForm = new EngineAnalysisForm();
+                AnalysisForm.Show();
+            }
         }
     }
 

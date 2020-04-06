@@ -14,13 +14,15 @@ namespace chess_pos_db_gui
         private Process EngineProcess { get; set; }
         private BlockingQueue<string> MessageQueue { get; set; }
         private Action<UciInfoResponse> UciInfoHandler { get; set; }
-        private IList<UciOption> Options { get; set; }
+        public IList<UciOption> CurrentOptions { get; private set; }
+        private IList<UciOption> AppliedOptions { get; set; }
 
         public UciEngineProxy(string path)
         {
             Path = path;
             MessageQueue = new BlockingQueue<string>();
-            Options = new List<UciOption>();
+            CurrentOptions = new List<UciOption>();
+            AppliedOptions = new List<UciOption>();
 
             EngineProcess = new Process();
             EngineProcess.StartInfo.FileName = path;
@@ -44,6 +46,11 @@ namespace chess_pos_db_gui
             PerformUciHandshake();
         }
 
+        public void Quit()
+        {
+            SendMessage("quit");
+        }
+
         private void CreateUciOptionsSnapshot()
         {
             // TODO:
@@ -62,6 +69,8 @@ namespace chess_pos_db_gui
 
         private void ReceiveMessage(Object sender, DataReceivedEventArgs e)
         {
+            if (e.Data == null) return;
+
             System.Diagnostics.Debug.WriteLine("Message: " + e.Data);
 
             if (UciInfoHandler != null && e.Data.StartsWith("info"))
@@ -81,7 +90,12 @@ namespace chess_pos_db_gui
 
         private void AddOption(string line)
         {
-            Options.Add(new UciOptionFactory().FromString(line));
+            var opt = new UciOptionFactory().FromString(line);
+            if (opt != null)
+            {
+                CurrentOptions.Add(opt);
+                AppliedOptions.Add(new UciOptionFactory().FromString(line)); //we want a copy
+            }
         }
 
         private void SendMessage(string message)
@@ -459,7 +473,7 @@ namespace chess_pos_db_gui
 
             string name = parts.Dequeue();
 
-            while (breakers.Contains(parts.Peek()))
+            while (!breakers.Contains(parts.Peek()))
             {
                 name += " " + parts.Dequeue();
             }

@@ -30,12 +30,7 @@
         {
             this.enginePathLabel = new System.Windows.Forms.Label();
             this.engineIdLabel = new System.Windows.Forms.Label();
-            this.engineOptionsDataGridView = new System.Windows.Forms.DataGridView();
-            this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.OptionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.engineOptionsDataGridView)).BeginInit();
+            this.optionsFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
             // 
             // enginePathLabel
@@ -56,52 +51,25 @@
             this.engineIdLabel.TabIndex = 3;
             this.engineIdLabel.Text = "ENGINE ID";
             // 
-            // engineOptionsDataGridView
+            // optionsFlowLayoutPanel
             // 
-            this.engineOptionsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.engineOptionsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Edit,
-            this.OptionName,
-            this.Type,
-            this.Value});
-            this.engineOptionsDataGridView.Location = new System.Drawing.Point(15, 38);
-            this.engineOptionsDataGridView.Name = "engineOptionsDataGridView";
-            this.engineOptionsDataGridView.Size = new System.Drawing.Size(394, 249);
-            this.engineOptionsDataGridView.TabIndex = 5;
-            // 
-            // Edit
-            // 
-            this.Edit.HeaderText = "";
-            this.Edit.Name = "Edit";
-            this.Edit.Text = "Edit";
-            this.Edit.Width = 50;
-            // 
-            // OptionName
-            // 
-            this.OptionName.HeaderText = "Name";
-            this.OptionName.Name = "OptionName";
-            // 
-            // Type
-            // 
-            this.Type.HeaderText = "Type";
-            this.Type.Name = "Type";
-            // 
-            // Value
-            // 
-            this.Value.HeaderText = "Value";
-            this.Value.Name = "Value";
+            this.optionsFlowLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.optionsFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.optionsFlowLayoutPanel.Location = new System.Drawing.Point(15, 38);
+            this.optionsFlowLayoutPanel.Name = "optionsFlowLayoutPanel";
+            this.optionsFlowLayoutPanel.Size = new System.Drawing.Size(375, 279);
+            this.optionsFlowLayoutPanel.TabIndex = 5;
             // 
             // EngineOptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.engineOptionsDataGridView);
+            this.ClientSize = new System.Drawing.Size(402, 329);
+            this.Controls.Add(this.optionsFlowLayoutPanel);
             this.Controls.Add(this.enginePathLabel);
             this.Controls.Add(this.engineIdLabel);
             this.Name = "EngineOptionsForm";
             this.Text = "EngineOptionsForm";
-            ((System.ComponentModel.ISupportInitialize)(this.engineOptionsDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -111,10 +79,6 @@
 
         private System.Windows.Forms.Label enginePathLabel;
         private System.Windows.Forms.Label engineIdLabel;
-        private System.Windows.Forms.DataGridView engineOptionsDataGridView;
-        private System.Windows.Forms.DataGridViewButtonColumn Edit;
-        private System.Windows.Forms.DataGridViewTextBoxColumn OptionName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Type;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Value;
+        private System.Windows.Forms.FlowLayoutPanel optionsFlowLayoutPanel;
     }
 }

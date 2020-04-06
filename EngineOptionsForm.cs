@@ -12,9 +12,22 @@ namespace chess_pos_db_gui
 {
     public partial class EngineOptionsForm : Form
     {
-        public EngineOptionsForm()
+        private IList<UciOption> Options { get; set; }
+
+        public EngineOptionsForm(IList<UciOption> options)
         {
             InitializeComponent();
+
+            Options = options;
+            AddControlsForOptions(Options);
+        }
+
+        private void AddControlsForOptions(IList<UciOption> options)
+        {
+            foreach(var opt in options)
+            {
+                optionsFlowLayoutPanel.Controls.Add(opt.CreateControl());
+            }
         }
     }
 }
