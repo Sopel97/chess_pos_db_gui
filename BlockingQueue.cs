@@ -51,5 +51,13 @@ namespace chess_pos_db_gui
                 }
             }
         }
+
+        public void Clear()
+        {
+            lock (q)
+            {
+                q.Clear();
+            }
+        }
     }
 }

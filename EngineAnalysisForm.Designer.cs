@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.engineIdNameLabel = new System.Windows.Forms.Label();
             this.enginePathLabel = new System.Windows.Forms.Label();
             this.analysisDataGridView = new System.Windows.Forms.DataGridView();
@@ -38,6 +39,7 @@
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleAnalyzeButton = new System.Windows.Forms.Button();
             this.engineIdAuthorLabel = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.analysisDataGridView)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -120,6 +122,7 @@
             this.toggleAnalyzeButton.Size = new System.Drawing.Size(75, 23);
             this.toggleAnalyzeButton.TabIndex = 5;
             this.toggleAnalyzeButton.Text = "Analyze";
+            this.toolTip1.SetToolTip(this.toggleAnalyzeButton, "Start/stop analysis.");
             this.toggleAnalyzeButton.UseVisualStyleBackColor = true;
             this.toggleAnalyzeButton.Click += new System.EventHandler(this.toggleAnalyzeButton_Click);
             // 
@@ -167,5 +170,6 @@
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.Button toggleAnalyzeButton;
         private System.Windows.Forms.Label engineIdAuthorLabel;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

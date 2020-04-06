@@ -43,23 +43,33 @@ namespace chess_pos_db_gui
 
             analysisDataGridView.Columns["Move"].MinimumWidth = 50;
             analysisDataGridView.Columns["Move"].HeaderText = "Move";
+            analysisDataGridView.Columns["Move"].ToolTipText = "Move suggested by the engine";
             analysisDataGridView.Columns["Depth"].MinimumWidth = 40;
             analysisDataGridView.Columns["Depth"].HeaderText = "D";
+            analysisDataGridView.Columns["Depth"].ToolTipText = "The depth in plies reached by the engine";
             analysisDataGridView.Columns["SelDepth"].MinimumWidth = 40;
             analysisDataGridView.Columns["SelDepth"].HeaderText = "SD";
+            analysisDataGridView.Columns["SelDepth"].ToolTipText = "The depth in plies reached by the engine in some extended lines";
             analysisDataGridView.Columns["Score"].MinimumWidth = 60;
             analysisDataGridView.Columns["Score"].HeaderText = "Score";
+            analysisDataGridView.Columns["Score"].ToolTipText = "Score of the move in pawns for the side to move.";
             analysisDataGridView.Columns["Time"].MinimumWidth = 110;
             analysisDataGridView.Columns["Time"].HeaderText = "Time [hh:mm:ss]";
+            analysisDataGridView.Columns["Time"].ToolTipText = "Time spend to produce the move";
             analysisDataGridView.Columns["Nodes"].HeaderText = "Nodes";
             analysisDataGridView.Columns["Nodes"].MinimumWidth = 60;
+            analysisDataGridView.Columns["Nodes"].ToolTipText = "Number of nodes examined";
             analysisDataGridView.Columns["NPS"].HeaderText = "NPS";
             analysisDataGridView.Columns["NPS"].MinimumWidth = 60;
+            analysisDataGridView.Columns["NPS"].ToolTipText = "Average number of nodes being examined per second";
             analysisDataGridView.Columns["MultiPV"].HeaderText = "MultiPV";
             analysisDataGridView.Columns["MultiPV"].MinimumWidth = 40;
+            analysisDataGridView.Columns["MultiPV"].ToolTipText = "Engines internal id of the line";
             analysisDataGridView.Columns["TBHits"].HeaderText = "TBHits";
             analysisDataGridView.Columns["TBHits"].MinimumWidth = 60;
+            analysisDataGridView.Columns["TBHits"].ToolTipText = "Number of successful tablebase lookups";
             analysisDataGridView.Columns["PV"].HeaderText = "PV";
+            analysisDataGridView.Columns["PV"].ToolTipText = "The principal variation - engine's predicted line";
             analysisDataGridView.Columns["ScoreInt"].Visible = false;
 
             analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
@@ -176,7 +186,13 @@ namespace chess_pos_db_gui
 
         private void OnAnalysisStarted(object sender, EventArgs e)
         {
+            var sortedColumn = analysisDataGridView.SortedColumn;
+            var sortedOrder = analysisDataGridView.SortOrder;
             AnalysisData.Clear();
+            if (sortedColumn != null)
+            {
+                analysisDataGridView.Sort(sortedColumn, sortedOrder == SortOrder.Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
+            }
         }
 
         private void UnloadEngine()
@@ -222,6 +238,8 @@ namespace chess_pos_db_gui
 
         private void OnInfoResponse(UciInfoResponse info)
         {
+            if (info.Fen != Fen) return;
+
             try
             {
                 // Updating is slow right now, so we skip early updates when there's a lot of them.
@@ -231,7 +249,7 @@ namespace chess_pos_db_gui
 
                 foreach (var _ in info.Score)
                 {
-                    var move = LanToMoveWithSan(Fen, info.PV.Or(new List<string>()).FirstOrDefault());
+                    var move = LanToMoveWithSan(info.Fen, info.PV.Or(new List<string>()).FirstOrDefault());
                     var multipv = info.MultiPV.Or(0);
                     System.Data.DataRow row = (System.Data.DataRow)Invoke(new Func<System.Data.DataRow>(delegate () { return FindOrCreateRowByMoveOrMultiPV(move, multipv); }));
 
@@ -253,7 +271,7 @@ namespace chess_pos_db_gui
         private void FillRowFromInfo(DataRow row, UciInfoResponse info)
         {
             SuspendLayout();
-            row["Move"] = LanToMoveWithSan(Fen, info.PV.Or(new List<string>()).FirstOrDefault());
+            row["Move"] = LanToMoveWithSan(info.Fen, info.PV.Or(new List<string>()).FirstOrDefault());
             row["Depth"] = info.Depth.Or(0);
             row["SelDepth"] = info.SelDepth.Or(0);
             var score = info.Score.Or(new UciScore(0, UciScoreType.Cp, UciScoreBoundType.Exact));
@@ -264,7 +282,7 @@ namespace chess_pos_db_gui
             row["NPS"] = info.Nps.Or(0);
             row["MultiPV"] = info.MultiPV.Or(0);
             row["TBHits"] = info.TBHits.Or(0);
-            row["PV"] = StringifyPV(Fen, info.PV.FirstOrDefault());
+            row["PV"] = StringifyPV(info.Fen, info.PV.FirstOrDefault());
             ResumeLayout();
         }
 
@@ -360,8 +378,11 @@ namespace chess_pos_db_gui
 
         public void OnPositionChanged(string fen)
         {
-            Fen = fen;
-            Engine.SetPosition(Fen);
+            if (Fen != fen)
+            {
+                Fen = fen;
+                Engine.SetPosition(fen);
+            }
         }
 
         private void analysisDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)

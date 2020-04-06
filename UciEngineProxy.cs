@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessDotNet;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace chess_pos_db_gui
         private Process EngineProcess { get; set; }
         private BlockingQueue<string> MessageQueue { get; set; }
         private Action<UciInfoResponse> UciInfoHandler { get; set; }
+        private string Fen { get; set; }
         public IList<UciOption> CurrentOptions { get; private set; }
         private IList<UciOption> AppliedOptions { get; set; }
         public bool IsSearching { get; private set; }
@@ -40,6 +42,7 @@ namespace chess_pos_db_gui
             Path = path;
             Name = "";
             Author = "";
+            Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
             MessageQueue = new BlockingQueue<string>();
             CurrentOptions = new List<UciOption>();
             AppliedOptions = new List<UciOption>();
@@ -97,12 +100,15 @@ namespace chess_pos_db_gui
         {
             if (e.Data == null) return;
 
-            System.Diagnostics.Debug.WriteLine("Message: " + e.Data);
+            System.Diagnostics.Debug.WriteLine("Received: " + e.Data);
 
             if (UciInfoHandler != null && e.Data.StartsWith("info"))
             {
                 var infoResponse = ParseInfoResponse(e.Data);
-                UciInfoHandler.Invoke(infoResponse);
+                if (infoResponse.IsLegal())
+                {
+                    UciInfoHandler.Invoke(infoResponse);
+                }
             }
             else if (e.Data.StartsWith("option"))
             {
@@ -156,15 +162,14 @@ namespace chess_pos_db_gui
         {
             if (IsSearching)
             {
-                SendMessage("stop");
-                WaitForMessage("bestmove");
-                SendSetPositionUnsafe(fen);
-                SendMessage("go infinite");
-                OnAnalysisStarted.Invoke(this, new EventArgs());
+                Pause();
+                Fen = fen;
+                GoInfinite(UciInfoHandler, Fen);
             }
             else
             {
                 EnsureReady();
+                Fen = fen;
                 SendSetPositionUnsafe(fen);
             }
         }
@@ -181,7 +186,10 @@ namespace chess_pos_db_gui
 
         private void SendMessage(string message)
         {
-            EngineProcess.StandardInput.WriteLine(message);
+            System.Diagnostics.Debug.WriteLine("Sent: " + message);
+
+            EngineProcess.StandardInput.Write(message + "\n");
+            EngineProcess.StandardInput.Flush();
         }
 
         private string WaitForMessage(string startsWith)
@@ -219,6 +227,9 @@ namespace chess_pos_db_gui
             {
                 throw new TimeoutException("Engine didn't respond with \"uciok\" within the set timeout");
             }
+
+            EnsureReady();
+            SendMessage("setoption name UCI_AnalyseMode value true");
         }
 
         private void EnsureReady()
@@ -243,11 +254,9 @@ namespace chess_pos_db_gui
 
             if (IsSearching)
             {
-                SendMessage("stop");
-                WaitForMessage("bestmove");
+                Pause();
                 UpdateUciOptionsWhileNotSearching();
-                SendMessage("go infinite");
-                OnAnalysisStarted.Invoke(this, new EventArgs());
+                GoInfinite(UciInfoHandler, Fen);
             }
             else
             {
@@ -256,7 +265,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        public void GoInfinite(Action<UciInfoResponse> handler, string fen = null)
+        public void GoInfinite(Action<UciInfoResponse> handler, string fen)
         {
             if (IsSearching)
             {
@@ -264,12 +273,11 @@ namespace chess_pos_db_gui
             }
 
             UciInfoHandler = handler;
-            EnsureReady();
-            SendMessage("setoption name UCI_AnalyseMode value true");
-            UpdateUciOptions();
+            UpdateUciOptionsWhileNotSearching();
+            Fen = fen;
             SendSetPositionUnsafe(fen);
-            SendMessage("go infinite");
             OnAnalysisStarted.Invoke(this, new EventArgs());
+            SendMessage("go infinite");
 
             IsSearching = true;
         }
@@ -279,8 +287,20 @@ namespace chess_pos_db_gui
             if (IsSearching)
             {
                 SendMessage("stop");
-                WaitForMessageTimed("bestmove", 1000);
+                // TODO: For some reason waiting for bestmove sometimes prevents it from being received.
+                // For example when clicking the stop button after starting analysis.
+                //WaitForMessage("bestmove");
                 UciInfoHandler = null;
+                IsSearching = false;
+            }
+        }
+
+        private void Pause()
+        {
+            if (IsSearching)
+            {
+                SendMessage("stop");
+                //WaitForMessage("bestmove");
                 IsSearching = false;
             }
         }
@@ -371,7 +391,7 @@ namespace chess_pos_db_gui
 
         private UciInfoResponse ParseInfoResponse(string msg)
         {
-            var r = new UciInfoResponse();
+            var r = new UciInfoResponse(Fen);
             try
             {
                 Queue<string> parts = new Queue<string>(msg.Split(new char[] { ' ' }));
@@ -542,6 +562,7 @@ namespace chess_pos_db_gui
 
     public class UciInfoResponse : EventArgs
     {
+        public string Fen { get; private set; }
         public Optional<int> Depth { get; set; }
         public Optional<int> SelDepth { get; set; }
         public Optional<long> Time { get; set; }
@@ -555,8 +576,9 @@ namespace chess_pos_db_gui
         public Optional<long> Nps { get; set; }
         public Optional<long> TBHits { get; set; }
 
-        public UciInfoResponse()
+        public UciInfoResponse(string fen)
         {
+            Fen = fen;
             Depth = Optional<int>.CreateEmpty();
             SelDepth = Optional<int>.CreateEmpty();
             Time = Optional<long>.CreateEmpty();
@@ -569,6 +591,21 @@ namespace chess_pos_db_gui
             HashFull = Optional<int>.CreateEmpty();
             Nps = Optional<long>.CreateEmpty();
             TBHits = Optional<long>.CreateEmpty();
+        }
+
+        public bool IsLegal()
+        {
+            var lan = PV.Or(new List<string>()).FirstOrDefault();
+            if (lan == null || lan == "0000") return false;
+
+            ChessGame game = new ChessGame(Fen);
+            var from = lan.Substring(0, 2);
+            var to = lan.Substring(2, 2);
+            Player player = game.WhoseTurn;
+            var move = lan.Length == 5 ? new ChessDotNet.Move(from, to, player, lan[4]) : new ChessDotNet.Move(from, to, player);
+            if(game.MakeMove(move, false) == MoveType.Invalid) return false;
+
+            return true;
         }
     }
 
