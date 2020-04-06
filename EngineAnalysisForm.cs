@@ -20,7 +20,7 @@ namespace chess_pos_db_gui
             InitializeComponent();
 
             Engine = new UciEngineProxy("stockfish.exe");
-            Engine.GoInfinite(delegate (UciInfoResponse e) { });
+            SetToggleButtonName();
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -39,13 +39,37 @@ namespace chess_pos_db_gui
 
         private void OnOptionsFormClosing(object sender, FormClosingEventArgs e)
         {
-            Engine.UpdateUciOptions();
+            if (Engine != null)
+            {
+                Engine.UpdateUciOptions();
+            }
         }
 
         private void EngineAnalysisForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Engine.Stop();
             Engine.Quit();
+            Engine = null;
+            OptionsForm.Close();
+        }
+
+        private void toggleAnalyzeButton_Click(object sender, EventArgs e)
+        {
+            if (Engine.IsSearching)
+            {
+                Engine.Stop();
+            }
+            else
+            {
+                Engine.GoInfinite(delegate (UciInfoResponse ee) { });
+            }
+
+            SetToggleButtonName();
+        }
+
+        private void SetToggleButtonName()
+        {
+            toggleAnalyzeButton.Text = Engine.IsSearching ? "Stop" : "Start";
         }
     }
 }

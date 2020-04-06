@@ -185,6 +185,7 @@
             this.toggleAnalyzeButton.TabIndex = 5;
             this.toggleAnalyzeButton.Text = "Analyze";
             this.toggleAnalyzeButton.UseVisualStyleBackColor = true;
+            this.toggleAnalyzeButton.Click += new System.EventHandler(this.toggleAnalyzeButton_Click);
             // 
             // EngineAnalysisForm
             // 

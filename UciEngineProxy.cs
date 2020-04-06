@@ -17,7 +17,7 @@ namespace chess_pos_db_gui
         private Action<UciInfoResponse> UciInfoHandler { get; set; }
         public IList<UciOption> CurrentOptions { get; private set; }
         private IList<UciOption> AppliedOptions { get; set; }
-        private bool IsSearching { get; set; }
+        public bool IsSearching { get; private set; }
 
         public UciEngineProxy(string path)
         {
@@ -164,19 +164,30 @@ namespace chess_pos_db_gui
 
         public void UpdateUciOptions()
         {
-            if (!IsSearching) return;
-
             var changedOptions = GetChangedOptions();
             if (changedOptions.Count == 0) return;
 
-            SendMessage("stop");
-            WaitForMessage("bestmove");
-            UpdateUciOptionsWhileNotSearching();
-            SendMessage("go infinite");
+            if (IsSearching)
+            {
+                SendMessage("stop");
+                WaitForMessage("bestmove");
+                UpdateUciOptionsWhileNotSearching();
+                SendMessage("go infinite");
+            }
+            else
+            {
+                EnsureReady();
+                UpdateUciOptionsWhileNotSearching();
+            }
         }
 
         public void GoInfinite(Action<UciInfoResponse> handler, string fen = null)
         {
+            if (IsSearching)
+            {
+                Stop();
+            }
+
             UciInfoHandler = handler;
             EnsureReady();
             SendMessage("setoption name UCI_AnalyseMode value true");
@@ -196,10 +207,14 @@ namespace chess_pos_db_gui
 
         public void Stop()
         {
-            SendMessage("stop");
-            WaitForMessage("bestmove");
-            UciInfoHandler = null;
-            IsSearching = false;
+            if (IsSearching)
+            {
+
+                SendMessage("stop");
+                WaitForMessage("bestmove");
+                UciInfoHandler = null;
+                IsSearching = false;
+            }
         }
 
         private bool IsValidUciMove(string s)
