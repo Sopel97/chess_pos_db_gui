@@ -506,7 +506,7 @@ namespace chess_pos_db_gui
 
     public class UciScore
     {
-        private int Value { get; set; }
+        public int Value { get; private set; }
         private UciScoreType Type { get; set; }
         private UciScoreBoundType BoundType { get; set; }
 
@@ -527,6 +527,16 @@ namespace chess_pos_db_gui
             {
                 return string.Format("{0}M{1}", Value < 0 ? "-" : "", Math.Abs(Value));
             }
+        }
+
+        public int ToInteger()
+        {
+            int score = Value;
+            if (Type == UciScoreType.Mate)
+            {
+                score += score > 0 ? 1000000000 : -1000000000;
+            }
+            return score;
         }
     }
 

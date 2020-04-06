@@ -70,6 +70,7 @@
             this.analysisDataGridView.Name = "analysisDataGridView";
             this.analysisDataGridView.Size = new System.Drawing.Size(776, 343);
             this.analysisDataGridView.TabIndex = 3;
+            this.analysisDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.analysisDataGridView_ColumnHeaderMouseClick);
             // 
             // menuStrip1
             // 

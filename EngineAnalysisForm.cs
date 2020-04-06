@@ -18,6 +18,8 @@ namespace chess_pos_db_gui
         private UciEngineProxy Engine { get; set; }
         private DataTable AnalysisData { get; set; }
         private string Fen { get; set; }
+        private bool IsScoreSortDescending { get; set; }
+        private DataGridViewColumn SortColumn { get; set; }
 
         public EngineAnalysisForm()
         {
@@ -34,6 +36,7 @@ namespace chess_pos_db_gui
             AnalysisData.Columns.Add(new DataColumn("MultiPV", typeof(int)));
             AnalysisData.Columns.Add(new DataColumn("TBHits", typeof(long)));
             AnalysisData.Columns.Add(new DataColumn("PV", typeof(string)));
+            AnalysisData.Columns.Add(new DataColumn("ScoreInt", typeof(int)));
 
             MakeDoubleBuffered(analysisDataGridView);
             analysisDataGridView.DataSource = AnalysisData;
@@ -57,6 +60,7 @@ namespace chess_pos_db_gui
             analysisDataGridView.Columns["TBHits"].HeaderText = "TBHits";
             analysisDataGridView.Columns["TBHits"].MinimumWidth = 60;
             analysisDataGridView.Columns["PV"].HeaderText = "PV";
+            analysisDataGridView.Columns["ScoreInt"].Visible = false;
 
             analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
@@ -251,7 +255,9 @@ namespace chess_pos_db_gui
             row["Move"] = LanToMoveWithSan(Fen, info.PV.Or(new List<string>()).FirstOrDefault());
             row["Depth"] = info.Depth.Or(0);
             row["SelDepth"] = info.SelDepth.Or(0);
-            row["Score"] = info.Score.Or(new UciScore(0, UciScoreType.Cp, UciScoreBoundType.Exact));
+            var score = info.Score.Or(new UciScore(0, UciScoreType.Cp, UciScoreBoundType.Exact));
+            row["Score"] = score;
+            row["ScoreInt"] = score.ToInteger();
             row["Time"] = TimeSpan.FromMilliseconds(info.Time.Or(0));
             row["Nodes"] = info.Nodes.Or(0);
             row["NPS"] = info.Nps.Or(0);
@@ -317,6 +323,29 @@ namespace chess_pos_db_gui
         {
             Fen = fen;
             Engine.SetPosition(Fen);
+        }
+
+        private void analysisDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            DataGridViewColumn column = analysisDataGridView.Columns[e.ColumnIndex];
+            if (column.Name == "Score")
+            {
+                IsScoreSortDescending = (SortColumn == null || !IsScoreSortDescending);
+                var dir = IsScoreSortDescending ? ListSortDirection.Descending : ListSortDirection.Ascending;
+                analysisDataGridView.Sort(analysisDataGridView.Columns["ScoreInt"], dir);
+                SortColumn = column;
+            }
+            else
+            {
+                IsScoreSortDescending = false;
+                SortColumn = null;
+            }
+
+            analysisDataGridView.Columns["Score"].HeaderCell.SortGlyphDirection = SortOrder.None;
+            if (SortColumn != null && SortColumn.Name == "Score")
+            {
+                column.HeaderCell.SortGlyphDirection = IsScoreSortDescending ? SortOrder.Descending : SortOrder.Ascending;
+            }
         }
     }
 }
