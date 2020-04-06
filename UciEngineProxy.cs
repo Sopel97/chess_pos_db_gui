@@ -605,9 +605,10 @@ namespace chess_pos_db_gui
             Panel.AutoSize = true;
 
             Control = new System.Windows.Forms.CheckBox();
-            Control.Checked = DefaultValue;
+            Control.Checked = Value;
             Control.Enabled = true;
             Control.Visible = true;
+            Control.CheckedChanged += OnCheckedChanged;
 
             var label = new System.Windows.Forms.Label();
             label.Text = Name;
@@ -617,6 +618,11 @@ namespace chess_pos_db_gui
             Panel.Controls.Add(Control);
 
             return Panel;
+        }
+
+        private void OnCheckedChanged(object sender, EventArgs e)
+        {
+            Value = Control.Checked;
         }
 
         public override string ToString()
@@ -672,10 +678,11 @@ namespace chess_pos_db_gui
             Control = new System.Windows.Forms.NumericUpDown();
             Control.Minimum = Min.Or(DefaultValue);
             Control.Maximum = Max.Or(DefaultValue);
-            Control.Value = DefaultValue;
+            Control.Value = Value;
             Control.DecimalPlaces = 0;
             Control.Increment = 1;
             Control.AutoSize = true;
+            Control.ValueChanged += OnValueChanged;
 
             var label = new System.Windows.Forms.Label();
             label.Text = Name;
@@ -685,6 +692,11 @@ namespace chess_pos_db_gui
             Panel.Controls.Add(Control);
 
             return Panel;
+        }
+
+        private void OnValueChanged(object sender, EventArgs e)
+        {
+            Value = (long)Control.Value;
         }
 
         public override string ToString()
@@ -733,7 +745,8 @@ namespace chess_pos_db_gui
             {
                 Control.Items.Add(var);
             }
-            Control.SelectedItem = DefaultValue;
+            Control.SelectedItem = Value;
+            Control.SelectedValueChanged += OnSelectedValueChanged;
 
             var label = new System.Windows.Forms.Label();
             label.Text = Name;
@@ -743,6 +756,11 @@ namespace chess_pos_db_gui
             Panel.Controls.Add(Control);
 
             return Panel;
+        }
+
+        private void OnSelectedValueChanged(object sender, EventArgs e)
+        {
+            Value = Control.SelectedText;
         }
 
         public override string ToString()
@@ -789,6 +807,7 @@ namespace chess_pos_db_gui
             Control = new System.Windows.Forms.TextBox();
             Control.Text = DefaultValue;
             Control.Width = 100;
+            Control.TextChanged += OnTextChanged;
 
             var label = new System.Windows.Forms.Label();
             label.Text = Name;
@@ -798,6 +817,11 @@ namespace chess_pos_db_gui
             Panel.Controls.Add(Control);
 
             return Panel;
+        }
+
+        private void OnTextChanged(object sender, EventArgs e)
+        {
+            Value = Control.Text;
         }
 
         public override string ToString()
