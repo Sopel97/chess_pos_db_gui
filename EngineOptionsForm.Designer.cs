@@ -73,6 +73,7 @@
             this.Controls.Add(this.engineIdLabel);
             this.Name = "EngineOptionsForm";
             this.Text = "EngineOptionsForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EngineOptionsForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

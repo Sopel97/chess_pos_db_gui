@@ -18,8 +18,10 @@ namespace chess_pos_db_gui
         {
             InitializeComponent();
 
+            SuspendLayout();
             Options = options;
             AddControlsForOptions(Options);
+            ResumeLayout();
         }
 
         private void AddControlsForOptions(IList<UciOption> options)
@@ -27,6 +29,15 @@ namespace chess_pos_db_gui
             foreach(var opt in options)
             {
                 optionsFlowLayoutPanel.Controls.Add(opt.CreateControl());
+            }
+        }
+
+        private void EngineOptionsForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                Hide();
             }
         }
     }

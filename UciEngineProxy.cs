@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace chess_pos_db_gui
 {
@@ -16,6 +17,7 @@ namespace chess_pos_db_gui
         private Action<UciInfoResponse> UciInfoHandler { get; set; }
         public IList<UciOption> CurrentOptions { get; private set; }
         private IList<UciOption> AppliedOptions { get; set; }
+        private bool IsSearching { get; set; }
 
         public UciEngineProxy(string path)
         {
@@ -43,6 +45,8 @@ namespace chess_pos_db_gui
             EngineProcess.BeginOutputReadLine();
             EngineProcess.BeginErrorReadLine();
 
+            IsSearching = false;
+
             PerformUciHandshake();
         }
 
@@ -51,15 +55,18 @@ namespace chess_pos_db_gui
             SendMessage("quit");
         }
 
-        private void CreateUciOptionsSnapshot()
-        {
-            // TODO:
-        }
-
         private IList<UciOption> GetChangedOptions()
         {
-            // TODO:
-            return new List<UciOption>();
+            var changedOptions = new List<UciOption>(); 
+            var zippedOptions = CurrentOptions.Zip(AppliedOptions, (current, applied) => new { Current = current, Applied = applied });
+            foreach (var ca in zippedOptions)
+            {
+                if (!ca.Current.Equals(ca.Applied))
+                {
+                    changedOptions.Add(ca.Current);
+                }
+            }
+            return changedOptions;
         }
 
         private void ErrorReceived(Object sender, DataReceivedEventArgs e)
@@ -146,12 +153,26 @@ namespace chess_pos_db_gui
             WaitForMessage("readyok");
         }
 
-        private void EnsureUpToDateOptions()
+        private void UpdateUciOptionsWhileNotSearching()
         {
             foreach(var opt in GetChangedOptions())
             {
                 SendMessage(opt.GetSetOptionString());
+                AppliedOptions.First((UciOption o) => o.GetName() == opt.GetName()).CopyValueFrom(opt);
             }
+        }
+
+        public void UpdateUciOptions()
+        {
+            if (!IsSearching) return;
+
+            var changedOptions = GetChangedOptions();
+            if (changedOptions.Count == 0) return;
+
+            SendMessage("stop");
+            WaitForMessage("bestmove");
+            UpdateUciOptionsWhileNotSearching();
+            SendMessage("go infinite");
         }
 
         public void GoInfinite(Action<UciInfoResponse> handler, string fen = null)
@@ -159,7 +180,7 @@ namespace chess_pos_db_gui
             UciInfoHandler = handler;
             EnsureReady();
             SendMessage("setoption name UCI_AnalyseMode value true");
-            EnsureUpToDateOptions();
+            UpdateUciOptions();
             if (fen == null)
             {
                 SendMessage("position startpos");
@@ -169,6 +190,8 @@ namespace chess_pos_db_gui
                 SendMessage("position fen " + fen);
             }
             SendMessage("go infinite");
+
+            IsSearching = true;
         }
 
         public void Stop()
@@ -176,6 +199,7 @@ namespace chess_pos_db_gui
             SendMessage("stop");
             WaitForMessage("bestmove");
             UciInfoHandler = null;
+            IsSearching = false;
         }
 
         private bool IsValidUciMove(string s)
@@ -574,6 +598,8 @@ namespace chess_pos_db_gui
         {
             return string.Format("setoption name {0} value {1}", GetName(), this);
         }
+
+        public abstract void CopyValueFrom(UciOption other);
     }
 
     public class CheckUciOption : UciOption
@@ -594,6 +620,16 @@ namespace chess_pos_db_gui
         public override UciOptionType GetOptionType()
         {
             return UciOptionType.Check;
+        }
+
+        public override void CopyValueFrom(UciOption other)
+        {
+            if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
+            Value = ((CheckUciOption)other).Value;
+            if (Control != null)
+            {
+                Control.Checked = Value;
+            }
         }
 
         public override System.Windows.Forms.Control CreateControl()
@@ -634,6 +670,13 @@ namespace chess_pos_db_gui
         {
             return Name;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is CheckUciOption option &&
+                   Name == option.Name &&
+                   Value == option.Value;
+        }
     }
 
     public class SpinUciOption : UciOption
@@ -665,6 +708,16 @@ namespace chess_pos_db_gui
         public override UciOptionType GetOptionType()
         {
             return UciOptionType.Spin;
+        }
+
+        public override void CopyValueFrom(UciOption other)
+        {
+            if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
+            Value = ((SpinUciOption)other).Value;
+            if (Control != null)
+            {
+                Control.Value = Value;
+            }
         }
 
         public override System.Windows.Forms.Control CreateControl()
@@ -708,6 +761,13 @@ namespace chess_pos_db_gui
         {
             return Name;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is SpinUciOption option &&
+                   Name == option.Name &&
+                   Value == option.Value;
+        }
     }
 
     public class ComboUciOption : UciOption
@@ -730,6 +790,16 @@ namespace chess_pos_db_gui
         public override UciOptionType GetOptionType()
         {
             return UciOptionType.Combo;
+        }
+
+        public override void CopyValueFrom(UciOption other)
+        {
+            if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
+            Value = ((ComboUciOption)other).Value;
+            if (Control != null)
+            {
+                Control.SelectedItem = Value;
+            }
         }
 
         public override System.Windows.Forms.Control CreateControl()
@@ -772,6 +842,13 @@ namespace chess_pos_db_gui
         {
             return Name;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ComboUciOption option &&
+                   Name == option.Name &&
+                   Value == option.Value;
+        }
     }
 
     public class StringUciOption : UciOption
@@ -794,6 +871,16 @@ namespace chess_pos_db_gui
         public override UciOptionType GetOptionType()
         {
             return UciOptionType.String;
+        }
+
+        public override void CopyValueFrom(UciOption other)
+        {
+            if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
+            Value = ((StringUciOption)other).Value;
+            if (Control != null)
+            {
+                Control.Text = Value;
+            }
         }
 
         public override System.Windows.Forms.Control CreateControl()
@@ -832,6 +919,13 @@ namespace chess_pos_db_gui
         public override string GetName()
         {
             return Name;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is StringUciOption option &&
+                   Name == option.Name &&
+                   Value == option.Value;
         }
     }
 }

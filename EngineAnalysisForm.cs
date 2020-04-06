@@ -28,8 +28,18 @@ namespace chess_pos_db_gui
             if (OptionsForm == null)
             {
                 OptionsForm = new EngineOptionsForm(Engine.CurrentOptions);
+                OptionsForm.FormClosing += OnOptionsFormClosing;
+            }
+
+            if (!OptionsForm.Visible)
+            {
                 OptionsForm.Show();
             }
+        }
+
+        private void OnOptionsFormClosing(object sender, FormClosingEventArgs e)
+        {
+            Engine.UpdateUciOptions();
         }
 
         private void EngineAnalysisForm_FormClosing(object sender, FormClosingEventArgs e)

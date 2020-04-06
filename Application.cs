@@ -1260,8 +1260,14 @@ namespace chess_pos_db_gui
             if (AnalysisForm == null)
             {
                 AnalysisForm = new EngineAnalysisForm();
+                AnalysisForm.FormClosed += OnOptionsFormClosed;
                 AnalysisForm.Show();
             }
+        }
+
+        private void OnOptionsFormClosed(object sender, FormClosedEventArgs e)
+        {
+            AnalysisForm = null;
         }
     }
 
