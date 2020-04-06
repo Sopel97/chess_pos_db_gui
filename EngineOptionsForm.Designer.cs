@@ -56,18 +56,17 @@
             this.optionsFlowLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.optionsFlowLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.optionsFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.optionsFlowLayoutPanel.Location = new System.Drawing.Point(15, 38);
             this.optionsFlowLayoutPanel.Name = "optionsFlowLayoutPanel";
-            this.optionsFlowLayoutPanel.Size = new System.Drawing.Size(375, 279);
+            this.optionsFlowLayoutPanel.Size = new System.Drawing.Size(757, 512);
             this.optionsFlowLayoutPanel.TabIndex = 5;
             // 
             // EngineOptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(402, 329);
+            this.ClientSize = new System.Drawing.Size(784, 562);
             this.Controls.Add(this.optionsFlowLayoutPanel);
             this.Controls.Add(this.enginePathLabel);
             this.Controls.Add(this.engineIdLabel);

@@ -664,6 +664,7 @@ namespace chess_pos_db_gui
             var label = new System.Windows.Forms.Label();
             label.Text = Name;
             label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label.Width = 128;
 
             Panel.Controls.Add(label);
             Panel.Controls.Add(Control);
@@ -755,6 +756,7 @@ namespace chess_pos_db_gui
             var label = new System.Windows.Forms.Label();
             label.Text = Name;
             label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label.Width = 128;
 
             Panel.Controls.Add(label);
             Panel.Controls.Add(Control);
@@ -836,6 +838,7 @@ namespace chess_pos_db_gui
             var label = new System.Windows.Forms.Label();
             label.Text = Name;
             label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label.Width = 128;
 
             Panel.Controls.Add(label);
             Panel.Controls.Add(Control);
@@ -914,6 +917,7 @@ namespace chess_pos_db_gui
             var label = new System.Windows.Forms.Label();
             label.Text = Name;
             label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label.Width = 128;
 
             Panel.Controls.Add(label);
             Panel.Controls.Add(Control);
