@@ -19,8 +19,9 @@ namespace chess_pos_db_gui
         {
             InitializeComponent();
 
-            Engine = new UciEngineProxy("stockfish.exe");
             SetToggleButtonName();
+            closeToolStripMenuItem.Enabled = false;
+            toggleAnalyzeButton.Enabled = false;
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -45,12 +46,39 @@ namespace chess_pos_db_gui
             }
         }
 
+        private void LoadEngine(string path)
+        {
+            if (Engine != null)
+            {
+                UnloadEngine();
+            }
+
+            Engine = new UciEngineProxy(path);
+
+            toggleAnalyzeButton.Enabled = true;
+            closeToolStripMenuItem.Enabled = true;
+        }
+
+        private void UnloadEngine()
+        {
+            if (Engine != null)
+            {
+                Engine.Stop();
+                Engine.Quit();
+                Engine = null;
+            }
+
+            toggleAnalyzeButton.Enabled = false;
+            closeToolStripMenuItem.Enabled = false;
+        }
+
         private void EngineAnalysisForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Engine.Stop();
-            Engine.Quit();
-            Engine = null;
-            OptionsForm.Close();
+            UnloadEngine();
+            if (OptionsForm != null)
+            {
+                OptionsForm.Close();
+            }
         }
 
         private void toggleAnalyzeButton_Click(object sender, EventArgs e)
@@ -69,7 +97,25 @@ namespace chess_pos_db_gui
 
         private void SetToggleButtonName()
         {
-            toggleAnalyzeButton.Text = Engine.IsSearching ? "Stop" : "Start";
+            if (Engine == null)
+            {
+                toggleAnalyzeButton.Text = "Start";
+            }
+            else
+            {
+                toggleAnalyzeButton.Text = Engine.IsSearching ? "Stop" : "Start";
+            }
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var path = "stockfish.exe";
+            LoadEngine(path);
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UnloadEngine();
         }
     }
 }
