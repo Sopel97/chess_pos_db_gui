@@ -21,6 +21,20 @@ namespace chess_pos_db_gui
         private IList<UciOption> AppliedOptions { get; set; }
         public bool IsSearching { get; private set; }
 
+        private EventHandler OnAnalysisStarted { get; set; }
+        public event EventHandler AnalysisStarted
+        {
+            add
+            {
+                OnAnalysisStarted += value;
+            }
+
+            remove
+            {
+                OnAnalysisStarted -= value;
+            }
+        }
+
         public UciEngineProxy(string path)
         {
             Path = path;
@@ -57,6 +71,7 @@ namespace chess_pos_db_gui
         public void Quit()
         {
             SendMessage("quit");
+            EngineProcess = null;
         }
 
         private IList<UciOption> GetChangedOptions()
@@ -145,6 +160,7 @@ namespace chess_pos_db_gui
                 WaitForMessage("bestmove");
                 SendSetPositionUnsafe(fen);
                 SendMessage("go infinite");
+                OnAnalysisStarted.Invoke(this, new EventArgs());
             }
             else
             {
@@ -231,6 +247,7 @@ namespace chess_pos_db_gui
                 WaitForMessage("bestmove");
                 UpdateUciOptionsWhileNotSearching();
                 SendMessage("go infinite");
+                OnAnalysisStarted.Invoke(this, new EventArgs());
             }
             else
             {
@@ -252,6 +269,7 @@ namespace chess_pos_db_gui
             UpdateUciOptions();
             SendSetPositionUnsafe(fen);
             SendMessage("go infinite");
+            OnAnalysisStarted.Invoke(this, new EventArgs());
 
             IsSearching = true;
         }
@@ -261,7 +279,7 @@ namespace chess_pos_db_gui
             if (IsSearching)
             {
                 SendMessage("stop");
-                WaitForMessage("bestmove");
+                WaitForMessageTimed("bestmove", 1000);
                 UciInfoHandler = null;
                 IsSearching = false;
             }

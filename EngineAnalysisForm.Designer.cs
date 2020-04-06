@@ -70,7 +70,6 @@
             this.analysisDataGridView.Name = "analysisDataGridView";
             this.analysisDataGridView.Size = new System.Drawing.Size(776, 343);
             this.analysisDataGridView.TabIndex = 3;
-            this.analysisDataGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.analysisDataGridView_CellFormatting);
             // 
             // menuStrip1
             // 

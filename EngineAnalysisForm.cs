@@ -77,39 +77,35 @@ namespace chess_pos_db_gui
             Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
             ClearIdInfo();
-
-
-            var row = AnalysisData.NewRow();
-            row["Move"] = LanToMoveWithSan("e2e4");
-            row["Depth"] = 12;
-            row["SelDepth"] = 14;
-            row["Score"] = new UciScore(100, UciScoreType.Cp, UciScoreBoundType.Exact);
-            row["Time"] = TimeSpan.FromSeconds(1000);
-            row["Nodes"] = 12314214123;
-            row["NPS"] = 12314214;
-            row["MultiPV"] = 1;
-            row["TBHits"] = 0;
-            row["PV"] = StringifyPV(new List<string>() { "e2e4", "e7e5", "d2d4" });
-
-            AnalysisData.Rows.Add(row);
         }
 
-        private MoveWithSan LanToMoveWithSan(string lan)
+        private static MoveWithSan LanToMoveWithSan(string fen, string lan)
         {
-            ChessGame game = new ChessGame(Fen);
+            if (lan == null || lan == "0000") return new MoveWithSan(null, "null");
+
+            ChessGame game = new ChessGame(fen);
             var from = lan.Substring(0, 2);
             var to = lan.Substring(2, 2);
             Player player = game.WhoseTurn;
             var move = lan.Length == 5 ? new ChessDotNet.Move(from, to, player, lan[4]) : new ChessDotNet.Move(from, to, player);
             game.MakeMove(move, true);
-
             var detailedMove = game.Moves.Last();
             return new MoveWithSan(move, detailedMove.SAN);
         }
 
-        private string StringifyPV(IList<string> lans)
+        private string StringifyPV(string fen, IList<string> lans)
         {
-            return lans.Select(s => LanToMoveWithSan(s).San).Aggregate((a, b) => a + " " + b);
+            ChessGame game = new ChessGame(fen);
+            foreach(var lan in lans)
+            {
+                var from = lan.Substring(0, 2);
+                var to = lan.Substring(2, 2);
+                Player player = game.WhoseTurn;
+                var move = lan.Length == 5 ? new ChessDotNet.Move(from, to, player, lan[4]) : new ChessDotNet.Move(from, to, player);
+                game.MakeMove(move, true);
+            }
+
+            return game.Moves.Select(d => d.SAN).Aggregate((a, b) => a + " " + b);
         }
 
         private static void MakeDoubleBuffered(DataGridView dgv)
@@ -160,6 +156,8 @@ namespace chess_pos_db_gui
 
             Engine = new UciEngineProxy(path);
 
+            Engine.AnalysisStarted += OnAnalysisStarted;
+
             toggleAnalyzeButton.Enabled = true;
             optionsToolStripMenuItem.Enabled = true;
             closeToolStripMenuItem.Enabled = true;
@@ -168,6 +166,13 @@ namespace chess_pos_db_gui
 
             OptionsForm = new EngineOptionsForm(Engine.CurrentOptions);
             OptionsForm.FormClosing += OnOptionsFormClosing;
+
+            AnalysisData.Clear();
+        }
+
+        private void OnAnalysisStarted(object sender, EventArgs e)
+        {
+            AnalysisData.Clear();
         }
 
         private void UnloadEngine()
@@ -205,10 +210,64 @@ namespace chess_pos_db_gui
             }
             else
             {
-                Engine.GoInfinite(delegate (UciInfoResponse ee) { }, Fen);
+                Engine.GoInfinite(OnInfoResponse, Fen);
             }
 
             SetToggleButtonName();
+        }
+
+        private void OnInfoResponse(UciInfoResponse info)
+        {
+            try
+            {
+                foreach (var _ in info.Score)
+                {
+                    var multipv = info.MultiPV.Or(0);
+                    System.Data.DataRow row = (System.Data.DataRow)Invoke(new Func<System.Data.DataRow>(delegate () { return FindOrCreateRowByMultiPV(multipv); }));
+                    Invoke(new Func<bool>(delegate () { FillRowFromInfo(row, info); return true; }));
+                }
+            }
+            catch(ObjectDisposedException e)
+            {
+                // Since we call in another thread we may happen after actually closing the window
+            }
+        }
+
+        private void FillRowFromInfo(DataRow row, UciInfoResponse info)
+        {
+            row["Move"] = LanToMoveWithSan(Fen, info.PV.Or(new List<string>()).FirstOrDefault());
+            row["Depth"] = info.Depth.Or(0);
+            row["SelDepth"] = info.Depth.Or(0);
+            row["Score"] = info.Score.Or(new UciScore(0, UciScoreType.Cp, UciScoreBoundType.Exact));
+            row["Time"] = TimeSpan.FromMilliseconds(info.Time.Or(0));
+            row["Nodes"] = info.Nodes.Or(0);
+            row["NPS"] = info.Nps.Or(0);
+            row["MultiPV"] = info.MultiPV.Or(0);
+            row["TBHits"] = info.TBHits.Or(0);
+            row["PV"] = StringifyPV(Fen, info.PV.FirstOrDefault());
+        }
+
+        private System.Data.DataRow FindOrCreateRowByMultiPV(int multipv)
+        {
+            System.Data.DataRow row = null;
+            foreach(var rr in AnalysisData.Rows)
+            {
+                System.Data.DataRow r = (System.Data.DataRow)rr;
+                if (r["MultiPV"] == null) continue;
+                if ((int)r["MultiPV"] == multipv)
+                {
+                    row = r;
+                    break;
+                }
+            }
+
+            if (row == null)
+            {
+                row = AnalysisData.NewRow();
+                AnalysisData.Rows.Add(row);
+            }
+
+            return row;
         }
 
         private void SetToggleButtonName()
@@ -238,12 +297,6 @@ namespace chess_pos_db_gui
         {
             Fen = fen;
             Engine.SetPosition(Fen);
-        }
-
-        private void analysisDataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            var columnName = analysisDataGridView.Columns[e.ColumnIndex].Name;
-
         }
     }
 }
