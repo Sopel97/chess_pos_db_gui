@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.engineIdLabel = new System.Windows.Forms.Label();
+            this.engineIdNameLabel = new System.Windows.Forms.Label();
             this.enginePathLabel = new System.Windows.Forms.Label();
             this.analysisDataGridView = new System.Windows.Forms.DataGridView();
             this.BestMove = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -47,18 +47,19 @@
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleAnalyzeButton = new System.Windows.Forms.Button();
+            this.engineIdAuthorLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.analysisDataGridView)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // engineIdLabel
+            // engineIdNameLabel
             // 
-            this.engineIdLabel.AutoSize = true;
-            this.engineIdLabel.Location = new System.Drawing.Point(12, 37);
-            this.engineIdLabel.Name = "engineIdLabel";
-            this.engineIdLabel.Size = new System.Drawing.Size(62, 13);
-            this.engineIdLabel.TabIndex = 1;
-            this.engineIdLabel.Text = "ENGINE ID";
+            this.engineIdNameLabel.AutoSize = true;
+            this.engineIdNameLabel.Location = new System.Drawing.Point(12, 37);
+            this.engineIdNameLabel.Name = "engineIdNameLabel";
+            this.engineIdNameLabel.Size = new System.Drawing.Size(62, 13);
+            this.engineIdNameLabel.TabIndex = 1;
+            this.engineIdNameLabel.Text = "ENGINE ID";
             // 
             // enginePathLabel
             // 
@@ -71,6 +72,9 @@
             // 
             // analysisDataGridView
             // 
+            this.analysisDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.analysisDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.analysisDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.BestMove,
@@ -83,9 +87,9 @@
             this.MultiPV,
             this.TBHits,
             this.PV});
-            this.analysisDataGridView.Location = new System.Drawing.Point(12, 82);
+            this.analysisDataGridView.Location = new System.Drawing.Point(12, 95);
             this.analysisDataGridView.Name = "analysisDataGridView";
-            this.analysisDataGridView.Size = new System.Drawing.Size(776, 356);
+            this.analysisDataGridView.Size = new System.Drawing.Size(776, 343);
             this.analysisDataGridView.TabIndex = 3;
             // 
             // BestMove
@@ -181,7 +185,7 @@
             // 
             // toggleAnalyzeButton
             // 
-            this.toggleAnalyzeButton.Location = new System.Drawing.Point(12, 53);
+            this.toggleAnalyzeButton.Location = new System.Drawing.Point(12, 66);
             this.toggleAnalyzeButton.Name = "toggleAnalyzeButton";
             this.toggleAnalyzeButton.Size = new System.Drawing.Size(75, 23);
             this.toggleAnalyzeButton.TabIndex = 5;
@@ -189,15 +193,25 @@
             this.toggleAnalyzeButton.UseVisualStyleBackColor = true;
             this.toggleAnalyzeButton.Click += new System.EventHandler(this.toggleAnalyzeButton_Click);
             // 
+            // engineIdAuthorLabel
+            // 
+            this.engineIdAuthorLabel.AutoSize = true;
+            this.engineIdAuthorLabel.Location = new System.Drawing.Point(12, 50);
+            this.engineIdAuthorLabel.Name = "engineIdAuthorLabel";
+            this.engineIdAuthorLabel.Size = new System.Drawing.Size(62, 13);
+            this.engineIdAuthorLabel.TabIndex = 6;
+            this.engineIdAuthorLabel.Text = "ENGINE ID";
+            // 
             // EngineAnalysisForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.engineIdAuthorLabel);
             this.Controls.Add(this.toggleAnalyzeButton);
             this.Controls.Add(this.analysisDataGridView);
             this.Controls.Add(this.enginePathLabel);
-            this.Controls.Add(this.engineIdLabel);
+            this.Controls.Add(this.engineIdNameLabel);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "EngineAnalysisForm";
@@ -213,7 +227,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label engineIdLabel;
+        private System.Windows.Forms.Label engineIdNameLabel;
         private System.Windows.Forms.Label enginePathLabel;
         private System.Windows.Forms.DataGridView analysisDataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn BestMove;
@@ -232,5 +246,6 @@
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.Button toggleAnalyzeButton;
+        private System.Windows.Forms.Label engineIdAuthorLabel;
     }
 }

@@ -21,18 +21,15 @@ namespace chess_pos_db_gui
 
             SetToggleButtonName();
             closeToolStripMenuItem.Enabled = false;
+            optionsToolStripMenuItem.Enabled = false;
             toggleAnalyzeButton.Enabled = false;
+
+            ClearnIdInfo();
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (OptionsForm == null)
-            {
-                OptionsForm = new EngineOptionsForm(Engine.CurrentOptions);
-                OptionsForm.FormClosing += OnOptionsFormClosing;
-            }
-
-            if (!OptionsForm.Visible)
+            if (OptionsForm != null && !OptionsForm.Visible)
             {
                 OptionsForm.Show();
             }
@@ -46,6 +43,20 @@ namespace chess_pos_db_gui
             }
         }
 
+        private void FillIdInfo()
+        {
+            enginePathLabel.Text = "Path: " + Engine.Path;
+            engineIdNameLabel.Text = "Name: " + Engine.Name;
+            engineIdAuthorLabel.Text = "Author: " + Engine.Author;
+        }
+
+        private void ClearnIdInfo()
+        {
+            enginePathLabel.Text = "Path: ";
+            engineIdNameLabel.Text = "Name: ";
+            engineIdAuthorLabel.Text = "Author: ";
+        }
+
         private void LoadEngine(string path)
         {
             if (Engine != null)
@@ -56,7 +67,13 @@ namespace chess_pos_db_gui
             Engine = new UciEngineProxy(path);
 
             toggleAnalyzeButton.Enabled = true;
+            optionsToolStripMenuItem.Enabled = true;
             closeToolStripMenuItem.Enabled = true;
+
+            FillIdInfo();
+
+            OptionsForm = new EngineOptionsForm(Engine.CurrentOptions);
+            OptionsForm.FormClosing += OnOptionsFormClosing;
         }
 
         private void UnloadEngine()
@@ -69,7 +86,12 @@ namespace chess_pos_db_gui
             }
 
             toggleAnalyzeButton.Enabled = false;
+            optionsToolStripMenuItem.Enabled = false;
             closeToolStripMenuItem.Enabled = false;
+
+            ClearnIdInfo();
+
+            OptionsForm = null;
         }
 
         private void EngineAnalysisForm_FormClosing(object sender, FormClosingEventArgs e)

@@ -12,6 +12,8 @@ namespace chess_pos_db_gui
     class UciEngineProxy
     {
         public string Path { get; private set; }
+        public string Name { get; private set; }
+        public string Author { get; private set; }
         private Process EngineProcess { get; set; }
         private BlockingQueue<string> MessageQueue { get; set; }
         private Action<UciInfoResponse> UciInfoHandler { get; set; }
@@ -22,6 +24,8 @@ namespace chess_pos_db_gui
         public UciEngineProxy(string path)
         {
             Path = path;
+            Name = "";
+            Author = "";
             MessageQueue = new BlockingQueue<string>();
             CurrentOptions = new List<UciOption>();
             AppliedOptions = new List<UciOption>();
@@ -89,9 +93,35 @@ namespace chess_pos_db_gui
             {
                 AddOption(e.Data);
             }
+            else if (e.Data.StartsWith("id"))
+            {
+                SetId(e.Data);
+            }
             else
             {
                 MessageQueue.Enqueue(e.Data);
+            }
+        }
+
+        private void SetId(string id)
+        {
+            var parts = id.Split(new char[] { ' ' });
+            if (parts.Length < 3) return;
+            var value = parts.Skip(2).Aggregate((a, b) => a + " " + b);
+
+            switch(parts[1])
+            {
+                case "name":
+                    {
+                        Name = value;
+                        break;
+                    }
+
+                case "author":
+                    {
+                        Author = value;
+                        break;
+                    }
             }
         }
 
