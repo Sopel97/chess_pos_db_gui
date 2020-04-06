@@ -231,8 +231,9 @@ namespace chess_pos_db_gui
 
                 foreach (var _ in info.Score)
                 {
+                    var move = LanToMoveWithSan(Fen, info.PV.Or(new List<string>()).FirstOrDefault());
                     var multipv = info.MultiPV.Or(0);
-                    System.Data.DataRow row = (System.Data.DataRow)Invoke(new Func<System.Data.DataRow>(delegate () { return FindOrCreateRowByMultiPV(multipv); }));
+                    System.Data.DataRow row = (System.Data.DataRow)Invoke(new Func<System.Data.DataRow>(delegate () { return FindOrCreateRowByMoveOrMultiPV(move, multipv); }));
 
                     // Only update if depth changed
                     if (row["Depth"].GetType() != typeof(DBNull) && (int)row["Depth"] >= info.Depth.Or(0)) return;
@@ -278,6 +279,44 @@ namespace chess_pos_db_gui
                 {
                     row = r;
                     break;
+                }
+            }
+
+            if (row == null)
+            {
+                row = AnalysisData.NewRow();
+                AnalysisData.Rows.Add(row);
+            }
+
+            return row;
+        }
+
+        private System.Data.DataRow FindOrCreateRowByMoveOrMultiPV(MoveWithSan move, int multipv)
+        {
+            System.Data.DataRow row = null;
+
+            // First look for a matching move.
+            // If no matching move found then it means we have a new entry and we replace with matching multipv.
+            foreach (var rr in AnalysisData.Rows)
+            {
+                System.Data.DataRow r = (System.Data.DataRow)rr;
+                if (r["Move"] != null && ((MoveWithSan)r["Move"]).San == move.San)
+                {
+                    row = r;
+                    break;
+                }
+            }
+
+            if (row == null)
+            {
+                foreach (var rr in AnalysisData.Rows)
+                {
+                    System.Data.DataRow r = (System.Data.DataRow)rr;
+                    if (r["MultiPV"] != null && (int)r["MultiPV"] == multipv)
+                    {
+                        row = r;
+                        break;
+                    }
                 }
             }
 
