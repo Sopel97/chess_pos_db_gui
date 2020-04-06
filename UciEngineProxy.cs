@@ -125,6 +125,34 @@ namespace chess_pos_db_gui
             }
         }
 
+        private void SendSetPositionUnsafe(string fen)
+        {
+            if (fen == null)
+            {
+                SendMessage("position startpos");
+            }
+            else
+            {
+                SendMessage("position fen " + fen);
+            }
+        }
+
+        public void SetPosition(string fen)
+        {
+            if (IsSearching)
+            {
+                SendMessage("stop");
+                WaitForMessage("bestmove");
+                SendSetPositionUnsafe(fen);
+                SendMessage("go infinite");
+            }
+            else
+            {
+                EnsureReady();
+                SendSetPositionUnsafe(fen);
+            }
+        }
+
         private void AddOption(string line)
         {
             var opt = new UciOptionFactory().FromString(line);
@@ -222,14 +250,7 @@ namespace chess_pos_db_gui
             EnsureReady();
             SendMessage("setoption name UCI_AnalyseMode value true");
             UpdateUciOptions();
-            if (fen == null)
-            {
-                SendMessage("position startpos");
-            }
-            else
-            {
-                SendMessage("position fen " + fen);
-            }
+            SendSetPositionUnsafe(fen);
             SendMessage("go infinite");
 
             IsSearching = true;
@@ -239,7 +260,6 @@ namespace chess_pos_db_gui
         {
             if (IsSearching)
             {
-
                 SendMessage("stop");
                 WaitForMessage("bestmove");
                 UciInfoHandler = null;

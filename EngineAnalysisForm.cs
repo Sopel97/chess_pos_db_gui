@@ -14,6 +14,7 @@ namespace chess_pos_db_gui
     {
         private EngineOptionsForm OptionsForm { get; set; }
         private UciEngineProxy Engine { get; set; }
+        private string Fen { get; set; }
 
         public EngineAnalysisForm()
         {
@@ -23,6 +24,8 @@ namespace chess_pos_db_gui
             closeToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Enabled = false;
             toggleAnalyzeButton.Enabled = false;
+
+            Fen = null;
 
             ClearnIdInfo();
         }
@@ -111,7 +114,7 @@ namespace chess_pos_db_gui
             }
             else
             {
-                Engine.GoInfinite(delegate (UciInfoResponse ee) { });
+                Engine.GoInfinite(delegate (UciInfoResponse ee) { }, Fen);
             }
 
             SetToggleButtonName();
@@ -138,6 +141,12 @@ namespace chess_pos_db_gui
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UnloadEngine();
+        }
+
+        public void OnPositionChanged(string fen)
+        {
+            Fen = fen;
+            Engine.SetPosition(Fen);
         }
     }
 }

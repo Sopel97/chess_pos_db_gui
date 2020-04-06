@@ -339,6 +339,11 @@ namespace chess_pos_db_gui
 
         private void OnPositionChanged(object sender, EventArgs e)
         {
+            if (AnalysisForm != null)
+            {
+                AnalysisForm.OnPositionChanged(chessBoard.GetFen());
+            }
+
             if (!database.IsOpen) return;
 
             if (autoQueryCheckbox.Checked)
