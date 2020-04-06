@@ -196,6 +196,37 @@ namespace chess_pos_db_gui
             return Optional<IList<string>>.Create(list);
         }
 
+        private Optional<UciScore> NextScore(Queue<string> parts)
+        {
+            UciScoreBoundType boundType = UciScoreBoundType.Exact;
+            UciScoreType type = UciScoreType.Cp;
+            string typestr = parts.Dequeue();
+            if (typestr == "mate")
+            {
+                type = UciScoreType.Mate;
+            }
+
+            string valuestr = parts.Dequeue();
+
+            string boundstr = parts.Peek();
+            if (boundstr == "lowerbound")
+            {
+                boundType = UciScoreBoundType.LowerBound;
+                parts.Dequeue();
+            }
+            else if (boundstr == "upperbound")
+            {
+                boundType = UciScoreBoundType.UpperBound;
+                parts.Dequeue();
+            }
+
+            return Optional<UciScore>.Create(new UciScore(
+                int.Parse(valuestr),
+                type,
+                boundType
+                ));
+        }
+
         private Optional<int> NextInt(Queue<string> parts)
         {
             return Optional<int>.Create(int.Parse(parts.Dequeue()));
@@ -260,32 +291,7 @@ namespace chess_pos_db_gui
 
                         case "score":
                             {
-                                switch (parts.Dequeue())
-                                {
-                                    case "cp":
-                                        {
-                                            r.Cp = NextInt(parts);
-                                            break;
-                                        }
-
-                                    case "mate":
-                                        {
-                                            r.Mate = NextInt(parts);
-                                            break;
-                                        }
-
-                                    case "lowerbound":
-                                        {
-                                            r.LowerBound = NextInt(parts);
-                                            break;
-                                        }
-
-                                    case "upperbound":
-                                        {
-                                            r.UpperBound = NextInt(parts);
-                                            break;
-                                        }
-                                }
+                                r.Score = NextScore(parts);
                                 break;
                             }
 
@@ -358,6 +364,45 @@ namespace chess_pos_db_gui
         }
     }
 
+    public enum UciScoreType
+    {
+        Cp,
+        Mate
+    }
+
+    public enum UciScoreBoundType
+    {
+        Exact,
+        LowerBound,
+        UpperBound
+    }
+
+    public class UciScore
+    {
+        private int Value { get; set; }
+        private UciScoreType Type { get; set; }
+        private UciScoreBoundType BoundType { get; set; }
+
+        public UciScore(int value, UciScoreType type, UciScoreBoundType boundType)
+        {
+            Value = value;
+            Type = type;
+            BoundType = boundType;
+        }
+
+        public override string ToString()
+        {
+            if (Type == UciScoreType.Cp)
+            {
+                return (Value / 100.0).ToString("0.00");
+            }
+            else
+            {
+                return string.Format("{0}M{1}", Value < 0 ? "-" : "", Math.Abs(Value));
+            }
+        }
+    }
+
     public class UciInfoResponse : EventArgs
     {
         public Optional<int> Depth { get; set; }
@@ -366,10 +411,7 @@ namespace chess_pos_db_gui
         public Optional<long> Nodes { get; set; }
         public Optional<IList<string>> PV { get; set; }
         public Optional<int> MultiPV { get; set; }
-        public Optional<int> Cp { get; set; }
-        public Optional<int> Mate { get; set; }
-        public Optional<int> LowerBound { get; set; }
-        public Optional<int> UpperBound { get; set; }
+        public Optional<UciScore> Score { get; set; }
         public Optional<string> CurrMove { get; set; }
         public Optional<int> CurrMoveNumber { get; set; }
         public Optional<int> HashFull { get; set; }
@@ -384,10 +426,7 @@ namespace chess_pos_db_gui
             Nodes = Optional<long>.CreateEmpty();
             PV = Optional<IList<string>>.CreateEmpty();
             MultiPV = Optional<int>.CreateEmpty();
-            Cp = Optional<int>.CreateEmpty();
-            Mate = Optional<int>.CreateEmpty();
-            LowerBound = Optional<int>.CreateEmpty();
-            UpperBound = Optional<int>.CreateEmpty();
+            Score = Optional<UciScore>.CreateEmpty();
             CurrMove = Optional<string>.CreateEmpty();
             CurrMoveNumber = Optional<int>.CreateEmpty();
             HashFull = Optional<int>.CreateEmpty();
