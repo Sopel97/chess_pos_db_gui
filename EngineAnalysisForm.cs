@@ -220,10 +220,22 @@ namespace chess_pos_db_gui
         {
             try
             {
+                // Updating is slow right now, so we skip early updates when there's a lot of them.
+                // TODO: Improve update performance. Run in different thread than IO.
+                // NOTE: it's better after updating once per depth but it still could be improved.
+                if (info.Time.Or(0) < 1000) return;
+
                 foreach (var _ in info.Score)
                 {
                     var multipv = info.MultiPV.Or(0);
                     System.Data.DataRow row = (System.Data.DataRow)Invoke(new Func<System.Data.DataRow>(delegate () { return FindOrCreateRowByMultiPV(multipv); }));
+
+                    // Only update if depth changed
+                    if (row["Depth"].GetType() != typeof(DBNull) && (int)row["Depth"] >= info.Depth.Or(0)) return;
+
+                    // only update if at least one second passed.
+                    var previousTime = row["Time"];
+                    if (previousTime.GetType() != typeof(DBNull) && (TimeSpan)previousTime + TimeSpan.FromSeconds(1) > TimeSpan.FromMilliseconds(info.Time.Or(0))) return;
                     Invoke(new Func<bool>(delegate () { FillRowFromInfo(row, info); return true; }));
                 }
             }
@@ -235,9 +247,10 @@ namespace chess_pos_db_gui
 
         private void FillRowFromInfo(DataRow row, UciInfoResponse info)
         {
+            SuspendLayout();
             row["Move"] = LanToMoveWithSan(Fen, info.PV.Or(new List<string>()).FirstOrDefault());
             row["Depth"] = info.Depth.Or(0);
-            row["SelDepth"] = info.Depth.Or(0);
+            row["SelDepth"] = info.SelDepth.Or(0);
             row["Score"] = info.Score.Or(new UciScore(0, UciScoreType.Cp, UciScoreBoundType.Exact));
             row["Time"] = TimeSpan.FromMilliseconds(info.Time.Or(0));
             row["Nodes"] = info.Nodes.Or(0);
@@ -245,6 +258,7 @@ namespace chess_pos_db_gui
             row["MultiPV"] = info.MultiPV.Or(0);
             row["TBHits"] = info.TBHits.Or(0);
             row["PV"] = StringifyPV(Fen, info.PV.FirstOrDefault());
+            ResumeLayout();
         }
 
         private System.Data.DataRow FindOrCreateRowByMultiPV(int multipv)
@@ -284,7 +298,13 @@ namespace chess_pos_db_gui
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var path = "stockfish.exe";
+            var dialog = new OpenFileDialog();
+            dialog.Filter = "Executable file|*.exe";
+            dialog.CheckFileExists = true;
+            dialog.Multiselect = false;
+            if (dialog.ShowDialog() != DialogResult.OK) return;
+
+            var path = dialog.FileName;
             LoadEngine(path);
         }
 
