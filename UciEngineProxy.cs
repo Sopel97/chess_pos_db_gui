@@ -168,13 +168,19 @@ namespace chess_pos_db_gui
         {
             string files = "abcdefgh";
             string ranks = "12345678";
+            string promotions = "qrbk";
 
-            if (s.Length != 4) return false;
+            if (s.Length > 5) return false;
             if (s == "0000") return true;
             if (files.IndexOf(s[0]) == -1) return false;
             if (ranks.IndexOf(s[1]) == -1) return false;
             if (files.IndexOf(s[2]) == -1) return false;
             if (ranks.IndexOf(s[3]) == -1) return false;
+
+            if (s.Length == 5)
+            {
+                return s[3] == '8' && promotions.IndexOf(s[4]) != -1;
+            }
 
             return true;
         }
