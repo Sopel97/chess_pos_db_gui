@@ -14,6 +14,7 @@ namespace chess_pos_db_gui
 {
     public partial class EngineAnalysisForm : Form
     {
+        private EngineProfileStorage Profiles { get; set; }
         private EngineOptionsForm OptionsForm { get; set; }
         private UciEngineProxy Engine { get; set; }
         private DataTable AnalysisData { get; set; }
@@ -89,6 +90,8 @@ namespace chess_pos_db_gui
             toggleAnalyzeButton.Enabled = false;
 
             Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+            Profiles = new EngineProfileStorage("data/engine_profiles.json");
 
             ClearIdInfo();
         }
@@ -170,6 +173,23 @@ namespace chess_pos_db_gui
 
             Engine = new UciEngineProxy(path);
 
+            AfterEngineLoaded();
+        }
+
+        private void LoadEngine(UciEngineProfile profile)
+        {
+            if (Engine != null)
+            {
+                UnloadEngine();
+            }
+
+            Engine = profile.LoadEngine();
+
+            AfterEngineLoaded();
+        }
+
+        private void AfterEngineLoaded()
+        {
             Engine.AnalysisStarted += OnAnalysisStarted;
 
             toggleAnalyzeButton.Enabled = true;
@@ -177,6 +197,7 @@ namespace chess_pos_db_gui
             closeToolStripMenuItem.Enabled = true;
 
             FillIdInfo();
+            SetToggleButtonName();
 
             OptionsForm = new EngineOptionsForm(Engine.CurrentOptions);
             OptionsForm.FormClosing += OnOptionsFormClosing;
@@ -209,6 +230,7 @@ namespace chess_pos_db_gui
             closeToolStripMenuItem.Enabled = false;
 
             ClearIdInfo();
+            SetToggleButtonName();
 
             OptionsForm = null;
         }
@@ -361,14 +383,12 @@ namespace chess_pos_db_gui
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dialog = new OpenFileDialog();
-            dialog.Filter = "Executable file|*.exe";
-            dialog.CheckFileExists = true;
-            dialog.Multiselect = false;
-            if (dialog.ShowDialog() != DialogResult.OK) return;
-
-            var path = dialog.FileName;
-            LoadEngine(path);
+            var form = new EngineProfilesForm(Profiles);
+            form.ShowDialog();
+            if (form.SelectedProfile != null)
+            {
+                LoadEngine(form.SelectedProfile);
+            }
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)

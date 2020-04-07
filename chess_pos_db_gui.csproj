@@ -68,6 +68,12 @@
     </Compile>
     <Compile Include="ChessBoardHistory.cs" />
     <Compile Include="ConditionVariable.cs" />
+    <Compile Include="CreateEngineProfileForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateEngineProfileForm.Designer.cs">
+      <DependentUpon>CreateEngineProfileForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EloCalculator.cs" />
     <Compile Include="EngineAnalysisForm.cs">
       <SubType>Form</SubType>
@@ -81,6 +87,14 @@
     <Compile Include="EngineOptionsForm.Designer.cs">
       <DependentUpon>EngineOptionsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="EngineProfilesStorage.cs" />
+    <Compile Include="EngineProfilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EngineProfilesForm.Designer.cs">
+      <DependentUpon>EngineProfilesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UciEngineProfile.cs" />
     <Compile Include="EpdDumpForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,11 +144,17 @@
     <EmbeddedResource Include="ChessBoard.resx">
       <DependentUpon>ChessBoard.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CreateEngineProfileForm.resx">
+      <DependentUpon>CreateEngineProfileForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EngineAnalysisForm.resx">
       <DependentUpon>EngineAnalysisForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EngineOptionsForm.resx">
       <DependentUpon>EngineOptionsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EngineProfilesForm.resx">
+      <DependentUpon>EngineProfilesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EpdDumpForm.resx">
       <DependentUpon>EpdDumpForm.cs</DependentUpon>

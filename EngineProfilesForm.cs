@@ -14,26 +14,22 @@ namespace chess_pos_db_gui
 {
     public partial class EngineProfilesForm : Form
     {
-        private static readonly string ProfileListPath = "data/engine_profiles.json";
-
-        private IList<UciEngineProfile> Profiles { get; set; }
+        private EngineProfileStorage Profiles { get; set; }
 
         public UciEngineProfile SelectedProfile { get; private set; }
 
-
-        public EngineProfilesForm()
+        public EngineProfilesForm(EngineProfileStorage profiles)
         {
             InitializeComponent();
 
-            Profiles = new List<UciEngineProfile>();
-            DeserializeEngineList();
+            Profiles = profiles;
 
             FillProfileListBox();
         }
 
         private void FillProfileListBox()
         {
-            foreach(var profile in Profiles)
+            foreach(var profile in Profiles.Profiles)
             {
                 profilesListBox.Items.Add(profile.Name);
             }
@@ -41,12 +37,12 @@ namespace chess_pos_db_gui
 
         private UciEngineProfile GetProfileByName(string name)
         {
-            return Profiles.First(p => p.Name == name);
+            return Profiles.Profiles.First(p => p.Name == name);
         }
 
         private void RemoveProfileByName(string name)
         {
-            Profiles.Remove(GetProfileByName(name));
+            Profiles.RemoveProfile(name);
             profilesListBox.Items.Remove(name);
         }
 
@@ -57,35 +53,8 @@ namespace chess_pos_db_gui
                 throw new ArgumentException("Name already used");
             }
 
-            Profiles.Add(profile);
+            Profiles.AddProfile(profile);
             profilesListBox.Items.Add(profile.Name);
-        }
-
-        private void DeserializeEngineList()
-        {
-            if (File.Exists(ProfileListPath))
-            {
-                var profileListJson = JsonValue.Parse(File.ReadAllText(ProfileListPath));
-                foreach (JsonValue json in profileListJson)
-                {
-                    Profiles.Add(new UciEngineProfile(json));
-                }
-            }
-        }
-
-        private void SerializeEngineList()
-        {
-            var json = new JsonArray();
-            foreach(var profile in Profiles)
-            {
-                json.Add(profile.ToJson());
-            }
-            File.WriteAllText(ProfileListPath, json.ToString());
-        }
-
-        private void EngineProfilesForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SerializeEngineList();
         }
 
         private void addProfileButton_Click(object sender, EventArgs e)

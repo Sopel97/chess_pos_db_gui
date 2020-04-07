@@ -83,7 +83,6 @@
             this.Controls.Add(this.profilesListBox);
             this.Name = "EngineProfilesForm";
             this.Text = "EngineProfilesForm";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EngineProfilesForm_FormClosing);
             this.ResumeLayout(false);
 
         }

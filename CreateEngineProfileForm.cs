@@ -13,9 +13,9 @@ namespace chess_pos_db_gui
     public partial class CreateEngineProfileForm : Form
     {
         public UciEngineProfile Profile { get; private set; }
-        private IList<UciEngineProfile> Profiles { get; set; }
+        private EngineProfileStorage Profiles { get; set; }
 
-        public CreateEngineProfileForm(IList<UciEngineProfile> profiles)
+        public CreateEngineProfileForm(EngineProfileStorage profiles)
         {
             InitializeComponent();
             Profiles = profiles;
@@ -47,13 +47,13 @@ namespace chess_pos_db_gui
                 return;
             }
 
-            if (Profiles.First(p => p.Name == name) != null)
+            if (Profiles.Profiles.FirstOrDefault(p => p.Name == name) != null)
             {
                 MessageBox.Show("Name already in use");
                 return;
             }
 
-            Profile = new UciEngineProfile(name, path);
+            Profile = new UciEngineProfile(null, name, path);
             Close();
         }
     }

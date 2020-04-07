@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace chess_pos_db_gui
 {
-    class UciEngineProxy
+    public class UciEngineProxy
     {
         public string Path { get; private set; }
         public string Name { get; private set; }
@@ -43,6 +43,7 @@ namespace chess_pos_db_gui
             this(profile.Path)
         {
             Profile = profile;
+            Profile.OverrideOptions(this);
         }
 
         public UciEngineProxy(string path)
