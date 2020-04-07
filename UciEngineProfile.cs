@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    class UciEngineProfile
+    public class UciEngineProfile
     {
         public string Name { get; private set; }
         public string Path { get; private set; }

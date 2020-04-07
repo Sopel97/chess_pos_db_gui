@@ -18,6 +18,8 @@ namespace chess_pos_db_gui
 
         private IList<UciEngineProfile> Profiles { get; set; }
 
+        public UciEngineProfile SelectedProfile { get; private set; }
+
 
         public EngineProfilesForm()
         {
@@ -25,6 +27,38 @@ namespace chess_pos_db_gui
 
             Profiles = new List<UciEngineProfile>();
             DeserializeEngineList();
+
+            FillProfileListBox();
+        }
+
+        private void FillProfileListBox()
+        {
+            foreach(var profile in Profiles)
+            {
+                profilesListBox.Items.Add(profile.Name);
+            }
+        }
+
+        private UciEngineProfile GetProfileByName(string name)
+        {
+            return Profiles.First(p => p.Name == name);
+        }
+
+        private void RemoveProfileByName(string name)
+        {
+            Profiles.Remove(GetProfileByName(name));
+            profilesListBox.Items.Remove(name);
+        }
+
+        private void AddProfile(UciEngineProfile profile)
+        {
+            if (profilesListBox.Items.Contains(profile.Name))
+            {
+                throw new ArgumentException("Name already used");
+            }
+
+            Profiles.Add(profile);
+            profilesListBox.Items.Add(profile.Name);
         }
 
         private void DeserializeEngineList()
@@ -52,6 +86,36 @@ namespace chess_pos_db_gui
         private void EngineProfilesForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SerializeEngineList();
+        }
+
+        private void addProfileButton_Click(object sender, EventArgs e)
+        {
+            var form = new CreateEngineProfileForm(Profiles);
+            form.ShowDialog();
+            var newProfile = form.Profile;
+            if(newProfile != null)
+            {
+                AddProfile(newProfile);
+            }
+        }
+
+        private void removeProfileButton_Click(object sender, EventArgs e)
+        {
+            var selection = profilesListBox.SelectedItem;
+            if (selection != null)
+            {
+                RemoveProfileByName((string)selection);
+            }
+        }
+
+        private void confirmButton_Click(object sender, EventArgs e)
+        {
+            var selection = profilesListBox.SelectedItem;
+            if (selection != null)
+            {
+                SelectedProfile = GetProfileByName((string)selection);
+                Close();
+            }
         }
     }
 }
