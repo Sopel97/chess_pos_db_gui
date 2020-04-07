@@ -87,7 +87,7 @@
     <Compile Include="EngineOptionsForm.Designer.cs">
       <DependentUpon>EngineOptionsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EngineProfilesStorage.cs" />
+    <Compile Include="UciEngineProfilesStorage.cs" />
     <Compile Include="EngineProfilesForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
-    public class EngineProfileStorage
+    public class UciEngineProfileStorage
     {
         private string ProfileListPath { get; set; }
         public IList<UciEngineProfile> Profiles { get; private set; }
 
-        public EngineProfileStorage(string path)
+        public UciEngineProfileStorage(string path)
         {
             ProfileListPath = path;
             Profiles = new List<UciEngineProfile>();
@@ -64,6 +64,7 @@ namespace chess_pos_db_gui
             {
                 json.Add(profile.ToJson());
             }
+            Directory.CreateDirectory(Path.GetDirectoryName(ProfileListPath));
             File.WriteAllText(ProfileListPath, json.ToString());
         }
     }

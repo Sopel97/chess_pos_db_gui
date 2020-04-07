@@ -11,7 +11,7 @@ namespace chess_pos_db_gui
 {
     public class UciEngineProfile
     {
-        private EngineProfileStorage Parent { get; set; }
+        private UciEngineProfileStorage Parent { get; set; }
         public string Name { get; private set; }
         public string Path { get; private set; }
         public string FileHash { get; private set; }
@@ -43,12 +43,12 @@ namespace chess_pos_db_gui
             }
         }
 
-        public void SetParent(EngineProfileStorage p)
+        public void SetParent(UciEngineProfileStorage p)
         {
             Parent = p;
         }
 
-        public UciEngineProfile(EngineProfileStorage parent, string name, string path)
+        public UciEngineProfile(UciEngineProfileStorage parent, string name, string path)
         {
             if (!IsValidUciEngine(path))
             {
@@ -63,7 +63,7 @@ namespace chess_pos_db_gui
             OverridedOptions = new List<JsonValue>();
         }
 
-        public UciEngineProfile(EngineProfileStorage parent, JsonValue json)
+        public UciEngineProfile(UciEngineProfileStorage parent, JsonValue json)
         {
             Parent = parent;
             Name = json["name"];

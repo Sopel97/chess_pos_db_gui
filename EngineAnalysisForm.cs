@@ -14,7 +14,7 @@ namespace chess_pos_db_gui
 {
     public partial class EngineAnalysisForm : Form
     {
-        private EngineProfileStorage Profiles { get; set; }
+        private UciEngineProfileStorage Profiles { get; set; }
         private EngineOptionsForm OptionsForm { get; set; }
         private UciEngineProxy Engine { get; set; }
         private DataTable AnalysisData { get; set; }
@@ -91,7 +91,7 @@ namespace chess_pos_db_gui
 
             Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-            Profiles = new EngineProfileStorage("data/engine_profiles.json");
+            Profiles = new UciEngineProfileStorage("data/engine_profiles.json");
 
             ClearIdInfo();
         }

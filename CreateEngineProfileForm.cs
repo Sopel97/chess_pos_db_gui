@@ -13,9 +13,9 @@ namespace chess_pos_db_gui
     public partial class CreateEngineProfileForm : Form
     {
         public UciEngineProfile Profile { get; private set; }
-        private EngineProfileStorage Profiles { get; set; }
+        private UciEngineProfileStorage Profiles { get; set; }
 
-        public CreateEngineProfileForm(EngineProfileStorage profiles)
+        public CreateEngineProfileForm(UciEngineProfileStorage profiles)
         {
             InitializeComponent();
             Profiles = profiles;

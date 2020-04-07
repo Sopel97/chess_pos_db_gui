@@ -14,11 +14,11 @@ namespace chess_pos_db_gui
 {
     public partial class EngineProfilesForm : Form
     {
-        private EngineProfileStorage Profiles { get; set; }
+        private UciEngineProfileStorage Profiles { get; set; }
 
         public UciEngineProfile SelectedProfile { get; private set; }
 
-        public EngineProfilesForm(EngineProfileStorage profiles)
+        public EngineProfilesForm(UciEngineProfileStorage profiles)
         {
             InitializeComponent();
 
