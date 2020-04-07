@@ -238,6 +238,12 @@ namespace chess_pos_db_gui
 
         private static double GetAdjustedPerformance(double actualPerf, double expectedPerf)
         {
+            // We have a cap on elo and elo error. Due to this we don't get infinities
+            // from 0% and 100% perf. This means adjusting them results in other values
+            // even if expected perf is 50%. So if the perf is borderling we just copy it.
+            double eps = 0.001;
+            if (actualPerf < eps || actualPerf > 1.0 - eps) return actualPerf;
+
             var actualElo = EloCalculator.GetEloFromPerformance(actualPerf);
             var expectedElo = EloCalculator.GetEloFromPerformance(expectedPerf);
             return EloCalculator.GetExpectedPerformance(actualElo - expectedElo);
@@ -401,6 +407,8 @@ namespace chess_pos_db_gui
          */
         private double CalculateGoodness(AggregatedEntry entry, AggregatedEntry nonEngineEntry, Score score)
         {
+            long maxAllowedEloDiff = 400;
+
             // if there's less than this amount of games then the goodness contribution will be penalized.
             ulong penaltyFromCountThreshold = 1;
 
@@ -410,13 +418,43 @@ namespace chess_pos_db_gui
             bool useEvalWeight = evaluationWeightCheckbox.Checked;
             bool useCount = goodnessUseCountCheckbox.Checked;
 
+            // return 0 if no games being considered
+            ulong usedGameCount = 0;
+            ulong usedWins = 0;
+            ulong usedDraws = 0;
+            ulong usedLosses = 0;
+            if (useTotalWeight)
+            {
+                usedGameCount += entry.Count;
+                usedWins += entry.WinCount;
+                usedDraws += entry.DrawCount;
+                usedLosses += entry.LossCount;
+            }
+            if (useHumanWeight)
+            {
+                usedGameCount += nonEngineEntry.Count;
+                usedWins += nonEngineEntry.WinCount;
+                usedDraws += nonEngineEntry.DrawCount;
+                usedLosses += nonEngineEntry.LossCount;
+            }
+            if (useEngineWeight)
+            {
+                usedGameCount += entry.Count - nonEngineEntry.Count;
+                usedWins += entry.WinCount - nonEngineEntry.WinCount;
+                usedDraws += entry.DrawCount - nonEngineEntry.DrawCount;
+                usedLosses += entry.LossCount - nonEngineEntry.LossCount;
+            }
+            if (usedGameCount == 0) return 0.0;
+
+            if (useEvalWeight && score == null && Math.Abs(entry.EloDiff / (long)entry.Count) > maxAllowedEloDiff) return 0.0;
+
             double engineWeight = useHumanWeight ? (double)engineWeightNumericUpDown.Value : 0.0;
             double humanWeight = useEngineWeight ? (double)humanWeightNumericUpDown.Value : 0.0;
             double totalWeight = useTotalWeight ? (double)gamesWeightNumericUpDown.Value : 0.0;
             double evalWeight = useEvalWeight ? (double)evalWeightNumericUpDown.Value : 0.0;
 
-            double adjustedTotalPerf = 1.0f;
             ulong totalCount = entry.Count;
+            double adjustedTotalPerf = 1.0f;
             if (totalCount > 0)
             {
                 ulong totalWins = entry.WinCount;
@@ -503,7 +541,13 @@ namespace chess_pos_db_gui
             double engineGoodness = Math.Pow(adjustedEnginePerf, engineWeight);
             double humanGoodness = Math.Pow(adjustedHumanPerf, humanWeight);
             double totalGoodness = Math.Pow(adjustedTotalPerf, totalWeight);
-            double evalGoodness = score != null ? Math.Pow(score.Perf, evalWeight) : Math.Pow(0.5, evalWeight);
+            // if eval is not present then assume 0.5 but penalize moves with low game count
+            double evalGoodness =
+                Math.Pow(
+                    score != null 
+                    ? score.Perf 
+                    : EloCalculator.GetExpectedPerformance(-EloCalculator.EloError99pct(usedWins, usedDraws, usedLosses))
+                    , evalWeight);
 
             double weightSum = engineWeight + humanWeight + totalWeight + evalWeight;
 
@@ -563,6 +607,8 @@ namespace chess_pos_db_gui
 
         private void Populate(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, bool isOnlyTransposition, Score score)
         {
+            long maxDisplayedEloDiff = 400;
+
             var row = tabulatedData.NewRow();
             if (move == "--")
             {
@@ -597,7 +643,10 @@ namespace chess_pos_db_gui
             row["DrawPct"] = (entry.DrawRate);
             row["HumanPct"] = ((double)nonEngineEntry.Count / (double)entry.Count);
 
-            row["AvgEloDiff"] = (long)Math.Round(averageEloDiff);
+            row["AvgEloDiff"] =
+                entry.Count == 0
+                ? double.NaN
+                : Math.Min(maxDisplayedEloDiff, Math.Max(-maxDisplayedEloDiff, (long)Math.Round(averageEloDiff)));
 
             // score is always for side to move
             if (score != null)
@@ -630,6 +679,8 @@ namespace chess_pos_db_gui
 
         private void PopulateTotal(AggregatedEntry total, AggregatedEntry totalNonEngine, Score totalScore)
         {
+            long maxDisplayedEloDiff = 400;
+
             totalTabulatedData.Clear();
 
             var row = totalTabulatedData.NewRow();
@@ -655,7 +706,10 @@ namespace chess_pos_db_gui
             row["DrawPct"] = (total.DrawRate);
             row["HumanPct"] = ((double)totalNonEngine.Count / (double)total.Count);
 
-            row["AvgEloDiff"] = (long)Math.Round(averageEloDiff);
+            row["AvgEloDiff"] =
+                total.Count == 0
+                ? double.NaN
+                : Math.Min(maxDisplayedEloDiff, Math.Max(-maxDisplayedEloDiff, (long)Math.Round(averageEloDiff)));
 
             // score is always for side to move
             if (totalScore != null)
@@ -1111,13 +1165,25 @@ namespace chess_pos_db_gui
             }
             else if (entriesGridView.Columns[e.ColumnIndex].Name == "Goodness")
             {
-                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
+                if (e.Value == null || e.Value.GetType() != typeof(double) || Math.Abs((double)e.Value) < 0.01 || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
                 {
                     e.Value = "";
                 }
                 else
                 {
                     e.Value = ((double)e.Value * 100.0).ToString("0.0");
+                }
+                e.FormattingApplied = true;
+            }
+            else if (entriesGridView.Columns[e.ColumnIndex].Name == "AvgEloDiff")
+            {
+                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
+                {
+                    e.Value = "";
+                }
+                else
+                {
+                    e.Value = e.Value.ToString();
                 }
                 e.FormattingApplied = true;
             }
@@ -1139,13 +1205,25 @@ namespace chess_pos_db_gui
         {
             if (totalEntriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("Goodness"))
             {
-                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
+                if (e.Value == null || e.Value.GetType() != typeof(double) || Math.Abs((double)e.Value) < 0.01 || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
                 {
                     e.Value = "";
                 }
                 else
                 {
                     e.Value = ((double)e.Value * 100).ToString("0");
+                }
+                e.FormattingApplied = true;
+            }
+            else if (totalEntriesGridView.Columns[e.ColumnIndex].Name == "AvgEloDiff")
+            {
+                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
+                {
+                    e.Value = "";
+                }
+                else
+                {
+                    e.Value = e.Value.ToString();
                 }
                 e.FormattingApplied = true;
             }
