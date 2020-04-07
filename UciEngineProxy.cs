@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Json;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,6 +16,7 @@ namespace chess_pos_db_gui
         public string Path { get; private set; }
         public string Name { get; private set; }
         public string Author { get; private set; }
+        private UciEngineProfile Profile { get; set; }
         private Process EngineProcess { get; set; }
         private BlockingQueue<string> MessageQueue { get; set; }
         private Action<UciInfoResponse> UciInfoHandler { get; set; }
@@ -35,6 +37,12 @@ namespace chess_pos_db_gui
             {
                 OnAnalysisStarted -= value;
             }
+        }
+
+        public UciEngineProxy(UciEngineProfile profile) :
+            this(profile.Path)
+        {
+            Profile = profile;
         }
 
         public UciEngineProxy(string path)
@@ -245,6 +253,11 @@ namespace chess_pos_db_gui
                 SendMessage(opt.GetSetOptionString());
                 AppliedOptions.First((UciOption o) => o.GetName() == opt.GetName()).CopyValueFrom(opt);
             }
+
+            if (Profile != null)
+            {
+                Profile.SetOverridedOptions(GetOverridedOptions());
+            }
         }
 
         public void UpdateUciOptions()
@@ -263,6 +276,38 @@ namespace chess_pos_db_gui
                 EnsureReady();
                 UpdateUciOptionsWhileNotSearching();
             }
+        }
+
+        public IList<JsonValue> GetOverridedOptions()
+        {
+            var overrided = new List<JsonValue>();
+            foreach(var opt in AppliedOptions)
+            {
+                if (!opt.IsDefault())
+                {
+                    overrided.Add(opt.NameValueToJson());
+                }
+            }
+            return overrided;
+        }
+
+        public void OverrideOptions(IList<JsonValue> optionsOverrides)
+        {
+            foreach(var json in optionsOverrides)
+            {
+                string name = json["name"];
+                string value = json["value"];
+                foreach (var opt in CurrentOptions)
+                {
+                    if (opt.GetName() == name)
+                    {
+                        opt.SetValue(value);
+                        break;
+                    }
+                }
+            }
+
+            UpdateUciOptions();
         }
 
         public void GoInfinite(Action<UciInfoResponse> handler, string fen)
@@ -730,6 +775,9 @@ namespace chess_pos_db_gui
         }
 
         public abstract void CopyValueFrom(UciOption other);
+        public abstract void SetValue(string value);
+        public abstract JsonValue NameValueToJson();
+        public abstract bool IsDefault();
     }
 
     public class CheckUciOption : UciOption
@@ -751,11 +799,23 @@ namespace chess_pos_db_gui
         {
             return UciOptionType.Check;
         }
+        public override bool IsDefault()
+        {
+            return DefaultValue == Value;
+        }
 
         public override void CopyValueFrom(UciOption other)
         {
             if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
             Value = ((CheckUciOption)other).Value;
+            if (Control != null)
+            {
+                Control.Checked = Value;
+            }
+        }
+        public override void SetValue(string value)
+        {
+            Value = bool.Parse(value);
             if (Control != null)
             {
                 Control.Checked = Value;
@@ -795,6 +855,14 @@ namespace chess_pos_db_gui
         public override string ToString()
         {
             return Value ? "true" : "false";
+        }
+        public override JsonValue NameValueToJson()
+        {
+            return new JsonObject(
+                new KeyValuePair<string, JsonValue>[]{ 
+                    new KeyValuePair<string, JsonValue>( "name", Name ), 
+                    new KeyValuePair<string, JsonValue>( "value", ToString() )
+                });
         }
 
         public override string GetName()
@@ -840,11 +908,23 @@ namespace chess_pos_db_gui
         {
             return UciOptionType.Spin;
         }
+        public override bool IsDefault()
+        {
+            return DefaultValue == Value;
+        }
 
         public override void CopyValueFrom(UciOption other)
         {
             if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
             Value = ((SpinUciOption)other).Value;
+            if (Control != null)
+            {
+                Control.Value = Value;
+            }
+        }
+        public override void SetValue(string value)
+        {
+            Value = long.Parse(value);
             if (Control != null)
             {
                 Control.Value = Value;
@@ -888,6 +968,14 @@ namespace chess_pos_db_gui
         {
             return Value.ToString();
         }
+        public override JsonValue NameValueToJson()
+        {
+            return new JsonObject(
+                new KeyValuePair<string, JsonValue>[]{
+                    new KeyValuePair<string, JsonValue>( "name", Name ),
+                    new KeyValuePair<string, JsonValue>( "value", Value.ToString() )
+                });
+        }
 
         public override string GetName()
         {
@@ -923,11 +1011,23 @@ namespace chess_pos_db_gui
         {
             return UciOptionType.Combo;
         }
+        public override bool IsDefault()
+        {
+            return DefaultValue == Value;
+        }
 
         public override void CopyValueFrom(UciOption other)
         {
             if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
             Value = ((ComboUciOption)other).Value;
+            if (Control != null)
+            {
+                Control.SelectedItem = Value;
+            }
+        }
+        public override void SetValue(string value)
+        {
+            Value = value;
             if (Control != null)
             {
                 Control.SelectedItem = Value;
@@ -970,6 +1070,14 @@ namespace chess_pos_db_gui
         {
             return Value;
         }
+        public override JsonValue NameValueToJson()
+        {
+            return new JsonObject(
+                new KeyValuePair<string, JsonValue>[]{
+                    new KeyValuePair<string, JsonValue>( "name", Name ),
+                    new KeyValuePair<string, JsonValue>( "value", Value )
+                });
+        }
 
         public override string GetName()
         {
@@ -1005,11 +1113,23 @@ namespace chess_pos_db_gui
         {
             return UciOptionType.String;
         }
+        public override bool IsDefault()
+        {
+            return DefaultValue == Value;
+        }
 
         public override void CopyValueFrom(UciOption other)
         {
             if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
             Value = ((StringUciOption)other).Value;
+            if (Control != null)
+            {
+                Control.Text = Value;
+            }
+        }
+        public override void SetValue(string value)
+        {
+            Value = value;
             if (Control != null)
             {
                 Control.Text = Value;
@@ -1048,6 +1168,14 @@ namespace chess_pos_db_gui
         public override string ToString()
         {
             return Value;
+        }
+        public override JsonValue NameValueToJson()
+        {
+            return new JsonObject(
+                new KeyValuePair<string, JsonValue>[]{
+                    new KeyValuePair<string, JsonValue>( "name", Name ),
+                    new KeyValuePair<string, JsonValue>( "value", Value )
+                });
         }
 
         public override string GetName()
