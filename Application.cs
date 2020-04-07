@@ -407,7 +407,7 @@ namespace chess_pos_db_gui
             bool useHumanWeight = humanWeightCheckbox.Checked && !combineHECheckbox.Checked;
             bool useEngineWeight = engineWeightCheckbox.Checked && !combineHECheckbox.Checked;
             bool useTotalWeight = gamesWeightCheckbox.Checked && combineHECheckbox.Checked;
-            bool useEvalWeight = score != null && evaluationWeightCheckbox.Checked;
+            bool useEvalWeight = evaluationWeightCheckbox.Checked;
             bool useCount = goodnessUseCountCheckbox.Checked;
 
             double engineWeight = useHumanWeight ? (double)engineWeightNumericUpDown.Value : 0.0;
@@ -503,7 +503,7 @@ namespace chess_pos_db_gui
             double engineGoodness = Math.Pow(adjustedEnginePerf, engineWeight);
             double humanGoodness = Math.Pow(adjustedHumanPerf, humanWeight);
             double totalGoodness = Math.Pow(adjustedTotalPerf, totalWeight);
-            double evalGoodness = score != null ? Math.Pow(score.Perf, evalWeight) : 1.0;
+            double evalGoodness = score != null ? Math.Pow(score.Perf, evalWeight) : Math.Pow(0.5, evalWeight);
 
             double weightSum = engineWeight + humanWeight + totalWeight + evalWeight;
 
