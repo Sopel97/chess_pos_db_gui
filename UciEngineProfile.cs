@@ -11,6 +11,7 @@ namespace chess_pos_db_gui
 {
     class UciEngineProfile
     {
+        public string Name { get; private set; }
         public string Path { get; private set; }
         public string FileHash { get; private set; }
         public IList<JsonValue> OverridedOptions { get; private set; }
@@ -41,13 +42,14 @@ namespace chess_pos_db_gui
             }
         }
 
-        public UciEngineProfile(string path)
+        public UciEngineProfile(string name, string path)
         {
             if (!IsValidUciEngine(path))
             {
                 throw new ArgumentException("Not a valid UCI engine.");
             }
 
+            Name = name;
             Path = path;
             FileHash = ComputeMD5(path);
 
@@ -56,6 +58,7 @@ namespace chess_pos_db_gui
 
         public UciEngineProfile(JsonValue json)
         {
+            Name = json["name"];
             Path = json["path"];
             FileHash = json["hash"];
             if (FileHash != ComputeMD5(Path))
@@ -89,6 +92,7 @@ namespace chess_pos_db_gui
         public JsonValue ToJson()
         {
             return new JsonObject(
+                new KeyValuePair<string, JsonValue>("name", Name),
                 new KeyValuePair<string, JsonValue>("path", Path),
                 new KeyValuePair<string, JsonValue>("hash", FileHash),
                 new KeyValuePair<string, JsonValue>("options", OverridedOptionsToJson())
