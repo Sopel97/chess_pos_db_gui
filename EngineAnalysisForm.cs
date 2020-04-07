@@ -144,9 +144,28 @@ namespace chess_pos_db_gui
 
         private void OnOptionsFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Engine != null)
+            if (OptionsForm.Discard)
+            {
+                Engine.DiscardUciOptionChanges();
+            }
+            else if (Engine != null)
             {
                 Engine.UpdateUciOptions();
+            }
+        }
+
+        private void OnOptionsFormVisibilityChanged(object sender, EventArgs e)
+        {
+            if (!OptionsForm.Visible)
+            {
+                if (OptionsForm.Discard)
+                {
+                    Engine.DiscardUciOptionChanges();
+                }
+                else if (Engine != null)
+                {
+                    Engine.UpdateUciOptions();
+                }
             }
         }
 
@@ -201,6 +220,7 @@ namespace chess_pos_db_gui
 
             OptionsForm = new EngineOptionsForm(Engine.CurrentOptions);
             OptionsForm.FormClosing += OnOptionsFormClosing;
+            OptionsForm.VisibleChanged += OnOptionsFormVisibilityChanged;
 
             AnalysisData.Clear();
         }

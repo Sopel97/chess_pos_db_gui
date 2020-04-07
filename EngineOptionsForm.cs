@@ -13,6 +13,7 @@ namespace chess_pos_db_gui
     public partial class EngineOptionsForm : Form
     {
         private IList<UciOption> Options { get; set; }
+        public bool Discard { get; private set; }
 
         public EngineOptionsForm(IList<UciOption> options)
         {
@@ -34,11 +35,25 @@ namespace chess_pos_db_gui
 
         private void EngineOptionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Discard = true;
+
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
                 Hide();
             }
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            Discard = false;
+            Hide();
+        }
+
+        private void discardButton_Click(object sender, EventArgs e)
+        {
+            Discard = true;
+            Hide();
         }
     }
 }

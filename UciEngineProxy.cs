@@ -247,6 +247,14 @@ namespace chess_pos_db_gui
             WaitForMessage("readyok");
         }
 
+        public void DiscardUciOptionChanges()
+        {
+            foreach (var opt in AppliedOptions)
+            {
+                CurrentOptions.First((UciOption o) => o.GetName() == opt.GetName()).CopyValueFrom(opt);
+            }
+        }
+
         private void UpdateUciOptionsWhileNotSearching()
         {
             foreach(var opt in GetChangedOptions())
