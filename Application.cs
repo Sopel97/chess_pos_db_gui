@@ -415,6 +415,7 @@ namespace chess_pos_db_gui
             bool useHumanWeight = humanWeightCheckbox.Checked && !combineHECheckbox.Checked;
             bool useEngineWeight = engineWeightCheckbox.Checked && !combineHECheckbox.Checked;
             bool useTotalWeight = gamesWeightCheckbox.Checked && combineHECheckbox.Checked;
+            bool useAnyGames = useHumanWeight || useEngineWeight || useTotalWeight;
             bool useEvalWeight = evaluationWeightCheckbox.Checked;
             bool useCount = goodnessUseCountCheckbox.Checked;
 
@@ -444,12 +445,12 @@ namespace chess_pos_db_gui
                 usedDraws += entry.DrawCount - nonEngineEntry.DrawCount;
                 usedLosses += entry.LossCount - nonEngineEntry.LossCount;
             }
-            if (usedGameCount == 0) return 0.0;
+            if (useAnyGames && usedGameCount == 0) return 0.0;
 
             if (useEvalWeight && score == null && Math.Abs(entry.EloDiff / (long)entry.Count) > maxAllowedEloDiff) return 0.0;
 
-            double engineWeight = useHumanWeight ? (double)engineWeightNumericUpDown.Value : 0.0;
-            double humanWeight = useEngineWeight ? (double)humanWeightNumericUpDown.Value : 0.0;
+            double humanWeight = useHumanWeight ? (double)humanWeightNumericUpDown.Value : 0.0;
+            double engineWeight = useEngineWeight ? (double)engineWeightNumericUpDown.Value : 0.0;
             double totalWeight = useTotalWeight ? (double)gamesWeightNumericUpDown.Value : 0.0;
             double evalWeight = useEvalWeight ? (double)evalWeightNumericUpDown.Value : 0.0;
 
@@ -672,6 +673,22 @@ namespace chess_pos_db_gui
             tabulatedData.Rows.Add(row);
         }
 
+        private void UpdateGoodness(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, bool isOnlyTransposition, Score score)
+        {
+            System.Data.DataRow row = null;
+            foreach(System.Data.DataRow r in tabulatedData.Rows)
+            {
+                if (((MoveWithSan)r["Move"]).San == move)
+                {
+                    row = r;
+                    break;
+                }
+            }
+            if (row == null) return;
+
+            row["Goodness"] = CalculateGoodness(entry, nonEngineEntry, score);
+        }
+
         private bool IsEmpty(AggregatedEntry entry)
         {
             return entry.Count == 0;
@@ -788,6 +805,43 @@ namespace chess_pos_db_gui
             entriesGridView.Refresh();
         }
 
+        private void UpdateGoodness(
+            Dictionary<string, AggregatedEntry> entries,
+            IEnumerable<string> continuationMoves,
+            Dictionary<string, AggregatedEntry> nonEngineEntries,
+            Dictionary<Move, Score> scores
+            )
+        {
+            entriesGridView.SuspendLayout();
+
+            bool hideEmpty = hideNeverPlayedCheckBox.Checked;
+
+            foreach (KeyValuePair<string, AggregatedEntry> entry in entries)
+            {
+                if (hideEmpty && IsEmpty(entry.Value)) continue;
+
+                if (!nonEngineEntries.ContainsKey(entry.Key))
+                {
+                    nonEngineEntries.Add(entry.Key, new AggregatedEntry());
+                }
+
+                if(entry.Key != "--")
+                {
+                    scores.TryGetValue(chessBoard.SanToMove(entry.Key), out Score score);
+                    UpdateGoodness(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), score);
+                }
+            }
+
+            if (goodnessNormalizeCheckbox.Checked)
+            {
+                NormalizeGoodnessValues();
+            }
+
+            entriesGridView.ResumeLayout(false);
+
+            entriesGridView.Refresh();
+        }
+
         private void Gather(CacheEntry res, Select select, List<GameLevel> levels, ref Dictionary<string, AggregatedEntry> aggregatedEntries)
         {
             var rootEntries = res.Stats.Results[0].ResultsBySelect[select].Root;
@@ -841,6 +895,33 @@ namespace chess_pos_db_gui
             Populate(aggregatedEntries, aggregatedContinuationEntries.Where(p => p.Value.Count != 0).Select(p => p.Key), aggregatedNonEngineEntries, data.Scores);
         }
 
+        private void UpdateGoodness(CacheEntry res, List<Select> selects, List<GameLevel> levels)
+        {
+            Dictionary<string, AggregatedEntry> aggregatedContinuationEntries = new Dictionary<string, AggregatedEntry>();
+
+            Gather(res, chess_pos_db_gui.Select.Continuations, levels, ref aggregatedContinuationEntries);
+
+            Dictionary<string, AggregatedEntry> aggregatedEntries = new Dictionary<string, AggregatedEntry>();
+            foreach (Select select in selects)
+            {
+                Gather(res, select, levels, ref aggregatedEntries);
+            }
+
+            Dictionary<string, AggregatedEntry> aggregatedNonEngineEntries = new Dictionary<string, AggregatedEntry>();
+            if (levels.Contains(GameLevel.Human) || levels.Contains(GameLevel.Server))
+            {
+                var nonEngineLevels = new List<GameLevel> { };
+                if (levels.Contains(GameLevel.Human)) nonEngineLevels.Add(GameLevel.Human);
+                if (levels.Contains(GameLevel.Server)) nonEngineLevels.Add(GameLevel.Server);
+                foreach (Select select in selects)
+                {
+                    Gather(res, select, nonEngineLevels, ref aggregatedNonEngineEntries);
+                }
+            }
+
+            UpdateGoodness(aggregatedEntries, aggregatedContinuationEntries.Where(p => p.Value.Count != 0).Select(p => p.Key), aggregatedNonEngineEntries, data.Scores);
+        }
+
         private void Clear()
         {
             tabulatedData.Clear();
@@ -872,6 +953,18 @@ namespace chess_pos_db_gui
                     totalEntriesGridView.Columns["AdjustedPerf"].HeaderText = "ABl%";
                 }
                 Populate(data, selects.ToList(), levels.ToList());
+            }
+        }
+
+        private void UpdateGoodness()
+        {
+            if (selects.Count == 0 || levels.Count == 0 || data == null)
+            {
+                return;
+            }
+            else
+            {
+                UpdateGoodness(data, selects.ToList(), levels.ToList());
             }
         }
 
@@ -1280,32 +1373,41 @@ namespace chess_pos_db_gui
 
         private void HumanWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            Repopulate();
+            if (humanWeightCheckbox.Checked)
+            {
+                UpdateGoodness();
+            }
         }
 
         private void EngineWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            Repopulate();
+            if(engineWeightCheckbox.Checked)
+            {
+                UpdateGoodness();
+            }
         }
 
         private void EvalWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            Repopulate();
+            if(evaluationWeightCheckbox.Checked)
+            {
+                UpdateGoodness();
+            }
         }
 
         private void GoodnessUseCountCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            Repopulate();
+            UpdateGoodness();
         }
 
         private void GoodnessNormalizeCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            Repopulate();
+            UpdateGoodness();
         }
 
         private void CombineHECheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            Repopulate();
+            UpdateGoodness();
 
             gamesWeightCheckbox.Visible = combineHECheckbox.Checked;
             gamesWeightNumericUpDown.Visible = combineHECheckbox.Checked;
@@ -1315,27 +1417,22 @@ namespace chess_pos_db_gui
 
         private void GamesWeightCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            Repopulate();
+            UpdateGoodness();
         }
 
         private void EngineWeightCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            Repopulate();
+            UpdateGoodness();
         }
 
         private void EvaluationWeightCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            Repopulate();
+            UpdateGoodness();
         }
 
         private void humanWeightCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            Repopulate();
-        }
-
-        private void meanTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Repopulate();
+            UpdateGoodness();
         }
 
         private void setupToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1355,7 +1452,10 @@ namespace chess_pos_db_gui
 
         private void gamesWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            Repopulate();
+            if (gamesWeightCheckbox.Checked)
+            {
+                UpdateGoodness();
+            }
         }
     }
 
