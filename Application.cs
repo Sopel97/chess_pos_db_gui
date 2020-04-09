@@ -1352,6 +1352,11 @@ namespace chess_pos_db_gui
         {
             AnalysisForm = null;
         }
+
+        private void gamesWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            Repopulate();
+        }
     }
 
     class QueryQueueEntry
