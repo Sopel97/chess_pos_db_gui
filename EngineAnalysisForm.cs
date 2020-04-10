@@ -275,6 +275,8 @@ namespace chess_pos_db_gui
             {
                 OptionsForm.Close();
             }
+
+            InfoUpdateTimer.Dispose();
         }
 
         private void toggleAnalyzeButton_Click(object sender, EventArgs e)
@@ -293,48 +295,54 @@ namespace chess_pos_db_gui
 
         private void ProcessPendingInfoReponses(object sender, System.Timers.ElapsedEventArgs e)
         {
-            for(; ; )
+            if (IsDisposed) return;
+
+            Invoke(new Func<bool>(delegate ()
             {
-                var info = PendingInfoResponses.TryDequeue();
-                if (info == null)
+                analysisDataGridView.DataSource = null;
+
+                for (; ; )
                 {
-                    break;
+                    var info = PendingInfoResponses.TryDequeue();
+                    if (info == null)
+                    {
+                        break;
+                    }
+
+                    if (info.Fen != Fen) continue;
+
+                    try
+                    {
+                        // Updating is slow right now, so we skip early updates when there's a lot of them.
+                        // TODO: Improve update performance. Run in different thread than IO.
+                        // NOTE: it's better after updating once per depth but it still could be improved.
+                        if (info.Time.Or(0) < 1000) continue;
+
+                        foreach (var _ in info.Score)
+                        {
+                            var move = LanToMoveWithSan(info.Fen, info.PV.Or(new List<string>()).FirstOrDefault());
+                            var multipv = info.MultiPV.Or(0);
+                            System.Data.DataRow row = FindOrCreateRowByMoveOrMultiPV(move, multipv);
+
+                            // Only update if depth changed
+                            if (row["Depth"].GetType() != typeof(DBNull) && (int)row["Depth"] >= info.Depth.Or(0)) continue;
+
+                            // only update if at least one second passed.
+                            var previousTime = row["Time"];
+                            if (previousTime.GetType() != typeof(DBNull) && (TimeSpan)previousTime + TimeSpan.FromSeconds(1) > TimeSpan.FromMilliseconds(info.Time.Or(0))) continue;
+                            FillRowFromInfo(row, info);
+                        }
+                    }
+                    catch (ObjectDisposedException ex)
+                    {
+                        // Since we call in another thread we may happen after actually closing the window
+                    }
                 }
 
-                ProcessInfoResponse(info);
-            }
-        }
+                analysisDataGridView.DataSource = AnalysisData;
 
-        private void ProcessInfoResponse(UciInfoResponse info)
-        {
-            if (info.Fen != Fen) return;
-
-            try
-            {
-                // Updating is slow right now, so we skip early updates when there's a lot of them.
-                // TODO: Improve update performance. Run in different thread than IO.
-                // NOTE: it's better after updating once per depth but it still could be improved.
-                if (info.Time.Or(0) < 1000) return;
-
-                foreach (var _ in info.Score)
-                {
-                    var move = LanToMoveWithSan(info.Fen, info.PV.Or(new List<string>()).FirstOrDefault());
-                    var multipv = info.MultiPV.Or(0);
-                    System.Data.DataRow row = (System.Data.DataRow)Invoke(new Func<System.Data.DataRow>(delegate () { return FindOrCreateRowByMoveOrMultiPV(move, multipv); }));
-
-                    // Only update if depth changed
-                    if (row["Depth"].GetType() != typeof(DBNull) && (int)row["Depth"] >= info.Depth.Or(0)) return;
-
-                    // only update if at least one second passed.
-                    var previousTime = row["Time"];
-                    if (previousTime.GetType() != typeof(DBNull) && (TimeSpan)previousTime + TimeSpan.FromSeconds(1) > TimeSpan.FromMilliseconds(info.Time.Or(0))) return;
-                    Invoke(new Func<bool>(delegate () { FillRowFromInfo(row, info); return true; }));
-                }
-            }
-            catch (ObjectDisposedException e)
-            {
-                // Since we call in another thread we may happen after actually closing the window
-            }
+                return true;
+            }));
         }
 
         private void OnInfoResponse(UciInfoResponse info)
