@@ -45,36 +45,7 @@ namespace chess_pos_db_gui
             MakeDoubleBuffered(analysisDataGridView);
             analysisDataGridView.DataSource = AnalysisData;
 
-            analysisDataGridView.Columns["Move"].MinimumWidth = 50;
-            analysisDataGridView.Columns["Move"].HeaderText = "Move";
-            analysisDataGridView.Columns["Move"].ToolTipText = "Move suggested by the engine";
-            analysisDataGridView.Columns["Depth"].MinimumWidth = 40;
-            analysisDataGridView.Columns["Depth"].HeaderText = "D";
-            analysisDataGridView.Columns["Depth"].ToolTipText = "The depth in plies reached by the engine";
-            analysisDataGridView.Columns["SelDepth"].MinimumWidth = 40;
-            analysisDataGridView.Columns["SelDepth"].HeaderText = "SD";
-            analysisDataGridView.Columns["SelDepth"].ToolTipText = "The depth in plies reached by the engine in some extended lines";
-            analysisDataGridView.Columns["Score"].MinimumWidth = 60;
-            analysisDataGridView.Columns["Score"].HeaderText = "Score";
-            analysisDataGridView.Columns["Score"].ToolTipText = "Score of the move in pawns for the side to move.";
-            analysisDataGridView.Columns["Time"].MinimumWidth = 110;
-            analysisDataGridView.Columns["Time"].HeaderText = "Time [hh:mm:ss]";
-            analysisDataGridView.Columns["Time"].ToolTipText = "Time spend to produce the move";
-            analysisDataGridView.Columns["Nodes"].HeaderText = "Nodes";
-            analysisDataGridView.Columns["Nodes"].MinimumWidth = 60;
-            analysisDataGridView.Columns["Nodes"].ToolTipText = "Number of nodes examined";
-            analysisDataGridView.Columns["NPS"].HeaderText = "NPS";
-            analysisDataGridView.Columns["NPS"].MinimumWidth = 60;
-            analysisDataGridView.Columns["NPS"].ToolTipText = "Average number of nodes being examined per second";
-            analysisDataGridView.Columns["MultiPV"].HeaderText = "MultiPV";
-            analysisDataGridView.Columns["MultiPV"].MinimumWidth = 40;
-            analysisDataGridView.Columns["MultiPV"].ToolTipText = "Engines internal id of the line";
-            analysisDataGridView.Columns["TBHits"].HeaderText = "TBHits";
-            analysisDataGridView.Columns["TBHits"].MinimumWidth = 60;
-            analysisDataGridView.Columns["TBHits"].ToolTipText = "Number of successful tablebase lookups";
-            analysisDataGridView.Columns["PV"].HeaderText = "PV";
-            analysisDataGridView.Columns["PV"].ToolTipText = "The principal variation - engine's predicted line";
-            analysisDataGridView.Columns["ScoreInt"].Visible = false;
+            SetupColumns();
 
             analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
@@ -105,6 +76,40 @@ namespace chess_pos_db_gui
             InfoUpdateTimer.Enabled = true;
 
             ClearIdInfo();
+        }
+
+        private void SetupColumns()
+        {
+            analysisDataGridView.Columns["Move"].MinimumWidth = 50;
+            analysisDataGridView.Columns["Move"].HeaderText = "Move";
+            analysisDataGridView.Columns["Move"].ToolTipText = "Move suggested by the engine";
+            analysisDataGridView.Columns["Depth"].MinimumWidth = 40;
+            analysisDataGridView.Columns["Depth"].HeaderText = "D";
+            analysisDataGridView.Columns["Depth"].ToolTipText = "The depth in plies reached by the engine";
+            analysisDataGridView.Columns["SelDepth"].MinimumWidth = 40;
+            analysisDataGridView.Columns["SelDepth"].HeaderText = "SD";
+            analysisDataGridView.Columns["SelDepth"].ToolTipText = "The depth in plies reached by the engine in some extended lines";
+            analysisDataGridView.Columns["Score"].MinimumWidth = 60;
+            analysisDataGridView.Columns["Score"].HeaderText = "Score";
+            analysisDataGridView.Columns["Score"].ToolTipText = "Score of the move in pawns for the side to move.";
+            analysisDataGridView.Columns["Time"].MinimumWidth = 110;
+            analysisDataGridView.Columns["Time"].HeaderText = "Time [hh:mm:ss]";
+            analysisDataGridView.Columns["Time"].ToolTipText = "Time spend to produce the move";
+            analysisDataGridView.Columns["Nodes"].HeaderText = "Nodes";
+            analysisDataGridView.Columns["Nodes"].MinimumWidth = 60;
+            analysisDataGridView.Columns["Nodes"].ToolTipText = "Number of nodes examined";
+            analysisDataGridView.Columns["NPS"].HeaderText = "NPS";
+            analysisDataGridView.Columns["NPS"].MinimumWidth = 60;
+            analysisDataGridView.Columns["NPS"].ToolTipText = "Average number of nodes being examined per second";
+            analysisDataGridView.Columns["MultiPV"].HeaderText = "MultiPV";
+            analysisDataGridView.Columns["MultiPV"].MinimumWidth = 40;
+            analysisDataGridView.Columns["MultiPV"].ToolTipText = "Engines internal id of the line";
+            analysisDataGridView.Columns["TBHits"].HeaderText = "TBHits";
+            analysisDataGridView.Columns["TBHits"].MinimumWidth = 60;
+            analysisDataGridView.Columns["TBHits"].ToolTipText = "Number of successful tablebase lookups";
+            analysisDataGridView.Columns["PV"].HeaderText = "PV";
+            analysisDataGridView.Columns["PV"].ToolTipText = "The principal variation - engine's predicted line";
+            analysisDataGridView.Columns["ScoreInt"].Visible = false;
         }
 
         private static MoveWithSan LanToMoveWithSan(string fen, string lan)
@@ -297,49 +302,47 @@ namespace chess_pos_db_gui
         {
             if (IsDisposed) return;
 
-            Invoke(new Func<bool>(delegate ()
+            var newAnalysisData = AnalysisData.Copy();
+
+            Dictionary<string, UciInfoResponse> responseByMove = new Dictionary<string, UciInfoResponse>();
+
+            // collect per move so we don't do updates for duplicates
+            for (; ; )
             {
-                analysisDataGridView.DataSource = null;
-
-                for (; ; )
+                var info = PendingInfoResponses.TryDequeue();
+                if (info == null)
                 {
-                    var info = PendingInfoResponses.TryDequeue();
-                    if (info == null)
-                    {
-                        break;
-                    }
-
-                    if (info.Fen != Fen) continue;
-
-                    try
-                    {
-                        // Updating is slow right now, so we skip early updates when there's a lot of them.
-                        // TODO: Improve update performance. Run in different thread than IO.
-                        // NOTE: it's better after updating once per depth but it still could be improved.
-                        if (info.Time.Or(0) < 1000) continue;
-
-                        foreach (var _ in info.Score)
-                        {
-                            var move = LanToMoveWithSan(info.Fen, info.PV.Or(new List<string>()).FirstOrDefault());
-                            var multipv = info.MultiPV.Or(0);
-                            System.Data.DataRow row = FindOrCreateRowByMoveOrMultiPV(move, multipv);
-
-                            // Only update if depth changed
-                            if (row["Depth"].GetType() != typeof(DBNull) && (int)row["Depth"] >= info.Depth.Or(0)) continue;
-
-                            // only update if at least one second passed.
-                            var previousTime = row["Time"];
-                            if (previousTime.GetType() != typeof(DBNull) && (TimeSpan)previousTime + TimeSpan.FromSeconds(1) > TimeSpan.FromMilliseconds(info.Time.Or(0))) continue;
-                            FillRowFromInfo(row, info);
-                        }
-                    }
-                    catch (ObjectDisposedException ex)
-                    {
-                        // Since we call in another thread we may happen after actually closing the window
-                    }
+                    break;
                 }
 
+                if (info.Fen != Fen) continue;
+
+                foreach (var _ in info.Score)
+                {
+                    // replace so we have the latest
+                    responseByMove[info.GetMoveLan()] = info;
+                }
+            }
+
+            // update only one info per move
+            foreach(KeyValuePair<string, UciInfoResponse> response in responseByMove)
+            {
+                var info = response.Value;
+                var move = LanToMoveWithSan(info.Fen, response.Key);
+                var multipv = info.MultiPV.Or(0);
+                System.Data.DataRow row = FindOrCreateRowByMoveOrMultiPV(newAnalysisData, move, multipv);
+
+                FillRowFromInfo(row, info);
+            }
+
+            AnalysisData = newAnalysisData;
+
+            Invoke(new Func<bool>(delegate ()
+            {
+                analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                 analysisDataGridView.DataSource = AnalysisData;
+                SetupColumns();
+                analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
                 return true;
             }));
@@ -391,13 +394,13 @@ namespace chess_pos_db_gui
             return row;
         }
 
-        private System.Data.DataRow FindOrCreateRowByMoveOrMultiPV(MoveWithSan move, int multipv)
+        private System.Data.DataRow FindOrCreateRowByMoveOrMultiPV(DataTable dt, MoveWithSan move, int multipv)
         {
             System.Data.DataRow row = null;
 
             // First look for a matching move.
             // If no matching move found then it means we have a new entry and we replace with matching multipv.
-            foreach (var rr in AnalysisData.Rows)
+            foreach (var rr in dt.Rows)
             {
                 System.Data.DataRow r = (System.Data.DataRow)rr;
                 if (r["Move"] != null && ((MoveWithSan)r["Move"]).San == move.San)
@@ -409,7 +412,7 @@ namespace chess_pos_db_gui
 
             if (row == null)
             {
-                foreach (var rr in AnalysisData.Rows)
+                foreach (var rr in dt.Rows)
                 {
                     System.Data.DataRow r = (System.Data.DataRow)rr;
                     if (r["MultiPV"] != null && (int)r["MultiPV"] == multipv)
@@ -422,8 +425,8 @@ namespace chess_pos_db_gui
 
             if (row == null)
             {
-                row = AnalysisData.NewRow();
-                AnalysisData.Rows.Add(row);
+                row = dt.NewRow();
+                dt.Rows.Add(row);
             }
 
             return row;

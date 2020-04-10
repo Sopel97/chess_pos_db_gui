@@ -647,6 +647,11 @@ namespace chess_pos_db_gui
             TBHits = Optional<long>.CreateEmpty();
         }
 
+        public string GetMoveLan()
+        {
+            return PV.Or(new List<string>()).FirstOrDefault();
+        }
+
         public bool IsLegal()
         {
             var lan = PV.Or(new List<string>()).FirstOrDefault();
