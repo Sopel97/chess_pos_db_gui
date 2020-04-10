@@ -64,12 +64,19 @@
             // 
             // analysisDataGridView
             // 
+            this.analysisDataGridView.AllowUserToAddRows = false;
+            this.analysisDataGridView.AllowUserToDeleteRows = false;
+            this.analysisDataGridView.AllowUserToResizeColumns = false;
+            this.analysisDataGridView.AllowUserToResizeRows = false;
             this.analysisDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.analysisDataGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             this.analysisDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.analysisDataGridView.Location = new System.Drawing.Point(12, 95);
             this.analysisDataGridView.Name = "analysisDataGridView";
+            this.analysisDataGridView.ReadOnly = true;
+            this.analysisDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.analysisDataGridView.Size = new System.Drawing.Size(776, 343);
             this.analysisDataGridView.TabIndex = 3;
             this.analysisDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.analysisDataGridView_ColumnHeaderMouseClick);

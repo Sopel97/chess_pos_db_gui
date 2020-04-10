@@ -116,7 +116,14 @@ namespace chess_pos_db_gui
                 var infoResponse = ParseInfoResponse(e.Data);
                 if (infoResponse.IsLegal())
                 {
-                    UciInfoHandler.Invoke(infoResponse);
+                    try
+                    {
+                        UciInfoHandler.Invoke(infoResponse);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageQueue.Clear();
+                    }
                 }
             }
             else if (e.Data.StartsWith("option"))

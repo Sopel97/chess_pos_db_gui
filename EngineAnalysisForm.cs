@@ -70,7 +70,7 @@ namespace chess_pos_db_gui
             Profiles = new UciEngineProfileStorage("data/engine_profiles.json");
 
             InfoUpdateTimer = new System.Timers.Timer();
-            InfoUpdateTimer.Interval = 1000;
+            InfoUpdateTimer.Interval = 2000;
             InfoUpdateTimer.Elapsed += ProcessPendingInfoReponses;
             InfoUpdateTimer.AutoReset = true;
             InfoUpdateTimer.Enabled = true;
@@ -300,10 +300,6 @@ namespace chess_pos_db_gui
 
         private void ProcessPendingInfoReponses(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (IsDisposed) return;
-
-            var newAnalysisData = AnalysisData.Copy();
-
             Dictionary<string, UciInfoResponse> responseByMove = new Dictionary<string, UciInfoResponse>();
 
             // collect per move so we don't do updates for duplicates
@@ -324,8 +320,12 @@ namespace chess_pos_db_gui
                 }
             }
 
+            if (responseByMove.Count == 0) return;
+
+            var newAnalysisData = AnalysisData.Copy();
+
             // update only one info per move
-            foreach(KeyValuePair<string, UciInfoResponse> response in responseByMove)
+            foreach (KeyValuePair<string, UciInfoResponse> response in responseByMove)
             {
                 var info = response.Value;
                 var move = LanToMoveWithSan(info.Fen, response.Key);
@@ -335,17 +335,32 @@ namespace chess_pos_db_gui
                 FillRowFromInfo(row, info);
             }
 
-            AnalysisData = newAnalysisData;
-
-            Invoke(new Func<bool>(delegate ()
+            try
             {
-                analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-                analysisDataGridView.DataSource = AnalysisData;
-                SetupColumns();
-                analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
+                Invoke(new Func<bool>(delegate ()
+                {
+                    AnalysisData = newAnalysisData;
+                    analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                    var oldSortOrder = analysisDataGridView.SortOrder;
+                    var oldSortedColumn = oldSortOrder == SortOrder.None ? 0 : analysisDataGridView.SortedColumn.Index;
+                    analysisDataGridView.DataSource = AnalysisData;
+                    SetupColumns();
+                    if (oldSortOrder != SortOrder.None)
+                    {
+                        analysisDataGridView.Sort(
+                            analysisDataGridView.Columns[oldSortedColumn],
+                            oldSortOrder == SortOrder.Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending
+                            );
+                    }
+                    analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
-                return true;
-            }));
+                    return true;
+                }));
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
 
         private void OnInfoResponse(UciInfoResponse info)
@@ -355,20 +370,18 @@ namespace chess_pos_db_gui
 
         private void FillRowFromInfo(DataRow row, UciInfoResponse info)
         {
-            SuspendLayout();
             row["Move"] = LanToMoveWithSan(info.Fen, info.PV.Or(new List<string>()).FirstOrDefault());
             row["Depth"] = info.Depth.Or(0);
             row["SelDepth"] = info.SelDepth.Or(0);
             var score = info.Score.Or(new UciScore(0, UciScoreType.Cp, UciScoreBoundType.Exact));
             row["Score"] = score;
             row["ScoreInt"] = score.ToInteger();
-            row["Time"] = TimeSpan.FromMilliseconds(info.Time.Or(0));
+            row["Time"] = TimeSpan.FromSeconds(info.Time.Or(0) / 1000);
             row["Nodes"] = info.Nodes.Or(0);
             row["NPS"] = info.Nps.Or(0);
             row["MultiPV"] = info.MultiPV.Or(0);
             row["TBHits"] = info.TBHits.Or(0);
             row["PV"] = StringifyPV(info.Fen, info.PV.FirstOrDefault());
-            ResumeLayout();
         }
 
         private System.Data.DataRow FindOrCreateRowByMultiPV(int multipv)
