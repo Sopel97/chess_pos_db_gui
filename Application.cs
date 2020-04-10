@@ -758,7 +758,6 @@ namespace chess_pos_db_gui
             Dictionary<Move, Score> scores
             )
         {
-            entriesGridView.SuspendLayout();
             Clear();
 
             bool hideEmpty = hideNeverPlayedCheckBox.Checked;
@@ -799,10 +798,6 @@ namespace chess_pos_db_gui
             {
                 NormalizeGoodnessValues();
             }
-
-            entriesGridView.ResumeLayout(false);
-
-            entriesGridView.Refresh();
         }
 
         private void UpdateGoodness(
