@@ -94,10 +94,10 @@ namespace chess_pos_db_gui
             tabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
             tabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
             tabulatedData.Columns.Add(new DataColumn("Goodness", typeof(double)));
-            tabulatedData.Columns.Add(new DataColumn("Date", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("White", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("Black", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("Result", typeof(string)));
+            tabulatedData.Columns.Add(new DataColumn("Date", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("Eco", typeof(string)));
             tabulatedData.Columns.Add(new DataColumn("PlyCount", typeof(ushort)));
             tabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
