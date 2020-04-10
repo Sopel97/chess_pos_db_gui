@@ -59,5 +59,20 @@ namespace chess_pos_db_gui
                 q.Clear();
             }
         }
+
+        public T TryDequeue()
+        {
+            lock (q)
+            {
+                if (q.Count > 0)
+                {
+                    return q.Dequeue();
+                }
+                else
+                {
+                    return default;
+                }
+            }
+        }
     }
 }

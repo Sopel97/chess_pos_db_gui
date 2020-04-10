@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace chess_pos_db_gui
@@ -17,6 +18,8 @@ namespace chess_pos_db_gui
         private UciEngineProfileStorage Profiles { get; set; }
         private EngineOptionsForm OptionsForm { get; set; }
         private UciEngineProxy Engine { get; set; }
+        private BlockingQueue<UciInfoResponse> PendingInfoResponses { get; set; }
+        private System.Timers.Timer InfoUpdateTimer { get; set; }
         private DataTable AnalysisData { get; set; }
         private string Fen { get; set; }
         private bool IsScoreSortDescending { get; set; }
@@ -89,9 +92,17 @@ namespace chess_pos_db_gui
             optionsToolStripMenuItem.Enabled = false;
             toggleAnalyzeButton.Enabled = false;
 
+            PendingInfoResponses = new BlockingQueue<UciInfoResponse>();
+
             Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
             Profiles = new UciEngineProfileStorage("data/engine_profiles.json");
+
+            InfoUpdateTimer = new System.Timers.Timer();
+            InfoUpdateTimer.Interval = 1000;
+            InfoUpdateTimer.Elapsed += ProcessPendingInfoReponses;
+            InfoUpdateTimer.AutoReset = true;
+            InfoUpdateTimer.Enabled = true;
 
             ClearIdInfo();
         }
@@ -227,6 +238,8 @@ namespace chess_pos_db_gui
 
         private void OnAnalysisStarted(object sender, EventArgs e)
         {
+            PendingInfoResponses.Clear();
+
             var sortedColumn = analysisDataGridView.SortedColumn;
             var sortedOrder = analysisDataGridView.SortOrder;
             AnalysisData.Clear();
@@ -278,7 +291,21 @@ namespace chess_pos_db_gui
             SetToggleButtonName();
         }
 
-        private void OnInfoResponse(UciInfoResponse info)
+        private void ProcessPendingInfoReponses(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            for(; ; )
+            {
+                var info = PendingInfoResponses.TryDequeue();
+                if (info == null)
+                {
+                    break;
+                }
+
+                ProcessInfoResponse(info);
+            }
+        }
+
+        private void ProcessInfoResponse(UciInfoResponse info)
         {
             if (info.Fen != Fen) return;
 
@@ -304,10 +331,15 @@ namespace chess_pos_db_gui
                     Invoke(new Func<bool>(delegate () { FillRowFromInfo(row, info); return true; }));
                 }
             }
-            catch(ObjectDisposedException e)
+            catch (ObjectDisposedException e)
             {
                 // Since we call in another thread we may happen after actually closing the window
             }
+        }
+
+        private void OnInfoResponse(UciInfoResponse info)
+        {
+            PendingInfoResponses.Enqueue(info);
         }
 
         private void FillRowFromInfo(DataRow row, UciInfoResponse info)
