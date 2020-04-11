@@ -50,6 +50,7 @@ namespace chess_pos_db_gui
         private int FirstPly { get; set; }
         private string LastFen { get; set; }
         private int BaseMoveNumber;
+        private bool Resetting { get; set; }
 
         private EventHandler onPositionChanged { get; set; }
         public event EventHandler PositionChanged
@@ -89,6 +90,7 @@ namespace chess_pos_db_gui
             MoveHistory.BaseMoveNumber = 1;
 
             IsBoardFlipped = false;
+            Resetting = false;
         }
 
         public string GetFen()
@@ -117,6 +119,8 @@ namespace chess_pos_db_gui
 
         private void Reset(string fen)
         {
+            Resetting = true;
+
             History.Reset(fen);
             MoveHistory.Clear();
             Plies = 0;
@@ -142,6 +146,8 @@ namespace chess_pos_db_gui
             }
 
             UpdateFenTextBox(fen);
+
+            Resetting = false;
         }
 
         private static void MakeDoubleBuffered(Panel chessBoardPanel)
@@ -532,7 +538,8 @@ namespace chess_pos_db_gui
 
             History.SetCurrent(ply);
             string fen = History.Current().GetFen();
-            UpdateFenTextBox(fen);
+            if (!Resetting)
+                UpdateFenTextBox(fen);
 
             chessBoardPanel.Refresh();
         }
@@ -546,11 +553,10 @@ namespace chess_pos_db_gui
         {
             if (LastFen != fen)
             {
-                LastFen = fen;
                 fenTextBox.Text = fen;
+                onPositionChanged?.Invoke(this, new EventArgs());
+                LastFen = fen;
             }
-
-            onPositionChanged?.Invoke(this, new EventArgs());
         }
 
         private void GoToStartButton_Click(object sender, EventArgs e)

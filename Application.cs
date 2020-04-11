@@ -26,6 +26,7 @@ namespace chess_pos_db_gui
         private CacheEntry data;
         private DataTable tabulatedData;
         private DataTable totalTabulatedData;
+        private double bestGoodness;
         private DatabaseProxy database;
         private LRUCache<QueryQueueEntry, CacheEntry> queryCache;
         private bool isEntryDataUpToDate = false;
@@ -65,6 +66,8 @@ namespace chess_pos_db_gui
             tabulatedData = new DataTable();
             totalTabulatedData = new DataTable();
             queryCache = new LRUCache<QueryQueueEntry, CacheEntry>(queryCacheSize);
+
+            bestGoodness = 0.0;
 
             InitializeComponent();
 
@@ -798,6 +801,8 @@ namespace chess_pos_db_gui
             {
                 NormalizeGoodnessValues();
             }
+
+            UpdateBestGoodness();
         }
 
         private void UpdateGoodness(
@@ -832,9 +837,27 @@ namespace chess_pos_db_gui
                 NormalizeGoodnessValues();
             }
 
+            UpdateBestGoodness();
+
             entriesGridView.ResumeLayout(false);
 
             entriesGridView.Refresh();
+        }
+
+        private void UpdateBestGoodness()
+        {
+            bestGoodness = 0.0;
+
+            foreach (DataRow row in tabulatedData.Rows)
+            {
+                if (row["Goodness"] != null)
+                {
+                    if (((MoveWithSan)row[0]).San != "--")
+                    {
+                        bestGoodness = Math.Max(bestGoodness, (double)row["Goodness"]);
+                    }
+                }
+            }
         }
 
         private void Gather(CacheEntry res, Select select, List<GameLevel> levels, ref Dictionary<string, AggregatedEntry> aggregatedEntries)
@@ -1332,13 +1355,18 @@ namespace chess_pos_db_gui
         private void EntriesGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             var row = entriesGridView.Rows[e.RowIndex];
+            var isTransposition = Convert.ToBoolean(row.Cells["IsOnlyTransposition"].Value);
+            var goodness = row.Cells["Goodness"].Value;
+            var isGoodGoodness = goodness != null && (double)goodness > 0.0 && (double)goodness <= 1.1 && (double)goodness >= 0.9 * bestGoodness;
             if ((ulong)row.Cells["Count"].Value == 0)
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(0xAA, 0xAA, 0xAA);
             }
-            else if (Convert.ToBoolean(row.Cells["IsOnlyTransposition"].Value))
+            else
             {
-                row.DefaultCellStyle.BackColor = Color.LightGray;
+                if (isTransposition && isGoodGoodness) row.DefaultCellStyle.BackColor = Color.DarkGreen;
+                else if (isTransposition && !isGoodGoodness) row.DefaultCellStyle.BackColor = Color.LightGray;
+                else if (!isTransposition && isGoodGoodness) row.DefaultCellStyle.BackColor = Color.LightGreen;
             }
 
             var nextSan = chessBoard.GetNextMoveSan();
