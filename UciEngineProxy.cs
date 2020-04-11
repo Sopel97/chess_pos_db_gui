@@ -24,6 +24,7 @@ namespace chess_pos_db_gui
         public IList<UciOption> CurrentOptions { get; private set; }
         private IList<UciOption> AppliedOptions { get; set; }
         public bool IsSearching { get; private set; }
+        public int PvCount { get; private set; }
 
         private EventHandler OnAnalysisStarted { get; set; }
         public event EventHandler AnalysisStarted
@@ -52,6 +53,7 @@ namespace chess_pos_db_gui
             Name = "";
             Author = "";
             Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            PvCount = 1;
             MessageQueue = new BlockingQueue<string>();
             CurrentOptions = new List<UciOption>();
             AppliedOptions = new List<UciOption>();
@@ -273,6 +275,16 @@ namespace chess_pos_db_gui
             if (Profile != null)
             {
                 Profile.SetOverridedOptions(GetOverridedOptions());
+            }
+
+            PvCount = 1;
+            foreach(var opt in AppliedOptions)
+            {
+                if (opt.GetName() == "MultiPV")
+                {
+                    PvCount = (int)(long)opt.GetValue();
+                    break;
+                }
             }
         }
 
@@ -797,6 +809,7 @@ namespace chess_pos_db_gui
 
         public abstract void CopyValueFrom(UciOption other);
         public abstract void SetValue(string value);
+        public abstract object GetValue();
         public abstract JsonValue NameValueToJson();
         public abstract bool IsDefault();
     }
@@ -891,6 +904,11 @@ namespace chess_pos_db_gui
             return Name;
         }
 
+        public override object GetValue()
+        {
+            return Value;
+        }
+
         public override bool Equals(object obj)
         {
             return obj is CheckUciOption option &&
@@ -950,6 +968,11 @@ namespace chess_pos_db_gui
             {
                 Control.Value = Value;
             }
+        }
+
+        public override object GetValue()
+        {
+            return Value;
         }
 
         public override System.Windows.Forms.Control CreateControl()
@@ -1105,6 +1128,11 @@ namespace chess_pos_db_gui
             return Name;
         }
 
+        public override object GetValue()
+        {
+            return Value;
+        }
+
         public override bool Equals(object obj)
         {
             return obj is ComboUciOption option &&
@@ -1187,6 +1215,11 @@ namespace chess_pos_db_gui
         }
 
         public override string ToString()
+        {
+            return Value;
+        }
+
+        public override object GetValue()
         {
             return Value;
         }

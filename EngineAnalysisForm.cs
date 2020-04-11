@@ -343,6 +343,7 @@ namespace chess_pos_db_gui
                     analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                     var oldSortOrder = analysisDataGridView.SortOrder;
                     var oldSortedColumn = oldSortOrder == SortOrder.None ? 0 : analysisDataGridView.SortedColumn.Index;
+                    RemoveSuperfluousInfoRows();
                     analysisDataGridView.DataSource = AnalysisData;
                     SetupColumns();
                     if (oldSortOrder != SortOrder.None)
@@ -360,6 +361,38 @@ namespace chess_pos_db_gui
             catch(Exception ex)
             {
 
+            }
+        }
+
+        private void RemoveSuperfluousInfoRow()
+        {
+            var maxNumPvs = Engine.PvCount;
+            if (AnalysisData.Rows.Count > maxNumPvs)
+            {
+                System.Data.DataRow rowToRemove = AnalysisData.Rows[0];
+                foreach (System.Data.DataRow row in AnalysisData.Rows)
+                {
+                    if ((TimeSpan)row["Time"] < (TimeSpan)rowToRemove["Time"])
+                    {
+                        rowToRemove = row;
+                    }
+                    else if (
+                        (TimeSpan)row["Time"] == (TimeSpan)rowToRemove["Time"]
+                        && (int)row["MultiPV"] >= (int)rowToRemove["MultiPV"])
+                    {
+                        rowToRemove = row;
+                    }
+                }
+                AnalysisData.Rows.Remove(rowToRemove);
+            }
+        }
+
+        private void RemoveSuperfluousInfoRows()
+        {
+            var maxNumPvs = Engine.PvCount;
+            while (AnalysisData.Rows.Count > maxNumPvs)
+            {
+                RemoveSuperfluousInfoRows();
             }
         }
 
