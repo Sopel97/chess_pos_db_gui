@@ -392,7 +392,7 @@ namespace chess_pos_db_gui
             var maxNumPvs = Engine.PvCount;
             while (AnalysisData.Rows.Count > maxNumPvs)
             {
-                RemoveSuperfluousInfoRows();
+                RemoveSuperfluousInfoRow();
             }
         }
 
