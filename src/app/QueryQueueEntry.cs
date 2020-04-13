@@ -2,36 +2,43 @@
 {
     public class QueryQueueEntry
     {
-        public string Sig { get; private set; }
-        public string Fen { get; private set; }
-        public string San { get; private set; }
+        public string QueryFen { get; private set; }
         public string CurrentFen { get; private set; }
+        public string San { get; private set; }
         public bool QueryEval { get; private set; }
+
+        public string Signature
+        {
+            get
+            {
+                return QueryFen + San;
+            }
+        }
 
         public QueryQueueEntry(ChessBoard chessBoard, bool queryEval)
         {
-            San = chessBoard.GetLastMoveSan();
-            Fen = San == "--"
+            QueryFen = 
+                San == chess_pos_db_gui.San.NullMove
                 ? chessBoard.GetFen()
                 : chessBoard.GetPrevFen();
 
             CurrentFen = chessBoard.GetFen();
 
-            Sig = Fen + San;
+            San = chessBoard.GetLastMoveSan();
 
             QueryEval = queryEval;
         }
 
         public override int GetHashCode()
         {
-            return Sig.GetHashCode();
+            return Signature.GetHashCode();
         }
 
         public override bool Equals(object obj)
         {
-            if (obj.GetType() == this.GetType())
+            if (obj.GetType() == GetType())
             {
-                return Sig.Equals(((QueryQueueEntry)obj).Sig);
+                return Signature.Equals(((QueryQueueEntry)obj).Signature);
             }
             return false;
         }

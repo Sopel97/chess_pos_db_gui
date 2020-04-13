@@ -35,7 +35,7 @@ namespace chess_pos_db_gui
         {
             if (Move == null)
             {
-                return "--";
+                return San.NullMove;
             }
 
             return Move.SAN;
@@ -50,11 +50,10 @@ namespace chess_pos_db_gui
 
         public ChessBoardHistory()
         {
+            var game = new ChessGame();
             Entries = new List<ChessBoardHistoryEntry>
             {
-                new ChessBoardHistoryEntry(
-                    new ChessGame()
-                )
+                new ChessBoardHistoryEntry(game)
             };
             Plies = 0;
         }
@@ -71,12 +70,12 @@ namespace chess_pos_db_gui
             Entries[0].Move = null;
         }
 
-        public void SetCurrent(int i)
+        public void SetCurrentPly(int i)
         {
             Plies = i;
         }
 
-        private void TruncateToCurrent()
+        private void TruncateToCurrentPly()
         {
             if (Plies != Entries.Count - 1)
             {
@@ -86,7 +85,7 @@ namespace chess_pos_db_gui
 
         public bool DoMove(Move move)
         {
-            TruncateToCurrent();
+            TruncateToCurrentPly();
 
             ChessGame pos = new ChessGame(Current().GCD);
             if (!pos.IsValidMove(move))
@@ -97,6 +96,7 @@ namespace chess_pos_db_gui
             pos.MakeMove(move, true);
             Entries.Add(new ChessBoardHistoryEntry(pos));
             ++Plies;
+
             return true;
         }
 
@@ -108,24 +108,14 @@ namespace chess_pos_db_gui
 
         public bool DoMove(string san)
         {
-            TruncateToCurrent();
-
             ChessGame pos = new ChessGame(Current().GCD);
             Move move = San.ParseSan(pos, san);
-            if (move == null)
-            {
-                return false;
-            }
-
-            pos.MakeMove(move, false);
-            Entries.Add(new ChessBoardHistoryEntry(pos));
-            ++Plies;
-            return true;
+            return DoMove(move);
         }
 
         public bool UndoMove()
         {
-            TruncateToCurrent();
+            TruncateToCurrentPly();
 
             if (Entries.Count() > 1)
             {

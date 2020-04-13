@@ -12,6 +12,7 @@ namespace chess_pos_db_gui.src.app.chessdbcn
     class ChessDBCNScoreProvider
     {
         private static readonly string URL = "http://www.chessdb.cn/cdb.php";
+
         private HttpClient Client { get; set; }
 
         public ChessDBCNScoreProvider()
@@ -27,11 +28,43 @@ namespace chess_pos_db_gui.src.app.chessdbcn
                 );
         }
 
+        private Dictionary<Move, ChessDBCNScore> ParseScoresFromResponse(string fen, string responseStr)
+        {
+            Dictionary<Move, ChessDBCNScore> scores = new Dictionary<Move, ChessDBCNScore>();
+
+            string[] byMoveStrs = responseStr.Split('|');
+            foreach (var byMoveStr in byMoveStrs)
+            {
+                string[] parts = byMoveStr.Split(',');
+
+                Dictionary<string, string> values = new Dictionary<string, string>();
+                foreach (var part in parts)
+                {
+                    string[] kv = part.Split(':');
+                    values.Add(kv[0], kv[1]);
+                }
+
+                values.TryGetValue("move", out string moveStr);
+                values.TryGetValue("score", out string scoreStr);
+
+                if (moveStr != null)
+                {
+                    try
+                    {
+                        scores.Add(Lan.LanToMove(fen, moveStr), new ChessDBCNScore(scoreStr));
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+
+            return scores;
+        }
+
         public Dictionary<Move, ChessDBCNScore> GetScores(string fen)
         {
             const string urlParameters = "?action=queryall&board={0}";
-
-            Dictionary<Move, ChessDBCNScore> scores = new Dictionary<Move, ChessDBCNScore>();
 
             try
             {
@@ -39,37 +72,14 @@ namespace chess_pos_db_gui.src.app.chessdbcn
                 if (response.IsSuccessStatusCode)
                 {
                     var responseStr = response.Content.ReadAsStringAsync().Result;
-                    Console.WriteLine("{0}", responseStr);
-                    string[] byMoveStrs = responseStr.Split('|');
-                    foreach (var byMoveStr in byMoveStrs)
-                    {
-                        string[] parts = byMoveStr.Split(',');
-
-                        Dictionary<string, string> values = new Dictionary<string, string>();
-                        foreach (var part in parts)
-                        {
-                            string[] kv = part.Split(':');
-                            values.Add(kv[0], kv[1]);
-                        }
-
-                        values.TryGetValue("move", out string moveStr);
-                        values.TryGetValue("score", out string scoreStr);
-
-                        if (moveStr != null)
-                        {
-                            try
-                            {
-                                scores.Add(Lan.LanToMove(fen, moveStr), new ChessDBCNScore(scoreStr));
-                            }
-                            catch
-                            {
-                            }
-                        }
-                    }
+                    System.Diagnostics.Debug.WriteLine(responseStr);
+                    return ParseScoresFromResponse(fen, responseStr);
                 }
                 else
                 {
-                    Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+                    System.Diagnostics.Debug.WriteLine(
+                        string.Format("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase)
+                        );
                 }
             }
             catch (Exception ex)
@@ -77,7 +87,7 @@ namespace chess_pos_db_gui.src.app.chessdbcn
                 Console.WriteLine(ex.Message);
             }
 
-            return scores;
+            return new Dictionary<Move, ChessDBCNScore>();
         }
     }
 }

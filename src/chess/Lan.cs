@@ -69,7 +69,7 @@ namespace chess_pos_db_gui.src.chess
         {
             if (lan == null || lan == "0000")
             {
-                return new MoveWithSan(null, "--");
+                return new MoveWithSan(null, San.NullMove);
             }
 
             ChessGame game = new ChessGame(fen);

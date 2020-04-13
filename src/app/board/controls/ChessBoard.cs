@@ -1,5 +1,5 @@
 ﻿using chess_pos_db_gui.src.chess;
-
+using chess_pos_db_gui.src.util;
 using ChessDotNet;
 using ChessDotNet.Pieces;
 
@@ -18,7 +18,9 @@ namespace chess_pos_db_gui
     {
         private static readonly Bitmap DefaultBitmap = CreateDefaultBitmap();
 
-        private ChessBoardHistory History { get; set; }
+        private ChessBoardHistory BoardHistory { get; set; }
+
+        private MoveHistoryTable MoveHistory { get; set; }
 
         private Image BoardImageWhite { get; set; }
         private Image BoardImageBlack { get; set; }
@@ -36,16 +38,15 @@ namespace chess_pos_db_gui
         private Image BlackKing { get; set; }
 
         private Dictionary<Piece, Image> PieceImages { get; set; }
+
         private Point? MouseFrom { get; set; }
         private Point? MouseTo { get; set; }
 
         private bool IsBoardFlipped { get; set; }
-
-        private MoveHistoryTable MoveHistory { get; set; }
         private int Plies { get; set; }
         private int FirstPly { get; set; }
         private string LastFen { get; set; }
-        private int BaseMoveNumber;
+        private int BaseMoveNumber { get; set; }
         private bool IsSettingPosition { get; set; }
 
         private EventHandler onPositionChanged;
@@ -66,7 +67,7 @@ namespace chess_pos_db_gui
         {
             InitializeComponent();
 
-            History = new ChessBoardHistory();
+            BoardHistory = new ChessBoardHistory();
 
             PieceImages = new Dictionary<Piece, Image>();
 
@@ -78,7 +79,7 @@ namespace chess_pos_db_gui
             moveHistoryGridView.DataSource = MoveHistory;
             moveHistoryGridView.CellBorderStyle = DataGridViewCellBorderStyle.None;
 
-            MakeDoubleBuffered(chessBoardPanel);
+            WinFormsControlUtil.MakeDoubleBuffered(chessBoardPanel);
 
             LastFen = "";
 
@@ -91,17 +92,17 @@ namespace chess_pos_db_gui
 
         public string GetFen()
         {
-            return History.Current().GetFen();
+            return BoardHistory.Current().GetFen();
         }
 
         public string GetPrevFen()
         {
-            return History.Prev().GetFen();
+            return BoardHistory.Prev().GetFen();
         }
 
         public string GetLastMoveSan()
         {
-            return History.Current().GetSan();
+            return BoardHistory.Current().GetSan();
         }
 
         private void SetGame(ChessGame game)
@@ -117,14 +118,14 @@ namespace chess_pos_db_gui
         {
             IsSettingPosition = true;
 
-            History.SetInitialPosition(fen);
+            BoardHistory.SetInitialPosition(fen);
             MoveHistory.Clear();
             Plies = 0;
             MoveHistory.Rows.Add();
             MoveHistory.Last().No = 1;
-            if (History.Current().GCD.WhoseTurn == Player.Black)
+            if (BoardHistory.Current().GCD.WhoseTurn == Player.Black)
             {
-                History.DuplicateLast();
+                BoardHistory.DuplicateLast();
                 MoveHistory.Last().WhiteDetailedMove = null;
                 Plies = 1;
                 SetSelection(1);
@@ -144,14 +145,6 @@ namespace chess_pos_db_gui
             UpdateFenTextBox(fen);
 
             IsSettingPosition = false;
-        }
-
-        private static void MakeDoubleBuffered(Panel chessBoardPanel)
-        {
-            Type dgvType = chessBoardPanel.GetType();
-            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
-                  BindingFlags.Instance | BindingFlags.NonPublic);
-            pi.SetValue(chessBoardPanel, true, null);
         }
 
         public void LoadImages(string path)
@@ -203,7 +196,7 @@ namespace chess_pos_db_gui
             g.DrawImage(img, 0, 0, chessBoardPanel.Width, chessBoardPanel.Height);
         }
 
-        private Rectangle GetSquareRectangle(int file, int rank)
+        private Rectangle GetSquareHitbox(int file, int rank)
         {
             if (IsBoardFlipped)
             {
@@ -223,7 +216,7 @@ namespace chess_pos_db_gui
             return new Rectangle((int)x, (int)y, (int)sw, (int)sh);
         }
 
-        private Position PointToSquare(Point point)
+        private Position ConvertPointToSquare(Point point)
         {
             float w = chessBoardPanel.Width;
             float h = chessBoardPanel.Height;
@@ -251,7 +244,7 @@ namespace chess_pos_db_gui
 
         private void DrawOnSquare(Graphics g, Image img, int file, int rank)
         {
-            g.DrawImage(img, GetSquareRectangle(file, rank));
+            g.DrawImage(img, GetSquareHitbox(file, rank));
         }
 
         private void DrawPiece(Graphics g, Piece piece, int file, int rank)
@@ -262,7 +255,7 @@ namespace chess_pos_db_gui
 
         private void DrawPieces(Graphics g)
         {
-            var game = History.Current();
+            var game = BoardHistory.Current();
             var board = game.GetBoard();
 
             for (int x = 0; x < 8; ++x)
@@ -316,7 +309,7 @@ namespace chess_pos_db_gui
 
         public string NextMoveNumber()
         {
-            int c = History.Plies;
+            int c = BoardHistory.Plies;
             int move = c / 2 + BaseMoveNumber;
             bool isWhite = c % 2 == 0;
 
@@ -356,26 +349,26 @@ namespace chess_pos_db_gui
 
         private void SynchronizeMoveListWithHistory()
         {
-            if (History.Plies < FirstPly)
+            if (BoardHistory.Plies < FirstPly)
             {
                 SetSelection(FirstPly);
             }
 
-            if (Plies > History.Plies)
+            if (Plies > BoardHistory.Plies)
             {
-                RemoveLastMovesFromMoveHistory(Plies - History.Plies);
+                RemoveLastMovesFromMoveHistory(Plies - BoardHistory.Plies);
             }
         }
 
         public bool DoMove(string san, bool silent = false)
         {
-            Move move = San.ParseSan(new ChessGame(History.Current().GCD), san);
+            Move move = San.ParseSan(new ChessGame(BoardHistory.Current().GCD), san);
             return DoMove(move, silent);
         }
 
         private bool DoMove(Move move, bool silent = false)
         {
-            if (!History.IsMoveValid(move))
+            if (!BoardHistory.IsMoveValid(move))
             {
                 return false;
             }
@@ -386,8 +379,8 @@ namespace chess_pos_db_gui
                 SynchronizeMoveListWithHistory();
             }
 
-            History.DoMove(move);
-            AddMoveToMoveHistory(History.Current().Move, silent);
+            BoardHistory.DoMove(move);
+            AddMoveToMoveHistory(BoardHistory.Current().Move, silent);
             if (!silent)
             {
                 moveHistoryGridView.Refresh();
@@ -415,17 +408,12 @@ namespace chess_pos_db_gui
             }
         }
 
-        private bool TryPerformMoveBasedOnMouseDrag(Point? from, Point? to)
+        private bool TryDragPiece(Point from, Point to)
         {
-            if (from == null || to == null)
-            {
-                return false;
-            }
+            Position fromSquare = ConvertPointToSquare(from);
+            Position toSquare = ConvertPointToSquare(to);
 
-            Position fromSquare = PointToSquare(from.Value);
-            Position toSquare = PointToSquare(to.Value);
-
-            Player player = History.Current().GCD.WhoseTurn;
+            Player player = BoardHistory.Current().GCD.WhoseTurn;
             Move move = new Move(fromSquare, toSquare, player);
             return DoMove(move);
         }
@@ -494,7 +482,12 @@ namespace chess_pos_db_gui
         private void ChessBoardPanel_MouseUp(object sender, MouseEventArgs e)
         {
             MouseTo = new Point(e.X, e.Y);
-            TryPerformMoveBasedOnMouseDrag(MouseFrom, MouseTo);
+            if (MouseFrom == null || MouseTo == null)
+            {
+                return;
+            }
+
+            TryDragPiece(MouseFrom.Value, MouseTo.Value);
         }
 
         private void MoveHistoryGridView_SelectionChanged(object sender, EventArgs e)
@@ -514,8 +507,8 @@ namespace chess_pos_db_gui
                 return;
             }
 
-            History.SetCurrent(ply);
-            string fen = History.Current().GetFen();
+            BoardHistory.SetCurrentPly(ply);
+            string fen = BoardHistory.Current().GetFen();
             if (!IsSettingPosition)
             {
                 UpdateFenTextBox(fen);
@@ -524,9 +517,9 @@ namespace chess_pos_db_gui
             chessBoardPanel.Refresh();
         }
 
-        internal Player CurrentPlayer()
+        internal Player SideToMove()
         {
-            return History.Current().GCD.WhoseTurn;
+            return BoardHistory.Current().GCD.WhoseTurn;
         }
 
         private void UpdateFenTextBox(string fen)
@@ -546,17 +539,17 @@ namespace chess_pos_db_gui
 
         private void GoToPrevButton_Click(object sender, EventArgs e)
         {
-            SetSelection(History.Plies - 1);
+            SetSelection(BoardHistory.Plies - 1);
         }
 
         private void GoToNextButton_Click(object sender, EventArgs e)
         {
-            SetSelection(History.Plies + 1);
+            SetSelection(BoardHistory.Plies + 1);
         }
 
         private void GoToEndButton_Click(object sender, EventArgs e)
         {
-            SetSelection(History.Count - 1);
+            SetSelection(BoardHistory.Count - 1);
         }
 
         private void CopyFenButton_Click(object sender, EventArgs e)
@@ -630,9 +623,9 @@ namespace chess_pos_db_gui
             }
         }
 
-        public String GetNextMoveSan()
+        public string GetNextMoveSan()
         {
-            var e = History.Next();
+            var e = BoardHistory.Next();
             if (e == null)
             {
                 return null;
@@ -655,15 +648,18 @@ namespace chess_pos_db_gui
     }
     internal class MoveHistoryDataRow : DataRow
     {
-        public int BaseMoveNumber = 1;
+        public int BaseMoveNumber { get; set; } = 1;
+
         private int _No;
         private DetailedMove _WhiteDetailedMove;
         private DetailedMove _BlackDetailedMove;
+
         public int No
         {
             get { return _No; }
             set { _No = value; base["No"] = (value + BaseMoveNumber - 1).ToString() + "."; }
         }
+
         public DetailedMove WhiteDetailedMove
         {
             get { return _WhiteDetailedMove; }
@@ -680,6 +676,7 @@ namespace chess_pos_db_gui
                 }
             }
         }
+
         public DetailedMove BlackDetailedMove
         {
             get { return _BlackDetailedMove; }
@@ -712,7 +709,7 @@ namespace chess_pos_db_gui
 
     internal class MoveHistoryTable : DataTable
     {
-        public int BaseMoveNumber = 1;
+        public int BaseMoveNumber { get; set; } = 1;
 
         public MoveHistoryTable()
         {
@@ -739,6 +736,7 @@ namespace chess_pos_db_gui
         {
             return new MoveHistoryDataRow(builder, BaseMoveNumber);
         }
+
         public void Add(MoveHistoryDataRow row)
         {
             Rows.Add(row);

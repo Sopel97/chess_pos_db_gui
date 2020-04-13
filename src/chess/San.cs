@@ -8,6 +8,8 @@ namespace chess_pos_db_gui
 {
     class San
     {
+        public static readonly string NullMove = "--";
+
         public static Move ParseSan(string fen, string san)
         {
             return ParseSan(new ChessGame(fen), san);

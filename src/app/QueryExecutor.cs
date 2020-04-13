@@ -10,19 +10,19 @@ namespace chess_pos_db_gui.src.app
     public class QueryExecutor
     {
         private static readonly int queryCacheSize = 128;
+
         private DatabaseProxy Database { get; set; }
-        private LRUCache<QueryQueueEntry, QueryCacheEntry> QueryCache { get; set; }
-
-        private QueryQueue QueryQueue { get; set; }
-
-        private object CacheLock { get; set; }
 
         private Thread QueryThread { get; set; }
-        private ConditionVariable AnyOutstandingQuery { get; set; }
-
         private volatile bool EndQueryThread;
 
-        private Mutex QueueMutex { get; set; }
+        private QueryQueue QueryQueue { get; set; }
+        private Mutex QueryQueueMutex { get; set; }
+
+        private LRUCache<QueryQueueEntry, QueryCacheEntry> QueryCache { get; set; }
+        private object QueryCacheLock { get; set; }
+
+        private ConditionVariable AnyOutstandingQuery { get; set; }
 
         private ChessDBCNScoreProvider ScoreProvider { get; set; }
 
@@ -44,9 +44,9 @@ namespace chess_pos_db_gui.src.app
         {
             ScoreProvider = new ChessDBCNScoreProvider();
             Database = db;
-            QueueMutex = new Mutex();
+            QueryQueueMutex = new Mutex();
             QueryQueue = new QueryQueue();
-            CacheLock = new object();
+            QueryCacheLock = new object();
             EndQueryThread = false;
             AnyOutstandingQuery = new ConditionVariable();
             QueryCache = new LRUCache<QueryQueueEntry, QueryCacheEntry>(queryCacheSize);
@@ -56,7 +56,7 @@ namespace chess_pos_db_gui.src.app
 
         public void ResetQueueAndCache()
         {
-            QueueMutex.WaitOne();
+            QueryQueueMutex.WaitOne();
             for (; ; )
             {
                 if (QueryQueue.Pop() == null)
@@ -65,8 +65,8 @@ namespace chess_pos_db_gui.src.app
                 }
             }
 
-            QueueMutex.ReleaseMutex();
-            lock (CacheLock)
+            QueryQueueMutex.ReleaseMutex();
+            lock (QueryCacheLock)
             {
                 QueryCache.Clear();
             }
@@ -83,47 +83,47 @@ namespace chess_pos_db_gui.src.app
         {
             for (; ; )
             {
-                QueueMutex.WaitOne();
+                QueryQueueMutex.WaitOne();
                 while (QueryQueue.IsEmpty() && !EndQueryThread)
                 {
-                    AnyOutstandingQuery.Wait(QueueMutex);
+                    AnyOutstandingQuery.Wait(QueryQueueMutex);
                 }
 
                 if (EndQueryThread)
                 {
-                    QueueMutex.ReleaseMutex();
+                    QueryQueueMutex.ReleaseMutex();
                     break;
                 }
 
                 var sig = QueryQueue.Pop();
-                QueueMutex.ReleaseMutex();
+                QueryQueueMutex.ReleaseMutex();
 
                 QueryAsyncToCacheAndUpdate(sig);
             }
         }
 
-        public void ScheduleUpdateDataAsync(QueryQueueEntry e)
+        public void ScheduleUpdateDataAsync(QueryQueueEntry key)
         {
             {
-                var c = GetFromCache(e);
-                if (c != null)
+                var entry = GetFromCache(key);
+                if (entry != null)
                 {
-                    onDataReceived?.Invoke(this, new KeyValuePair<QueryQueueEntry, QueryCacheEntry>(e, c));
+                    onDataReceived?.Invoke(this, new KeyValuePair<QueryQueueEntry, QueryCacheEntry>(key, entry));
                     return;
                 }
             }
 
-            QueueMutex.WaitOne();
-            QueryQueue.Enqueue(e);
-            QueueMutex.ReleaseMutex();
+            QueryQueueMutex.WaitOne();
+            QueryQueue.Enqueue(key);
+            QueryQueueMutex.ReleaseMutex();
             AnyOutstandingQuery.Signal();
         }
 
-        private QueryCacheEntry GetFromCache(QueryQueueEntry e)
+        private QueryCacheEntry GetFromCache(QueryQueueEntry key)
         {
-            lock (CacheLock)
+            lock (QueryCacheLock)
             {
-                return QueryCache.Get(e);
+                return QueryCache.Get(key);
             }
         }
 
@@ -132,7 +132,7 @@ namespace chess_pos_db_gui.src.app
             return ScoreProvider.GetScores(fen);
         }
 
-        private QueryCacheEntry QueryAsyncToCache(QueryQueueEntry sig)
+        private QueryCacheEntry QueryAsyncToCache(QueryQueueEntry key)
         {
             if (!Database.IsOpen)
             {
@@ -143,26 +143,26 @@ namespace chess_pos_db_gui.src.app
             {
                 var data = new QueryCacheEntry(null, null);
 
-                var scores = sig.QueryEval
-                    ? Task.Run(() => GetChessdbcnScores(sig.CurrentFen))
+                var scores = key.QueryEval
+                    ? Task.Run(() => GetChessdbcnScores(key.CurrentFen))
                     : Task.FromResult(new Dictionary<Move, ChessDBCNScore>());
 
-                if (sig.San == "--")
+                if (key.San == San.NullMove)
                 {
-                    data.Stats = Database.Query(sig.Fen);
+                    data.Stats = Database.Query(key.QueryFen);
                     data.Scores = scores.Result;
-                    lock (CacheLock)
+                    lock (QueryCacheLock)
                     {
-                        QueryCache.Add(sig, data);
+                        QueryCache.Add(key, data);
                     }
                 }
                 else
                 {
-                    data.Stats = Database.Query(sig.Fen, sig.San);
+                    data.Stats = Database.Query(key.QueryFen, key.San);
                     data.Scores = scores.Result;
-                    lock (CacheLock)
+                    lock (QueryCacheLock)
                     {
-                        QueryCache.Add(sig, data);
+                        QueryCache.Add(key, data);
                     }
                 }
 
@@ -174,10 +174,10 @@ namespace chess_pos_db_gui.src.app
             }
         }
 
-        private void QueryAsyncToCacheAndUpdate(QueryQueueEntry sig)
+        private void QueryAsyncToCacheAndUpdate(QueryQueueEntry key)
         {
-            var e = QueryAsyncToCache(sig);
-            onDataReceived?.Invoke(this, new KeyValuePair<QueryQueueEntry, QueryCacheEntry>(sig, e));
+            var entry = QueryAsyncToCache(key);
+            onDataReceived?.Invoke(this, new KeyValuePair<QueryQueueEntry, QueryCacheEntry>(key, entry));
         }
 
         public void Dispose()
@@ -203,17 +203,17 @@ namespace chess_pos_db_gui.src.app
             Lock = new object();
         }
 
-        public void Enqueue(QueryQueueEntry e)
+        public void Enqueue(QueryQueueEntry key)
         {
             lock (Lock)
             {
                 if (Current == null)
                 {
-                    Current = e;
+                    Current = key;
                 }
                 else
                 {
-                    Next = e;
+                    Next = key;
                 }
             }
         }

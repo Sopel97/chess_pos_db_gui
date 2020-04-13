@@ -1,4 +1,5 @@
 ﻿using chess_pos_db_gui.src.chess;
+using chess_pos_db_gui.src.util;
 using ChessDotNet;
 
 using System;
@@ -13,15 +14,24 @@ namespace chess_pos_db_gui
 {
     public partial class EngineAnalysisForm : Form
     {
+        private static readonly string profilesPath = "data/engine_profiles.json";
+
         private UciEngineProfileStorage Profiles { get; set; }
+
         private EngineOptionsForm OptionsForm { get; set; }
+
         private UciEngineProxy Engine { get; set; }
+
         private BlockingQueue<UciInfoResponse> PendingInfoResponses { get; set; }
+
         private System.Timers.Timer InfoUpdateTimer { get; set; }
+
         private DataTable AnalysisData { get; set; }
+
         private string Fen { get; set; }
         private bool IsScoreSortDescending { get; set; }
-        private DataGridViewColumn SortColumn { get; set; }
+
+        private DataGridViewColumn SortedColumn { get; set; }
 
         public EngineAnalysisForm()
         {
@@ -40,7 +50,7 @@ namespace chess_pos_db_gui
             AnalysisData.Columns.Add(new DataColumn("PV", typeof(string)));
             AnalysisData.Columns.Add(new DataColumn("ScoreInt", typeof(int)));
 
-            MakeDoubleBuffered(analysisDataGridView);
+            WinFormsControlUtil.MakeDoubleBuffered(analysisDataGridView);
             analysisDataGridView.DataSource = AnalysisData;
 
             SetupColumns();
@@ -56,16 +66,16 @@ namespace chess_pos_db_gui
                 }
             }
 
-            SetToggleButtonName();
+            UpdateAnalysisButtonName();
             closeToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Enabled = false;
             toggleAnalyzeButton.Enabled = false;
 
             PendingInfoResponses = new BlockingQueue<UciInfoResponse>();
 
-            Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            Fen = FenProvider.StartPos;
 
-            Profiles = new UciEngineProfileStorage("data/engine_profiles.json");
+            Profiles = new UciEngineProfileStorage(profilesPath);
 
             InfoUpdateTimer = new System.Timers.Timer
             {
@@ -75,7 +85,7 @@ namespace chess_pos_db_gui
             InfoUpdateTimer.Elapsed += ProcessPendingInfoReponses;
             InfoUpdateTimer.Enabled = true;
 
-            ClearIdInfo();
+            ClearEngineIdInfo();
         }
 
         private void SetupColumns()
@@ -110,15 +120,6 @@ namespace chess_pos_db_gui
             analysisDataGridView.Columns["PV"].HeaderText = "PV";
             analysisDataGridView.Columns["PV"].ToolTipText = "The principal variation - engine's predicted line";
             analysisDataGridView.Columns["ScoreInt"].Visible = false;
-        }
-
-        private static void MakeDoubleBuffered(DataGridView dgv)
-        {
-            Type dgvType = dgv.GetType();
-            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
-                  BindingFlags.Instance | BindingFlags.NonPublic);
-
-            pi.SetValue(dgv, true, null);
         }
 
         private void OptionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -156,14 +157,14 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void FillIdInfo()
+        private void FillEngineIdInfo()
         {
             enginePathLabel.Text = "Path: " + Engine.Path;
             engineIdNameLabel.Text = "Name: " + Engine.Name;
             engineIdAuthorLabel.Text = "Author: " + Engine.Author;
         }
 
-        private void ClearIdInfo()
+        private void ClearEngineIdInfo()
         {
             enginePathLabel.Text = "Path: ";
             engineIdNameLabel.Text = "Name: ";
@@ -190,8 +191,8 @@ namespace chess_pos_db_gui
             optionsToolStripMenuItem.Enabled = true;
             closeToolStripMenuItem.Enabled = true;
 
-            FillIdInfo();
-            SetToggleButtonName();
+            FillEngineIdInfo();
+            UpdateAnalysisButtonName();
 
             OptionsForm = new EngineOptionsForm(Engine.CurrentOptions);
             OptionsForm.FormClosing += OnOptionsFormClosing;
@@ -209,7 +210,12 @@ namespace chess_pos_db_gui
             AnalysisData.Clear();
             if (sortedColumn != null)
             {
-                analysisDataGridView.Sort(sortedColumn, sortedOrder == SortOrder.Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
+                analysisDataGridView.Sort(
+                    sortedColumn, 
+                    sortedOrder == SortOrder.Ascending 
+                        ? ListSortDirection.Ascending 
+                        : ListSortDirection.Descending
+                    );
             }
         }
 
@@ -226,8 +232,8 @@ namespace chess_pos_db_gui
             optionsToolStripMenuItem.Enabled = false;
             closeToolStripMenuItem.Enabled = false;
 
-            ClearIdInfo();
-            SetToggleButtonName();
+            ClearEngineIdInfo();
+            UpdateAnalysisButtonName();
 
             OptionsForm = null;
         }
@@ -254,7 +260,51 @@ namespace chess_pos_db_gui
                 Engine.GoInfinite(OnInfoResponse, Fen);
             }
 
-            SetToggleButtonName();
+            UpdateAnalysisButtonName();
+        }
+
+        private void ApplyNewAnalysisData(DataTable newAnalysisData)
+        {
+            try
+            {
+                Invoke(new MethodInvoker(delegate ()
+                {
+                    AnalysisData = newAnalysisData;
+
+                    analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                    var oldSortOrder = analysisDataGridView.SortOrder;
+                    var oldSortedColumn = oldSortOrder == SortOrder.None ? 0 : analysisDataGridView.SortedColumn.Index;
+                    RemoveSuperfluousInfoRows(AnalysisData);
+                    analysisDataGridView.DataSource = AnalysisData;
+                    SetupColumns();
+                    if (oldSortOrder != SortOrder.None)
+                    {
+                        analysisDataGridView.Sort(
+                            analysisDataGridView.Columns[oldSortedColumn],
+                            oldSortOrder == SortOrder.Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending
+                            );
+                    }
+                    analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
+                }));
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void UpdateAnalysisData(DataTable newAnalysisData, Dictionary<string, UciInfoResponse> responseByMove)
+        {
+            // update only one info per move
+            foreach (KeyValuePair<string, UciInfoResponse> response in responseByMove)
+            {
+                var info = response.Value;
+                var move = Lan.LanToMoveWithSan(info.Fen, response.Key);
+                var multipv = info.MultiPV.Or(0);
+                System.Data.DataRow row = FindOrCreateRowByMoveOrMultiPV(newAnalysisData, move, multipv);
+
+                FillRowFromInfo(row, info);
+            }
         }
 
         private void ProcessPendingInfoReponses(object sender, System.Timers.ElapsedEventArgs e)
@@ -289,75 +339,44 @@ namespace chess_pos_db_gui
 
             var newAnalysisData = AnalysisData.Copy();
 
-            // update only one info per move
-            foreach (KeyValuePair<string, UciInfoResponse> response in responseByMove)
-            {
-                var info = response.Value;
-                var move = Lan.LanToMoveWithSan(info.Fen, response.Key);
-                var multipv = info.MultiPV.Or(0);
-                System.Data.DataRow row = FindOrCreateRowByMoveOrMultiPV(newAnalysisData, move, multipv);
+            UpdateAnalysisData(newAnalysisData, responseByMove);
 
-                FillRowFromInfo(row, info);
-            }
-
-            try
-            {
-                Invoke(new Func<bool>(delegate ()
-                {
-                    AnalysisData = newAnalysisData;
-                    analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-                    var oldSortOrder = analysisDataGridView.SortOrder;
-                    var oldSortedColumn = oldSortOrder == SortOrder.None ? 0 : analysisDataGridView.SortedColumn.Index;
-                    RemoveSuperfluousInfoRows();
-                    analysisDataGridView.DataSource = AnalysisData;
-                    SetupColumns();
-                    if (oldSortOrder != SortOrder.None)
-                    {
-                        analysisDataGridView.Sort(
-                            analysisDataGridView.Columns[oldSortedColumn],
-                            oldSortOrder == SortOrder.Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending
-                            );
-                    }
-                    analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
-
-                    return true;
-                }));
-            }
-            catch (Exception)
-            {
-
-            }
+            ApplyNewAnalysisData(newAnalysisData);
         }
 
-        private void RemoveSuperfluousInfoRow()
+        private bool IsLhsMoreSuperfluousThanRhs(System.Data.DataRow lhs, System.Data.DataRow rhs)
+        {
+            return 
+                ((TimeSpan)lhs["Time"] < (TimeSpan)rhs["Time"])
+                || (
+                   (TimeSpan)lhs["Time"] == (TimeSpan)rhs["Time"]
+                   && (int)lhs["MultiPV"] >= (int)rhs["MultiPV"]
+                   );
+        }
+
+        private void RemoveSuperfluousInfoRow(DataTable dt)
         {
             var maxNumPvs = Engine.PvCount;
-            if (AnalysisData.Rows.Count > maxNumPvs)
+            if (dt.Rows.Count > maxNumPvs)
             {
-                System.Data.DataRow rowToRemove = AnalysisData.Rows[0];
-                foreach (System.Data.DataRow row in AnalysisData.Rows)
+                System.Data.DataRow rowToRemove = dt.Rows[0];
+                foreach (System.Data.DataRow row in dt.Rows)
                 {
-                    if ((TimeSpan)row["Time"] < (TimeSpan)rowToRemove["Time"])
-                    {
-                        rowToRemove = row;
-                    }
-                    else if (
-                        (TimeSpan)row["Time"] == (TimeSpan)rowToRemove["Time"]
-                        && (int)row["MultiPV"] >= (int)rowToRemove["MultiPV"])
+                    if (IsLhsMoreSuperfluousThanRhs(row, rowToRemove))
                     {
                         rowToRemove = row;
                     }
                 }
-                AnalysisData.Rows.Remove(rowToRemove);
+                dt.Rows.Remove(rowToRemove);
             }
         }
 
-        private void RemoveSuperfluousInfoRows()
+        private void RemoveSuperfluousInfoRows(DataTable dt)
         {
             var maxNumPvs = Engine.PvCount;
-            while (AnalysisData.Rows.Count > maxNumPvs)
+            while (dt.Rows.Count > maxNumPvs)
             {
-                RemoveSuperfluousInfoRow();
+                RemoveSuperfluousInfoRow(dt);
             }
         }
 
@@ -420,16 +439,12 @@ namespace chess_pos_db_gui
             return row;
         }
 
-        private void SetToggleButtonName()
+        private void UpdateAnalysisButtonName()
         {
-            if (Engine == null)
-            {
-                toggleAnalyzeButton.Text = "Start";
-            }
-            else
-            {
-                toggleAnalyzeButton.Text = Engine.IsSearching ? "Stop" : "Start";
-            }
+            toggleAnalyzeButton.Text = 
+                (Engine != null && Engine.IsSearching)
+                ? "Stop" 
+                : "Start";
         }
 
         private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -461,19 +476,19 @@ namespace chess_pos_db_gui
             DataGridViewColumn column = analysisDataGridView.Columns[e.ColumnIndex];
             if (column.Name == "Score")
             {
-                IsScoreSortDescending = (SortColumn == null || !IsScoreSortDescending);
+                IsScoreSortDescending = (SortedColumn == null || !IsScoreSortDescending);
                 var dir = IsScoreSortDescending ? ListSortDirection.Descending : ListSortDirection.Ascending;
                 analysisDataGridView.Sort(analysisDataGridView.Columns["ScoreInt"], dir);
-                SortColumn = column;
+                SortedColumn = column;
             }
             else
             {
                 IsScoreSortDescending = false;
-                SortColumn = null;
+                SortedColumn = null;
             }
 
             analysisDataGridView.Columns["Score"].HeaderCell.SortGlyphDirection = SortOrder.None;
-            if (SortColumn != null && SortColumn.Name == "Score")
+            if (SortedColumn != null && SortedColumn.Name == "Score")
             {
                 column.HeaderCell.SortGlyphDirection = IsScoreSortDescending ? SortOrder.Descending : SortOrder.Ascending;
             }

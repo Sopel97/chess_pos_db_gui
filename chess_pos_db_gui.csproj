@@ -160,6 +160,7 @@
     <Compile Include="src\db\query\SegregatedEntries.cs" />
     <Compile Include="src\db\query\Select.cs" />
     <Compile Include="src\chess\engine\uci\UciEngineProxy.cs" />
+    <Compile Include="src\util\WinFormsControlUtil.cs" />
     <EmbeddedResource Include="src\app\forms\Application.resx">
       <DependentUpon>Application.cs</DependentUpon>
     </EmbeddedResource>

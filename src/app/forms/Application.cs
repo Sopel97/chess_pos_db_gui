@@ -404,7 +404,7 @@ namespace chess_pos_db_gui
                 double totalPerf = (totalWins + totalDraws * 0.5) / totalCount;
                 double totalEloError = EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses);
                 double expectedTotalPerf = EloCalculator.GetExpectedPerformance((entry.EloDiff) / (double)totalCount);
-                if (chessBoard.CurrentPlayer() == Player.Black)
+                if (chessBoard.SideToMove() == Player.Black)
                 {
                     totalPerf = 1.0 - totalPerf;
                     expectedTotalPerf = 1.0 - expectedTotalPerf;
@@ -426,7 +426,7 @@ namespace chess_pos_db_gui
                 double enginePerf = (engineWins + engineDraws * 0.5) / engineCount;
                 double engineEloError = EloCalculator.EloError99pct(engineWins, engineDraws, engineLosses);
                 double expectedEnginePerf = EloCalculator.GetExpectedPerformance((entry.EloDiff - nonEngineEntry.EloDiff) / (double)engineCount);
-                if (chessBoard.CurrentPlayer() == Player.Black)
+                if (chessBoard.SideToMove() == Player.Black)
                 {
                     enginePerf = 1.0 - enginePerf;
                     expectedEnginePerf = 1.0 - expectedEnginePerf;
@@ -448,7 +448,7 @@ namespace chess_pos_db_gui
                 double humanPerf = (humanWins + humanDraws * 0.5) / humanCount;
                 double humanEloError = EloCalculator.EloError99pct(humanWins, humanDraws, humanLosses);
                 double expectedHumanPerf = EloCalculator.GetExpectedPerformance(nonEngineEntry.EloDiff / (double)humanCount);
-                if (chessBoard.CurrentPlayer() == Player.Black)
+                if (chessBoard.SideToMove() == Player.Black)
                 {
                     humanPerf = 1.0 - humanPerf;
                     expectedHumanPerf = 1.0 - expectedHumanPerf;
@@ -579,7 +579,7 @@ namespace chess_pos_db_gui
             var averageEloDiff = entry.Count > 0 ? entry.EloDiff / (double)entry.Count : 0.0;
             var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
             var adjustedPerf = GetAdjustedPerformance(entry.Perf, expectedPerf);
-            if (chessBoard.CurrentPlayer() == Player.White)
+            if (chessBoard.SideToMove() == Player.White)
             {
                 row["Perf"] = entry.Perf;
                 row["AdjustedPerf"] = adjustedPerf;
@@ -661,7 +661,7 @@ namespace chess_pos_db_gui
             var averageEloDiff = total.Count > 0 ? total.EloDiff / (double)total.Count : 0.0;
             var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
             var adjustedPerf = GetAdjustedPerformance(total.Perf, expectedPerf);
-            if (chessBoard.CurrentPlayer() == Player.White)
+            if (chessBoard.SideToMove() == Player.White)
             {
                 row["Perf"] = total.Perf;
                 row["AdjustedPerf"] = adjustedPerf;
@@ -926,7 +926,7 @@ namespace chess_pos_db_gui
             }
             else
             {
-                if (chessBoard.CurrentPlayer() == Player.White)
+                if (chessBoard.SideToMove() == Player.White)
                 {
                     entriesGridView.Columns["Perf"].HeaderText = "Wh%";
                     totalEntriesGridView.Columns["Perf"].HeaderText = "Wh%";
