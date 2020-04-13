@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace chess_pos_db_gui
 {
-    class ChessDBCNScore : IComparable
+    public class ChessDBCNScore : IComparable
     {
         private static readonly int knownResultThreashold = 18000;
         private static readonly int cursedDtz0 = 20000;

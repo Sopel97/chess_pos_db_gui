@@ -53,6 +53,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\app\chessdbcn\ChessDBCNScoreProvider.cs" />
+    <Compile Include="src\app\QueryExecutor.cs" />
+    <Compile Include="src\chess\engine\uci\options\model\CheckUciOption.cs" />
+    <Compile Include="src\chess\engine\uci\options\control\CheckUciOptionLinkedControl.cs" />
+    <Compile Include="src\chess\engine\uci\options\model\ComboUciOption.cs" />
+    <Compile Include="src\chess\engine\uci\options\control\ComboUciOptionLinkedControl.cs" />
+    <Compile Include="src\chess\engine\uci\options\model\SpinUciOption.cs" />
+    <Compile Include="src\chess\engine\uci\options\control\SpinUciOptionLinkedControl.cs" />
+    <Compile Include="src\chess\engine\uci\options\model\StringUciOption.cs" />
+    <Compile Include="src\chess\engine\uci\options\control\StringUciOptionLinkedControl.cs" />
+    <Compile Include="src\chess\engine\uci\UciInfoResponse.cs" />
+    <Compile Include="src\chess\engine\uci\options\model\UciOption.cs" />
+    <Compile Include="src\chess\engine\uci\options\control\UciOptionControlPanel.cs" />
+    <Compile Include="src\chess\engine\uci\options\UciOptionFactory.cs" />
+    <Compile Include="src\chess\engine\uci\options\control\UciOptionLinkedControl.cs" />
+    <Compile Include="src\chess\engine\uci\options\UciOptionType.cs" />
+    <Compile Include="src\chess\engine\uci\UciScore.cs" />
     <Compile Include="src\chess\FenProvider.cs" />
     <Compile Include="src\chess\Lan.cs" />
     <Compile Include="src\db\query\AggregatedEntry.cs" />
@@ -137,7 +153,7 @@
     <Compile Include="src\db\query\ResultForRoot.cs" />
     <Compile Include="src\db\query\RootPosition.cs" />
     <Compile Include="src\chess\San.cs" />
-    <Compile Include="src\app\chessdbcn\Score.cs" />
+    <Compile Include="src\app\chessdbcn\ChessDBCNScore.cs" />
     <Compile Include="src\db\query\SegregatedEntries.cs" />
     <Compile Include="src\db\query\Select.cs" />
     <Compile Include="src\chess\engine\uci\UciEngineProxy.cs" />

@@ -1,4 +1,5 @@
-﻿using chess_pos_db_gui.src.app.chessdbcn;
+﻿using chess_pos_db_gui.src.app;
+using chess_pos_db_gui.src.app.chessdbcn;
 
 using ChessDotNet;
 
@@ -17,8 +18,6 @@ namespace chess_pos_db_gui
 {
     public partial class Application : Form
     {
-        private static readonly int queryCacheSize = 128;
-
         private HashSet<GameLevel> Levels { get; set; }
         private HashSet<Select> Selects { get; set; }
         private CacheEntry Data { get; set; }
@@ -26,43 +25,23 @@ namespace chess_pos_db_gui
         private DataTable TotalTabulatedData { get; set; }
         private double BestGoodness { get; set; }
         private DatabaseProxy Database { get; set; }
-        private LRUCache<QueryQueueEntry, CacheEntry> QueryCache { get; set; }
         private bool IsEntryDataUpToDate { get; set; } = false;
         private string Ip { get; set; } = "127.0.0.1";
         private int Port { get; set; } = 1234;
-
-        private QueryQueue QueryQueue { get; set; }
-
-        private object CacheLock { get; set; }
-
-        private Thread QueryThread { get; set; }
-
-        private ConditionVariable AnyOutstandingQuery { get; set; }
-
-        private volatile bool EndQueryThread;
-
-        private Mutex QueueMutex { get; set; }
 
         private ChessDBCNScoreProvider ScoreProvider { get; set; }
 
         private EngineAnalysisForm AnalysisForm { get; set; }
 
+        private QueryExecutor QueryExecutor { get; set; }
+
         public Application()
         {
-            QueueMutex = new Mutex();
-            QueryQueue = new QueryQueue();
-            CacheLock = new object();
-            EndQueryThread = false;
-            AnyOutstandingQuery = new ConditionVariable();
-            QueryThread = new Thread(new ThreadStart(RunQueryThread));
-            QueryThread.Start();
-
             Levels = new HashSet<GameLevel>();
             Selects = new HashSet<Select>();
             Data = null;
             TabulatedData = new DataTable();
             TotalTabulatedData = new DataTable();
-            QueryCache = new LRUCache<QueryQueueEntry, CacheEntry>(queryCacheSize);
 
             BestGoodness = 0.0;
 
@@ -278,6 +257,8 @@ namespace chess_pos_db_gui
             try
             {
                 Database = new DatabaseProxy(Ip, Port);
+                QueryExecutor = new QueryExecutor(Database);
+                QueryExecutor.DataReceived += OnDataReceived;
             }
             catch
             {
@@ -291,6 +272,17 @@ namespace chess_pos_db_gui
             ScoreProvider = new ChessDBCNScoreProvider();
 
             UpdateDatabaseInfo();
+        }
+
+        private void OnDataReceived(object sender, KeyValuePair<QueryQueueEntry, CacheEntry> p)
+        {
+            var key = p.Key;
+            var data = p.Value;
+            if (key.CurrentFen == chessBoard.GetFen())
+            {
+                Data = data;
+                Invoke(new MethodInvoker(Repopulate));
+            }
         }
 
         private void OnPositionChanged(object sender, EventArgs e)
@@ -1060,134 +1052,10 @@ namespace chess_pos_db_gui
             UpdateData();
         }
 
-        private bool TryUpdateDataFromCache()
-        {
-            if (!Database.IsOpen)
-            {
-                return false;
-            }
-
-            var e = new QueryQueueEntry(chessBoard);
-
-            try
-            {
-                CacheEntry cached = null;
-                lock (CacheLock)
-                {
-                    cached = QueryCache.Get(e);
-                }
-
-                if (cached == null)
-                {
-                    TabulatedData.Clear();
-                    TotalTabulatedData.Clear();
-                    return false;
-                }
-                else
-                {
-                    Data = cached;
-                }
-                Repopulate();
-
-                return true;
-            }
-            catch
-            {
-            }
-
-            TabulatedData.Clear();
-            TotalTabulatedData.Clear();
-            return false;
-        }
-
-        private void QueryAsyncToCache(QueryQueueEntry sig)
-        {
-            if (!Database.IsOpen)
-            {
-                return;
-            }
-
-            try
-            {
-                var data = new CacheEntry(null, null);
-                ;
-                var scores = queryEvalCheckBox.Checked
-                    ? Task.Run(() => GetChessdbcnScores(sig.CurrentFen))
-                    : Task.FromResult(new Dictionary<Move, ChessDBCNScore>());
-
-                if (sig.San == "--")
-                {
-                    data.Stats = Database.Query(sig.Fen);
-                    data.Scores = scores.Result;
-                    lock (CacheLock)
-                    {
-                        QueryCache.Add(sig, data);
-                    }
-                }
-                else
-                {
-                    data.Stats = Database.Query(sig.Fen, sig.San);
-                    data.Scores = scores.Result;
-                    lock (CacheLock)
-                    {
-                        QueryCache.Add(sig, data);
-                    }
-                }
-            }
-            catch
-            {
-            }
-        }
-
-        private void QueryAsyncToCacheAndUpdate(QueryQueueEntry sig)
-        {
-            QueryAsyncToCache(sig);
-
-            if (InvokeRequired)
-            {
-                Invoke(new Func<bool>(TryUpdateDataFromCache));
-            }
-            else
-            {
-                TryUpdateDataFromCache();
-            }
-        }
-
         private void ScheduleUpdateDataAsync()
         {
-            if (TryUpdateDataFromCache())
-            {
-                return;
-            }
-
-            var sig = new QueryQueueEntry(chessBoard);
-            QueueMutex.WaitOne();
-            QueryQueue.Enqueue(sig);
-            QueueMutex.ReleaseMutex();
-            AnyOutstandingQuery.Signal();
-        }
-
-        private void RunQueryThread()
-        {
-            for (; ; )
-            {
-                QueueMutex.WaitOne();
-                while (QueryQueue.IsEmpty() && !EndQueryThread)
-                {
-                    AnyOutstandingQuery.Wait(QueueMutex);
-                }
-
-                if (EndQueryThread)
-                {
-                    QueueMutex.ReleaseMutex();
-                    break;
-                }
-
-                var sig = QueryQueue.Pop();
-                QueueMutex.ReleaseMutex();
-
-                QueryAsyncToCacheAndUpdate(sig);
-            }
+            var sig = new QueryQueueEntry(chessBoard, queryEvalCheckBox.Checked);
+            QueryExecutor.ScheduleUpdateDataAsync(sig);
         }
 
         private void UpdateData()
@@ -1197,6 +1065,7 @@ namespace chess_pos_db_gui
                 return;
             }
 
+            Clear();
             ScheduleUpdateDataAsync();
         }
 
@@ -1229,7 +1098,7 @@ namespace chess_pos_db_gui
         {
             Database.Close();
             Database.Open(path);
-            QueryCache.Clear();
+            QueryExecutor.ResetQueueAndCache();
             UpdateDatabaseInfo();
 
             OnPositionChanged(this, new EventArgs());
@@ -1278,7 +1147,7 @@ namespace chess_pos_db_gui
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Database.Close();
-            QueryCache.Clear();
+            QueryExecutor.ResetQueueAndCache();
             UpdateDatabaseInfo();
         }
 
@@ -1429,9 +1298,7 @@ namespace chess_pos_db_gui
 
         private void Application_FormClosing(object sender, FormClosingEventArgs e)
         {
-            EndQueryThread = true;
-            AnyOutstandingQuery.Signal();
-            QueryThread.Join();
+            QueryExecutor.Dispose();
         }
 
         private void HideNeverPlayedCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1527,14 +1394,15 @@ namespace chess_pos_db_gui
         }
     }
 
-    class QueryQueueEntry
+    public class QueryQueueEntry
     {
         public string Sig { get; private set; }
         public string Fen { get; private set; }
         public string San { get; private set; }
         public string CurrentFen { get; private set; }
+        public bool QueryEval { get; private set; }
 
-        public QueryQueueEntry(ChessBoard chessBoard)
+        public QueryQueueEntry(ChessBoard chessBoard, bool queryEval)
         {
             San = chessBoard.GetLastMoveSan();
             Fen = San == "--"
@@ -1544,6 +1412,8 @@ namespace chess_pos_db_gui
             CurrentFen = chessBoard.GetFen();
 
             Sig = Fen + San;
+
+            QueryEval = queryEval;
         }
 
         public override int GetHashCode()
@@ -1632,7 +1502,7 @@ namespace chess_pos_db_gui
         }
     }
 
-    class CacheEntry
+    public class CacheEntry
     {
         public QueryResponse Stats { get; set; }
         public Dictionary<Move, ChessDBCNScore> Scores { get; set; }
