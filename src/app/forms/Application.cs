@@ -288,25 +288,15 @@ namespace chess_pos_db_gui
 
         private void NormalizeGoodnessValues()
         {
-            double highest = 0.0;
-            foreach (DataRow row in TabulatedData.Rows)
-            {
-                if (row["Goodness"] != null)
-                {
-                    if (((MoveWithSan)row[0]).San != "--")
-                    {
-                        highest = Math.Max(highest, (double)row["Goodness"]);
-                    }
-                }
-            }
+            double highest = GetBestGoodness();
 
-            if (highest != 0.0)
+            if (highest > 0.0)
             {
                 foreach (DataRow row in TabulatedData.Rows)
                 {
                     if (row["Goodness"] != null)
                     {
-                        if (((MoveWithSan)row[0]).San != "--")
+                        if (((MoveWithSan)row[0]).San != San.NullMove)
                         {
                             row["Goodness"] = (double)row["Goodness"] / highest;
                         }
@@ -335,106 +325,15 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Populate(string san, AggregatedEntry entry, AggregatedEntry nonEngineEntry, bool isOnlyTransposition, ChessDBCNScore score)
-        {
-            var fen = chessBoard.GetFen();
-            long maxDisplayedEloDiff = 400;
-
-            var row = TabulatedData.NewRow();
-            if (san == "--")
-            {
-                row["Move"] = new MoveWithSan(null, san);
-                row["Goodness"] = double.PositiveInfinity;
-
-                PopulateFirstGameInfo(entry);
-            }
-            else
-            {
-                row["Move"] = new MoveWithSan(San.ParseSan(fen, san), san);
-                row["Goodness"] = CalculateGoodness(entry, nonEngineEntry, score);
-            }
-            row["Count"] = entry.Count;
-            row["WinCount"] = entry.WinCount;
-            row["DrawCount"] = entry.DrawCount;
-            row["LossCount"] = entry.LossCount;
-
-            var averageEloDiff = entry.Count > 0 ? entry.EloDiff / (double)entry.Count : 0.0;
-            var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
-            var adjustedPerf = EloCalculator.GetAdjustedPerformance(entry.Perf, expectedPerf);
-            if (chessBoard.SideToMove() == Player.White)
-            {
-                row["Perf"] = entry.Perf;
-                row["AdjustedPerf"] = adjustedPerf;
-            }
-            else
-            {
-                row["Perf"] = 1.0 - entry.Perf;
-                row["AdjustedPerf"] = 1.0 - adjustedPerf;
-            }
-            row["DrawPct"] = (entry.DrawRate);
-            row["HumanPct"] = (nonEngineEntry.Count / (double)entry.Count);
-
-            row["AvgEloDiff"] =
-                entry.Count == 0
-                ? double.NaN
-                : Math.Min(maxDisplayedEloDiff, Math.Max(-maxDisplayedEloDiff, (long)Math.Round(averageEloDiff)));
-
-            // score is always for side to move
-            if (score != null)
-            {
-                row["Eval"] = score;
-                row["EvalPct"] = score.Perf;
-            }
-
-            foreach (GameHeader header in entry.FirstGame)
-            {
-                row["GameId"] = header.GameId;
-                row["Date"] = header.Date.ToStringOmitUnknown();
-                row["Event"] = header.Event;
-                row["White"] = header.White;
-                row["Black"] = header.Black;
-                row["Result"] = header.Result.ToStringPgnUnicodeFormat();
-                row["Eco"] = header.Eco.ToString();
-                row["PlyCount"] = header.PlyCount.FirstOrDefault();
-            }
-
-            row["IsOnlyTransposition"] = isOnlyTransposition;
-
-            TabulatedData.Rows.Add(row);
-        }
-
-        private void UpdateGoodness(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, ChessDBCNScore score)
-        {
-            System.Data.DataRow row = null;
-            foreach (System.Data.DataRow r in TabulatedData.Rows)
-            {
-                if (((MoveWithSan)r["Move"]).San == move)
-                {
-                    row = r;
-                    break;
-                }
-            }
-            if (row == null)
-            {
-                return;
-            }
-
-            row["Goodness"] = CalculateGoodness(entry, nonEngineEntry, score);
-        }
-
-        private bool IsEmpty(AggregatedEntry entry)
-        {
-            return entry.Count == 0;
-        }
-
-        private void PopulateTotal(AggregatedEntry total, AggregatedEntry totalNonEngine, ChessDBCNScore totalScore)
+        private void PopulateCommon(
+            DataRow row,
+            AggregatedEntry total,
+            AggregatedEntry totalNonEngine,
+            ChessDBCNScore totalScore
+            )
         {
             long maxDisplayedEloDiff = 400;
 
-            TotalTabulatedData.Clear();
-
-            var row = TotalTabulatedData.NewRow();
-            row["Move"] = "Total";
             row["Count"] = total.Count;
             row["WinCount"] = total.WinCount;
             row["DrawCount"] = total.DrawCount;
@@ -467,8 +366,96 @@ namespace chess_pos_db_gui
                 row["Eval"] = totalScore;
                 row["EvalPct"] = totalScore.Perf;
             }
+        }
+
+        private void Populate(
+            string san, 
+            AggregatedEntry entry, 
+            AggregatedEntry nonEngineEntry, 
+            bool isOnlyTransposition, 
+            ChessDBCNScore score
+            )
+        {
+            var fen = chessBoard.GetFen();
+
+            var row = TabulatedData.NewRow();
+
+            PopulateCommon(row, entry, nonEngineEntry, score);
+
+            if (san == San.NullMove)
+            {
+                row["Move"] = new MoveWithSan(null, san);
+                row["Goodness"] = double.PositiveInfinity;
+
+                PopulateFirstGameInfo(entry);
+            }
+            else
+            {
+                row["Move"] = new MoveWithSan(San.ParseSan(fen, san), san);
+                row["Goodness"] = CalculateGoodness(entry, nonEngineEntry, score);
+            }
+
+            foreach (GameHeader header in entry.FirstGame)
+            {
+                row["GameId"] = header.GameId;
+                row["Date"] = header.Date.ToStringOmitUnknown();
+                row["Event"] = header.Event;
+                row["White"] = header.White;
+                row["Black"] = header.Black;
+                row["Result"] = header.Result.ToStringPgnUnicodeFormat();
+                row["Eco"] = header.Eco.ToString();
+                row["PlyCount"] = header.PlyCount.FirstOrDefault();
+            }
+
+            row["IsOnlyTransposition"] = isOnlyTransposition;
+
+            TabulatedData.Rows.Add(row);
+        }
+
+        private void PopulateTotal(
+            AggregatedEntry total, 
+            AggregatedEntry totalNonEngine, 
+            ChessDBCNScore totalScore
+            )
+        {
+            TotalTabulatedData.Clear();
+
+            var row = TotalTabulatedData.NewRow();
+
+            PopulateCommon(row, total, totalNonEngine, totalScore);
+
+            row["Move"] = "Total";
 
             TotalTabulatedData.Rows.InsertAt(row, 0);
+        }
+
+        private void UpdateGoodness(
+            string move, 
+            AggregatedEntry entry, 
+            AggregatedEntry nonEngineEntry, 
+            ChessDBCNScore score
+            )
+        {
+            System.Data.DataRow row = null;
+            foreach (System.Data.DataRow r in TabulatedData.Rows)
+            {
+                if (((MoveWithSan)r["Move"]).San == move)
+                {
+                    row = r;
+                    break;
+                }
+            }
+            if (row == null)
+            {
+                return;
+            }
+
+            row["Goodness"] = CalculateGoodness(entry, nonEngineEntry, score);
+        }
+
+        private bool IsEmpty(AggregatedEntry entry)
+        {
+            return entry.Count == 0;
         }
 
         private ChessDBCNScore GetBestScore(Dictionary<Move, ChessDBCNScore> scores)
@@ -510,7 +497,7 @@ namespace chess_pos_db_gui
                     nonEngineEntries.Add(entry.Key, new AggregatedEntry());
                 }
 
-                if (entry.Key == "--")
+                if (entry.Key == San.NullMove)
                 {
                     Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), bestScore);
                 }
@@ -519,10 +506,7 @@ namespace chess_pos_db_gui
                     var fen = chessBoard.GetFen();
                     scores.TryGetValue(San.ParseSan(fen, entry.Key), out ChessDBCNScore score);
                     Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), score);
-                }
 
-                if (entry.Key != "--")
-                {
                     total.Combine(entry.Value);
                     totalNonEngine.Combine(nonEngineEntries[entry.Key]);
                 }
@@ -560,7 +544,7 @@ namespace chess_pos_db_gui
                     nonEngineEntries.Add(entry.Key, new AggregatedEntry());
                 }
 
-                if (entry.Key != "--")
+                if (entry.Key != San.NullMove)
                 {
                     var fen = chessBoard.GetFen();
                     scores.TryGetValue(San.ParseSan(fen, entry.Key), out ChessDBCNScore score);
@@ -582,18 +566,25 @@ namespace chess_pos_db_gui
 
         private void UpdateBestGoodness()
         {
-            BestGoodness = 0.0;
+            BestGoodness = GetBestGoodness();
+        }
+
+        private double GetBestGoodness()
+        {
+            double goodness = 0.0;
 
             foreach (DataRow row in TabulatedData.Rows)
             {
                 if (row["Goodness"] != null)
                 {
-                    if (((MoveWithSan)row[0]).San != "--")
+                    if (((MoveWithSan)row[0]).San != San.NullMove)
                     {
-                        BestGoodness = Math.Max(BestGoodness, (double)row["Goodness"]);
+                        goodness = Math.Max(goodness, (double)row["Goodness"]);
                     }
                 }
             }
+
+            return goodness;
         }
 
         private void Gather(QueryCacheEntry res, Select select, List<GameLevel> levels, ref Dictionary<string, AggregatedEntry> aggregatedEntries)
@@ -938,7 +929,7 @@ namespace chess_pos_db_gui
                 if (cell.ColumnIndex == 0)
                 {
                     var san = cell.Value.ToString();
-                    if (san != "--" && san != "Total")
+                    if (san != San.NullMove && san != "Total")
                     {
                         chessBoard.DoMove(san);
                     }
@@ -946,56 +937,20 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void EntriesGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private bool IsInvalidDouble(object value)
         {
-            if (e.ColumnIndex == 0)
-            {
-                e.Value = chessBoard.NextMoveNumber() + " " + e.Value.ToString();
-                e.FormattingApplied = true;
-            }
-            else if (entriesGridView.Columns[e.ColumnIndex].Name == "Goodness")
-            {
-                if (e.Value == null || e.Value.GetType() != typeof(double) || Math.Abs((double)e.Value) < 0.01 || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
-                {
-                    e.Value = "";
-                }
-                else
-                {
-                    e.Value = ((double)e.Value * 100.0).ToString("0.0");
-                }
-                e.FormattingApplied = true;
-            }
-            else if (entriesGridView.Columns[e.ColumnIndex].Name == "AvgEloDiff")
-            {
-                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
-                {
-                    e.Value = "";
-                }
-                else
-                {
-                    e.Value = e.Value.ToString();
-                }
-                e.FormattingApplied = true;
-            }
-            else if (entriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("%"))
-            {
-                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
-                {
-                    e.Value = "";
-                }
-                else
-                {
-                    e.Value = ((double)e.Value * 100).ToString("0.0") + "%";
-                }
-                e.FormattingApplied = true;
-            }
+            return value == null || value.GetType() != typeof(double) || Double.IsNaN((double)value) || Double.IsInfinity((double)value);
         }
 
-        private void TotalEntriesGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void ApplyCommonCellFormatting(DataGridView dgv, DataGridViewCellFormattingEventArgs e)
         {
-            if (totalEntriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("Goodness"))
+            var column = dgv.Columns[e.ColumnIndex];
+            var columnName = column.Name;
+            var headerText = column.HeaderText;
+
+            if (headerText.Contains("Goodness"))
             {
-                if (e.Value == null || e.Value.GetType() != typeof(double) || Math.Abs((double)e.Value) < 0.01 || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
+                if (IsInvalidDouble(e.Value) || Math.Abs((double)e.Value) < 0.01)
                 {
                     e.Value = "";
                 }
@@ -1005,9 +960,9 @@ namespace chess_pos_db_gui
                 }
                 e.FormattingApplied = true;
             }
-            else if (totalEntriesGridView.Columns[e.ColumnIndex].Name == "AvgEloDiff")
+            else if (columnName == "AvgEloDiff")
             {
-                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
+                if (IsInvalidDouble(e.Value))
                 {
                     e.Value = "";
                 }
@@ -1017,9 +972,9 @@ namespace chess_pos_db_gui
                 }
                 e.FormattingApplied = true;
             }
-            else if (totalEntriesGridView.Columns[e.ColumnIndex].HeaderText.Contains("%"))
+            else if (headerText.Contains("%"))
             {
-                if (e.Value == null || e.Value.GetType() != typeof(double) || Double.IsNaN((double)e.Value) || Double.IsInfinity((double)e.Value))
+                if (IsInvalidDouble(e.Value))
                 {
                     e.Value = "";
                 }
@@ -1029,6 +984,27 @@ namespace chess_pos_db_gui
                 }
                 e.FormattingApplied = true;
             }
+        }
+
+        private void EntriesGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            ApplyCommonCellFormatting(entriesGridView, e);
+
+            if (e.FormattingApplied)
+            {
+                return;
+            }
+
+            if (e.ColumnIndex == 0)
+            {
+                e.Value = chessBoard.NextMoveNumber() + " " + e.Value.ToString();
+                e.FormattingApplied = true;
+            }
+        }
+
+        private void TotalEntriesGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            ApplyCommonCellFormatting(totalEntriesGridView, e);
         }
 
         private void EntriesGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
