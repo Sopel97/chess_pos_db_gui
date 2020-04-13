@@ -25,6 +25,9 @@ namespace chess_pos_db_gui.src.app
         }
 
         /*
+         * This is the general idea, it is slightly modified at
+         * corner cases and extended for combined games.
+         * 
          * W - number of wins
          * D - number of draws
          * L - number of losses
@@ -74,7 +77,8 @@ namespace chess_pos_db_gui.src.app
             Options options
             )
         {
-            long maxAllowedEloDiff = 400;
+            const long maxAllowedEloDiff = 400;
+            const double minPerf = 0.01;
 
             // if there's less than this amount of games then the goodness contribution will be penalized.
             ulong penaltyFromCountThreshold = 1;
@@ -86,38 +90,40 @@ namespace chess_pos_db_gui.src.app
             bool useEvalWeight = options.UseEval;
             bool useCount = options.UseCount;
 
+            AggregatedEntry engineEntry = entry - nonEngineEntry;
+
             // return 0 if no games being considered
             ulong usedGameCount = 0;
             ulong usedWins = 0;
             ulong usedDraws = 0;
             ulong usedLosses = 0;
+            void addEntry(AggregatedEntry e)
+            {
+                usedGameCount += e.Count;
+                usedWins += e.WinCount;
+                usedDraws += e.DrawCount;
+                usedLosses += e.LossCount;
+            }
+
             if (useTotalWeight)
             {
-                usedGameCount += entry.Count;
-                usedWins += entry.WinCount;
-                usedDraws += entry.DrawCount;
-                usedLosses += entry.LossCount;
+                addEntry(entry);
             }
             if (useHumanWeight)
             {
-                usedGameCount += nonEngineEntry.Count;
-                usedWins += nonEngineEntry.WinCount;
-                usedDraws += nonEngineEntry.DrawCount;
-                usedLosses += nonEngineEntry.LossCount;
+                addEntry(nonEngineEntry);
             }
             if (useEngineWeight)
             {
-                usedGameCount += entry.Count - nonEngineEntry.Count;
-                usedWins += entry.WinCount - nonEngineEntry.WinCount;
-                usedDraws += entry.DrawCount - nonEngineEntry.DrawCount;
-                usedLosses += entry.LossCount - nonEngineEntry.LossCount;
+                addEntry(engineEntry);
             }
+
             if (useAnyGames && usedGameCount == 0)
             {
                 return 0.0;
             }
 
-            if (useEvalWeight && score == null && Math.Abs(entry.EloDiff / (long)entry.Count) > maxAllowedEloDiff)
+            if (useEvalWeight && score == null && Math.Abs(entry.TotalEloDiff / (long)entry.Count) > maxAllowedEloDiff)
             {
                 return 0.0;
             }
@@ -127,73 +133,41 @@ namespace chess_pos_db_gui.src.app
             double totalWeight = useTotalWeight ? (double)options.CombinedGamesWeight : 0.0;
             double evalWeight = useEvalWeight ? (double)options.EvalWeight : 0.0;
 
+            double calculateAdjustedPerf(AggregatedEntry e)
+            {
+                if (e.Count > 0)
+                {
+                    ulong totalWins = e.WinCount;
+                    ulong totalDraws = e.DrawCount;
+                    ulong totalLosses = e.Count - totalWins - totalDraws;
+                    double totalPerf = (totalWins + totalDraws * 0.5) / e.Count;
+                    double totalEloError = EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses);
+                    double expectedTotalPerf = EloCalculator.GetExpectedPerformance((e.TotalEloDiff) / (double)e.Count);
+                    if (sideToMove == Player.Black)
+                    {
+                        totalPerf = 1.0 - totalPerf;
+                        expectedTotalPerf = 1.0 - expectedTotalPerf;
+                    }
+                    if (useCount)
+                    {
+                        totalPerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(totalPerf) - totalEloError);
+                    }
+                    return EloCalculator.GetAdjustedPerformance(totalPerf, expectedTotalPerf);
+                }
+                else
+                {
+                    return 1.0;
+                }
+            }
+
             ulong totalCount = entry.Count;
-            double adjustedTotalPerf = 1.0f;
-            if (totalCount > 0)
-            {
-                ulong totalWins = entry.WinCount;
-                ulong totalDraws = entry.DrawCount;
-                ulong totalLosses = totalCount - totalWins - totalDraws;
-                double totalPerf = (totalWins + totalDraws * 0.5) / totalCount;
-                double totalEloError = EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses);
-                double expectedTotalPerf = EloCalculator.GetExpectedPerformance((entry.EloDiff) / (double)totalCount);
-                if (sideToMove == Player.Black)
-                {
-                    totalPerf = 1.0 - totalPerf;
-                    expectedTotalPerf = 1.0 - expectedTotalPerf;
-                }
-                if (useCount)
-                {
-                    totalPerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(totalPerf) - totalEloError);
-                }
-                adjustedTotalPerf = EloCalculator.GetAdjustedPerformance(totalPerf, expectedTotalPerf);
-            }
+            double adjustedTotalPerf = calculateAdjustedPerf(entry);
 
-            double adjustedEnginePerf = 1.0f;
-            ulong engineCount = entry.Count - nonEngineEntry.Count;
-            if (engineCount > 0)
-            {
-                ulong engineWins = entry.WinCount - nonEngineEntry.WinCount;
-                ulong engineDraws = entry.DrawCount - nonEngineEntry.DrawCount;
-                ulong engineLosses = engineCount - engineWins - engineDraws;
-                double enginePerf = (engineWins + engineDraws * 0.5) / engineCount;
-                double engineEloError = EloCalculator.EloError99pct(engineWins, engineDraws, engineLosses);
-                double expectedEnginePerf = EloCalculator.GetExpectedPerformance((entry.EloDiff - nonEngineEntry.EloDiff) / (double)engineCount);
-                if (sideToMove == Player.Black)
-                {
-                    enginePerf = 1.0 - enginePerf;
-                    expectedEnginePerf = 1.0 - expectedEnginePerf;
-                }
-                if (useCount)
-                {
-                    enginePerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(enginePerf) - engineEloError);
-                }
-                adjustedEnginePerf = EloCalculator.GetAdjustedPerformance(enginePerf, expectedEnginePerf);
-            }
+            ulong engineCount = engineEntry.Count;
+            double adjustedEnginePerf = calculateAdjustedPerf(engineEntry);
 
-            double adjustedHumanPerf = 1.0f;
             ulong humanCount = nonEngineEntry.Count;
-            if (humanCount > 0)
-            {
-                ulong humanWins = nonEngineEntry.WinCount;
-                ulong humanDraws = nonEngineEntry.DrawCount;
-                ulong humanLosses = humanCount - humanWins - humanDraws;
-                double humanPerf = (humanWins + humanDraws * 0.5) / humanCount;
-                double humanEloError = EloCalculator.EloError99pct(humanWins, humanDraws, humanLosses);
-                double expectedHumanPerf = EloCalculator.GetExpectedPerformance(nonEngineEntry.EloDiff / (double)humanCount);
-                if (sideToMove == Player.Black)
-                {
-                    humanPerf = 1.0 - humanPerf;
-                    expectedHumanPerf = 1.0 - expectedHumanPerf;
-                }
-                if (useCount)
-                {
-                    humanPerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(humanPerf) - humanEloError);
-                }
-                adjustedHumanPerf = EloCalculator.GetAdjustedPerformance(humanPerf, expectedHumanPerf);
-            }
-
-            double minPerf = 0.01;
+            double adjustedHumanPerf = calculateAdjustedPerf(nonEngineEntry);
 
             double penalizePerf(double perf, double numGames)
             {
@@ -222,7 +196,9 @@ namespace chess_pos_db_gui.src.app
             double engineGoodness = Math.Pow(adjustedEnginePerf, engineWeight);
             double humanGoodness = Math.Pow(adjustedHumanPerf, humanWeight);
             double totalGoodness = Math.Pow(adjustedTotalPerf, totalWeight);
-            // if eval is not present then assume 0.5 but penalize moves with low game count
+
+            // If eval is not present then assume 0.5 but reduce it for moves with low game count.
+            // The idea is that we don't want missing eval to penalize common moves.
             double evalGoodness =
                 Math.Pow(
                     score != null

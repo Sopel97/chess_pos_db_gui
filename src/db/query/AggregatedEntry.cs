@@ -9,7 +9,7 @@ namespace chess_pos_db_gui
         public ulong WinCount { get; set; }
         public ulong DrawCount { get; set; }
         public ulong LossCount { get; set; }
-        public long EloDiff { get; set; }
+        public long TotalEloDiff { get; set; }
         public Optional<GameHeader> FirstGame { get; set; }
         public double Perf { get { return (WinCount + DrawCount / 2.0) / Count; } }
         public double DrawRate { get { return (double)DrawCount / Count; } }
@@ -20,7 +20,7 @@ namespace chess_pos_db_gui
             WinCount = 0;
             DrawCount = 0;
             LossCount = 0;
-            EloDiff = 0;
+            TotalEloDiff = 0;
             FirstGame = Optional<GameHeader>.CreateEmpty();
         }
 
@@ -36,10 +36,22 @@ namespace chess_pos_db_gui
             }
         }
 
+        public static AggregatedEntry operator-(AggregatedEntry lhs, AggregatedEntry rhs)
+        {
+            return new AggregatedEntry
+            {
+                Count = lhs.Count - rhs.Count,
+                WinCount = lhs.WinCount - rhs.WinCount,
+                DrawCount = lhs.DrawCount - rhs.DrawCount,
+                LossCount = lhs.LossCount - rhs.LossCount,
+                TotalEloDiff = lhs.TotalEloDiff - rhs.TotalEloDiff
+            };
+        }
+
         public void Combine(Entry entry, GameResult result)
         {
             Count += entry.Count;
-            EloDiff += entry.EloDiff.Or(0);
+            TotalEloDiff += entry.EloDiff.Or(0);
 
             switch (result)
             {
@@ -70,7 +82,7 @@ namespace chess_pos_db_gui
             WinCount += entry.WinCount;
             DrawCount += entry.DrawCount;
             LossCount += entry.LossCount;
-            EloDiff += entry.EloDiff;
+            TotalEloDiff += entry.TotalEloDiff;
 
             if (FirstGame.Count() == 0)
             {

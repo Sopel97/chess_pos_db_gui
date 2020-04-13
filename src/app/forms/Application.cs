@@ -339,7 +339,7 @@ namespace chess_pos_db_gui
             row["DrawCount"] = total.DrawCount;
             row["LossCount"] = total.LossCount;
 
-            var averageEloDiff = total.Count > 0 ? total.EloDiff / (double)total.Count : 0.0;
+            var averageEloDiff = total.Count > 0 ? total.TotalEloDiff / (double)total.Count : 0.0;
             var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
             var adjustedPerf = EloCalculator.GetAdjustedPerformance(total.Perf, expectedPerf);
             if (chessBoard.SideToMove() == Player.White)
@@ -948,7 +948,7 @@ namespace chess_pos_db_gui
             var columnName = column.Name;
             var headerText = column.HeaderText;
 
-            if (headerText.Contains("Goodness"))
+            if (columnName == "Goodness")
             {
                 if (IsInvalidDouble(e.Value) || Math.Abs((double)e.Value) < 0.01)
                 {
@@ -956,7 +956,7 @@ namespace chess_pos_db_gui
                 }
                 else
                 {
-                    e.Value = ((double)e.Value * 100).ToString("0");
+                    e.Value = ((double)e.Value * 100).ToString("0.0");
                 }
                 e.FormattingApplied = true;
             }
