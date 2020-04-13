@@ -40,7 +40,9 @@ namespace chess_pos_db_gui
             SerializeEngineList();
         }
 
+#pragma warning disable IDE0060 // Remove unused parameter
         public void OnProfileUpdated(UciEngineProfile profile)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             SerializeEngineList();
         }

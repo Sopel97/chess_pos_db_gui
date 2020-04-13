@@ -57,7 +57,7 @@ namespace chess_pos_db_gui
             profilesListBox.Items.Add(profile.Name);
         }
 
-        private void addProfileButton_Click(object sender, EventArgs e)
+        private void AddProfileButton_Click(object sender, EventArgs e)
         {
             var form = new CreateEngineProfileForm(Profiles);
             form.ShowDialog();
@@ -68,7 +68,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void removeProfileButton_Click(object sender, EventArgs e)
+        private void RemoveProfileButton_Click(object sender, EventArgs e)
         {
             var selection = profilesListBox.SelectedItem;
             if (selection != null)
@@ -77,7 +77,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void confirmButton_Click(object sender, EventArgs e)
+        private void ConfirmButton_Click(object sender, EventArgs e)
         {
             var selection = profilesListBox.SelectedItem;
             if (selection != null)

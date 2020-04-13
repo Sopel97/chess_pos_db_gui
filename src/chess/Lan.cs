@@ -19,7 +19,6 @@ namespace chess_pos_db_gui.src.chess
 
             Position origin = null;
             Position destination = null;
-            Piece piece = null;
             char? promotion = null;
 
             if (move.Length > 2)
@@ -37,14 +36,12 @@ namespace chess_pos_db_gui.src.chess
                 int r = player == Player.White ? 1 : 8;
                 origin = new Position(File.E, r);
                 destination = new Position(File.G, r);
-                piece = new King(player);
             }
             else if (move.ToUpperInvariant() == "O-O-O")
             {
                 int r = player == Player.White ? 1 : 8;
                 origin = new Position(File.E, r);
                 destination = new Position(File.C, r);
-                piece = new King(player);
             }
 
             if (destination == null)

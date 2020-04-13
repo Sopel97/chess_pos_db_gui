@@ -602,7 +602,9 @@ namespace chess_pos_db_gui
     {
         public int Value { get; private set; }
         private UciScoreType Type { get; set; }
+#pragma warning disable IDE0052 // Remove unread private members
         private UciScoreBoundType BoundType { get; set; }
+#pragma warning restore IDE0052 // Remove unread private members
 
         public UciScore(int value, UciScoreType type, UciScoreBoundType boundType)
         {
@@ -780,10 +782,10 @@ namespace chess_pos_db_gui
 
             switch (type)
             {
-                case "check": return new CheckUciOption(name, defaultValue, min, max, vars);
-                case "spin": return new SpinUciOption(name, defaultValue, min, max, vars);
-                case "combo": return new ComboUciOption(name, defaultValue, min, max, vars);
-                case "string": return new StringUciOption(name, defaultValue, min, max, vars);
+                case "check": return CheckUciOption.ParseFromParts(name, defaultValue);
+                case "spin": return SpinUciOption.ParseFromParts(name, defaultValue, min, max);
+                case "combo": return ComboUciOption.ParseFromParts(name, defaultValue, vars);
+                case "string": return StringUciOption.ParseFromParts(name, defaultValue);
                 default: return null;
             }
         }
@@ -824,18 +826,22 @@ namespace chess_pos_db_gui
 
         public UciOptionControlPanel(string name, System.Windows.Forms.Control control)
         {
-            Panel = new System.Windows.Forms.TableLayoutPanel();
-            Panel.ColumnCount = 2;
-            Panel.RowCount = 1;
-            Panel.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            Panel.AutoSize = true;
+            Panel = new System.Windows.Forms.TableLayoutPanel
+            {
+                ColumnCount = 2,
+                RowCount = 1,
+                Padding = new System.Windows.Forms.Padding(0, 0, 10, 0),
+                AutoSize = true
+            };
 
             Control = control;
 
-            var label = new System.Windows.Forms.Label();
-            label.Text = name;
-            label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            label.Width = 128;
+            var label = new System.Windows.Forms.Label
+            {
+                Text = name,
+                TextAlign = System.Drawing.ContentAlignment.MiddleRight,
+                Width = 128
+            };
 
             Panel.Controls.Add(label);
             Panel.Controls.Add(Control);
@@ -848,10 +854,15 @@ namespace chess_pos_db_gui
         public bool DefaultValue { get; private set; }
         public bool Value { get; private set; }
 
-        public CheckUciOption(string name, string defaultValue, string min, string max, IList<string> var)
+        public static CheckUciOption ParseFromParts(string name, string defaultValue)
+        {
+            return new CheckUciOption(name, defaultValue == "true");
+        }
+
+        public CheckUciOption(string name, bool defaultValue)
         {
             Name = name;
-            DefaultValue = Value = (defaultValue == "true");
+            DefaultValue = Value = defaultValue;
         }
 
         public override UciOptionType GetOptionType()
@@ -879,10 +890,12 @@ namespace chess_pos_db_gui
 
         public override UciOptionControlPanel CreateControl()
         {
-            var control = new System.Windows.Forms.CheckBox();
-            control.Checked = Value;
-            control.Enabled = true;
-            control.Visible = true;
+            var control = new System.Windows.Forms.CheckBox
+            {
+                Checked = Value,
+                Enabled = true,
+                Visible = true
+            };
 
             return new UciOptionControlPanel(Name, control);
         }
@@ -932,22 +945,28 @@ namespace chess_pos_db_gui
         public string Name { get; private set; }
         public long DefaultValue { get; private set; }
         public long Value { get; private set; }
-        public Optional<long> Min { get; private set; }
-        public Optional<long> Max { get; private set; }
+        public long Min { get; private set; }
+        public long Max { get; private set; }
 
-        public SpinUciOption(string name, string defaultValue, string min, string max, IList<string> var)
+
+        public static SpinUciOption ParseFromParts(string name, string defaultValue, string min, string max)
+        {
+            var minopt = min == null ? Optional<long>.CreateEmpty() : Optional<long>.Create(long.Parse(min));
+            var maxopt = max == null ? Optional<long>.CreateEmpty() : Optional<long>.Create(long.Parse(max));
+            var def = defaultValue == null ? minopt.Or(0) : long.Parse(defaultValue);
+            return new SpinUciOption(
+                name, 
+                def, 
+                minopt.Or(def), 
+                maxopt.Or(def)
+                );
+        }
+        public SpinUciOption(string name, long defaultValue, long min, long max)
         {
             Name = name;
-            Min = min == null ? Optional<long>.CreateEmpty() : Optional<long>.Create(long.Parse(min));
-            Max = max == null ? Optional<long>.CreateEmpty() : Optional<long>.Create(long.Parse(max));
-            if (defaultValue == null)
-            {
-                DefaultValue = Value = Min.Or(0);
-            }
-            else
-            {
-                DefaultValue = Value = long.Parse(defaultValue);
-            }
+            Min = min;
+            Max = max;
+            DefaultValue = Value = defaultValue;
         }
 
         public override UciOptionType GetOptionType()
@@ -981,13 +1000,15 @@ namespace chess_pos_db_gui
 
         public override UciOptionControlPanel CreateControl()
         {
-            var control = new System.Windows.Forms.NumericUpDown();
-            control.Minimum = Min.Or(DefaultValue);
-            control.Maximum = Max.Or(DefaultValue);
-            control.Value = Value;
-            control.DecimalPlaces = 0;
-            control.Increment = 1;
-            control.AutoSize = true;
+            var control = new System.Windows.Forms.NumericUpDown
+            {
+                Minimum = Min,
+                Maximum = Max,
+                Value = Value,
+                DecimalPlaces = 0,
+                Increment = 1,
+                AutoSize = true
+            };
 
             return new UciOptionControlPanel(Name, control);
         }
@@ -1034,7 +1055,12 @@ namespace chess_pos_db_gui
         public string Value { get; private set; }
         public IList<string> Vars { get; private set; }
 
-        public ComboUciOption(string name, string defaultValue, string min, string max, IList<string> var)
+        public static ComboUciOption ParseFromParts(string name, string defaultValue, IList<string> var)
+        {
+            return new ComboUciOption(name, defaultValue, var);
+        }
+
+        public ComboUciOption(string name, string defaultValue, IList<string> var)
         {
             Name = name;
             DefaultValue = Value = defaultValue;
@@ -1118,12 +1144,14 @@ namespace chess_pos_db_gui
         public string DefaultValue { get; private set; }
         public string Value { get; private set; }
 
-        public StringUciOption(string name, string defaultValue, string min, string max, IList<string> var)
+        public static StringUciOption ParseFromParts(string name, string defaultValue)
         {
-            if (defaultValue == null) defaultValue = "";
-
+            return new StringUciOption(name, defaultValue);
+        }
+        public StringUciOption(string name, string defaultValue)
+        {
             Name = name;
-            DefaultValue = Value = defaultValue;
+            DefaultValue = Value = defaultValue ?? "";
         }
 
         public override UciOptionType GetOptionType()
@@ -1147,9 +1175,11 @@ namespace chess_pos_db_gui
 
         public override UciOptionControlPanel CreateControl()
         {
-            var control = new System.Windows.Forms.TextBox();
-            control.Text = DefaultValue;
-            control.Width = 100;
+            var control = new System.Windows.Forms.TextBox
+            {
+                Text = DefaultValue,
+                Width = 100
+            };
 
             return new UciOptionControlPanel(Name, control);
         }

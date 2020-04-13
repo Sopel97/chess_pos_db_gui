@@ -59,8 +59,7 @@ namespace chess_pos_db_gui
 
         public void Signal()
         {
-            ManualResetEventSlim waitHandle;
-            if (_waitingThreads.TryDequeue(out waitHandle))
+            if (_waitingThreads.TryDequeue(out ManualResetEventSlim waitHandle))
             {
                 waitHandle.Set();
             }
@@ -68,8 +67,7 @@ namespace chess_pos_db_gui
 
         public void Broadcast()
         {
-            ManualResetEventSlim waitHandle;
-            while (_waitingThreads.TryDequeue(out waitHandle))
+            while (_waitingThreads.TryDequeue(out ManualResetEventSlim waitHandle))
             {
                 waitHandle.Set();
             }

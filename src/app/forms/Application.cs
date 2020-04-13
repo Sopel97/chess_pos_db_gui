@@ -22,52 +22,52 @@ namespace chess_pos_db_gui
     {
         private static readonly int queryCacheSize = 128;
 
-        private HashSet<GameLevel> levels { get; set; }
-        private HashSet<Select> selects { get; set; }
-        private CacheEntry data { get; set; }
-        private DataTable tabulatedData { get; set; }
-        private DataTable totalTabulatedData { get; set; }
-        private double bestGoodness { get; set; }
-        private DatabaseProxy database { get; set; }
-        private LRUCache<QueryQueueEntry, CacheEntry> queryCache { get; set; }
-        private bool isEntryDataUpToDate { get; set; } = false;
-        private string ip { get; set; } = "127.0.0.1";
-        private int port { get; set; } = 1234;
+        private HashSet<GameLevel> Levels { get; set; }
+        private HashSet<Select> Selects { get; set; }
+        private CacheEntry Data { get; set; }
+        private DataTable TabulatedData { get; set; }
+        private DataTable TotalTabulatedData { get; set; }
+        private double BestGoodness { get; set; }
+        private DatabaseProxy Database { get; set; }
+        private LRUCache<QueryQueueEntry, CacheEntry> QueryCache { get; set; }
+        private bool IsEntryDataUpToDate { get; set; } = false;
+        private string Ip { get; set; } = "127.0.0.1";
+        private int Port { get; set; } = 1234;
 
-        private QueryQueue queryQueue { get; set; }
+        private QueryQueue QueryQueue { get; set; }
 
-        private object cacheLock { get; set; }
+        private object CacheLock { get; set; }
 
-        private Thread queryThread { get; set; }
+        private Thread QueryThread { get; set; }
 
-        private ConditionVariable anyOutstandingQuery { get; set; }
+        private ConditionVariable AnyOutstandingQuery { get; set; }
 
-        private volatile bool endQueryThread;
+        private volatile bool EndQueryThread;
 
-        private Mutex queueMutex { get; set; }
+        private Mutex QueueMutex { get; set; }
 
-        private ChessDBCNScoreProvider chessdbcn;
+        private ChessDBCNScoreProvider ScoreProvider { get; set; }
 
         private EngineAnalysisForm AnalysisForm { get; set; }
 
         public Application()
         {
-            queueMutex = new Mutex();
-            queryQueue = new QueryQueue();
-            cacheLock = new object();
-            endQueryThread = false;
-            anyOutstandingQuery = new ConditionVariable();
-            queryThread = new Thread(new ThreadStart(QueryThread));
-            queryThread.Start();
+            QueueMutex = new Mutex();
+            QueryQueue = new QueryQueue();
+            CacheLock = new object();
+            EndQueryThread = false;
+            AnyOutstandingQuery = new ConditionVariable();
+            QueryThread = new Thread(new ThreadStart(RunQueryThread));
+            QueryThread.Start();
 
-            levels = new HashSet<GameLevel>();
-            selects = new HashSet<Select>();
-            data = null;
-            tabulatedData = new DataTable();
-            totalTabulatedData = new DataTable();
-            queryCache = new LRUCache<QueryQueueEntry, CacheEntry>(queryCacheSize);
+            Levels = new HashSet<GameLevel>();
+            Selects = new HashSet<Select>();
+            Data = null;
+            TabulatedData = new DataTable();
+            TotalTabulatedData = new DataTable();
+            QueryCache = new LRUCache<QueryQueueEntry, CacheEntry>(queryCacheSize);
 
-            bestGoodness = 0.0;
+            BestGoodness = 0.0;
 
             InitializeComponent();
 
@@ -84,47 +84,47 @@ namespace chess_pos_db_gui
             gamesWeightCheckbox.Visible = false;
             gamesWeightNumericUpDown.Visible = false;
 
-            tabulatedData.Columns.Add(new DataColumn("Move", typeof(MoveWithSan)));
-            tabulatedData.Columns.Add(new DataColumn("Count", typeof(ulong)));
-            tabulatedData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
-            tabulatedData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
-            tabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
-            tabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
-            tabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
-            tabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
-            tabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
-            tabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
-            tabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
-            tabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
-            tabulatedData.Columns.Add(new DataColumn("Goodness", typeof(double)));
-            tabulatedData.Columns.Add(new DataColumn("White", typeof(string)));
-            tabulatedData.Columns.Add(new DataColumn("Black", typeof(string)));
-            tabulatedData.Columns.Add(new DataColumn("Result", typeof(string)));
-            tabulatedData.Columns.Add(new DataColumn("Date", typeof(string)));
-            tabulatedData.Columns.Add(new DataColumn("Eco", typeof(string)));
-            tabulatedData.Columns.Add(new DataColumn("PlyCount", typeof(ushort)));
-            tabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
-            tabulatedData.Columns.Add(new DataColumn("GameId", typeof(uint)));
-            tabulatedData.Columns.Add(new DataColumn("IsOnlyTransposition", typeof(bool)));
+            TabulatedData.Columns.Add(new DataColumn("Move", typeof(MoveWithSan)));
+            TabulatedData.Columns.Add(new DataColumn("Count", typeof(ulong)));
+            TabulatedData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
+            TabulatedData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
+            TabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
+            TabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
+            TabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
+            TabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
+            TabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
+            TabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
+            TabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
+            TabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
+            TabulatedData.Columns.Add(new DataColumn("Goodness", typeof(double)));
+            TabulatedData.Columns.Add(new DataColumn("White", typeof(string)));
+            TabulatedData.Columns.Add(new DataColumn("Black", typeof(string)));
+            TabulatedData.Columns.Add(new DataColumn("Result", typeof(string)));
+            TabulatedData.Columns.Add(new DataColumn("Date", typeof(string)));
+            TabulatedData.Columns.Add(new DataColumn("Eco", typeof(string)));
+            TabulatedData.Columns.Add(new DataColumn("PlyCount", typeof(ushort)));
+            TabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
+            TabulatedData.Columns.Add(new DataColumn("GameId", typeof(uint)));
+            TabulatedData.Columns.Add(new DataColumn("IsOnlyTransposition", typeof(bool)));
 
-            totalTabulatedData.Columns.Add(new DataColumn("Move", typeof(string)));
-            totalTabulatedData.Columns.Add(new DataColumn("Count", typeof(ulong)));
-            totalTabulatedData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
-            totalTabulatedData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
-            totalTabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
-            totalTabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
-            totalTabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
-            totalTabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
-            totalTabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
-            totalTabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
-            totalTabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
-            totalTabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
+            TotalTabulatedData.Columns.Add(new DataColumn("Move", typeof(string)));
+            TotalTabulatedData.Columns.Add(new DataColumn("Count", typeof(ulong)));
+            TotalTabulatedData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
+            TotalTabulatedData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
+            TotalTabulatedData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
+            TotalTabulatedData.Columns.Add(new DataColumn("Perf", typeof(double)));
+            TotalTabulatedData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
+            TotalTabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
+            TotalTabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
+            TotalTabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
+            TotalTabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
+            TotalTabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
 
             MakeDoubleBuffered(entriesGridView);
-            entriesGridView.DataSource = tabulatedData;
+            entriesGridView.DataSource = TabulatedData;
 
             MakeDoubleBuffered(totalEntriesGridView);
-            totalEntriesGridView.DataSource = totalTabulatedData;
+            totalEntriesGridView.DataSource = TotalTabulatedData;
 
             totalEntriesGridView.Columns["Move"].Frozen = true;
             totalEntriesGridView.Columns["Move"].MinimumWidth = 50;
@@ -263,12 +263,12 @@ namespace chess_pos_db_gui
 
         private void OnProcessExit(object sender, EventArgs e)
         {
-            database?.Dispose();
+            Database?.Dispose();
         }
 
         private Dictionary<Move, Score> GetChessdbcnScores(string fen)
         {
-            return chessdbcn.GetScores(fen);
+            return ScoreProvider.GetScores(fen);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -277,7 +277,7 @@ namespace chess_pos_db_gui
 
             try
             {
-                database = new DatabaseProxy(ip, port);
+                Database = new DatabaseProxy(Ip, Port);
             }
             catch
             {
@@ -288,7 +288,7 @@ namespace chess_pos_db_gui
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
             chessBoard.PositionChanged += OnPositionChanged;
 
-            chessdbcn = new ChessDBCNScoreProvider();
+            ScoreProvider = new ChessDBCNScoreProvider();
 
             UpdateDatabaseInfo();
         }
@@ -300,16 +300,16 @@ namespace chess_pos_db_gui
                 AnalysisForm.OnPositionChanged(chessBoard.GetFen());
             }
 
-            if (!database.IsOpen) return;
+            if (!Database.IsOpen) return;
 
             if (autoQueryCheckbox.Checked)
             {
                 UpdateData();
-                isEntryDataUpToDate = true;
+                IsEntryDataUpToDate = true;
             }
             else
             {
-                isEntryDataUpToDate = false;
+                IsEntryDataUpToDate = false;
             }
         }
 
@@ -472,15 +472,15 @@ namespace chess_pos_db_gui
 
             double minPerf = 0.01;
 
-            Func<double, double, double> penalizePerf = (perf, numGames) =>
+            double penalizePerf(double perf, double numGames)
             {
                 if (numGames >= penaltyFromCountThreshold) return perf;
                 if (numGames == 0) return minPerf;
 
-                double r = ((numGames+1.0) / (penaltyFromCountThreshold+1));
+                double r = ((numGames + 1.0) / (penaltyFromCountThreshold + 1));
                 double penalty = 1 - Math.Log(r);
                 return Math.Max(minPerf, perf / penalty);
-            };
+            }
 
             if (useCount)
             {
@@ -510,7 +510,7 @@ namespace chess_pos_db_gui
         private void NormalizeGoodnessValues()
         {
             double highest = 0.0;
-            foreach (DataRow row in tabulatedData.Rows)
+            foreach (DataRow row in TabulatedData.Rows)
             {
                 if (row["Goodness"] != null)
                 {
@@ -523,7 +523,7 @@ namespace chess_pos_db_gui
 
             if (highest != 0.0)
             {
-                foreach (DataRow row in tabulatedData.Rows)
+                foreach (DataRow row in TabulatedData.Rows)
                 {
                     if (row["Goodness"] != null)
                     {
@@ -560,7 +560,7 @@ namespace chess_pos_db_gui
         {
             long maxDisplayedEloDiff = 400;
 
-            var row = tabulatedData.NewRow();
+            var row = TabulatedData.NewRow();
             if (move == "--")
             {
                 row["Move"] = new MoveWithSan(null, move);
@@ -620,13 +620,13 @@ namespace chess_pos_db_gui
 
             row["IsOnlyTransposition"] = isOnlyTransposition;
 
-            tabulatedData.Rows.Add(row);
+            TabulatedData.Rows.Add(row);
         }
 
-        private void UpdateGoodness(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, bool isOnlyTransposition, Score score)
+        private void UpdateGoodness(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, Score score)
         {
             System.Data.DataRow row = null;
-            foreach(System.Data.DataRow r in tabulatedData.Rows)
+            foreach(System.Data.DataRow r in TabulatedData.Rows)
             {
                 if (((MoveWithSan)r["Move"]).San == move)
                 {
@@ -648,9 +648,9 @@ namespace chess_pos_db_gui
         {
             long maxDisplayedEloDiff = 400;
 
-            totalTabulatedData.Clear();
+            TotalTabulatedData.Clear();
 
-            var row = totalTabulatedData.NewRow();
+            var row = TotalTabulatedData.NewRow();
             row["Move"] = "Total";
             row["Count"] = total.Count;
             row["WinCount"] = total.WinCount;
@@ -685,7 +685,7 @@ namespace chess_pos_db_gui
                 row["EvalPct"] = totalScore.Perf;
             }
 
-            totalTabulatedData.Rows.InsertAt(row, 0);
+            TotalTabulatedData.Rows.InsertAt(row, 0);
         }
 
         private Score GetBestScore(Dictionary<Move, Score> scores)
@@ -730,8 +730,7 @@ namespace chess_pos_db_gui
                 }
                 else
                 {
-                    Score score = null;
-                    scores.TryGetValue(chessBoard.SanToMove(entry.Key), out score);
+                    scores.TryGetValue(chessBoard.SanToMove(entry.Key), out Score score);
                     Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), score);
                 }
 
@@ -754,7 +753,6 @@ namespace chess_pos_db_gui
 
         private void UpdateGoodness(
             Dictionary<string, AggregatedEntry> entries,
-            IEnumerable<string> continuationMoves,
             Dictionary<string, AggregatedEntry> nonEngineEntries,
             Dictionary<Move, Score> scores
             )
@@ -775,7 +773,7 @@ namespace chess_pos_db_gui
                 if(entry.Key != "--")
                 {
                     scores.TryGetValue(chessBoard.SanToMove(entry.Key), out Score score);
-                    UpdateGoodness(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), score);
+                    UpdateGoodness(entry.Key, entry.Value, nonEngineEntries[entry.Key], score);
                 }
             }
 
@@ -793,15 +791,15 @@ namespace chess_pos_db_gui
 
         private void UpdateBestGoodness()
         {
-            bestGoodness = 0.0;
+            BestGoodness = 0.0;
 
-            foreach (DataRow row in tabulatedData.Rows)
+            foreach (DataRow row in TabulatedData.Rows)
             {
                 if (row["Goodness"] != null)
                 {
                     if (((MoveWithSan)row[0]).San != "--")
                     {
-                        bestGoodness = Math.Max(bestGoodness, (double)row["Goodness"]);
+                        BestGoodness = Math.Max(BestGoodness, (double)row["Goodness"]);
                     }
                 }
             }
@@ -857,7 +855,7 @@ namespace chess_pos_db_gui
                 }
             }
 
-            Populate(aggregatedEntries, aggregatedContinuationEntries.Where(p => p.Value.Count != 0).Select(p => p.Key), aggregatedNonEngineEntries, data.Scores);
+            Populate(aggregatedEntries, aggregatedContinuationEntries.Where(p => p.Value.Count != 0).Select(p => p.Key), aggregatedNonEngineEntries, Data.Scores);
         }
 
         private void UpdateGoodness(CacheEntry res, List<Select> selects, List<GameLevel> levels)
@@ -884,12 +882,12 @@ namespace chess_pos_db_gui
                 }
             }
 
-            UpdateGoodness(aggregatedEntries, aggregatedContinuationEntries.Where(p => p.Value.Count != 0).Select(p => p.Key), aggregatedNonEngineEntries, data.Scores);
+            UpdateGoodness(aggregatedEntries, aggregatedNonEngineEntries, Data.Scores);
         }
 
         private void Clear()
         {
-            tabulatedData.Clear();
+            TabulatedData.Clear();
             entriesGridView.Refresh();
 
             firstGameInfoRichTextBox.Clear();
@@ -897,7 +895,7 @@ namespace chess_pos_db_gui
 
         private void Repopulate()
         {
-            if (selects.Count == 0 || levels.Count == 0 || data == null)
+            if (Selects.Count == 0 || Levels.Count == 0 || Data == null)
             {
                 Clear();
             }
@@ -917,54 +915,54 @@ namespace chess_pos_db_gui
                     entriesGridView.Columns["AdjustedPerf"].HeaderText = "ABl%";
                     totalEntriesGridView.Columns["AdjustedPerf"].HeaderText = "ABl%";
                 }
-                Populate(data, selects.ToList(), levels.ToList());
+                Populate(Data, Selects.ToList(), Levels.ToList());
             }
         }
 
         private void UpdateGoodness()
         {
-            if (selects.Count == 0 || levels.Count == 0 || data == null)
+            if (Selects.Count == 0 || Levels.Count == 0 || Data == null)
             {
                 return;
             }
             else
             {
-                UpdateGoodness(data, selects.ToList(), levels.ToList());
+                UpdateGoodness(Data, Selects.ToList(), Levels.ToList());
             }
         }
 
         private void LevelHumanCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (levelHumanCheckBox.Checked) levels.Add(GameLevel.Human);
-            else levels.Remove(GameLevel.Human);
+            if (levelHumanCheckBox.Checked) Levels.Add(GameLevel.Human);
+            else Levels.Remove(GameLevel.Human);
             Repopulate();
         }
 
         private void LevelEngineCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (levelEngineCheckBox.Checked) levels.Add(GameLevel.Engine);
-            else levels.Remove(GameLevel.Engine);
+            if (levelEngineCheckBox.Checked) Levels.Add(GameLevel.Engine);
+            else Levels.Remove(GameLevel.Engine);
             Repopulate();
         }
 
         private void LevelServerCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (levelServerCheckBox.Checked) levels.Add(GameLevel.Server);
-            else levels.Remove(GameLevel.Server);
+            if (levelServerCheckBox.Checked) Levels.Add(GameLevel.Server);
+            else Levels.Remove(GameLevel.Server);
             Repopulate();
         }
 
         private void TypeContinuationsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (typeContinuationsCheckBox.Checked) selects.Add(chess_pos_db_gui.Select.Continuations);
-            else selects.Remove(chess_pos_db_gui.Select.Continuations);
+            if (typeContinuationsCheckBox.Checked) Selects.Add(chess_pos_db_gui.Select.Continuations);
+            else Selects.Remove(chess_pos_db_gui.Select.Continuations);
             Repopulate();
         }
 
         private void TypeTranspositionsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (typeTranspositionsCheckBox.Checked) selects.Add(chess_pos_db_gui.Select.Transpositions);
-            else selects.Remove(chess_pos_db_gui.Select.Transpositions);
+            if (typeTranspositionsCheckBox.Checked) Selects.Add(chess_pos_db_gui.Select.Transpositions);
+            else Selects.Remove(chess_pos_db_gui.Select.Transpositions);
             Repopulate();
         }
 
@@ -988,27 +986,27 @@ namespace chess_pos_db_gui
 
         private bool TryUpdateDataFromCache()
         {
-            if (!database.IsOpen) return false;
+            if (!Database.IsOpen) return false;
 
             var e = new QueryQueueEntry(chessBoard);
 
             try
             {
                 CacheEntry cached = null;
-                lock (cacheLock)
+                lock (CacheLock)
                 {
-                    cached = queryCache.Get(e);
+                    cached = QueryCache.Get(e);
                 }
 
                 if (cached == null)
                 {
-                    tabulatedData.Clear();
-                    totalTabulatedData.Clear();
+                    TabulatedData.Clear();
+                    TotalTabulatedData.Clear();
                     return false;
                 }
                 else
                 {
-                    data = cached;
+                    Data = cached;
                 }
                 Repopulate();
 
@@ -1018,14 +1016,14 @@ namespace chess_pos_db_gui
             {
             }
 
-            tabulatedData.Clear();
-            totalTabulatedData.Clear();
+            TabulatedData.Clear();
+            TotalTabulatedData.Clear();
             return false;
         }
 
         private void QueryAsyncToCache(QueryQueueEntry sig)
         {
-            if (!database.IsOpen) return;
+            if (!Database.IsOpen) return;
 
             try
             {
@@ -1037,20 +1035,20 @@ namespace chess_pos_db_gui
 
                 if (sig.San == "--")
                 {
-                    data.Stats = database.Query(sig.Fen);
+                    data.Stats = Database.Query(sig.Fen);
                     data.Scores = scores.Result;
-                    lock (cacheLock)
+                    lock (CacheLock)
                     {
-                        queryCache.Add(sig, data);
+                        QueryCache.Add(sig, data);
                     }
                 }
                 else
                 {
-                    data.Stats = database.Query(sig.Fen, sig.San);
+                    data.Stats = Database.Query(sig.Fen, sig.San);
                     data.Scores = scores.Result;
-                    lock (cacheLock)
+                    lock (CacheLock)
                     {
-                        queryCache.Add(sig, data);
+                        QueryCache.Add(sig, data);
                     }
                 }
             }
@@ -1081,30 +1079,30 @@ namespace chess_pos_db_gui
             }
 
             var sig = new QueryQueueEntry(chessBoard);
-            queueMutex.WaitOne();
-            queryQueue.Enqueue(sig);
-            queueMutex.ReleaseMutex();
-            anyOutstandingQuery.Signal();
+            QueueMutex.WaitOne();
+            QueryQueue.Enqueue(sig);
+            QueueMutex.ReleaseMutex();
+            AnyOutstandingQuery.Signal();
         }
         
-        private void QueryThread()
+        private void RunQueryThread()
         {
             for(; ; )
             {
-                queueMutex.WaitOne();
-                while(queryQueue.IsEmpty() && !endQueryThread)
+                QueueMutex.WaitOne();
+                while(QueryQueue.IsEmpty() && !EndQueryThread)
                 {
-                    anyOutstandingQuery.Wait(queueMutex);
+                    AnyOutstandingQuery.Wait(QueueMutex);
                 }
 
-                if (endQueryThread)
+                if (EndQueryThread)
                 {
-                    queueMutex.ReleaseMutex();
+                    QueueMutex.ReleaseMutex();
                     break;
                 }
 
-                var sig = queryQueue.Pop();
-                queueMutex.ReleaseMutex();
+                var sig = QueryQueue.Pop();
+                QueueMutex.ReleaseMutex();
 
                 QueryAsyncToCacheAndUpdate(sig);
             }
@@ -1112,7 +1110,7 @@ namespace chess_pos_db_gui
 
         private void UpdateData()
         {
-            if (!database.IsOpen) return;
+            if (!Database.IsOpen) return;
             ScheduleUpdateDataAsync();
         }
 
@@ -1120,7 +1118,7 @@ namespace chess_pos_db_gui
         {
             bool open = false;
             string path = "";
-            using (var form = new DatabaseCreationForm(database))
+            using (var form = new DatabaseCreationForm(Database))
             {
                 form.ShowDialog();
                 open = form.OpenAfterFinished;
@@ -1135,7 +1133,7 @@ namespace chess_pos_db_gui
 
         private void EpdDumpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new EpdDumpForm(database))
+            using (var form = new EpdDumpForm(Database))
             {
                 form.ShowDialog();
             }
@@ -1143,9 +1141,9 @@ namespace chess_pos_db_gui
 
         private void Open(string path)
         {
-            database.Close();
-            database.Open(path);
-            queryCache.Clear();
+            Database.Close();
+            Database.Open(path);
+            QueryCache.Clear();
             UpdateDatabaseInfo();
 
             OnPositionChanged(this, new EventArgs());
@@ -1153,7 +1151,7 @@ namespace chess_pos_db_gui
 
         private void UpdateDatabaseInfo()
         {
-            var info = database.GetInfo();
+            var info = Database.GetInfo();
 
             if (info.IsOpen)
             {
@@ -1193,8 +1191,8 @@ namespace chess_pos_db_gui
 
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            database.Close();
-            queryCache.Clear();
+            Database.Close();
+            QueryCache.Clear();
             UpdateDatabaseInfo();
         }
 
@@ -1202,7 +1200,7 @@ namespace chess_pos_db_gui
         {
             if (e.RowIndex < 0 || e.RowIndex >= entriesGridView.Rows.Count || e.ColumnIndex != 0) return;
 
-            if (isEntryDataUpToDate)
+            if (IsEntryDataUpToDate)
             {
                 var cell = entriesGridView[e.ColumnIndex, e.RowIndex];
                 if (cell.ColumnIndex == 0)
@@ -1304,7 +1302,7 @@ namespace chess_pos_db_gui
             var row = entriesGridView.Rows[e.RowIndex];
             var isTransposition = Convert.ToBoolean(row.Cells["IsOnlyTransposition"].Value);
             var goodness = row.Cells["Goodness"].Value;
-            var isGoodGoodness = goodness != null && (double)goodness > 0.0 && (double)goodness <= 1.1 && (double)goodness >= 0.9 * bestGoodness;
+            var isGoodGoodness = goodness != null && (double)goodness > 0.0 && (double)goodness <= 1.1 && (double)goodness >= 0.9 * BestGoodness;
             if ((ulong)row.Cells["Count"].Value == 0)
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(0xAA, 0xAA, 0xAA);
@@ -1331,9 +1329,9 @@ namespace chess_pos_db_gui
 
         private void Application_FormClosing(object sender, FormClosingEventArgs e)
         {
-            endQueryThread = true;
-            anyOutstandingQuery.Signal();
-            queryThread.Join();
+            EndQueryThread = true;
+            AnyOutstandingQuery.Signal();
+            QueryThread.Join();
         }
 
         private void HideNeverPlayedCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1400,12 +1398,12 @@ namespace chess_pos_db_gui
             UpdateGoodness();
         }
 
-        private void humanWeightCheckbox_CheckedChanged(object sender, EventArgs e)
+        private void HumanWeightCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             UpdateGoodness();
         }
 
-        private void setupToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetupToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (AnalysisForm == null)
             {
@@ -1420,7 +1418,7 @@ namespace chess_pos_db_gui
             AnalysisForm = null;
         }
 
-        private void gamesWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
+        private void GamesWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             if (gamesWeightCheckbox.Checked)
             {
@@ -1468,7 +1466,7 @@ namespace chess_pos_db_gui
         private QueryQueueEntry Current { get; set; }
         private QueryQueueEntry Next { get; set; }
 
-        private object Lock;
+        private readonly object Lock;
 
         public QueryQueue()
         {

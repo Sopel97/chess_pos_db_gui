@@ -31,7 +31,7 @@ namespace chess_pos_db_gui
          *
          * elo_error = 1600 * z * s(H_Perf) / ln(10)
          */
-        private static double s(double p, double drawRatio, double total)
+        private static double ComputeS(double p, double drawRatio, double total)
         {
             double safePerf = 0.15;
             p = Math.Max(safePerf, Math.Min(1.0 - safePerf, p));
@@ -51,7 +51,7 @@ namespace chess_pos_db_gui
             double z = 2.58;
             double perf = ((double)engineWins + (double)engineDraws * 0.5) / total;
 
-            return Math.Min(1600.0 * z * s(perf, drawRatio, total) / Math.Log(10), maxElo * 2);
+            return Math.Min(1600.0 * z * ComputeS(perf, drawRatio, total) / Math.Log(10), maxElo * 2);
         }
     }
 }

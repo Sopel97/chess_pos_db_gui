@@ -17,8 +17,10 @@ namespace chess_pos_db_gui.src.app.chessdbcn
 
         public ChessDBCNScoreProvider()
         {
-            Client = new HttpClient();
-            Client.BaseAddress = new Uri(URL);
+            Client = new HttpClient
+            {
+                BaseAddress = new Uri(URL)
+            };
 
             // Add an Accept header for JSON format.
             Client.DefaultRequestHeaders.Accept.Add(

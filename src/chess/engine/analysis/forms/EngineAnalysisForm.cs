@@ -69,10 +69,12 @@ namespace chess_pos_db_gui
 
             Profiles = new UciEngineProfileStorage("data/engine_profiles.json");
 
-            InfoUpdateTimer = new System.Timers.Timer();
-            InfoUpdateTimer.Interval = 2000;
+            InfoUpdateTimer = new System.Timers.Timer
+            {
+                Interval = 2000,
+                AutoReset = true
+            };
             InfoUpdateTimer.Elapsed += ProcessPendingInfoReponses;
-            InfoUpdateTimer.AutoReset = true;
             InfoUpdateTimer.Enabled = true;
 
             ClearIdInfo();
@@ -150,7 +152,7 @@ namespace chess_pos_db_gui
             pi.SetValue(dgv, true, null);
         }
 
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OptionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (OptionsForm != null && !OptionsForm.Visible)
             {
@@ -197,18 +199,6 @@ namespace chess_pos_db_gui
             enginePathLabel.Text = "Path: ";
             engineIdNameLabel.Text = "Name: ";
             engineIdAuthorLabel.Text = "Author: ";
-        }
-
-        private void LoadEngine(string path)
-        {
-            if (Engine != null)
-            {
-                UnloadEngine();
-            }
-
-            Engine = new UciEngineProxy(path);
-
-            AfterEngineLoaded();
         }
 
         private void LoadEngine(UciEngineProfile profile)
@@ -284,7 +274,7 @@ namespace chess_pos_db_gui
             InfoUpdateTimer.Dispose();
         }
 
-        private void toggleAnalyzeButton_Click(object sender, EventArgs e)
+        private void ToggleAnalyzeButton_Click(object sender, EventArgs e)
         {
             if (Engine.IsSearching)
             {
@@ -417,29 +407,6 @@ namespace chess_pos_db_gui
             row["PV"] = StringifyPV(info.Fen, info.PV.FirstOrDefault());
         }
 
-        private System.Data.DataRow FindOrCreateRowByMultiPV(int multipv)
-        {
-            System.Data.DataRow row = null;
-            foreach(var rr in AnalysisData.Rows)
-            {
-                System.Data.DataRow r = (System.Data.DataRow)rr;
-                if (r["MultiPV"] == null) continue;
-                if ((int)r["MultiPV"] == multipv)
-                {
-                    row = r;
-                    break;
-                }
-            }
-
-            if (row == null)
-            {
-                row = AnalysisData.NewRow();
-                AnalysisData.Rows.Add(row);
-            }
-
-            return row;
-        }
-
         private System.Data.DataRow FindOrCreateRowByMoveOrMultiPV(DataTable dt, MoveWithSan move, int multipv)
         {
             System.Data.DataRow row = null;
@@ -490,7 +457,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var form = new EngineProfilesForm(Profiles);
             form.ShowDialog();
@@ -500,7 +467,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UnloadEngine();
         }
@@ -514,7 +481,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void analysisDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void AnalysisDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             DataGridViewColumn column = analysisDataGridView.Columns[e.ColumnIndex];
             if (column.Name == "Score")

@@ -13,14 +13,14 @@ namespace chess_pos_db_gui
 {
     public class DatabaseProxy
     {
-        private TcpClient client { get; set; }
-        private Process process { get; set; }
+        private TcpClient Client { get; set; }
+        private Process Process { get; set; }
 
         public bool IsOpen { get; private set; }
 
         public string Path { get; private set; }
 
-        private object Lock = new object();
+        private readonly object Lock = new object();
 
         public DatabaseProxy(string address, int port, int numTries = 3, int msBetweenTries = 1000)
         {
@@ -38,24 +38,24 @@ namespace chess_pos_db_gui
                 }
             }
 
-            process = new Process();
-            process.StartInfo.FileName = processName + ".exe";
-            process.StartInfo.Arguments = "tcp " + port;
+            Process = new Process();
+            Process.StartInfo.FileName = processName + ".exe";
+            Process.StartInfo.Arguments = "tcp " + port;
 
             // TODO: Setting this to true makes the program hang after a few queries
             //       Find a fix as it will be needed for reporting progress to the user.
             // process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardInput = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            process.StartInfo.CreateNoWindow = true; 
-            process.Start();
+            Process.StartInfo.RedirectStandardInput = true;
+            Process.StartInfo.UseShellExecute = false;
+            Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            Process.StartInfo.CreateNoWindow = true; 
+            Process.Start();
 
             while(numTries-- > 0)
             {
                 try
                 {
-                    client = new TcpClient(address, port);
+                    Client = new TcpClient(address, port);
 
                     break;
                 }
@@ -63,7 +63,7 @@ namespace chess_pos_db_gui
                 {
                     if (numTries == 0)
                     {
-                        process.Kill();
+                        Process.Kill();
                         throw new InvalidDataException("Cannot open communication channel with the database.");
                     }
                     else
@@ -73,7 +73,7 @@ namespace chess_pos_db_gui
                 }
                 catch
                 {
-                    process.Kill();
+                    Process.Kill();
                     throw;
                 }
             }
@@ -87,7 +87,7 @@ namespace chess_pos_db_gui
 
                 if (IsOpen)
                 {
-                    var stream = client.GetStream();
+                    var stream = Client.GetStream();
                     SendMessage(stream, "{\"command\":\"stats\"}");
 
                     var response = ReceiveMessage(stream);
@@ -114,7 +114,7 @@ namespace chess_pos_db_gui
                 Path = path;
                 path = path.Replace("\\", "\\\\"); // we stringify it naively to json so we need to escape manually
 
-                var stream = client.GetStream();
+                var stream = Client.GetStream();
                 SendMessage(stream, "{\"command\":\"open\",\"database_path\":\"" + path + "\"}");
 
                 while (true)
@@ -139,7 +139,7 @@ namespace chess_pos_db_gui
         {
             lock (Lock)
             {
-                var stream = client.GetStream();
+                var stream = Client.GetStream();
 
                 SendMessage(stream, query);
 
@@ -174,7 +174,7 @@ namespace chess_pos_db_gui
 
                 try
                 {
-                    var stream = client.GetStream();
+                    var stream = Client.GetStream();
                     SendMessage(stream, "{\"command\":\"close\"}");
 
                     var responseJson = JsonValue.Parse(ReceiveMessage(stream));
@@ -195,14 +195,14 @@ namespace chess_pos_db_gui
             {
                 try
                 {
-                    var stream = client.GetStream();
+                    var stream = Client.GetStream();
                     SendMessage(stream, "{\"command\":\"exit\"}");
-                    process.WaitForExit();
+                    Process.WaitForExit();
                 }
                 catch
                 {
                 }
-                client.Close();
+                Client.Close();
             }
         }
 
@@ -281,11 +281,13 @@ namespace chess_pos_db_gui
         {
             lock (Lock)
             {
-                var stream = client.GetStream();
+                var stream = Client.GetStream();
 
-                var json = new JsonObject();
-                json.Add("command", "dump");
-                json.Add("output_path", outPath);
+                var json = new JsonObject
+                {
+                    { "command", "dump" },
+                    { "output_path", outPath }
+                };
                 if (tempPath != null)
                 {
                     json.Add("temporary_path", tempPath);
@@ -333,7 +335,7 @@ namespace chess_pos_db_gui
         {
             lock (Lock)
             {
-                var stream = client.GetStream();
+                var stream = Client.GetStream();
 
                 SendMessage(stream, json.ToString());
 

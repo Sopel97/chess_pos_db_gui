@@ -55,7 +55,7 @@
             this.setPathButton.TabIndex = 8;
             this.setPathButton.Text = "...";
             this.setPathButton.UseVisualStyleBackColor = true;
-            this.setPathButton.Click += new System.EventHandler(this.setPathButton_Click);
+            this.setPathButton.Click += new System.EventHandler(this.SetPathButton_Click);
             // 
             // pathTextBox
             // 
@@ -94,7 +94,7 @@
             this.addButton.TabIndex = 12;
             this.addButton.Text = "Add";
             this.addButton.UseVisualStyleBackColor = true;
-            this.addButton.Click += new System.EventHandler(this.addButton_Click);
+            this.addButton.Click += new System.EventHandler(this.AddButton_Click);
             // 
             // CreateEngineProfileForm
             // 

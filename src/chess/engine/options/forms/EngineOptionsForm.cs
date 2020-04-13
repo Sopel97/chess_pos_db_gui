@@ -64,13 +64,13 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void saveButton_Click(object sender, EventArgs e)
+        private void SaveButton_Click(object sender, EventArgs e)
         {
             SaveChanges();
             Hide();
         }
 
-        private void discardButton_Click(object sender, EventArgs e)
+        private void DiscardButton_Click(object sender, EventArgs e)
         {
             DiscardChanges();
             Hide();

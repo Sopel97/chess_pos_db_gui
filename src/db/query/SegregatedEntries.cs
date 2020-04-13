@@ -10,7 +10,7 @@ namespace chess_pos_db_gui
 {
     public class SegregatedEntries
     {
-        private Dictionary<Origin, Entry> entries;
+        private Dictionary<Origin, Entry> Entries { get; set; }
 
         public static SegregatedEntries FromJson(JsonValue json)
         {
@@ -32,17 +32,17 @@ namespace chess_pos_db_gui
 
         public SegregatedEntries()
         {
-            entries = new Dictionary<Origin, Entry>();
+            Entries = new Dictionary<Origin, Entry>();
         }
 
         public void Add(GameLevel level, GameResult result, Entry entry)
         {
-            entries.Add(new Origin(level, result), entry);
+            Entries.Add(new Origin(level, result), entry);
         }
 
         public Entry Get(GameLevel level, GameResult result)
         {
-            if (entries.TryGetValue(new Origin(level, result), out Entry e))
+            if (Entries.TryGetValue(new Origin(level, result), out Entry e))
                 return e;
 
             return null;
@@ -50,7 +50,7 @@ namespace chess_pos_db_gui
 
         public IEnumerator GetEnumerator()
         {
-            return entries.GetEnumerator();
+            return Entries.GetEnumerator();
         }
     }
 

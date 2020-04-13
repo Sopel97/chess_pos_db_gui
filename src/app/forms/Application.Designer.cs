@@ -344,7 +344,7 @@
             this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
             this.setupToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
             this.setupToolStripMenuItem.Text = "Setup";
-            this.setupToolStripMenuItem.Click += new System.EventHandler(this.setupToolStripMenuItem_Click);
+            this.setupToolStripMenuItem.Click += new System.EventHandler(this.SetupToolStripMenuItem_Click);
             // 
             // firstGameInfoGroupBox
             // 
@@ -413,7 +413,7 @@
             0,
             0,
             0});
-            this.gamesWeightNumericUpDown.ValueChanged += new System.EventHandler(this.gamesWeightNumericUpDown_ValueChanged);
+            this.gamesWeightNumericUpDown.ValueChanged += new System.EventHandler(this.GamesWeightNumericUpDown_ValueChanged);
             // 
             // gamesWeightCheckbox
             // 
@@ -441,7 +441,7 @@
             this.humanWeightCheckbox.Text = "Human weight";
             this.tooltip.SetToolTip(this.humanWeightCheckbox, "When enabled the quality index calculation will include human games");
             this.humanWeightCheckbox.UseVisualStyleBackColor = true;
-            this.humanWeightCheckbox.CheckedChanged += new System.EventHandler(this.humanWeightCheckbox_CheckedChanged);
+            this.humanWeightCheckbox.CheckedChanged += new System.EventHandler(this.HumanWeightCheckbox_CheckedChanged);
             // 
             // engineWeightCheckbox
             // 

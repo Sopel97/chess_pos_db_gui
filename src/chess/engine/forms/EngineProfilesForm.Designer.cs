@@ -54,7 +54,7 @@
             this.confirmButton.TabIndex = 1;
             this.confirmButton.Text = "Select";
             this.confirmButton.UseVisualStyleBackColor = true;
-            this.confirmButton.Click += new System.EventHandler(this.confirmButton_Click);
+            this.confirmButton.Click += new System.EventHandler(this.ConfirmButton_Click);
             // 
             // addProfileButton
             // 
@@ -65,7 +65,7 @@
             this.addProfileButton.TabIndex = 2;
             this.addProfileButton.Text = "Add";
             this.addProfileButton.UseVisualStyleBackColor = true;
-            this.addProfileButton.Click += new System.EventHandler(this.addProfileButton_Click);
+            this.addProfileButton.Click += new System.EventHandler(this.AddProfileButton_Click);
             // 
             // removeProfileButton
             // 
@@ -76,7 +76,7 @@
             this.removeProfileButton.TabIndex = 3;
             this.removeProfileButton.Text = "Remove";
             this.removeProfileButton.UseVisualStyleBackColor = true;
-            this.removeProfileButton.Click += new System.EventHandler(this.removeProfileButton_Click);
+            this.removeProfileButton.Click += new System.EventHandler(this.RemoveProfileButton_Click);
             // 
             // EngineProfilesForm
             // 

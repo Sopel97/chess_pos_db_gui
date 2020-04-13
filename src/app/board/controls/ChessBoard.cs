@@ -406,24 +406,6 @@ namespace chess_pos_db_gui
             return true;
         }
 
-        private bool UndoMove()
-        {
-            SynchronizeMoveListWithHistory();
-
-            if (History.UndoMove())
-            {
-                RemoveLastMoveFromMoveHistory();
-                return true;
-            }
-
-            return false;
-        }
-
-        private void RemoveLastMoveFromMoveHistory()
-        {
-            RemoveLastMovesFromMoveHistory(1);
-        }
-
         private void RemoveLastMovesFromMoveHistory(int count)
         {
             for(int i = 0; i < count; ++i)

@@ -79,7 +79,7 @@
             this.analysisDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.analysisDataGridView.Size = new System.Drawing.Size(776, 343);
             this.analysisDataGridView.TabIndex = 3;
-            this.analysisDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.analysisDataGridView_ColumnHeaderMouseClick);
+            this.analysisDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.AnalysisDataGridView_ColumnHeaderMouseClick);
             // 
             // menuStrip1
             // 
@@ -106,21 +106,21 @@
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
             this.loadToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.loadToolStripMenuItem.Text = "Load";
-            this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
+            this.loadToolStripMenuItem.Click += new System.EventHandler(this.LoadToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.optionsToolStripMenuItem.Text = "Options";
-            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.OptionsToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             this.closeToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.closeToolStripMenuItem.Text = "Unload";
-            this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
             // 
             // toggleAnalyzeButton
             // 
@@ -131,7 +131,7 @@
             this.toggleAnalyzeButton.Text = "Analyze";
             this.toolTip1.SetToolTip(this.toggleAnalyzeButton, "Start/stop analysis.");
             this.toggleAnalyzeButton.UseVisualStyleBackColor = true;
-            this.toggleAnalyzeButton.Click += new System.EventHandler(this.toggleAnalyzeButton_Click);
+            this.toggleAnalyzeButton.Click += new System.EventHandler(this.ToggleAnalyzeButton_Click);
             // 
             // engineIdAuthorLabel
             // 

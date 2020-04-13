@@ -21,7 +21,7 @@ namespace chess_pos_db_gui
             Profiles = profiles;
         }
 
-        private void setPathButton_Click(object sender, EventArgs e)
+        private void SetPathButton_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog browser = new OpenFileDialog())
             {
@@ -37,7 +37,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void addButton_Click(object sender, EventArgs e)
+        private void AddButton_Click(object sender, EventArgs e)
         {
             var name = nameTextBox.Text;
             var path = pathTextBox.Text;

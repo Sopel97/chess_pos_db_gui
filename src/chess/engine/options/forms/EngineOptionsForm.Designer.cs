@@ -52,7 +52,7 @@
             this.saveButton.TabIndex = 6;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
-            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            this.saveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
             // discardButton
             // 
@@ -62,7 +62,7 @@
             this.discardButton.TabIndex = 7;
             this.discardButton.Text = "Discard";
             this.discardButton.UseVisualStyleBackColor = true;
-            this.discardButton.Click += new System.EventHandler(this.discardButton_Click);
+            this.discardButton.Click += new System.EventHandler(this.DiscardButton_Click);
             // 
             // EngineOptionsForm
             // 
