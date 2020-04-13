@@ -358,7 +358,7 @@ namespace chess_pos_db_gui
                     return true;
                 }));
             }
-            catch(Exception ex)
+            catch(Exception)
             {
 
             }

@@ -52,6 +52,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\app\chessdbcn\ChessDBCNScoreProvider.cs" />
+    <Compile Include="src\chess\FenProvider.cs" />
+    <Compile Include="src\chess\Lan.cs" />
     <Compile Include="src\db\query\AggregatedEntry.cs" />
     <Compile Include="src\app\forms\Application.cs">
       <SubType>Form</SubType>
@@ -128,7 +131,7 @@
     <Compile Include="src\app\forms\PgnInputForm.Designer.cs">
       <DependentUpon>PgnInputForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\db\query\QueryResponse.cs" />
     <Compile Include="src\db\query\ResultForRoot.cs" />

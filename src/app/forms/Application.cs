@@ -1,4 +1,5 @@
-﻿using ChessDotNet;
+﻿using chess_pos_db_gui.src.app.chessdbcn;
+using ChessDotNet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,32 +22,31 @@ namespace chess_pos_db_gui
     {
         private static readonly int queryCacheSize = 128;
 
-        private HashSet<GameLevel> levels;
-        private HashSet<Select> selects;
-        private CacheEntry data;
-        private DataTable tabulatedData;
-        private DataTable totalTabulatedData;
-        private double bestGoodness;
-        private DatabaseProxy database;
-        private LRUCache<QueryQueueEntry, CacheEntry> queryCache;
-        private bool isEntryDataUpToDate = false;
-        private string ip = "127.0.0.1";
-        private int port = 1234;
+        private HashSet<GameLevel> levels { get; set; }
+        private HashSet<Select> selects { get; set; }
+        private CacheEntry data { get; set; }
+        private DataTable tabulatedData { get; set; }
+        private DataTable totalTabulatedData { get; set; }
+        private double bestGoodness { get; set; }
+        private DatabaseProxy database { get; set; }
+        private LRUCache<QueryQueueEntry, CacheEntry> queryCache { get; set; }
+        private bool isEntryDataUpToDate { get; set; } = false;
+        private string ip { get; set; } = "127.0.0.1";
+        private int port { get; set; } = 1234;
 
-        private QueryQueue queryQueue;
+        private QueryQueue queryQueue { get; set; }
 
-        private object cacheLock;
+        private object cacheLock { get; set; }
 
-        private Thread queryThread;
+        private Thread queryThread { get; set; }
 
-        private ConditionVariable anyOutstandingQuery;
+        private ConditionVariable anyOutstandingQuery { get; set; }
 
         private volatile bool endQueryThread;
 
-        private Mutex queueMutex;
+        private Mutex queueMutex { get; set; }
 
-        private const string URL = "http://www.chessdb.cn/cdb.php";
-        private HttpClient chessdbcn;
+        private ChessDBCNScoreProvider chessdbcn;
 
         private EngineAnalysisForm AnalysisForm { get; set; }
 
@@ -268,55 +268,7 @@ namespace chess_pos_db_gui
 
         private Dictionary<Move, Score> GetChessdbcnScores(string fen)
         {
-            const string urlParameters = "?action=queryall&board={0}";
-
-            Dictionary<Move, Score> scores = new Dictionary<Move, Score>();
-
-            try
-            {
-                HttpResponseMessage response = chessdbcn.GetAsync(String.Format(urlParameters, fen)).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseStr = response.Content.ReadAsStringAsync().Result;
-                    Console.WriteLine("{0}", responseStr);
-                    string[] byMoveStrs = responseStr.Split('|');
-                    foreach (var byMoveStr in byMoveStrs)
-                    {
-                        string[] parts = byMoveStr.Split(',');
-
-                        Dictionary<string, string> values = new Dictionary<string, string>();
-                        foreach (var part in parts)
-                        {
-                            string[] kv = part.Split(':');
-                            values.Add(kv[0], kv[1]);
-                        }
-
-                        values.TryGetValue("move", out string moveStr);
-                        values.TryGetValue("score", out string scoreStr);
-
-                        if (moveStr != null)
-                        {
-                            try
-                            {
-                                scores.Add(chessBoard.LanToMove(fen, moveStr), new Score(scoreStr));
-                            }
-                            catch
-                            {
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            return scores;
+            return chessdbcn.GetScores(fen);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -336,12 +288,7 @@ namespace chess_pos_db_gui
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
             chessBoard.PositionChanged += OnPositionChanged;
 
-            chessdbcn = new HttpClient();
-            chessdbcn.BaseAddress = new Uri(URL);
-
-            // Add an Accept header for JSON format.
-            chessdbcn.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
+            chessdbcn = new ChessDBCNScoreProvider();
 
             UpdateDatabaseInfo();
         }

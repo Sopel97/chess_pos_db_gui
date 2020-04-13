@@ -1,4 +1,5 @@
-﻿using ChessDotNet;
+﻿using chess_pos_db_gui.src.chess;
+using ChessDotNet;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -52,7 +53,7 @@ namespace chess_pos_db_gui
             Path = path;
             Name = "";
             Author = "";
-            Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            Fen = FenProvider.StartPos;
             PvCount = 1;
             MessageQueue = new BlockingQueue<string>();
             CurrentOptions = new List<UciOption>();
@@ -122,7 +123,7 @@ namespace chess_pos_db_gui
                     {
                         UciInfoHandler.Invoke(infoResponse);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         MessageQueue.Clear();
                     }
@@ -915,6 +916,11 @@ namespace chess_pos_db_gui
                    Name == option.Name &&
                    Value == option.Value;
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
         public override UciOptionLinkedControl CreateLinkedControl()
         {
             return new CheckUciOptionLinkedControl(this);
@@ -1010,6 +1016,11 @@ namespace chess_pos_db_gui
                    Name == option.Name &&
                    Value == option.Value;
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
         public override UciOptionLinkedControl CreateLinkedControl()
         {
             return new SpinUciOptionLinkedControl(this);
@@ -1090,6 +1101,11 @@ namespace chess_pos_db_gui
                    Name == option.Name &&
                    Value == option.Value;
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
         public override UciOptionLinkedControl CreateLinkedControl()
         {
             return new ComboUciOptionLinkedControl(this);
@@ -1166,6 +1182,11 @@ namespace chess_pos_db_gui
             return obj is StringUciOption option &&
                    Name == option.Name &&
                    Value == option.Value;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
         public override UciOptionLinkedControl CreateLinkedControl()
         {

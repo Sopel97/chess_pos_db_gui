@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using ChessDotNet;
 using ChessDotNet.Pieces;
 using System.Reflection;
+using chess_pos_db_gui.src.chess;
 
 namespace chess_pos_db_gui
 {
@@ -18,28 +19,24 @@ namespace chess_pos_db_gui
     {
         private static readonly Bitmap DefaultBitmap = CreateDefaultBitmap();
 
-        private static readonly string StartPosFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         private ChessBoardHistory History { get; set; }
 
-        private Image boardImage { get; set; }
-        private Image boardImageWhite { get; set; }
-        private Image boardImageBlack { get; set; }
-        private Image boardLightSquare { get; set; }
-        private Image boardDarkSquare { get; set; }
-        private Image whitePawn { get; set; }
-        private Image whiteKnight { get; set; }
-        private Image whiteBishop { get; set; }
-        private Image whiteRook { get; set; }
-        private Image whiteQueen { get; set; }
-        private Image whiteKing { get; set; }
-        private Image blackPawn { get; set; }
-        private Image blackKnight { get; set; }
-        private Image blackBishop { get; set; }
-        private Image blackRook { get; set; }
-        private Image blackQueen { get; set; }
-        private Image blackKing { get; set; }
+        private Image BoardImageWhite { get; set; }
+        private Image BoardImageBlack { get; set; }
+        private Image WhitePawn { get; set; }
+        private Image WhiteKnight { get; set; }
+        private Image WhiteBishop { get; set; }
+        private Image WhiteRook { get; set; }
+        private Image WhiteQueen { get; set; }
+        private Image WhiteKing { get; set; }
+        private Image BlackPawn { get; set; }
+        private Image BlackKnight { get; set; }
+        private Image BlackBishop { get; set; }
+        private Image BlackRook { get; set; }
+        private Image BlackQueen { get; set; }
+        private Image BlackKing { get; set; }
 
-        private Dictionary<Piece, Image> pieceImages;
+        private Dictionary<Piece, Image> PieceImages { get; set; }
         private Point? MouseFrom { get; set; }
         private Point? MouseTo { get; set; }
 
@@ -52,7 +49,7 @@ namespace chess_pos_db_gui
         private int BaseMoveNumber;
         private bool Resetting { get; set; }
 
-        private EventHandler onPositionChanged { get; set; }
+        private EventHandler onPositionChanged;
         public event EventHandler PositionChanged
         {
             add
@@ -72,7 +69,7 @@ namespace chess_pos_db_gui
 
             History = new ChessBoardHistory();
 
-            pieceImages = new Dictionary<Piece, Image>();
+            PieceImages = new Dictionary<Piece, Image>();
 
             MouseFrom = null;
             MouseTo = null;
@@ -110,7 +107,7 @@ namespace chess_pos_db_gui
 
         private void Reset(ChessGame game)
         {
-            Reset(StartPosFen);
+            Reset(FenProvider.StartPos);
             foreach (var move in game.Moves)
             {
                 DoMove(move.SAN, true);
@@ -160,25 +157,22 @@ namespace chess_pos_db_gui
 
         public void LoadImages(string path)
         {
-            boardImage = Image.FromFile(path + "/board.png");
-            boardImageWhite = Image.FromFile(path + "/board_w.png");
-            boardImageBlack = Image.FromFile(path + "/board_b.png");
-            boardLightSquare = Image.FromFile(path + "/board_light.png");
-            boardDarkSquare = Image.FromFile(path + "/board_dark.png");
+            BoardImageWhite = Image.FromFile(path + "/board_w.png");
+            BoardImageBlack = Image.FromFile(path + "/board_b.png");
 
-            whitePawn = Image.FromFile(path + "/white_pawn.png");
-            whiteKnight = Image.FromFile(path + "/white_knight.png");
-            whiteBishop = Image.FromFile(path + "/white_bishop.png");
-            whiteRook = Image.FromFile(path + "/white_rook.png");
-            whiteQueen = Image.FromFile(path + "/white_queen.png");
-            whiteKing = Image.FromFile(path + "/white_king.png");
+            WhitePawn = Image.FromFile(path + "/white_pawn.png");
+            WhiteKnight = Image.FromFile(path + "/white_knight.png");
+            WhiteBishop = Image.FromFile(path + "/white_bishop.png");
+            WhiteRook = Image.FromFile(path + "/white_rook.png");
+            WhiteQueen = Image.FromFile(path + "/white_queen.png");
+            WhiteKing = Image.FromFile(path + "/white_king.png");
 
-            blackPawn = Image.FromFile(path + "/black_pawn.png");
-            blackKnight = Image.FromFile(path + "/black_knight.png");
-            blackBishop = Image.FromFile(path + "/black_bishop.png");
-            blackRook = Image.FromFile(path + "/black_rook.png");
-            blackQueen = Image.FromFile(path + "/black_queen.png");
-            blackKing = Image.FromFile(path + "/black_king.png");
+            BlackPawn = Image.FromFile(path + "/black_pawn.png");
+            BlackKnight = Image.FromFile(path + "/black_knight.png");
+            BlackBishop = Image.FromFile(path + "/black_bishop.png");
+            BlackRook = Image.FromFile(path + "/black_rook.png");
+            BlackQueen = Image.FromFile(path + "/black_queen.png");
+            BlackKing = Image.FromFile(path + "/black_king.png");
 
             UpdatePieceImagesDictionary();
 
@@ -187,26 +181,26 @@ namespace chess_pos_db_gui
 
         private void UpdatePieceImagesDictionary()
         {
-            pieceImages.Clear();
+            PieceImages.Clear();
 
-            pieceImages.Add(new Pawn(Player.White), whitePawn);
-            pieceImages.Add(new Knight(Player.White), whiteKnight);
-            pieceImages.Add(new Bishop(Player.White), whiteBishop);
-            pieceImages.Add(new Rook(Player.White), whiteRook);
-            pieceImages.Add(new Queen(Player.White), whiteQueen);
-            pieceImages.Add(new King(Player.White), whiteKing);
+            PieceImages.Add(new Pawn(Player.White), WhitePawn);
+            PieceImages.Add(new Knight(Player.White), WhiteKnight);
+            PieceImages.Add(new Bishop(Player.White), WhiteBishop);
+            PieceImages.Add(new Rook(Player.White), WhiteRook);
+            PieceImages.Add(new Queen(Player.White), WhiteQueen);
+            PieceImages.Add(new King(Player.White), WhiteKing);
 
-            pieceImages.Add(new Pawn(Player.Black), blackPawn);
-            pieceImages.Add(new Knight(Player.Black), blackKnight);
-            pieceImages.Add(new Bishop(Player.Black), blackBishop);
-            pieceImages.Add(new Rook(Player.Black), blackRook);
-            pieceImages.Add(new Queen(Player.Black), blackQueen);
-            pieceImages.Add(new King(Player.Black), blackKing);
+            PieceImages.Add(new Pawn(Player.Black), BlackPawn);
+            PieceImages.Add(new Knight(Player.Black), BlackKnight);
+            PieceImages.Add(new Bishop(Player.Black), BlackBishop);
+            PieceImages.Add(new Rook(Player.Black), BlackRook);
+            PieceImages.Add(new Queen(Player.Black), BlackQueen);
+            PieceImages.Add(new King(Player.Black), BlackKing);
         }
 
         private void DrawBoard(Graphics g)
         {
-            var img = IsBoardFlipped ? boardImageBlack : boardImageWhite;
+            var img = IsBoardFlipped ? BoardImageBlack : BoardImageWhite;
             g.DrawImage(img, 0, 0, chessBoardPanel.Width, chessBoardPanel.Height);
         }
 
@@ -263,7 +257,7 @@ namespace chess_pos_db_gui
 
         private void DrawPiece(Graphics g, Piece piece, int file, int rank)
         {
-            Image img = pieceImages[piece];
+            Image img = PieceImages[piece];
             DrawOnSquare(g, img, file, rank);
         }
 
@@ -302,27 +296,23 @@ namespace chess_pos_db_gui
 
         private void ChessBoard_Load(object sender, EventArgs e)
         {
-            boardImage = DefaultBitmap;
-            boardLightSquare = DefaultBitmap;
-            boardDarkSquare = DefaultBitmap;
+            WhitePawn = DefaultBitmap;
+            WhiteKnight = DefaultBitmap;
+            WhiteBishop = DefaultBitmap;
+            WhiteRook = DefaultBitmap;
+            WhiteQueen = DefaultBitmap;
+            WhiteKing = DefaultBitmap;
 
-            whitePawn = DefaultBitmap;
-            whiteKnight = DefaultBitmap;
-            whiteBishop = DefaultBitmap;
-            whiteRook = DefaultBitmap;
-            whiteQueen = DefaultBitmap;
-            whiteKing = DefaultBitmap;
-
-            blackPawn = DefaultBitmap;
-            blackKnight = DefaultBitmap;
-            blackBishop = DefaultBitmap;
-            blackRook = DefaultBitmap;
-            blackQueen = DefaultBitmap;
-            blackKing = DefaultBitmap;
+            BlackPawn = DefaultBitmap;
+            BlackKnight = DefaultBitmap;
+            BlackBishop = DefaultBitmap;
+            BlackRook = DefaultBitmap;
+            BlackQueen = DefaultBitmap;
+            BlackKing = DefaultBitmap;
 
             UpdatePieceImagesDictionary();
 
-            Reset(StartPosFen);
+            Reset(FenProvider.StartPos);
         }
 
         public string NextMoveNumber()
@@ -386,13 +376,13 @@ namespace chess_pos_db_gui
 
         public Move LanToMove(string lan)
         {
-            Move move = San.ParseLan(new ChessGame(History.Current().GCD), lan);
+            Move move = Lan.ParseLan(new ChessGame(History.Current().GCD), lan);
             return move;
         }
 
         public Move LanToMove(string fen, string lan)
         {
-            Move move = San.ParseLan(new ChessGame(fen), lan);
+            Move move = Lan.ParseLan(new ChessGame(fen), lan);
             return move;
         }
 
@@ -586,7 +576,7 @@ namespace chess_pos_db_gui
 
         private void ResetButton_Click(object sender, EventArgs e)
         {
-            Reset(StartPosFen);
+            Reset(FenProvider.StartPos);
         }
 
         private void FlipBoardButton_Click(object sender, EventArgs e)
@@ -672,9 +662,9 @@ namespace chess_pos_db_gui
     internal class MoveHistoryDataRow : DataRow
     {
         public int BaseMoveNumber = 1;
-        private int _No { get; set; }
-        private DetailedMove _WhiteDetailedMove { get; set; }
-        private DetailedMove _BlackDetailedMove { get; set; }
+        private int _No;
+        private DetailedMove _WhiteDetailedMove;
+        private DetailedMove _BlackDetailedMove;
         public int No {
             get { return _No; }
             set { _No = value; base["No"] = (value + BaseMoveNumber - 1).ToString() + "."; }

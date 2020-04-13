@@ -13,8 +13,6 @@ namespace chess_pos_db_gui
 {
     public partial class EpdDumpForm : Form
     {
-        private bool finishedWithErrors = true;
-
         private ulong NumGames;
         private ulong NumPosIn;
         private ulong NumPosOut;
@@ -216,7 +214,6 @@ namespace chess_pos_db_gui
             try
             {
                 database.Dump(pgns, outPath, tempPath, minCount, ProgressCallback);
-                finishedWithErrors = false;
                 MessageBox.Show(
                     String.Format(
                         "Finished.\nGames processed: {0}\nPositions processed: {1}\nPositions dumped: {2}",
@@ -237,7 +234,6 @@ namespace chess_pos_db_gui
             }
             catch (Exception ex)
             {
-                finishedWithErrors = true;
                 MessageBox.Show("Finished with errors. " + ex.Message);
 
                 if (InvokeRequired)
