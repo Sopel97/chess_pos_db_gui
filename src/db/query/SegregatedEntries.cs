@@ -21,7 +21,7 @@ namespace chess_pos_db_gui
                 GameLevel level = GameLevelHelper.FromString(byLevel.Key).First();
                 foreach (KeyValuePair<string, JsonValue> byResult in byLevel.Value)
                 {
-                    GameResult result = GameResultHelper.FromString(new GameResultWordFormat(), byResult.Key).First();
+                    GameResult result = GameResultHelper.FromStringWordFormat(byResult.Key).First();
 
                     e.Add(level, result, Entry.FromJson(byResult.Value));
                 }

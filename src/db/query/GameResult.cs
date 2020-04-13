@@ -8,14 +8,9 @@ namespace chess_pos_db_gui
 {
     public enum GameResult { WhiteWin, BlackWin, Draw };
 
-    public struct GameResultWordFormat { }
-    public struct GameResultPgnFormat { }
-    public struct GameResultLetterFormat { }
-    public struct GameResultPgnUnicodeFormat { }
-
     public static class GameResultHelper
     {
-        public static string Stringify(this GameResult result, GameResultWordFormat f)
+        public static string ToStringWordFormat(this GameResult result)
         {
             switch(result)
             {
@@ -30,7 +25,7 @@ namespace chess_pos_db_gui
             throw new ArgumentException();
         }
 
-        public static string Stringify(this GameResult result, GameResultPgnFormat f)
+        public static string ToStringPgnFormat(this GameResult result)
         {
             switch (result)
             {
@@ -45,7 +40,7 @@ namespace chess_pos_db_gui
             throw new ArgumentException();
         }
 
-        public static string Stringify(this GameResult result, GameResultPgnUnicodeFormat f)
+        public static string ToStringPgnUnicodeFormat(this GameResult result)
         {
             switch (result)
             {
@@ -60,7 +55,7 @@ namespace chess_pos_db_gui
             throw new ArgumentException();
         }
 
-        public static string Stringify(this GameResult result, GameResultLetterFormat f)
+        public static string ToStringLetterFormat(this GameResult result)
         {
             switch (result)
             {
@@ -75,7 +70,7 @@ namespace chess_pos_db_gui
             throw new ArgumentException();
         }
 
-        public static Optional<GameResult> FromString(GameResultWordFormat f, string str)
+        public static Optional<GameResult> FromStringWordFormat(string str)
         {
             switch (str)
             {
@@ -89,7 +84,7 @@ namespace chess_pos_db_gui
 
             return Optional<GameResult>.CreateEmpty();
         }
-        public static Optional<GameResult> FromString(GameResultPgnFormat f, string str)
+        public static Optional<GameResult> FromStringPgnFormat(string str)
         {
             switch (str)
             {

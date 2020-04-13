@@ -22,7 +22,7 @@ namespace chess_pos_db_gui
         {
             return new GameHeader(
                 json["game_id"],
-                GameResultHelper.FromString(new GameResultPgnFormat(), json["result"]).First(),
+                GameResultHelper.FromStringPgnFormat(new GameResultPgnFormat(), json["result"]).First(),
                 Date.FromJson(json["date"]),
                 Eco.FromJson(json["eco"]),
                 json.ContainsKey("ply_count") ? Optional<ushort>.Create(json["ply_count"]) : Optional<ushort>.CreateEmpty(),

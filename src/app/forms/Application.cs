@@ -546,7 +546,7 @@ namespace chess_pos_db_gui
                     {
                         header.White,
                         header.Black,
-                        header.Result.Stringify(new GameResultPgnFormat()),
+                        header.Result.ToStringPgnFormat(new GameResultPgnFormat()),
                         header.Eco,
                         header.PlyCount.Or(0) / 2,
                         header.Event,
@@ -613,7 +613,7 @@ namespace chess_pos_db_gui
                 row["Event"] = header.Event;
                 row["White"] = header.White;
                 row["Black"] = header.Black;
-                row["Result"] = header.Result.Stringify(new GameResultPgnUnicodeFormat());
+                row["Result"] = header.Result.ToStringPgnUnicodeFormat(new GameResultPgnUnicodeFormat());
                 row["Eco"] = header.Eco.ToString();
                 row["PlyCount"] = header.PlyCount.FirstOrDefault();
             }
