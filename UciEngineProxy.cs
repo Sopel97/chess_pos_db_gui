@@ -800,7 +800,7 @@ namespace chess_pos_db_gui
     {
         abstract public UciOptionType GetOptionType();
         // TODO: pass some parent as parameter
-        abstract public System.Windows.Forms.Control CreateControl();
+        abstract public UciOptionControlPanel CreateControl();
         abstract public string GetName();
         public string GetSetOptionString()
         {
@@ -812,20 +812,44 @@ namespace chess_pos_db_gui
         public abstract object GetValue();
         public abstract JsonValue NameValueToJson();
         public abstract bool IsDefault();
+        public abstract UciOptionLinkedControl CreateLinkedControl();
+    }
+
+    public class UciOptionControlPanel
+    {
+        public System.Windows.Forms.TableLayoutPanel Panel { get; private set; }
+        public System.Windows.Forms.Label Label { get; private set; }
+        public System.Windows.Forms.Control Control { get; private set; }
+
+        public UciOptionControlPanel(string name, System.Windows.Forms.Control control)
+        {
+            Panel = new System.Windows.Forms.TableLayoutPanel();
+            Panel.ColumnCount = 2;
+            Panel.RowCount = 1;
+            Panel.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            Panel.AutoSize = true;
+
+            Control = control;
+
+            var label = new System.Windows.Forms.Label();
+            label.Text = name;
+            label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label.Width = 128;
+
+            Panel.Controls.Add(label);
+            Panel.Controls.Add(Control);
+        }
     }
 
     public class CheckUciOption : UciOption
     {
         public string Name { get; private set; }
-        public System.Windows.Forms.TableLayoutPanel Panel { get; private set; }
-        public System.Windows.Forms.CheckBox Control { get; private set; }
         public bool DefaultValue { get; private set; }
         public bool Value { get; private set; }
 
         public CheckUciOption(string name, string defaultValue, string min, string max, IList<string> var)
         {
             Name = name;
-            Control = null;
             DefaultValue = Value = (defaultValue == "true");
         }
 
@@ -842,48 +866,24 @@ namespace chess_pos_db_gui
         {
             if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
             Value = ((CheckUciOption)other).Value;
-            if (Control != null)
-            {
-                Control.Checked = Value;
-            }
+        }
+        public void SetValue(bool value)
+        {
+            Value = value;
         }
         public override void SetValue(string value)
         {
             Value = bool.Parse(value);
-            if (Control != null)
-            {
-                Control.Checked = Value;
-            }
         }
 
-        public override System.Windows.Forms.Control CreateControl()
+        public override UciOptionControlPanel CreateControl()
         {
-            Panel = new System.Windows.Forms.TableLayoutPanel();
-            Panel.ColumnCount = 2;
-            Panel.RowCount = 1;
-            Panel.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            Panel.AutoSize = true;
+            var control = new System.Windows.Forms.CheckBox();
+            control.Checked = Value;
+            control.Enabled = true;
+            control.Visible = true;
 
-            Control = new System.Windows.Forms.CheckBox();
-            Control.Checked = Value;
-            Control.Enabled = true;
-            Control.Visible = true;
-            Control.CheckedChanged += OnCheckedChanged;
-
-            var label = new System.Windows.Forms.Label();
-            label.Text = Name;
-            label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            label.Width = 128;
-
-            Panel.Controls.Add(label);
-            Panel.Controls.Add(Control);
-
-            return Panel;
-        }
-
-        private void OnCheckedChanged(object sender, EventArgs e)
-        {
-            Value = Control.Checked;
+            return new UciOptionControlPanel(Name, control);
         }
 
         public override string ToString()
@@ -915,13 +915,15 @@ namespace chess_pos_db_gui
                    Name == option.Name &&
                    Value == option.Value;
         }
+        public override UciOptionLinkedControl CreateLinkedControl()
+        {
+            return new CheckUciOptionLinkedControl(this);
+        }
     }
 
     public class SpinUciOption : UciOption
     {
         public string Name { get; private set; }
-        public System.Windows.Forms.TableLayoutPanel Panel { get; private set; }
-        public System.Windows.Forms.NumericUpDown Control { get; private set; }
         public long DefaultValue { get; private set; }
         public long Value { get; private set; }
         public Optional<long> Min { get; private set; }
@@ -930,7 +932,6 @@ namespace chess_pos_db_gui
         public SpinUciOption(string name, string defaultValue, string min, string max, IList<string> var)
         {
             Name = name;
-            Control = null;
             Min = min == null ? Optional<long>.CreateEmpty() : Optional<long>.Create(long.Parse(min));
             Max = max == null ? Optional<long>.CreateEmpty() : Optional<long>.Create(long.Parse(max));
             if (defaultValue == null)
@@ -956,18 +957,15 @@ namespace chess_pos_db_gui
         {
             if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
             Value = ((SpinUciOption)other).Value;
-            if (Control != null)
-            {
-                Control.Value = Value;
-            }
         }
         public override void SetValue(string value)
         {
             Value = long.Parse(value);
-            if (Control != null)
-            {
-                Control.Value = Value;
-            }
+        }
+
+        public void SetValue(long value)
+        {
+            Value = value;
         }
 
         public override object GetValue()
@@ -975,37 +973,17 @@ namespace chess_pos_db_gui
             return Value;
         }
 
-        public override System.Windows.Forms.Control CreateControl()
+        public override UciOptionControlPanel CreateControl()
         {
-            Panel = new System.Windows.Forms.TableLayoutPanel();
-            Panel.ColumnCount = 2;
-            Panel.RowCount = 1;
-            Panel.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            Panel.AutoSize = true;
+            var control = new System.Windows.Forms.NumericUpDown();
+            control.Minimum = Min.Or(DefaultValue);
+            control.Maximum = Max.Or(DefaultValue);
+            control.Value = Value;
+            control.DecimalPlaces = 0;
+            control.Increment = 1;
+            control.AutoSize = true;
 
-            Control = new System.Windows.Forms.NumericUpDown();
-            Control.Minimum = Min.Or(DefaultValue);
-            Control.Maximum = Max.Or(DefaultValue);
-            Control.Value = Value;
-            Control.DecimalPlaces = 0;
-            Control.Increment = 1;
-            Control.AutoSize = true;
-            Control.ValueChanged += OnValueChanged;
-
-            var label = new System.Windows.Forms.Label();
-            label.Text = Name;
-            label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            label.Width = 128;
-
-            Panel.Controls.Add(label);
-            Panel.Controls.Add(Control);
-
-            return Panel;
-        }
-
-        private void OnValueChanged(object sender, EventArgs e)
-        {
-            Value = (long)Control.Value;
+            return new UciOptionControlPanel(Name, control);
         }
 
         public override string ToString()
@@ -1032,13 +1010,15 @@ namespace chess_pos_db_gui
                    Name == option.Name &&
                    Value == option.Value;
         }
+        public override UciOptionLinkedControl CreateLinkedControl()
+        {
+            return new SpinUciOptionLinkedControl(this);
+        }
     }
 
     public class ComboUciOption : UciOption
     {
         public string Name { get; private set; }
-        public System.Windows.Forms.TableLayoutPanel Panel { get; private set; }
-        public System.Windows.Forms.ComboBox Control { get; private set; }
         public string DefaultValue { get; private set; }
         public string Value { get; private set; }
         public IList<string> Vars { get; private set; }
@@ -1046,7 +1026,6 @@ namespace chess_pos_db_gui
         public ComboUciOption(string name, string defaultValue, string min, string max, IList<string> var)
         {
             Name = name;
-            Control = null;
             DefaultValue = Value = defaultValue;
             Vars = var;
         }
@@ -1064,50 +1043,22 @@ namespace chess_pos_db_gui
         {
             if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
             Value = ((ComboUciOption)other).Value;
-            if (Control != null)
-            {
-                Control.SelectedItem = Value;
-            }
         }
         public override void SetValue(string value)
         {
             Value = value;
-            if (Control != null)
-            {
-                Control.SelectedItem = Value;
-            }
         }
 
-        public override System.Windows.Forms.Control CreateControl()
+        public override UciOptionControlPanel CreateControl()
         {
-            Panel = new System.Windows.Forms.TableLayoutPanel();
-            Panel.ColumnCount = 2;
-            Panel.RowCount = 1;
-            Panel.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            Panel.AutoSize = true;
-
-            Control = new System.Windows.Forms.ComboBox();
+            var control = new System.Windows.Forms.ComboBox();
             foreach (var var in Vars)
             {
-                Control.Items.Add(var);
+                control.Items.Add(var);
             }
-            Control.SelectedItem = Value;
-            Control.SelectedValueChanged += OnSelectedValueChanged;
+            control.SelectedItem = Value;
 
-            var label = new System.Windows.Forms.Label();
-            label.Text = Name;
-            label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            label.Width = 128;
-
-            Panel.Controls.Add(label);
-            Panel.Controls.Add(Control);
-
-            return Panel;
-        }
-
-        private void OnSelectedValueChanged(object sender, EventArgs e)
-        {
-            Value = Control.SelectedText;
+            return new UciOptionControlPanel(Name, control);
         }
 
         public override string ToString()
@@ -1139,13 +1090,15 @@ namespace chess_pos_db_gui
                    Name == option.Name &&
                    Value == option.Value;
         }
+        public override UciOptionLinkedControl CreateLinkedControl()
+        {
+            return new ComboUciOptionLinkedControl(this);
+        }
     }
 
     public class StringUciOption : UciOption
     {
         public string Name { get; private set; }
-        public System.Windows.Forms.TableLayoutPanel Panel { get; private set; }
-        public System.Windows.Forms.TextBox Control { get; private set; }
         public string DefaultValue { get; private set; }
         public string Value { get; private set; }
 
@@ -1154,7 +1107,6 @@ namespace chess_pos_db_gui
             if (defaultValue == null) defaultValue = "";
 
             Name = name;
-            Control = null;
             DefaultValue = Value = defaultValue;
         }
 
@@ -1171,47 +1123,19 @@ namespace chess_pos_db_gui
         {
             if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
             Value = ((StringUciOption)other).Value;
-            if (Control != null)
-            {
-                Control.Text = Value;
-            }
         }
         public override void SetValue(string value)
         {
             Value = value;
-            if (Control != null)
-            {
-                Control.Text = Value;
-            }
         }
 
-        public override System.Windows.Forms.Control CreateControl()
+        public override UciOptionControlPanel CreateControl()
         {
-            Panel = new System.Windows.Forms.TableLayoutPanel();
-            Panel.ColumnCount = 2;
-            Panel.RowCount = 1;
-            Panel.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            Panel.AutoSize = true;
+            var control = new System.Windows.Forms.TextBox();
+            control.Text = DefaultValue;
+            control.Width = 100;
 
-            Control = new System.Windows.Forms.TextBox();
-            Control.Text = DefaultValue;
-            Control.Width = 100;
-            Control.TextChanged += OnTextChanged;
-
-            var label = new System.Windows.Forms.Label();
-            label.Text = Name;
-            label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            label.Width = 128;
-
-            Panel.Controls.Add(label);
-            Panel.Controls.Add(Control);
-
-            return Panel;
-        }
-
-        private void OnTextChanged(object sender, EventArgs e)
-        {
-            Value = Control.Text;
+            return new UciOptionControlPanel(Name, control);
         }
 
         public override string ToString()
@@ -1242,6 +1166,130 @@ namespace chess_pos_db_gui
             return obj is StringUciOption option &&
                    Name == option.Name &&
                    Value == option.Value;
+        }
+        public override UciOptionLinkedControl CreateLinkedControl()
+        {
+            return new StringUciOptionLinkedControl(this);
+        }
+    }
+
+    public abstract class UciOptionLinkedControl
+    {
+        public UciOptionControlPanel LinkedControl { get; private set; }
+
+        public System.Windows.Forms.Control GetControl()
+        {
+            return LinkedControl.Control;
+        }
+
+        public System.Windows.Forms.Panel GetPanel()
+        {
+            return LinkedControl.Panel;
+        }
+
+        public abstract void ResetControlValue();
+        public abstract void UpdateLinkedOptionValue();
+
+        protected UciOptionLinkedControl(UciOption opt)
+        {
+            LinkedControl = opt.CreateControl();
+        }
+    }
+
+    public class CheckUciOptionLinkedControl : UciOptionLinkedControl
+    {
+        private CheckUciOption Option { get; set; }
+
+        private System.Windows.Forms.CheckBox Control => (System.Windows.Forms.CheckBox)LinkedControl.Control;
+
+
+        public CheckUciOptionLinkedControl(CheckUciOption opt) :
+            base(opt)
+        {
+            Option = opt;
+            ResetControlValue();
+        }
+
+        public override void ResetControlValue()
+        {
+            Control.Checked = Option.Value;
+        }
+
+        public override void UpdateLinkedOptionValue()
+        {
+            Option.SetValue(Control.Checked);
+        }
+    }
+
+    public class SpinUciOptionLinkedControl : UciOptionLinkedControl
+    {
+        private SpinUciOption Option { get; set; }
+        private System.Windows.Forms.NumericUpDown Control => (System.Windows.Forms.NumericUpDown)LinkedControl.Control;
+
+
+        public SpinUciOptionLinkedControl(SpinUciOption opt) :
+            base(opt)
+        {
+            Option = opt;
+            ResetControlValue();
+        }
+
+        public override void ResetControlValue()
+        {
+            Control.Value = Option.Value;
+        }
+
+        public override void UpdateLinkedOptionValue()
+        {
+            Option.SetValue((long)Control.Value);
+        }
+    }
+
+    public class ComboUciOptionLinkedControl : UciOptionLinkedControl
+    {
+        private ComboUciOption Option { get; set; }
+        private System.Windows.Forms.ComboBox Control => (System.Windows.Forms.ComboBox)LinkedControl.Control;
+
+
+        public ComboUciOptionLinkedControl(ComboUciOption opt) :
+            base(opt)
+        {
+            Option = opt;
+            ResetControlValue();
+        }
+
+        public override void ResetControlValue()
+        {
+            Control.SelectedItem = Option.Value;
+        }
+
+        public override void UpdateLinkedOptionValue()
+        {
+            Option.SetValue((string)Control.SelectedItem);
+        }
+    }
+
+    public class StringUciOptionLinkedControl : UciOptionLinkedControl
+    {
+        private StringUciOption Option { get; set; }
+        private System.Windows.Forms.TextBox Control => (System.Windows.Forms.TextBox)LinkedControl.Control;
+
+
+        public StringUciOptionLinkedControl(StringUciOption opt) :
+            base(opt)
+        {
+            Option = opt;
+            ResetControlValue();
+        }
+
+        public override void ResetControlValue()
+        {
+            Control.Text = Option.Value;
+        }
+
+        public override void UpdateLinkedOptionValue()
+        {
+            Option.SetValue(Control.Text);
         }
     }
 }

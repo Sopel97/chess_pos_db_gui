@@ -12,7 +12,7 @@ namespace chess_pos_db_gui
 {
     public partial class EngineOptionsForm : Form
     {
-        private IList<UciOption> Options { get; set; }
+        private IList<UciOptionLinkedControl> OptionControls { get; set; }
         public bool Discard { get; private set; }
 
         public EngineOptionsForm(IList<UciOption> options)
@@ -20,8 +20,8 @@ namespace chess_pos_db_gui
             InitializeComponent();
 
             SuspendLayout();
-            Options = options;
-            AddControlsForOptions(Options);
+            OptionControls = new List<UciOptionLinkedControl>();
+            AddControlsForOptions(options);
             ResumeLayout();
         }
 
@@ -29,13 +29,33 @@ namespace chess_pos_db_gui
         {
             foreach(var opt in options)
             {
-                optionsFlowLayoutPanel.Controls.Add(opt.CreateControl());
+                var control = opt.CreateLinkedControl();
+                OptionControls.Add(control);
+                optionsFlowLayoutPanel.Controls.Add(control.GetPanel());
             }
+        }
+
+        private void SaveChanges()
+        {
+            foreach(var opt in OptionControls)
+            {
+                opt.UpdateLinkedOptionValue();
+            }
+            Discard = false;
+        }
+
+        private void DiscardChanges()
+        {
+            foreach (var opt in OptionControls)
+            {
+                opt.ResetControlValue();
+            }
+            Discard = true;
         }
 
         private void EngineOptionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Discard = true;
+            DiscardChanges();
 
             if (e.CloseReason == CloseReason.UserClosing)
             {
@@ -46,13 +66,13 @@ namespace chess_pos_db_gui
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            Discard = false;
+            SaveChanges();
             Hide();
         }
 
         private void discardButton_Click(object sender, EventArgs e)
         {
-            Discard = true;
+            DiscardChanges();
             Hide();
         }
     }
