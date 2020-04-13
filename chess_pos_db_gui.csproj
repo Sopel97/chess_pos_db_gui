@@ -52,120 +52,120 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AggregatedEntry.cs" />
-    <Compile Include="Application.cs">
+    <Compile Include="src\db\query\AggregatedEntry.cs" />
+    <Compile Include="src\app\forms\Application.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Application.Designer.cs">
+    <Compile Include="src\app\forms\Application.Designer.cs">
       <DependentUpon>Application.cs</DependentUpon>
     </Compile>
-    <Compile Include="BlockingQueue.cs" />
-    <Compile Include="ChessBoard.cs">
+    <Compile Include="src\util\BlockingQueue.cs" />
+    <Compile Include="src\app\board\controls\ChessBoard.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ChessBoard.Designer.cs">
+    <Compile Include="src\app\board\controls\ChessBoard.Designer.cs">
       <DependentUpon>ChessBoard.cs</DependentUpon>
     </Compile>
-    <Compile Include="ChessBoardHistory.cs" />
-    <Compile Include="ConditionVariable.cs" />
-    <Compile Include="CreateEngineProfileForm.cs">
+    <Compile Include="src\app\board\ChessBoardHistory.cs" />
+    <Compile Include="src\util\ConditionVariable.cs" />
+    <Compile Include="src\chess\engine\forms\CreateEngineProfileForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CreateEngineProfileForm.Designer.cs">
+    <Compile Include="src\chess\engine\forms\CreateEngineProfileForm.Designer.cs">
       <DependentUpon>CreateEngineProfileForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EloCalculator.cs" />
-    <Compile Include="EngineAnalysisForm.cs">
+    <Compile Include="src\chess\EloCalculator.cs" />
+    <Compile Include="src\chess\engine\analysis\forms\EngineAnalysisForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EngineAnalysisForm.Designer.cs">
+    <Compile Include="src\chess\engine\analysis\forms\EngineAnalysisForm.Designer.cs">
       <DependentUpon>EngineAnalysisForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EngineOptionsForm.cs">
+    <Compile Include="src\chess\engine\options\forms\EngineOptionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EngineOptionsForm.Designer.cs">
+    <Compile Include="src\chess\engine\options\forms\EngineOptionsForm.Designer.cs">
       <DependentUpon>EngineOptionsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UciEngineProfilesStorage.cs" />
-    <Compile Include="EngineProfilesForm.cs">
+    <Compile Include="src\chess\engine\uci\UciEngineProfilesStorage.cs" />
+    <Compile Include="src\chess\engine\forms\EngineProfilesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EngineProfilesForm.Designer.cs">
+    <Compile Include="src\chess\engine\forms\EngineProfilesForm.Designer.cs">
       <DependentUpon>EngineProfilesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UciEngineProfile.cs" />
-    <Compile Include="EpdDumpForm.cs">
+    <Compile Include="src\chess\engine\uci\UciEngineProfile.cs" />
+    <Compile Include="src\app\forms\EpdDumpForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EpdDumpForm.Designer.cs">
+    <Compile Include="src\app\forms\EpdDumpForm.Designer.cs">
       <DependentUpon>EpdDumpForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseCreationForm.cs">
+    <Compile Include="src\app\forms\DatabaseCreationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DatabaseCreationForm.Designer.cs">
+    <Compile Include="src\app\forms\DatabaseCreationForm.Designer.cs">
       <DependentUpon>DatabaseCreationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseProxy.cs" />
-    <Compile Include="Date.cs" />
-    <Compile Include="Eco.cs" />
-    <Compile Include="Entry.cs" />
-    <Compile Include="FenInputForm.cs">
+    <Compile Include="src\db\DatabaseProxy.cs" />
+    <Compile Include="src\db\query\Date.cs" />
+    <Compile Include="src\db\query\Eco.cs" />
+    <Compile Include="src\db\query\Entry.cs" />
+    <Compile Include="src\app\board\forms\FenInputForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FenInputForm.Designer.cs">
+    <Compile Include="src\app\board\forms\FenInputForm.Designer.cs">
       <DependentUpon>FenInputForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GameHeader.cs" />
-    <Compile Include="GameLevel.cs" />
-    <Compile Include="GameResult.cs" />
-    <Compile Include="LRUCache.cs" />
-    <Compile Include="Optional.cs" />
-    <Compile Include="PgnInputForm.cs">
+    <Compile Include="src\db\query\GameHeader.cs" />
+    <Compile Include="src\db\query\GameLevel.cs" />
+    <Compile Include="src\db\query\GameResult.cs" />
+    <Compile Include="src\util\LRUCache.cs" />
+    <Compile Include="src\util\Optional.cs" />
+    <Compile Include="src\app\forms\PgnInputForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PgnInputForm.Designer.cs">
+    <Compile Include="src\app\forms\PgnInputForm.Designer.cs">
       <DependentUpon>PgnInputForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryResponse.cs" />
-    <Compile Include="ResultForRoot.cs" />
-    <Compile Include="RootPosition.cs" />
-    <Compile Include="San.cs" />
-    <Compile Include="Score.cs" />
-    <Compile Include="SegregatedEntries.cs" />
-    <Compile Include="Select.cs" />
-    <Compile Include="UciEngineProxy.cs" />
-    <EmbeddedResource Include="Application.resx">
+    <Compile Include="src\db\query\QueryResponse.cs" />
+    <Compile Include="src\db\query\ResultForRoot.cs" />
+    <Compile Include="src\db\query\RootPosition.cs" />
+    <Compile Include="src\chess\San.cs" />
+    <Compile Include="src\app\chessdbcn\Score.cs" />
+    <Compile Include="src\db\query\SegregatedEntries.cs" />
+    <Compile Include="src\db\query\Select.cs" />
+    <Compile Include="src\chess\engine\uci\UciEngineProxy.cs" />
+    <EmbeddedResource Include="src\app\forms\Application.resx">
       <DependentUpon>Application.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ChessBoard.resx">
+    <EmbeddedResource Include="src\app\board\controls\ChessBoard.resx">
       <DependentUpon>ChessBoard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CreateEngineProfileForm.resx">
+    <EmbeddedResource Include="src\chess\engine\forms\CreateEngineProfileForm.resx">
       <DependentUpon>CreateEngineProfileForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EngineAnalysisForm.resx">
+    <EmbeddedResource Include="src\chess\engine\analysis\forms\EngineAnalysisForm.resx">
       <DependentUpon>EngineAnalysisForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EngineOptionsForm.resx">
+    <EmbeddedResource Include="src\chess\engine\options\forms\EngineOptionsForm.resx">
       <DependentUpon>EngineOptionsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EngineProfilesForm.resx">
+    <EmbeddedResource Include="src\chess\engine\forms\EngineProfilesForm.resx">
       <DependentUpon>EngineProfilesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EpdDumpForm.resx">
+    <EmbeddedResource Include="src\app\forms\EpdDumpForm.resx">
       <DependentUpon>EpdDumpForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DatabaseCreationForm.resx">
+    <EmbeddedResource Include="src\app\forms\DatabaseCreationForm.resx">
       <DependentUpon>DatabaseCreationForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FenInputForm.resx">
+    <EmbeddedResource Include="src\app\board\forms\FenInputForm.resx">
       <DependentUpon>FenInputForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PgnInputform.resx">
+    <EmbeddedResource Include="src\app\forms\PgnInputform.resx">
       <DependentUpon>PgnInputForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -189,7 +189,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="src\app\App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
