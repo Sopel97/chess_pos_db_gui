@@ -46,7 +46,7 @@ namespace chess_pos_db_gui
         private int FirstPly { get; set; }
         private string LastFen { get; set; }
         private int BaseMoveNumber;
-        private bool Resetting { get; set; }
+        private bool IsSettingPosition { get; set; }
 
         private EventHandler onPositionChanged;
         public event EventHandler PositionChanged
@@ -86,7 +86,7 @@ namespace chess_pos_db_gui
             MoveHistory.BaseMoveNumber = 1;
 
             IsBoardFlipped = false;
-            Resetting = false;
+            IsSettingPosition = false;
         }
 
         public string GetFen()
@@ -104,20 +104,20 @@ namespace chess_pos_db_gui
             return History.Current().GetSan();
         }
 
-        private void Reset(ChessGame game)
+        private void SetGame(ChessGame game)
         {
-            Reset(FenProvider.StartPos);
+            SetPosition(FenProvider.StartPos);
             foreach (var move in game.Moves)
             {
                 DoMove(move.SAN, true);
             }
         }
 
-        private void Reset(string fen)
+        private void SetPosition(string fen)
         {
-            Resetting = true;
+            IsSettingPosition = true;
 
-            History.Reset(fen);
+            History.SetInitialPosition(fen);
             MoveHistory.Clear();
             Plies = 0;
             MoveHistory.Rows.Add();
@@ -143,7 +143,7 @@ namespace chess_pos_db_gui
 
             UpdateFenTextBox(fen);
 
-            Resetting = false;
+            IsSettingPosition = false;
         }
 
         private static void MakeDoubleBuffered(Panel chessBoardPanel)
@@ -311,7 +311,7 @@ namespace chess_pos_db_gui
 
             UpdatePieceImagesDictionary();
 
-            Reset(FenProvider.StartPos);
+            SetPosition(FenProvider.StartPos);
         }
 
         public string NextMoveNumber()
@@ -371,24 +371,6 @@ namespace chess_pos_db_gui
         {
             Move move = San.ParseSan(new ChessGame(History.Current().GCD), san);
             return DoMove(move, silent);
-        }
-
-        public Move LanToMove(string lan)
-        {
-            Move move = Lan.ParseLan(new ChessGame(History.Current().GCD), lan);
-            return move;
-        }
-
-        public Move LanToMove(string fen, string lan)
-        {
-            Move move = Lan.ParseLan(new ChessGame(fen), lan);
-            return move;
-        }
-
-        public Move SanToMove(string san)
-        {
-            Move move = San.ParseSan(new ChessGame(History.Current().GCD), san);
-            return move;
         }
 
         private bool DoMove(Move move, bool silent = false)
@@ -534,7 +516,7 @@ namespace chess_pos_db_gui
 
             History.SetCurrent(ply);
             string fen = History.Current().GetFen();
-            if (!Resetting)
+            if (!IsSettingPosition)
             {
                 UpdateFenTextBox(fen);
             }
@@ -584,7 +566,7 @@ namespace chess_pos_db_gui
 
         private void ResetButton_Click(object sender, EventArgs e)
         {
-            Reset(FenProvider.StartPos);
+            SetPosition(FenProvider.StartPos);
         }
 
         private void FlipBoardButton_Click(object sender, EventArgs e)
@@ -608,7 +590,7 @@ namespace chess_pos_db_gui
                     return;
                 }
 
-                Reset(newFen);
+                SetPosition(newFen);
             }
         }
 
@@ -643,7 +625,7 @@ namespace chess_pos_db_gui
                         return;
                     }
 
-                    Reset(pgnReader.Game);
+                    SetGame(pgnReader.Game);
                 }
             }
         }

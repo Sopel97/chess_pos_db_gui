@@ -1,6 +1,8 @@
 ﻿using ChessDotNet;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace chess_pos_db_gui.src.chess
 {
@@ -61,6 +63,45 @@ namespace chess_pos_db_gui.src.chess
         public static Move LanToMove(string fen, string lan)
         {
             return ParseLan(new ChessGame(fen), lan);
+        }
+
+        public static MoveWithSan LanToMoveWithSan(string fen, string lan)
+        {
+            if (lan == null || lan == "0000")
+            {
+                return new MoveWithSan(null, "--");
+            }
+
+            ChessGame game = new ChessGame(fen);
+            var from = lan.Substring(0, 2);
+            var to = lan.Substring(2, 2);
+            Player player = game.WhoseTurn;
+            var move = 
+                lan.Length == 5 
+                ? new ChessDotNet.Move(from, to, player, lan[4]) 
+                : new ChessDotNet.Move(from, to, player);
+            game.MakeMove(move, true);
+            
+            var detailedMove = game.Moves.Last();
+            return new MoveWithSan(move, detailedMove.SAN);
+        }
+
+        public static string PVToString(string fen, IList<string> lans)
+        {
+            ChessGame game = new ChessGame(fen);
+            foreach (var lan in lans)
+            {
+                var from = lan.Substring(0, 2);
+                var to = lan.Substring(2, 2);
+                Player player = game.WhoseTurn;
+                var move = 
+                    lan.Length == 5 
+                    ? new ChessDotNet.Move(from, to, player, lan[4]) 
+                    : new ChessDotNet.Move(from, to, player);
+                game.MakeMove(move, true);
+            }
+
+            return game.Moves.Select(d => d.SAN).Aggregate((a, b) => a + " " + b);
         }
     }
 }

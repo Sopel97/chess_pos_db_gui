@@ -2,8 +2,6 @@
 using ChessDotNet;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,7 +11,7 @@ namespace chess_pos_db_gui.src.app
     {
         private static readonly int queryCacheSize = 128;
         private DatabaseProxy Database { get; set; }
-        private LRUCache<QueryQueueEntry, CacheEntry> QueryCache { get; set; }
+        private LRUCache<QueryQueueEntry, QueryCacheEntry> QueryCache { get; set; }
 
         private QueryQueue QueryQueue { get; set; }
 
@@ -28,8 +26,8 @@ namespace chess_pos_db_gui.src.app
 
         private ChessDBCNScoreProvider ScoreProvider { get; set; }
 
-        private EventHandler<KeyValuePair<QueryQueueEntry, CacheEntry>> onDataReceived;
-        public event EventHandler<KeyValuePair<QueryQueueEntry, CacheEntry>> DataReceived
+        private EventHandler<KeyValuePair<QueryQueueEntry, QueryCacheEntry>> onDataReceived;
+        public event EventHandler<KeyValuePair<QueryQueueEntry, QueryCacheEntry>> DataReceived
         {
             add
             {
@@ -51,7 +49,7 @@ namespace chess_pos_db_gui.src.app
             CacheLock = new object();
             EndQueryThread = false;
             AnyOutstandingQuery = new ConditionVariable();
-            QueryCache = new LRUCache<QueryQueueEntry, CacheEntry>(queryCacheSize);
+            QueryCache = new LRUCache<QueryQueueEntry, QueryCacheEntry>(queryCacheSize);
             QueryThread = new Thread(new ThreadStart(RunQueryThread));
             QueryThread.Start();
         }
@@ -110,7 +108,7 @@ namespace chess_pos_db_gui.src.app
                 var c = GetFromCache(e);
                 if (c != null)
                 {
-                    onDataReceived?.Invoke(this, new KeyValuePair<QueryQueueEntry, CacheEntry>(e, c));
+                    onDataReceived?.Invoke(this, new KeyValuePair<QueryQueueEntry, QueryCacheEntry>(e, c));
                     return;
                 }
             }
@@ -121,7 +119,7 @@ namespace chess_pos_db_gui.src.app
             AnyOutstandingQuery.Signal();
         }
 
-        private CacheEntry GetFromCache(QueryQueueEntry e)
+        private QueryCacheEntry GetFromCache(QueryQueueEntry e)
         {
             lock (CacheLock)
             {
@@ -134,7 +132,7 @@ namespace chess_pos_db_gui.src.app
             return ScoreProvider.GetScores(fen);
         }
 
-        private CacheEntry QueryAsyncToCache(QueryQueueEntry sig)
+        private QueryCacheEntry QueryAsyncToCache(QueryQueueEntry sig)
         {
             if (!Database.IsOpen)
             {
@@ -143,7 +141,7 @@ namespace chess_pos_db_gui.src.app
 
             try
             {
-                var data = new CacheEntry(null, null);
+                var data = new QueryCacheEntry(null, null);
 
                 var scores = sig.QueryEval
                     ? Task.Run(() => GetChessdbcnScores(sig.CurrentFen))
@@ -179,7 +177,7 @@ namespace chess_pos_db_gui.src.app
         private void QueryAsyncToCacheAndUpdate(QueryQueueEntry sig)
         {
             var e = QueryAsyncToCache(sig);
-            onDataReceived?.Invoke(this, new KeyValuePair<QueryQueueEntry, CacheEntry>(sig, e));
+            onDataReceived?.Invoke(this, new KeyValuePair<QueryQueueEntry, QueryCacheEntry>(sig, e));
         }
 
         public void Dispose()
@@ -187,6 +185,60 @@ namespace chess_pos_db_gui.src.app
             EndQueryThread = true;
             AnyOutstandingQuery.Signal();
             QueryThread.Join();
+        }
+    }
+
+    internal class QueryQueue
+    {
+        private QueryQueueEntry Current { get; set; }
+        private QueryQueueEntry Next { get; set; }
+
+        private readonly object Lock;
+
+        public QueryQueue()
+        {
+            Current = null;
+            Next = null;
+
+            Lock = new object();
+        }
+
+        public void Enqueue(QueryQueueEntry e)
+        {
+            lock (Lock)
+            {
+                if (Current == null)
+                {
+                    Current = e;
+                }
+                else
+                {
+                    Next = e;
+                }
+            }
+        }
+
+        public bool IsEmpty()
+        {
+            return Current == null;
+        }
+
+        public QueryQueueEntry Pop()
+        {
+            lock (Lock)
+            {
+                if (Current != null)
+                {
+                    var ret = Current;
+                    Current = Next;
+                    Next = null;
+                    return ret;
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
     }
 }

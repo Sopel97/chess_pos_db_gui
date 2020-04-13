@@ -59,16 +59,14 @@ namespace chess_pos_db_gui
             Plies = 0;
         }
 
-        public void Reset(string fen)
+        public void SetInitialPosition(string fen)
         {
             Entries.Clear();
             Plies = 0;
             var game = new ChessGame(fen);
             Entries = new List<ChessBoardHistoryEntry>
             {
-                new ChessBoardHistoryEntry(
-                    game
-                )
+                new ChessBoardHistoryEntry(game)
             };
             Entries[0].Move = null;
         }

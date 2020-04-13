@@ -1,4 +1,5 @@
-﻿using ChessDotNet;
+﻿using chess_pos_db_gui.src.chess;
+using ChessDotNet;
 
 using System;
 using System.Collections.Generic;
@@ -109,38 +110,6 @@ namespace chess_pos_db_gui
             analysisDataGridView.Columns["PV"].HeaderText = "PV";
             analysisDataGridView.Columns["PV"].ToolTipText = "The principal variation - engine's predicted line";
             analysisDataGridView.Columns["ScoreInt"].Visible = false;
-        }
-
-        private static MoveWithSan LanToMoveWithSan(string fen, string lan)
-        {
-            if (lan == null || lan == "0000")
-            {
-                return new MoveWithSan(null, "null");
-            }
-
-            ChessGame game = new ChessGame(fen);
-            var from = lan.Substring(0, 2);
-            var to = lan.Substring(2, 2);
-            Player player = game.WhoseTurn;
-            var move = lan.Length == 5 ? new ChessDotNet.Move(from, to, player, lan[4]) : new ChessDotNet.Move(from, to, player);
-            game.MakeMove(move, true);
-            var detailedMove = game.Moves.Last();
-            return new MoveWithSan(move, detailedMove.SAN);
-        }
-
-        private string StringifyPV(string fen, IList<string> lans)
-        {
-            ChessGame game = new ChessGame(fen);
-            foreach (var lan in lans)
-            {
-                var from = lan.Substring(0, 2);
-                var to = lan.Substring(2, 2);
-                Player player = game.WhoseTurn;
-                var move = lan.Length == 5 ? new ChessDotNet.Move(from, to, player, lan[4]) : new ChessDotNet.Move(from, to, player);
-                game.MakeMove(move, true);
-            }
-
-            return game.Moves.Select(d => d.SAN).Aggregate((a, b) => a + " " + b);
         }
 
         private static void MakeDoubleBuffered(DataGridView dgv)
@@ -324,7 +293,7 @@ namespace chess_pos_db_gui
             foreach (KeyValuePair<string, UciInfoResponse> response in responseByMove)
             {
                 var info = response.Value;
-                var move = LanToMoveWithSan(info.Fen, response.Key);
+                var move = Lan.LanToMoveWithSan(info.Fen, response.Key);
                 var multipv = info.MultiPV.Or(0);
                 System.Data.DataRow row = FindOrCreateRowByMoveOrMultiPV(newAnalysisData, move, multipv);
 
@@ -399,7 +368,7 @@ namespace chess_pos_db_gui
 
         private void FillRowFromInfo(DataRow row, UciInfoResponse info)
         {
-            row["Move"] = LanToMoveWithSan(info.Fen, info.PV.Or(new List<string>()).FirstOrDefault());
+            row["Move"] = Lan.LanToMoveWithSan(info.Fen, info.PV.Or(new List<string>()).FirstOrDefault());
             row["Depth"] = info.Depth.Or(0);
             row["SelDepth"] = info.SelDepth.Or(0);
             var score = info.Score.Or(new UciScore(0, UciScoreType.Cp, UciScoreBoundType.Exact));
@@ -410,7 +379,7 @@ namespace chess_pos_db_gui
             row["NPS"] = info.Nps.Or(0);
             row["MultiPV"] = info.MultiPV.Or(0);
             row["TBHits"] = info.TBHits.Or(0);
-            row["PV"] = StringifyPV(info.Fen, info.PV.FirstOrDefault());
+            row["PV"] = Lan.PVToString(info.Fen, info.PV.FirstOrDefault());
         }
 
         private System.Data.DataRow FindOrCreateRowByMoveOrMultiPV(DataTable dt, MoveWithSan move, int multipv)

@@ -10,8 +10,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace chess_pos_db_gui
@@ -20,7 +18,7 @@ namespace chess_pos_db_gui
     {
         private HashSet<GameLevel> Levels { get; set; }
         private HashSet<Select> Selects { get; set; }
-        private CacheEntry Data { get; set; }
+        private QueryCacheEntry Data { get; set; }
         private DataTable TabulatedData { get; set; }
         private DataTable TotalTabulatedData { get; set; }
         private double BestGoodness { get; set; }
@@ -28,8 +26,6 @@ namespace chess_pos_db_gui
         private bool IsEntryDataUpToDate { get; set; } = false;
         private string Ip { get; set; } = "127.0.0.1";
         private int Port { get; set; } = 1234;
-
-        private ChessDBCNScoreProvider ScoreProvider { get; set; }
 
         private EngineAnalysisForm AnalysisForm { get; set; }
 
@@ -245,11 +241,6 @@ namespace chess_pos_db_gui
             Database?.Dispose();
         }
 
-        private Dictionary<Move, ChessDBCNScore> GetChessdbcnScores(string fen)
-        {
-            return ScoreProvider.GetScores(fen);
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             chessBoard.LoadImages("assets/graphics");
@@ -269,12 +260,10 @@ namespace chess_pos_db_gui
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
             chessBoard.PositionChanged += OnPositionChanged;
 
-            ScoreProvider = new ChessDBCNScoreProvider();
-
             UpdateDatabaseInfo();
         }
 
-        private void OnDataReceived(object sender, KeyValuePair<QueryQueueEntry, CacheEntry> p)
+        private void OnDataReceived(object sender, KeyValuePair<QueryQueueEntry, QueryCacheEntry> p)
         {
             var key = p.Key;
             var data = p.Value;
@@ -564,21 +553,22 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Populate(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, bool isOnlyTransposition, ChessDBCNScore score)
+        private void Populate(string san, AggregatedEntry entry, AggregatedEntry nonEngineEntry, bool isOnlyTransposition, ChessDBCNScore score)
         {
+            var fen = chessBoard.GetFen();
             long maxDisplayedEloDiff = 400;
 
             var row = TabulatedData.NewRow();
-            if (move == "--")
+            if (san == "--")
             {
-                row["Move"] = new MoveWithSan(null, move);
+                row["Move"] = new MoveWithSan(null, san);
                 row["Goodness"] = double.PositiveInfinity;
 
                 PopulateFirstGameInfo(entry);
             }
             else
             {
-                row["Move"] = new MoveWithSan(chessBoard.SanToMove(move), move);
+                row["Move"] = new MoveWithSan(San.ParseSan(fen, san), san);
                 row["Goodness"] = CalculateGoodness(entry, nonEngineEntry, score);
             }
             row["Count"] = entry.Count;
@@ -744,7 +734,8 @@ namespace chess_pos_db_gui
                 }
                 else
                 {
-                    scores.TryGetValue(chessBoard.SanToMove(entry.Key), out ChessDBCNScore score);
+                    var fen = chessBoard.GetFen();
+                    scores.TryGetValue(San.ParseSan(fen, entry.Key), out ChessDBCNScore score);
                     Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), score);
                 }
 
@@ -789,7 +780,8 @@ namespace chess_pos_db_gui
 
                 if (entry.Key != "--")
                 {
-                    scores.TryGetValue(chessBoard.SanToMove(entry.Key), out ChessDBCNScore score);
+                    var fen = chessBoard.GetFen();
+                    scores.TryGetValue(San.ParseSan(fen, entry.Key), out ChessDBCNScore score);
                     UpdateGoodness(entry.Key, entry.Value, nonEngineEntries[entry.Key], score);
                 }
             }
@@ -822,7 +814,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Gather(CacheEntry res, Select select, List<GameLevel> levels, ref Dictionary<string, AggregatedEntry> aggregatedEntries)
+        private void Gather(QueryCacheEntry res, Select select, List<GameLevel> levels, ref Dictionary<string, AggregatedEntry> aggregatedEntries)
         {
             var rootEntries = res.Stats.Results[0].ResultsBySelect[select].Root;
             var childrenEntries = res.Stats.Results[0].ResultsBySelect[select].Children;
@@ -848,7 +840,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Populate(CacheEntry res, List<Select> selects, List<GameLevel> levels)
+        private void Populate(QueryCacheEntry res, List<Select> selects, List<GameLevel> levels)
         {
             Dictionary<string, AggregatedEntry> aggregatedContinuationEntries = new Dictionary<string, AggregatedEntry>();
 
@@ -883,7 +875,7 @@ namespace chess_pos_db_gui
             Populate(aggregatedEntries, aggregatedContinuationEntries.Where(p => p.Value.Count != 0).Select(p => p.Key), aggregatedNonEngineEntries, Data.Scores);
         }
 
-        private void UpdateGoodness(CacheEntry res, List<Select> selects, List<GameLevel> levels)
+        private void UpdateGoodness(QueryCacheEntry res, List<Select> selects, List<GameLevel> levels)
         {
             Dictionary<string, AggregatedEntry> aggregatedContinuationEntries = new Dictionary<string, AggregatedEntry>();
 
@@ -1391,126 +1383,6 @@ namespace chess_pos_db_gui
             {
                 UpdateGoodness();
             }
-        }
-    }
-
-    public class QueryQueueEntry
-    {
-        public string Sig { get; private set; }
-        public string Fen { get; private set; }
-        public string San { get; private set; }
-        public string CurrentFen { get; private set; }
-        public bool QueryEval { get; private set; }
-
-        public QueryQueueEntry(ChessBoard chessBoard, bool queryEval)
-        {
-            San = chessBoard.GetLastMoveSan();
-            Fen = San == "--"
-                ? chessBoard.GetFen()
-                : chessBoard.GetPrevFen();
-
-            CurrentFen = chessBoard.GetFen();
-
-            Sig = Fen + San;
-
-            QueryEval = queryEval;
-        }
-
-        public override int GetHashCode()
-        {
-            return Sig.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj.GetType() == this.GetType())
-            {
-                return Sig.Equals(((QueryQueueEntry)obj).Sig);
-            }
-            return false;
-        }
-    }
-
-    class QueryQueue
-    {
-        private QueryQueueEntry Current { get; set; }
-        private QueryQueueEntry Next { get; set; }
-
-        private readonly object Lock;
-
-        public QueryQueue()
-        {
-            Current = null;
-            Next = null;
-
-            Lock = new object();
-        }
-
-        public void Enqueue(QueryQueueEntry e)
-        {
-            lock (Lock)
-            {
-                if (Current == null)
-                {
-                    Current = e;
-                }
-                else
-                {
-                    Next = e;
-                }
-            }
-        }
-
-        public bool IsEmpty()
-        {
-            return Current == null;
-        }
-
-        public QueryQueueEntry Pop()
-        {
-            lock (Lock)
-            {
-                if (Current != null)
-                {
-                    var ret = Current;
-                    Current = Next;
-                    Next = null;
-                    return ret;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-    }
-
-    class MoveWithSan
-    {
-        public Move Move { get; set; }
-        public string San { get; set; }
-
-        public MoveWithSan(Move move, string san)
-        {
-            Move = move;
-            San = san;
-        }
-
-        public override string ToString()
-        {
-            return San;
-        }
-    }
-
-    public class CacheEntry
-    {
-        public QueryResponse Stats { get; set; }
-        public Dictionary<Move, ChessDBCNScore> Scores { get; set; }
-
-        public CacheEntry(QueryResponse stats, Dictionary<Move, ChessDBCNScore> scores)
-        {
-            Stats = stats;
-            Scores = scores;
         }
     }
 

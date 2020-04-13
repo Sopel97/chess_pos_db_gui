@@ -8,6 +8,11 @@ namespace chess_pos_db_gui
 {
     class San
     {
+        public static Move ParseSan(string fen, string san)
+        {
+            return ParseSan(new ChessGame(fen), san);
+        }
+
         public static Move ParseSan(ChessGame game, string san)
         {
             Player player = game.WhoseTurn;
