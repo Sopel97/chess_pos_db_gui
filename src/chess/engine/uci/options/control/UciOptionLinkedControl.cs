@@ -4,6 +4,11 @@
     {
         public UciOptionControlPanel LinkedControl { get; private set; }
 
+        protected UciOptionLinkedControl(UciOption opt)
+        {
+            LinkedControl = opt.CreateControlPanel();
+        }
+
         public System.Windows.Forms.Control GetControl()
         {
             return LinkedControl.Control;
@@ -15,11 +20,7 @@
         }
 
         public abstract void ResetControlValue();
-        public abstract void UpdateLinkedOptionValue();
 
-        protected UciOptionLinkedControl(UciOption opt)
-        {
-            LinkedControl = opt.CreateControl();
-        }
+        public abstract void UpdateLinkedOptionValue();
     }
 }

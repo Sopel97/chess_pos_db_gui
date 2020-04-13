@@ -9,6 +9,7 @@ namespace chess_pos_db_gui
     public class UciEngineProfileStorage
     {
         private string ProfileListPath { get; set; }
+
         public IList<UciEngineProfile> Profiles { get; private set; }
 
         public UciEngineProfileStorage(string path)
@@ -18,9 +19,14 @@ namespace chess_pos_db_gui
             DeserializeEngineList();
         }
 
+        public bool ExistsWithName(string name)
+        {
+            return GetByName(name) != null;
+        }
+
         public void AddProfile(UciEngineProfile profile)
         {
-            if (Profiles.FirstOrDefault(p => p.Name == profile.Name) != null)
+            if (ExistsWithName(profile.Name))
             {
                 throw new ArgumentException("Name already used");
             }
@@ -30,7 +36,12 @@ namespace chess_pos_db_gui
             SerializeEngineList();
         }
 
-        public void RemoveProfile(string name)
+        public UciEngineProfile GetByName(string name)
+        {
+            return Profiles.FirstOrDefault(p => p.Name == name);
+        }
+
+        public void RemoveProfileByName(string name)
         {
             var obj = Profiles.FirstOrDefault(p => p.Name == name);
             obj.SetParent(null);

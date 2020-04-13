@@ -8,11 +8,27 @@ namespace chess_pos_db_gui
     public class SpinUciOption : UciOption
     {
         public string Name { get; private set; }
+
         public long DefaultValue { get; private set; }
-        public long Value { get; private set; }
         public long Min { get; private set; }
         public long Max { get; private set; }
 
+        private long _Value;
+        public long Value { 
+            get => _Value; 
+            
+            private set
+            {
+                if (value < Min || value > Max)
+                {
+                    throw new ArgumentException("Value not between min and max.");
+                }
+                else
+                {
+                    _Value = value;
+                }
+            }
+        }
 
         public static SpinUciOption ParseFromParts(string name, string defaultValue, string min, string max)
         {
@@ -26,6 +42,7 @@ namespace chess_pos_db_gui
                 maxopt.Or(def)
                 );
         }
+
         public SpinUciOption(string name, long defaultValue, long min, long max)
         {
             Name = name;
@@ -34,16 +51,26 @@ namespace chess_pos_db_gui
             DefaultValue = Value = defaultValue;
         }
 
+        public SpinUciOption(string name, long defaultValue, long min, long max, long value)
+        {
+            Name = name;
+            Min = min;
+            Max = max;
+            DefaultValue = defaultValue;
+            Value = value;
+        }
+
         public override UciOptionType GetOptionType()
         {
             return UciOptionType.Spin;
         }
+
         public override bool IsDefault()
         {
             return DefaultValue == Value;
         }
 
-        public override void CopyValueFrom(UciOption other)
+        public override void SetValue(UciOption other)
         {
             if (this.GetType() != other.GetType())
             {
@@ -52,6 +79,7 @@ namespace chess_pos_db_gui
 
             Value = ((SpinUciOption)other).Value;
         }
+
         public override void SetValue(string value)
         {
             Value = long.Parse(value);
@@ -67,7 +95,7 @@ namespace chess_pos_db_gui
             return Value;
         }
 
-        public override UciOptionControlPanel CreateControl()
+        public override UciOptionControlPanel CreateControlPanel()
         {
             var control = new System.Windows.Forms.NumericUpDown
             {
@@ -82,17 +110,17 @@ namespace chess_pos_db_gui
             return new UciOptionControlPanel(Name, control);
         }
 
-        public override string ToString()
+        public override string ValueToString()
         {
             return Value.ToString();
         }
-        public override JsonValue NameValueToJson()
+
+        public override KeyValuePair<string, string> GetKeyValuePair()
         {
-            return new JsonObject(
-                new KeyValuePair<string, JsonValue>[]{
-                    new KeyValuePair<string, JsonValue>( "name", Name ),
-                    new KeyValuePair<string, JsonValue>( "value", Value.ToString() )
-                });
+            return new KeyValuePair<string, string>(
+                Name,
+                ValueToString()
+                );
         }
 
         public override string GetName()
@@ -109,11 +137,17 @@ namespace chess_pos_db_gui
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return (Name, Value).GetHashCode();
         }
+
         public override UciOptionLinkedControl CreateLinkedControl()
         {
             return new SpinUciOptionLinkedControl(this);
+        }
+
+        public override UciOption Copy()
+        {
+            return new SpinUciOption(Name, DefaultValue, Min, Max, Value);
         }
     }
 }

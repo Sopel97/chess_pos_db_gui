@@ -8,9 +8,27 @@ namespace chess_pos_db_gui
     public class ComboUciOption : UciOption
     {
         public string Name { get; private set; }
+
         public string DefaultValue { get; private set; }
-        public string Value { get; private set; }
         public IList<string> Vars { get; private set; }
+
+        private string _Value;
+        public string Value
+        {
+            get => _Value;
+            
+            private set
+            {
+                if (value != null && !Vars.Contains(value))
+                {
+                    throw new ArgumentException("Value not in vars.");
+                }
+                else
+                {
+                    _Value = value;
+                }
+            }
+        }
 
         public static ComboUciOption ParseFromParts(string name, string defaultValue, IList<string> var)
         {
@@ -20,34 +38,44 @@ namespace chess_pos_db_gui
         public ComboUciOption(string name, string defaultValue, IList<string> var)
         {
             Name = name;
-            DefaultValue = Value = defaultValue;
             Vars = var;
+            DefaultValue = Value = defaultValue;
+        }
+
+        public ComboUciOption(string name, string defaultValue, IList<string> var, string value)
+        {
+            Name = name;
+            DefaultValue = defaultValue;
+            Vars = var;
+            Value = value;
         }
 
         public override UciOptionType GetOptionType()
         {
             return UciOptionType.Combo;
         }
+
         public override bool IsDefault()
         {
             return DefaultValue == Value;
         }
 
-        public override void CopyValueFrom(UciOption other)
+        public override void SetValue(UciOption other)
         {
-            if (this.GetType() != other.GetType())
+            if (GetType() != other.GetType())
             {
                 throw new ArgumentException("Option type different");
             }
 
             Value = ((ComboUciOption)other).Value;
         }
+
         public override void SetValue(string value)
         {
             Value = value;
         }
 
-        public override UciOptionControlPanel CreateControl()
+        public override UciOptionControlPanel CreateControlPanel()
         {
             var control = new System.Windows.Forms.ComboBox();
             foreach (var var in Vars)
@@ -59,17 +87,17 @@ namespace chess_pos_db_gui
             return new UciOptionControlPanel(Name, control);
         }
 
-        public override string ToString()
+        public override string ValueToString()
         {
             return Value;
         }
-        public override JsonValue NameValueToJson()
+
+        public override KeyValuePair<string, string> GetKeyValuePair()
         {
-            return new JsonObject(
-                new KeyValuePair<string, JsonValue>[]{
-                    new KeyValuePair<string, JsonValue>( "name", Name ),
-                    new KeyValuePair<string, JsonValue>( "value", Value )
-                });
+            return new KeyValuePair<string, string>(
+                Name,
+                Value
+                );
         }
 
         public override string GetName()
@@ -91,11 +119,17 @@ namespace chess_pos_db_gui
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return (Name, Value).GetHashCode();
         }
+
         public override UciOptionLinkedControl CreateLinkedControl()
         {
             return new ComboUciOptionLinkedControl(this);
+        }
+
+        public override UciOption Copy()
+        {
+            return new ComboUciOption(Name, DefaultValue, Vars, Value);
         }
     }
 }

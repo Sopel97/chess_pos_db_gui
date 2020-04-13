@@ -670,7 +670,7 @@
             this.Name = "Application";
             this.Text = "chess_pos_db_gui";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Application_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.Application_Load);
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).EndInit();
             this.levelSelectionGroupBox.ResumeLayout(false);
             this.levelSelectionGroupBox.PerformLayout();

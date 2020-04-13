@@ -11,16 +11,24 @@ namespace chess_pos_db_gui
     public class UciEngineProxy
     {
         public string Path { get; private set; }
-        public string Name { get; private set; }
-        public string Author { get; private set; }
+        public string IdName { get; private set; }
+        public string IdAuthor { get; private set; }
+
         private UciEngineProfile Profile { get; set; }
+
         private Process EngineProcess { get; set; }
+
         private BlockingQueue<string> MessageQueue { get; set; }
+
         private Action<UciInfoResponse> UciInfoHandler { get; set; }
+
         private string Fen { get; set; }
-        public IList<UciOption> CurrentOptions { get; private set; }
-        private IList<UciOption> AppliedOptions { get; set; }
+
+        public IList<UciOption> ScratchOptions { get; private set; }
+        private IList<UciOption> CurrentlyAppliedOptions { get; set; }
+
         public bool IsSearching { get; private set; }
+
         public int PvCount { get; private set; }
 
         private EventHandler OnAnalysisStarted { get; set; }
@@ -41,42 +49,48 @@ namespace chess_pos_db_gui
             this(profile.Path)
         {
             Profile = profile;
-            Profile.OverrideOptions(this);
+            Profile.ApplyOptionsToEngine(this);
         }
 
         public UciEngineProxy(string path)
         {
             Path = path;
-            Name = "";
-            Author = "";
+            IdName = "";
+            IdAuthor = "";
             Fen = FenProvider.StartPos;
             PvCount = 1;
             MessageQueue = new BlockingQueue<string>();
-            CurrentOptions = new List<UciOption>();
-            AppliedOptions = new List<UciOption>();
-
-            EngineProcess = new Process();
-            EngineProcess.StartInfo.FileName = path;
-
-            EngineProcess.StartInfo.RedirectStandardInput = true;
-            EngineProcess.StartInfo.RedirectStandardOutput = true;
-            EngineProcess.StartInfo.RedirectStandardError = true;
-
-            EngineProcess.StartInfo.UseShellExecute = false;
-            EngineProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            EngineProcess.StartInfo.CreateNoWindow = true;
-
-            EngineProcess.ErrorDataReceived += ErrorReceived;
-            EngineProcess.OutputDataReceived += ReceiveMessage;
-
-            EngineProcess.Start();
-
-            EngineProcess.BeginOutputReadLine();
-            EngineProcess.BeginErrorReadLine();
-
+            ScratchOptions = new List<UciOption>();
+            CurrentlyAppliedOptions = new List<UciOption>();
             IsSearching = false;
 
+            EngineProcess = MakeEngineProcess(path);
+
             PerformUciHandshake();
+        }
+
+        private Process MakeEngineProcess(string path)
+        {
+            var engineProcess = new Process();
+            engineProcess.StartInfo.FileName = path;
+
+            engineProcess.StartInfo.RedirectStandardInput = true;
+            engineProcess.StartInfo.RedirectStandardOutput = true;
+            engineProcess.StartInfo.RedirectStandardError = true;
+
+            engineProcess.StartInfo.UseShellExecute = false;
+            engineProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            engineProcess.StartInfo.CreateNoWindow = true;
+
+            engineProcess.Start();
+
+            engineProcess.ErrorDataReceived += ErrorReceived;
+            engineProcess.OutputDataReceived += ReceiveMessage;
+
+            engineProcess.BeginOutputReadLine();
+            engineProcess.BeginErrorReadLine();
+
+            return engineProcess;
         }
 
         public void Quit()
@@ -88,14 +102,20 @@ namespace chess_pos_db_gui
         private IList<UciOption> GetChangedOptions()
         {
             var changedOptions = new List<UciOption>();
-            var zippedOptions = CurrentOptions.Zip(AppliedOptions, (current, applied) => new { Current = current, Applied = applied });
-            foreach (var ca in zippedOptions)
+            var zippedOptions = 
+                ScratchOptions.Zip(
+                    CurrentlyAppliedOptions, 
+                    (scratch, applied) => new { Scratch = scratch, Applied = applied }
+                );
+
+            foreach (var optionPair in zippedOptions)
             {
-                if (!ca.Current.Equals(ca.Applied))
+                if (!optionPair.Scratch.Equals(optionPair.Applied))
                 {
-                    changedOptions.Add(ca.Current);
+                    changedOptions.Add(optionPair.Scratch);
                 }
             }
+
             return changedOptions;
         }
 
@@ -115,7 +135,7 @@ namespace chess_pos_db_gui
 
             if (UciInfoHandler != null && e.Data.StartsWith("info"))
             {
-                var infoResponse = ParseInfoResponse(e.Data);
+                var infoResponse = new UciInfoResponse(Fen, e.Data);
                 if (infoResponse.IsLegal())
                 {
                     try
@@ -156,13 +176,13 @@ namespace chess_pos_db_gui
             {
                 case "name":
                     {
-                        Name = value;
+                        IdName = value;
                         break;
                     }
 
                 case "author":
                     {
-                        Author = value;
+                        IdAuthor = value;
                         break;
                     }
             }
@@ -184,9 +204,9 @@ namespace chess_pos_db_gui
         {
             if (IsSearching)
             {
-                Pause();
+                PauseAnalysis();
                 Fen = fen;
-                GoInfinite(UciInfoHandler, Fen);
+                StartAnalysis(UciInfoHandler, Fen);
             }
             else
             {
@@ -201,8 +221,8 @@ namespace chess_pos_db_gui
             var opt = new UciOptionFactory().FromString(line);
             if (opt != null)
             {
-                CurrentOptions.Add(opt);
-                AppliedOptions.Add(new UciOptionFactory().FromString(line)); //we want a copy
+                ScratchOptions.Add(opt);
+                CurrentlyAppliedOptions.Add(new UciOptionFactory().FromString(line)); //we want a copy
             }
         }
 
@@ -262,9 +282,9 @@ namespace chess_pos_db_gui
 
         public void DiscardUciOptionChanges()
         {
-            foreach (var opt in AppliedOptions)
+            foreach (var opt in CurrentlyAppliedOptions)
             {
-                CurrentOptions.First((UciOption o) => o.GetName() == opt.GetName()).CopyValueFrom(opt);
+                ScratchOptions.First((UciOption o) => o.GetName() == opt.GetName()).SetValue(opt);
             }
         }
 
@@ -273,7 +293,7 @@ namespace chess_pos_db_gui
             foreach (var opt in GetChangedOptions())
             {
                 SendMessage(opt.GetSetOptionString());
-                AppliedOptions.First((UciOption o) => o.GetName() == opt.GetName()).CopyValueFrom(opt);
+                CurrentlyAppliedOptions.First((UciOption o) => o.GetName() == opt.GetName()).SetValue(opt);
             }
 
             if (Profile != null)
@@ -282,7 +302,7 @@ namespace chess_pos_db_gui
             }
 
             PvCount = 1;
-            foreach (var opt in AppliedOptions)
+            foreach (var opt in CurrentlyAppliedOptions)
             {
                 if (opt.GetName() == "MultiPV")
                 {
@@ -302,9 +322,9 @@ namespace chess_pos_db_gui
 
             if (IsSearching)
             {
-                Pause();
+                PauseAnalysis();
                 UpdateUciOptionsWhileNotSearching();
-                GoInfinite(UciInfoHandler, Fen);
+                StartAnalysis(UciInfoHandler, Fen);
             }
             else
             {
@@ -313,27 +333,27 @@ namespace chess_pos_db_gui
             }
         }
 
-        public IList<JsonValue> GetOverridedOptions()
+        public IList<KeyValuePair<string, string>> GetOverridedOptions()
         {
-            var overrided = new List<JsonValue>();
-            foreach (var opt in AppliedOptions)
+            var overrided = new List<KeyValuePair<string, string>>();
+            foreach (var opt in CurrentlyAppliedOptions)
             {
                 if (!opt.IsDefault())
                 {
-                    overrided.Add(opt.NameValueToJson());
+                    overrided.Add(opt.GetKeyValuePair());
                 }
             }
             return overrided;
         }
 
-        public void OverrideOptions(IList<JsonValue> optionsOverrides)
+        public void ApplyOptions(IList<KeyValuePair<string, string>> options)
         {
-            foreach (var json in optionsOverrides)
+            foreach (var newOpt in options)
             {
-                string name = json["name"];
-                string value = json["value"];
-                foreach (var opt in CurrentOptions)
+                foreach (var opt in ScratchOptions)
                 {
+                    var name = newOpt.Key;
+                    var value = newOpt.Value;
                     if (opt.GetName() == name)
                     {
                         opt.SetValue(value);
@@ -345,11 +365,11 @@ namespace chess_pos_db_gui
             UpdateUciOptions();
         }
 
-        public void GoInfinite(Action<UciInfoResponse> handler, string fen)
+        public void StartAnalysis(Action<UciInfoResponse> handler, string fen)
         {
             if (IsSearching)
             {
-                Stop();
+                StopAnalysis();
             }
 
             UciInfoHandler = handler;
@@ -362,7 +382,7 @@ namespace chess_pos_db_gui
             IsSearching = true;
         }
 
-        public void Stop()
+        public void StopAnalysis()
         {
             if (IsSearching)
             {
@@ -375,7 +395,8 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Pause()
+        // Doesn't remove the uci info handler.
+        private void PauseAnalysis()
         {
             if (IsSearching)
             {
@@ -383,234 +404,6 @@ namespace chess_pos_db_gui
                 //WaitForMessage("bestmove");
                 IsSearching = false;
             }
-        }
-
-        private bool IsValidUciMove(string s)
-        {
-            string files = "abcdefgh";
-            string ranks = "12345678";
-            string promotions = "qrbk";
-
-            if (s.Length > 5)
-            {
-                return false;
-            }
-
-            if (s == "0000")
-            {
-                return true;
-            }
-
-            if (files.IndexOf(s[0]) == -1)
-            {
-                return false;
-            }
-
-            if (ranks.IndexOf(s[1]) == -1)
-            {
-                return false;
-            }
-
-            if (files.IndexOf(s[2]) == -1)
-            {
-                return false;
-            }
-
-            if (ranks.IndexOf(s[3]) == -1)
-            {
-                return false;
-            }
-
-            if (s.Length == 5)
-            {
-                return s[3] == '8' && promotions.IndexOf(s[4]) != -1;
-            }
-
-            return true;
-        }
-
-        private Optional<IList<string>> NextMovelist(Queue<string> parts)
-        {
-            var list = new List<string>();
-
-            while (parts.Count > 0)
-            {
-                var part = parts.Peek();
-                if (IsValidUciMove(part))
-                {
-                    parts.Dequeue();
-                    list.Add(part);
-                }
-            }
-
-            return Optional<IList<string>>.Create(list);
-        }
-
-        private Optional<UciScore> NextScore(Queue<string> parts)
-        {
-            UciScoreBoundType boundType = UciScoreBoundType.Exact;
-            UciScoreType type = UciScoreType.Cp;
-            string typestr = parts.Dequeue();
-            if (typestr == "mate")
-            {
-                type = UciScoreType.Mate;
-            }
-
-            string valuestr = parts.Dequeue();
-
-            string boundstr = parts.Peek();
-            if (boundstr == "lowerbound")
-            {
-                boundType = UciScoreBoundType.LowerBound;
-                parts.Dequeue();
-            }
-            else if (boundstr == "upperbound")
-            {
-                boundType = UciScoreBoundType.UpperBound;
-                parts.Dequeue();
-            }
-
-            return Optional<UciScore>.Create(new UciScore(
-                int.Parse(valuestr),
-                type,
-                boundType
-                ));
-        }
-
-        private Optional<int> NextInt(Queue<string> parts)
-        {
-            return Optional<int>.Create(int.Parse(parts.Dequeue()));
-        }
-
-        private Optional<long> NextLong(Queue<string> parts)
-        {
-            return Optional<long>.Create(long.Parse(parts.Dequeue()));
-        }
-
-        private Optional<string> NextString(Queue<string> parts)
-        {
-            return Optional<string>.Create(parts.Dequeue());
-        }
-
-        private UciInfoResponse ParseInfoResponse(string msg)
-        {
-            var r = new UciInfoResponse(Fen);
-            try
-            {
-                Queue<string> parts = new Queue<string>(msg.Split(new char[] { ' ' }));
-                while (parts.Count > 0)
-                {
-                    string cmd = parts.Dequeue();
-                    switch (cmd)
-                    {
-                        case "depth":
-                            {
-                                r.Depth = NextInt(parts);
-                                break;
-                            }
-
-                        case "seldepth":
-                            {
-                                r.SelDepth = NextInt(parts);
-                                break;
-                            }
-
-                        case "time":
-                            {
-                                r.Time = NextLong(parts);
-                                break;
-                            }
-
-                        case "nodes":
-                            {
-                                r.Nodes = NextLong(parts);
-                                break;
-                            }
-
-                        case "pv":
-                            {
-                                r.PV = NextMovelist(parts);
-                                break;
-                            }
-
-                        case "multipv":
-                            {
-                                r.MultiPV = NextInt(parts);
-                                break;
-                            }
-
-                        case "score":
-                            {
-                                r.Score = NextScore(parts);
-                                break;
-                            }
-
-                        case "currmove":
-                            {
-                                r.CurrMove = NextString(parts);
-                                break;
-                            }
-
-                        case "currmovenumber":
-                            {
-                                r.CurrMoveNumber = NextInt(parts);
-                                break;
-                            }
-
-                        case "hashfull":
-                            {
-                                r.HashFull = NextInt(parts);
-                                break;
-                            }
-
-                        case "nps":
-                            {
-                                r.Nps = NextLong(parts);
-                                break;
-                            }
-
-                        case "tbhits":
-                            {
-                                r.TBHits = NextLong(parts);
-                                break;
-                            }
-
-                        case "cpuload":
-                            {
-                                NextInt(parts);
-                                break;
-                            }
-
-                        case "string":
-                            {
-                                NextString(parts);
-                                break;
-                            }
-
-                        case "refutation":
-                            {
-                                NextMovelist(parts);
-                                break;
-                            }
-
-                        case "currline":
-                            {
-                                NextInt(parts);
-                                break;
-                            }
-
-                        default:
-                            {
-                                break;
-                            }
-                    }
-                }
-            }
-            catch (Exception)
-            {
-            }
-
-            return r;
         }
     }
 }

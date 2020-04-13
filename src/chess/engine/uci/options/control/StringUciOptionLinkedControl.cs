@@ -5,7 +5,6 @@
         private StringUciOption Option { get; set; }
         private System.Windows.Forms.TextBox Control => (System.Windows.Forms.TextBox)LinkedControl.Control;
 
-
         public StringUciOptionLinkedControl(StringUciOption opt) :
             base(opt)
         {

@@ -41,7 +41,7 @@ namespace chess_pos_db_gui
                 return;
             }
 
-            if (Profiles.Profiles.FirstOrDefault(p => p.Name == name) != null)
+            if (Profiles.ExistsWithName(name))
             {
                 MessageBox.Show("Name already in use");
                 return;

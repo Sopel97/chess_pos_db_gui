@@ -9,10 +9,43 @@ namespace chess_pos_db_gui
     public class UciEngineProfile
     {
         private UciEngineProfileStorage Parent { get; set; }
+
         public string Name { get; private set; }
+
         public string Path { get; private set; }
         public string FileHash { get; private set; }
-        public IList<JsonValue> OverridedOptions { get; private set; }
+
+        // Doesn't store options that are equal to defaults.
+        public IList<KeyValuePair<string, string>> OverridedOptions { get; private set; }
+
+        public UciEngineProfile(UciEngineProfileStorage parent, string name, string path)
+        {
+            if (!IsValidUciEngine(path))
+            {
+                throw new ArgumentException("Not a valid UCI engine.");
+            }
+
+            Parent = parent;
+            Name = name;
+            Path = path;
+            FileHash = ComputeMD5(path);
+
+            OverridedOptions = new List<KeyValuePair<string, string>>();
+        }
+
+        public UciEngineProfile(UciEngineProfileStorage parent, JsonValue json)
+        {
+            Parent = parent;
+            Name = json["name"];
+            Path = json["path"];
+            FileHash = json["hash"];
+            if (FileHash != ComputeMD5(Path))
+            {
+                throw new FileNotFoundException("The filehash differs from the one of the installed engine.");
+            }
+
+            OverridedOptions = OverridedOptionsFromJson(json["options"]);
+        }
 
         private static bool IsValidUciEngine(string path)
         {
@@ -45,58 +78,44 @@ namespace chess_pos_db_gui
             Parent = p;
         }
 
-        public UciEngineProfile(UciEngineProfileStorage parent, string name, string path)
-        {
-            if (!IsValidUciEngine(path))
-            {
-                throw new ArgumentException("Not a valid UCI engine.");
-            }
-
-            Parent = parent;
-            Name = name;
-            Path = path;
-            FileHash = ComputeMD5(path);
-
-            OverridedOptions = new List<JsonValue>();
-        }
-
-        public UciEngineProfile(UciEngineProfileStorage parent, JsonValue json)
-        {
-            Parent = parent;
-            Name = json["name"];
-            Path = json["path"];
-            FileHash = json["hash"];
-            if (FileHash != ComputeMD5(Path))
-            {
-                throw new FileNotFoundException("The filehash differs from the one of the installed engine.");
-            }
-
-            OverridedOptions = OverridedOptionsFromJson(json["options"]);
-        }
-
         public UciEngineProxy LoadEngine()
         {
             return new UciEngineProxy(this);
         }
 
-        public void OverrideOptions(UciEngineProxy engine)
+        public void ApplyOptionsToEngine(UciEngineProxy engine)
         {
-            engine.OverrideOptions(OverridedOptions);
+            engine.ApplyOptions(OverridedOptions);
         }
 
-        public static IList<JsonValue> OverridedOptionsFromJson(JsonValue json)
+        public static IList<KeyValuePair<string, string>> OverridedOptionsFromJson(JsonValue json)
         {
-            var overrides = new List<JsonValue>();
+            var overrides = new List<KeyValuePair<string, string>>();
             foreach (JsonValue opt in json)
             {
-                overrides.Add(opt);
+                overrides.Add(
+                    new KeyValuePair<string, string>(
+                        opt["name"],
+                        opt["value"]
+                        )
+                    );
             }
             return overrides;
         }
 
         public JsonValue OverridedOptionsToJson()
         {
-            return new JsonArray(OverridedOptions);
+            var arr = new JsonArray();
+            foreach(var opt in OverridedOptions)
+            {
+                arr.Add(
+                    new JsonObject(
+                        new KeyValuePair<string, JsonValue>("name", opt.Key),
+                        new KeyValuePair<string, JsonValue>("value", opt.Value)
+                        )
+                    );
+            }
+            return arr;
         }
 
         public JsonValue ToJson()
@@ -109,7 +128,7 @@ namespace chess_pos_db_gui
                 );
         }
 
-        public void SetOverridedOptions(IList<JsonValue> list)
+        public void SetOverridedOptions(IList<KeyValuePair<string, string>> list)
         {
             OverridedOptions = list;
 

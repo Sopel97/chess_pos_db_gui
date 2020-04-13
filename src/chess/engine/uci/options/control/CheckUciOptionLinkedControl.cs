@@ -6,7 +6,6 @@
 
         private System.Windows.Forms.CheckBox Control => (System.Windows.Forms.CheckBox)LinkedControl.Control;
 
-
         public CheckUciOptionLinkedControl(CheckUciOption opt) :
             base(opt)
         {

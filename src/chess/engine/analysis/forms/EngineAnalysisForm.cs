@@ -160,8 +160,8 @@ namespace chess_pos_db_gui
         private void FillEngineIdInfo()
         {
             enginePathLabel.Text = "Path: " + Engine.Path;
-            engineIdNameLabel.Text = "Name: " + Engine.Name;
-            engineIdAuthorLabel.Text = "Author: " + Engine.Author;
+            engineIdNameLabel.Text = "Name: " + Engine.IdName;
+            engineIdAuthorLabel.Text = "Author: " + Engine.IdAuthor;
         }
 
         private void ClearEngineIdInfo()
@@ -194,7 +194,7 @@ namespace chess_pos_db_gui
             FillEngineIdInfo();
             UpdateAnalysisButtonName();
 
-            OptionsForm = new EngineOptionsForm(Engine.CurrentOptions);
+            OptionsForm = new EngineOptionsForm(Engine.ScratchOptions);
             OptionsForm.FormClosing += OnOptionsFormClosing;
             OptionsForm.VisibleChanged += OnOptionsFormVisibilityChanged;
 
@@ -223,7 +223,7 @@ namespace chess_pos_db_gui
         {
             if (Engine != null)
             {
-                Engine.Stop();
+                Engine.StopAnalysis();
                 Engine.Quit();
                 Engine = null;
             }
@@ -253,11 +253,11 @@ namespace chess_pos_db_gui
         {
             if (Engine.IsSearching)
             {
-                Engine.Stop();
+                Engine.StopAnalysis();
             }
             else
             {
-                Engine.GoInfinite(OnInfoResponse, Fen);
+                Engine.StartAnalysis(OnInfoResponse, Fen);
             }
 
             UpdateAnalysisButtonName();

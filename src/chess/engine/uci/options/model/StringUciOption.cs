@@ -8,6 +8,7 @@ namespace chess_pos_db_gui
     public class StringUciOption : UciOption
     {
         public string Name { get; private set; }
+
         public string DefaultValue { get; private set; }
         public string Value { get; private set; }
 
@@ -15,22 +16,31 @@ namespace chess_pos_db_gui
         {
             return new StringUciOption(name, defaultValue);
         }
+
         public StringUciOption(string name, string defaultValue)
         {
             Name = name;
             DefaultValue = Value = defaultValue ?? "";
         }
 
+        public StringUciOption(string name, string defaultValue, string value)
+        {
+            Name = name;
+            DefaultValue = defaultValue ?? "";
+            Value = value ?? "";
+        }
+
         public override UciOptionType GetOptionType()
         {
             return UciOptionType.String;
         }
+
         public override bool IsDefault()
         {
             return DefaultValue == Value;
         }
 
-        public override void CopyValueFrom(UciOption other)
+        public override void SetValue(UciOption other)
         {
             if (this.GetType() != other.GetType())
             {
@@ -44,7 +54,7 @@ namespace chess_pos_db_gui
             Value = value;
         }
 
-        public override UciOptionControlPanel CreateControl()
+        public override UciOptionControlPanel CreateControlPanel()
         {
             var control = new System.Windows.Forms.TextBox
             {
@@ -55,7 +65,7 @@ namespace chess_pos_db_gui
             return new UciOptionControlPanel(Name, control);
         }
 
-        public override string ToString()
+        public override string ValueToString()
         {
             return Value;
         }
@@ -64,13 +74,13 @@ namespace chess_pos_db_gui
         {
             return Value;
         }
-        public override JsonValue NameValueToJson()
+
+        public override KeyValuePair<string, string> GetKeyValuePair()
         {
-            return new JsonObject(
-                new KeyValuePair<string, JsonValue>[]{
-                    new KeyValuePair<string, JsonValue>( "name", Name ),
-                    new KeyValuePair<string, JsonValue>( "value", Value )
-                });
+            return new KeyValuePair<string, string>(
+                Name,
+                Value
+                );
         }
 
         public override string GetName()
@@ -87,11 +97,16 @@ namespace chess_pos_db_gui
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return (Name, Value).GetHashCode();
         }
         public override UciOptionLinkedControl CreateLinkedControl()
         {
             return new StringUciOptionLinkedControl(this);
+        }
+
+        public override UciOption Copy()
+        {
+            return new StringUciOption(Name, DefaultValue, Value);
         }
     }
 }

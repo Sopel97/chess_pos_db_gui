@@ -7,6 +7,7 @@ namespace chess_pos_db_gui
     public partial class EngineOptionsForm : Form
     {
         private IList<UciOptionLinkedControl> OptionControls { get; set; }
+
         public bool Discard { get; private set; }
 
         public EngineOptionsForm(IList<UciOption> options)

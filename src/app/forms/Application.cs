@@ -1,6 +1,6 @@
 ﻿using chess_pos_db_gui.src.app;
 using chess_pos_db_gui.src.app.chessdbcn;
-
+using chess_pos_db_gui.src.util;
 using ChessDotNet;
 
 using System;
@@ -16,16 +16,19 @@ namespace chess_pos_db_gui
 {
     public partial class Application : Form
     {
+        private string DatabaseTcpClientIp { get; set; } = "127.0.0.1";
+        private int DatabaseTcpClientPort { get; set; } = 1234;
+        private DatabaseProxy Database { get; set; }
+
         private HashSet<GameLevel> Levels { get; set; }
         private HashSet<Select> Selects { get; set; }
-        private QueryCacheEntry Data { get; set; }
+
+        private QueryCacheEntry CacheEntry { get; set; }
         private DataTable TabulatedData { get; set; }
         private DataTable TotalTabulatedData { get; set; }
+
         private double BestGoodness { get; set; }
-        private DatabaseProxy Database { get; set; }
         private bool IsEntryDataUpToDate { get; set; } = false;
-        private string Ip { get; set; } = "127.0.0.1";
-        private int Port { get; set; } = 1234;
 
         private EngineAnalysisForm AnalysisForm { get; set; }
 
@@ -35,7 +38,7 @@ namespace chess_pos_db_gui
         {
             Levels = new HashSet<GameLevel>();
             Selects = new HashSet<Select>();
-            Data = null;
+            CacheEntry = null;
             TabulatedData = new DataTable();
             TotalTabulatedData = new DataTable();
 
@@ -92,10 +95,10 @@ namespace chess_pos_db_gui
             TotalTabulatedData.Columns.Add(new DataColumn("Eval", typeof(ChessDBCNScore)));
             TotalTabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
 
-            MakeDoubleBuffered(entriesGridView);
+            WinFormsControlUtil.MakeDoubleBuffered(entriesGridView);
             entriesGridView.DataSource = TabulatedData;
 
-            MakeDoubleBuffered(totalEntriesGridView);
+            WinFormsControlUtil.MakeDoubleBuffered(totalEntriesGridView);
             totalEntriesGridView.DataSource = TotalTabulatedData;
 
             totalEntriesGridView.Columns["Move"].Frozen = true;
@@ -192,48 +195,8 @@ namespace chess_pos_db_gui
 
             entriesGridView.Sort(entriesGridView.Columns["Count"], ListSortDirection.Descending);
 
-            foreach (DataGridViewColumn column in entriesGridView.Columns)
-            {
-                if (column.ValueType == typeof(ulong) || column.ValueType == typeof(uint))
-                {
-                    column.DefaultCellStyle.Format = "N0";
-                    column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                }
-            }
-
-            foreach (DataGridViewColumn column in totalEntriesGridView.Columns)
-            {
-                if (column.ValueType == typeof(ulong) || column.ValueType == typeof(uint))
-                {
-                    column.DefaultCellStyle.Format = "N0";
-                    column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                }
-            }
-        }
-
-        private static double GetAdjustedPerformance(double actualPerf, double expectedPerf)
-        {
-            // We have a cap on elo and elo error. Due to this we don't get infinities
-            // from 0% and 100% perf. This means adjusting them results in other values
-            // even if expected perf is 50%. So if the perf is borderling we just copy it.
-            double eps = 0.001;
-            if (actualPerf < eps || actualPerf > 1.0 - eps)
-            {
-                return actualPerf;
-            }
-
-            var actualElo = EloCalculator.GetEloFromPerformance(actualPerf);
-            var expectedElo = EloCalculator.GetEloFromPerformance(expectedPerf);
-            return EloCalculator.GetExpectedPerformance(actualElo - expectedElo);
-        }
-
-        private static void MakeDoubleBuffered(DataGridView dgv)
-        {
-            Type dgvType = dgv.GetType();
-            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
-                  BindingFlags.Instance | BindingFlags.NonPublic);
-
-            pi.SetValue(dgv, true, null);
+            WinFormsControlUtil.SetThousandSeparator(entriesGridView);
+            WinFormsControlUtil.SetThousandSeparator(totalEntriesGridView);
         }
 
         private void OnProcessExit(object sender, EventArgs e)
@@ -241,13 +204,13 @@ namespace chess_pos_db_gui
             Database?.Dispose();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Application_Load(object sender, EventArgs e)
         {
             chessBoard.LoadImages("assets/graphics");
 
             try
             {
-                Database = new DatabaseProxy(Ip, Port);
+                Database = new DatabaseProxy(DatabaseTcpClientIp, DatabaseTcpClientPort);
                 QueryExecutor = new QueryExecutor(Database);
                 QueryExecutor.DataReceived += OnDataReceived;
             }
@@ -269,7 +232,7 @@ namespace chess_pos_db_gui
             var data = p.Value;
             if (key.CurrentFen == chessBoard.GetFen())
             {
-                Data = data;
+                CacheEntry = data;
                 Invoke(new MethodInvoker(Repopulate));
             }
         }
@@ -297,211 +260,30 @@ namespace chess_pos_db_gui
             }
         }
 
-        /*
-         * W - number of wins
-         * D - number of draws
-         * L - number of losses
-         *
-         * Ev_Perf - performance estimate based on eval (between 0 and 1)
-         * H_Perf - human performance (between 0 and 1)
-         * E_Perf - engine performance (between 0 and 1)
-         * 
-         * expected_perf - performance expected from elo diff
-         *
-         * H_weight - weight for human games
-         * E_weight - weight for engine games
-         * Eval_weight - weight for eval
-         * Count_confidence - whether elo_error is to be used (boolean)
-         *
-         * elo error formula: http://talkchess.com/forum3/viewtopic.php?p=645304#p645304
-         *
-         * N = W+D+L
-         * draw_ratio = D/N
-         * s(p) = sqrt([p*(1 - p) - draw_ratio/4]/(N - 1))
-         * z = 2,58 (for 99% confidence) (would be 2 for 95% confidence)
-         *
-         * H_elo_error = 1600 * z * s(H_Perf) / ln(10)
-         * E_elo_error = 1600 * z * s(E_Perf) / ln(10)
-         *
-         * if eval not provided:
-         *     Eval_weight = 0
-         *
-         * if Count_confidence:
-         *     H_Perf = Perf(Elo(H_Perf) - H_elo_error)
-         *     E_Perf = Perf(Elo(E_Perf) - E_elo_error)
-         *     
-         * H_APerf = AdjustPerf(H_Perf, expected_perf)
-         * E_APerf = AdjustPerf(E_Perf, expected_perf)
-         *
-         * weight_sum = H_weight + E_weight + Eval_weight
-         * a = pow(H_APerf, H_weight)
-         * b = pow(E_APerf, A_weight)
-         * c = pow(Ev_Perf, Eval_weight)
-         * goodness = pow(a*b*c, 1.0/weight_sum)
-         */
         private double CalculateGoodness(AggregatedEntry entry, AggregatedEntry nonEngineEntry, ChessDBCNScore score)
         {
-            long maxAllowedEloDiff = 400;
-
-            // if there's less than this amount of games then the goodness contribution will be penalized.
-            ulong penaltyFromCountThreshold = 1;
-
-            bool useHumanWeight = humanWeightCheckbox.Checked && !combineHECheckbox.Checked;
-            bool useEngineWeight = engineWeightCheckbox.Checked && !combineHECheckbox.Checked;
-            bool useTotalWeight = gamesWeightCheckbox.Checked && combineHECheckbox.Checked;
-            bool useAnyGames = useHumanWeight || useEngineWeight || useTotalWeight;
-            bool useEvalWeight = evaluationWeightCheckbox.Checked;
-            bool useCount = goodnessUseCountCheckbox.Checked;
-
-            // return 0 if no games being considered
-            ulong usedGameCount = 0;
-            ulong usedWins = 0;
-            ulong usedDraws = 0;
-            ulong usedLosses = 0;
-            if (useTotalWeight)
+            var options = new GoodnessCalculator.Options
             {
-                usedGameCount += entry.Count;
-                usedWins += entry.WinCount;
-                usedDraws += entry.DrawCount;
-                usedLosses += entry.LossCount;
-            }
-            if (useHumanWeight)
-            {
-                usedGameCount += nonEngineEntry.Count;
-                usedWins += nonEngineEntry.WinCount;
-                usedDraws += nonEngineEntry.DrawCount;
-                usedLosses += nonEngineEntry.LossCount;
-            }
-            if (useEngineWeight)
-            {
-                usedGameCount += entry.Count - nonEngineEntry.Count;
-                usedWins += entry.WinCount - nonEngineEntry.WinCount;
-                usedDraws += entry.DrawCount - nonEngineEntry.DrawCount;
-                usedLosses += entry.LossCount - nonEngineEntry.LossCount;
-            }
-            if (useAnyGames && usedGameCount == 0)
-            {
-                return 0.0;
-            }
+                UseHumanGames = humanWeightCheckbox.Checked,
+                UseEngineGames = engineWeightCheckbox.Checked,
+                UseEval = evaluationWeightCheckbox.Checked,
+                UseCombinedGames = gamesWeightCheckbox.Checked,
+                CombineGames = combineHECheckbox.Checked,
+                UseCount = goodnessUseCountCheckbox.Checked,
 
-            if (useEvalWeight && score == null && Math.Abs(entry.EloDiff / (long)entry.Count) > maxAllowedEloDiff)
-            {
-                return 0.0;
-            }
+                HumanWeight = (double)humanWeightNumericUpDown.Value,
+                EngineWeight = (double)engineWeightNumericUpDown.Value,
+                EvalWeight = (double)evalWeightNumericUpDown.Value,
+                CombinedGamesWeight = (double)gamesWeightNumericUpDown.Value
+            };
 
-            double humanWeight = useHumanWeight ? (double)humanWeightNumericUpDown.Value : 0.0;
-            double engineWeight = useEngineWeight ? (double)engineWeightNumericUpDown.Value : 0.0;
-            double totalWeight = useTotalWeight ? (double)gamesWeightNumericUpDown.Value : 0.0;
-            double evalWeight = useEvalWeight ? (double)evalWeightNumericUpDown.Value : 0.0;
-
-            ulong totalCount = entry.Count;
-            double adjustedTotalPerf = 1.0f;
-            if (totalCount > 0)
-            {
-                ulong totalWins = entry.WinCount;
-                ulong totalDraws = entry.DrawCount;
-                ulong totalLosses = totalCount - totalWins - totalDraws;
-                double totalPerf = (totalWins + totalDraws * 0.5) / totalCount;
-                double totalEloError = EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses);
-                double expectedTotalPerf = EloCalculator.GetExpectedPerformance((entry.EloDiff) / (double)totalCount);
-                if (chessBoard.SideToMove() == Player.Black)
-                {
-                    totalPerf = 1.0 - totalPerf;
-                    expectedTotalPerf = 1.0 - expectedTotalPerf;
-                }
-                if (useCount)
-                {
-                    totalPerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(totalPerf) - totalEloError);
-                }
-                adjustedTotalPerf = GetAdjustedPerformance(totalPerf, expectedTotalPerf);
-            }
-
-            double adjustedEnginePerf = 1.0f;
-            ulong engineCount = entry.Count - nonEngineEntry.Count;
-            if (engineCount > 0)
-            {
-                ulong engineWins = entry.WinCount - nonEngineEntry.WinCount;
-                ulong engineDraws = entry.DrawCount - nonEngineEntry.DrawCount;
-                ulong engineLosses = engineCount - engineWins - engineDraws;
-                double enginePerf = (engineWins + engineDraws * 0.5) / engineCount;
-                double engineEloError = EloCalculator.EloError99pct(engineWins, engineDraws, engineLosses);
-                double expectedEnginePerf = EloCalculator.GetExpectedPerformance((entry.EloDiff - nonEngineEntry.EloDiff) / (double)engineCount);
-                if (chessBoard.SideToMove() == Player.Black)
-                {
-                    enginePerf = 1.0 - enginePerf;
-                    expectedEnginePerf = 1.0 - expectedEnginePerf;
-                }
-                if (useCount)
-                {
-                    enginePerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(enginePerf) - engineEloError);
-                }
-                adjustedEnginePerf = GetAdjustedPerformance(enginePerf, expectedEnginePerf);
-            }
-
-            double adjustedHumanPerf = 1.0f;
-            ulong humanCount = nonEngineEntry.Count;
-            if (humanCount > 0)
-            {
-                ulong humanWins = nonEngineEntry.WinCount;
-                ulong humanDraws = nonEngineEntry.DrawCount;
-                ulong humanLosses = humanCount - humanWins - humanDraws;
-                double humanPerf = (humanWins + humanDraws * 0.5) / humanCount;
-                double humanEloError = EloCalculator.EloError99pct(humanWins, humanDraws, humanLosses);
-                double expectedHumanPerf = EloCalculator.GetExpectedPerformance(nonEngineEntry.EloDiff / (double)humanCount);
-                if (chessBoard.SideToMove() == Player.Black)
-                {
-                    humanPerf = 1.0 - humanPerf;
-                    expectedHumanPerf = 1.0 - expectedHumanPerf;
-                }
-                if (useCount)
-                {
-                    humanPerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(humanPerf) - humanEloError);
-                }
-                adjustedHumanPerf = GetAdjustedPerformance(humanPerf, expectedHumanPerf);
-            }
-
-            double minPerf = 0.01;
-
-            double penalizePerf(double perf, double numGames)
-            {
-                if (numGames >= penaltyFromCountThreshold)
-                {
-                    return perf;
-                }
-
-                if (numGames == 0)
-                {
-                    return minPerf;
-                }
-
-                double r = ((numGames + 1.0) / (penaltyFromCountThreshold + 1));
-                double penalty = 1 - Math.Log(r);
-                return Math.Max(minPerf, perf / penalty);
-            }
-
-            if (useCount)
-            {
-                adjustedEnginePerf = penalizePerf(adjustedEnginePerf, engineCount);
-                adjustedHumanPerf = penalizePerf(adjustedHumanPerf, humanCount);
-                adjustedTotalPerf = penalizePerf(adjustedTotalPerf, totalCount);
-            }
-
-            double engineGoodness = Math.Pow(adjustedEnginePerf, engineWeight);
-            double humanGoodness = Math.Pow(adjustedHumanPerf, humanWeight);
-            double totalGoodness = Math.Pow(adjustedTotalPerf, totalWeight);
-            // if eval is not present then assume 0.5 but penalize moves with low game count
-            double evalGoodness =
-                Math.Pow(
-                    score != null
-                    ? score.Perf
-                    : EloCalculator.GetExpectedPerformance(-EloCalculator.EloError99pct(usedWins, usedDraws, usedLosses))
-                    , evalWeight);
-
-            double weightSum = engineWeight + humanWeight + totalWeight + evalWeight;
-
-            double goodness = Math.Pow(engineGoodness * humanGoodness * totalGoodness * evalGoodness, 1.0 / weightSum);
-
-            return goodness;
+            return GoodnessCalculator.CalculateGoodness(
+                chessBoard.SideToMove(),
+                entry,
+                nonEngineEntry,
+                score,
+                options
+                );
         }
 
         private void NormalizeGoodnessValues()
@@ -578,7 +360,7 @@ namespace chess_pos_db_gui
 
             var averageEloDiff = entry.Count > 0 ? entry.EloDiff / (double)entry.Count : 0.0;
             var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
-            var adjustedPerf = GetAdjustedPerformance(entry.Perf, expectedPerf);
+            var adjustedPerf = EloCalculator.GetAdjustedPerformance(entry.Perf, expectedPerf);
             if (chessBoard.SideToMove() == Player.White)
             {
                 row["Perf"] = entry.Perf;
@@ -660,7 +442,7 @@ namespace chess_pos_db_gui
 
             var averageEloDiff = total.Count > 0 ? total.EloDiff / (double)total.Count : 0.0;
             var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
-            var adjustedPerf = GetAdjustedPerformance(total.Perf, expectedPerf);
+            var adjustedPerf = EloCalculator.GetAdjustedPerformance(total.Perf, expectedPerf);
             if (chessBoard.SideToMove() == Player.White)
             {
                 row["Perf"] = total.Perf;
@@ -872,7 +654,7 @@ namespace chess_pos_db_gui
                 }
             }
 
-            Populate(aggregatedEntries, aggregatedContinuationEntries.Where(p => p.Value.Count != 0).Select(p => p.Key), aggregatedNonEngineEntries, Data.Scores);
+            Populate(aggregatedEntries, aggregatedContinuationEntries.Where(p => p.Value.Count != 0).Select(p => p.Key), aggregatedNonEngineEntries, CacheEntry.Scores);
         }
 
         private void UpdateGoodness(QueryCacheEntry res, List<Select> selects, List<GameLevel> levels)
@@ -907,7 +689,7 @@ namespace chess_pos_db_gui
                 }
             }
 
-            UpdateGoodness(aggregatedEntries, aggregatedNonEngineEntries, Data.Scores);
+            UpdateGoodness(aggregatedEntries, aggregatedNonEngineEntries, CacheEntry.Scores);
         }
 
         private void Clear()
@@ -920,7 +702,7 @@ namespace chess_pos_db_gui
 
         private void Repopulate()
         {
-            if (Selects.Count == 0 || Levels.Count == 0 || Data == null)
+            if (Selects.Count == 0 || Levels.Count == 0 || CacheEntry == null)
             {
                 Clear();
             }
@@ -940,19 +722,19 @@ namespace chess_pos_db_gui
                     entriesGridView.Columns["AdjustedPerf"].HeaderText = "ABl%";
                     totalEntriesGridView.Columns["AdjustedPerf"].HeaderText = "ABl%";
                 }
-                Populate(Data, Selects.ToList(), Levels.ToList());
+                Populate(CacheEntry, Selects.ToList(), Levels.ToList());
             }
         }
 
         private void UpdateGoodness()
         {
-            if (Selects.Count == 0 || Levels.Count == 0 || Data == null)
+            if (Selects.Count == 0 || Levels.Count == 0 || CacheEntry == null)
             {
                 return;
             }
             else
             {
-                UpdateGoodness(Data, Selects.ToList(), Levels.ToList());
+                UpdateGoodness(CacheEntry, Selects.ToList(), Levels.ToList());
             }
         }
 

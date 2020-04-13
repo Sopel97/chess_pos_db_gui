@@ -5,7 +5,6 @@
         private ComboUciOption Option { get; set; }
         private System.Windows.Forms.ComboBox Control => (System.Windows.Forms.ComboBox)LinkedControl.Control;
 
-
         public ComboUciOptionLinkedControl(ComboUciOption opt) :
             base(opt)
         {

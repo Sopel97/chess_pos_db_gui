@@ -9,7 +9,6 @@ namespace chess_pos_db_gui
     {
         public UciOptionFactory()
         {
-
         }
 
         private string NextString(Queue<string> parts)

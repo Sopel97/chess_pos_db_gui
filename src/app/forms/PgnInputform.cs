@@ -17,21 +17,26 @@ namespace chess_pos_db_gui
 
             WasCancelled = false;
             Pgn = "";
+
             if (Clipboard.ContainsText())
             {
                 pgnTextBox.Text = Clipboard.GetText();
             }
         }
 
-        private void OkButton_Click(object sender, EventArgs e)
+        private string StripPgnHeader(string pgn)
         {
-            WasCancelled = false;
-            Pgn = pgnTextBox.Text;
-            var lines = Pgn.Split(
+            var lines = pgn.Split(
                 new[] { "\r\n", "\r", "\n" },
                 StringSplitOptions.None
                 );
-            MoveText = string.Concat(lines.Where(s => !s.StartsWith("[")));
+            return string.Concat(lines.Where(s => !s.StartsWith("[")));
+        }
+
+        private void OkButton_Click(object sender, EventArgs e)
+        {
+            WasCancelled = false;
+            Pgn = StripPgnHeader(pgnTextBox.Text);
             Close();
         }
 

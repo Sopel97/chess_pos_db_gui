@@ -5,7 +5,6 @@
         private SpinUciOption Option { get; set; }
         private System.Windows.Forms.NumericUpDown Control => (System.Windows.Forms.NumericUpDown)LinkedControl.Control;
 
-
         public SpinUciOptionLinkedControl(SpinUciOption opt) :
             base(opt)
         {

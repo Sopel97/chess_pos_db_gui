@@ -29,12 +29,12 @@ namespace chess_pos_db_gui
 
         private UciEngineProfile GetProfileByName(string name)
         {
-            return Profiles.Profiles.First(p => p.Name == name);
+            return Profiles.GetByName(name);
         }
 
         private void RemoveProfileByName(string name)
         {
-            Profiles.RemoveProfile(name);
+            Profiles.RemoveProfileByName(name);
             profilesListBox.Items.Remove(name);
         }
 

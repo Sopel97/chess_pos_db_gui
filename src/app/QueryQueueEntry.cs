@@ -17,14 +17,14 @@
 
         public QueryQueueEntry(ChessBoard chessBoard, bool queryEval)
         {
+            San = chessBoard.GetLastMoveSan();
+
             QueryFen = 
                 San == chess_pos_db_gui.San.NullMove
                 ? chessBoard.GetFen()
                 : chessBoard.GetPrevFen();
 
             CurrentFen = chessBoard.GetFen();
-
-            San = chessBoard.GetLastMoveSan();
 
             QueryEval = queryEval;
         }

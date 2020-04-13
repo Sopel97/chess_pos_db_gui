@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace chess_pos_db_gui
 {
-    class AggregatedEntry
+    public class AggregatedEntry
     {
         public ulong Count { get; set; }
         public ulong WinCount { get; set; }

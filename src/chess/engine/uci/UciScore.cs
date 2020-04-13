@@ -19,7 +19,9 @@ namespace chess_pos_db_gui
     public class UciScore
     {
         public int Value { get; private set; }
+
         private UciScoreType Type { get; set; }
+
 #pragma warning disable IDE0052 // Remove unread private members
         private UciScoreBoundType BoundType { get; set; }
 #pragma warning restore IDE0052 // Remove unread private members
@@ -33,6 +35,7 @@ namespace chess_pos_db_gui
 
         public override string ToString()
         {
+            // TODO: incorporate bounds into the formatting
             if (Type == UciScoreType.Cp)
             {
                 return (Value / 100.0).ToString("0.00");

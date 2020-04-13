@@ -18,6 +18,7 @@ namespace chess_pos_db_gui
         public ulong NumGames { get; private set; }
         public ulong NumPositions { get; private set; }
         public ulong NumSkippedGames { get; private set; }
+
         public bool KeepFormAlive { get; private set; }
 
         private readonly DatabaseProxy database;

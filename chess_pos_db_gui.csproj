@@ -53,7 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\app\chessdbcn\ChessDBCNScoreProvider.cs" />
+    <Compile Include="src\app\GoodnessCalculator.cs" />
     <Compile Include="src\app\QueryCacheEntry.cs" />
+    <Compile Include="src\chess\engine\uci\UciUtil.cs" />
     <Compile Include="src\chess\MoveWithSan.cs" />
     <Compile Include="src\app\QueryQueueEntry.cs" />
     <Compile Include="src\app\QueryExecutor.cs" />

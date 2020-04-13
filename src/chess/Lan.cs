@@ -8,6 +8,24 @@ namespace chess_pos_db_gui.src.chess
 {
     static class Lan
     {
+        public static readonly string NullMove = "0000";
+
+        public static bool IsLegal(string fen, string lan)
+        {
+            if (lan == null || lan == NullMove)
+            {
+                return false;
+            }
+
+            ChessGame game = new ChessGame(fen);
+            var from = lan.Substring(0, 2);
+            var to = lan.Substring(2, 2);
+            Player player = game.WhoseTurn;
+            var move = lan.Length == 5 ? new ChessDotNet.Move(from, to, player, lan[4]) : new ChessDotNet.Move(from, to, player);
+         
+            return game.MakeMove(move, false) != MoveType.Invalid;
+        }
+
         public static Move ParseLan(ChessGame game, string lan)
         {
             // a1a1
@@ -67,7 +85,7 @@ namespace chess_pos_db_gui.src.chess
 
         public static MoveWithSan LanToMoveWithSan(string fen, string lan)
         {
-            if (lan == null || lan == "0000")
+            if (lan == null || lan == NullMove)
             {
                 return new MoveWithSan(null, San.NullMove);
             }
