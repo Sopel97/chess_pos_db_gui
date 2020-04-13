@@ -1,9 +1,7 @@
 ﻿using ChessDotNet;
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
@@ -15,7 +13,7 @@ namespace chess_pos_db_gui
         public ChessBoardHistoryEntry(ChessGame game)
         {
             GCD = game.GetGameCreationData();
-            
+
             if (GCD.Moves.Length > 0)
             {
                 Move = GCD.Moves.Last();
@@ -35,7 +33,10 @@ namespace chess_pos_db_gui
 
         public string GetSan()
         {
-            if (Move == null) return "--";
+            if (Move == null)
+            {
+                return "--";
+            }
 
             return Move.SAN;
         }
@@ -80,7 +81,9 @@ namespace chess_pos_db_gui
         private void TruncateToCurrent()
         {
             if (Plies != Entries.Count - 1)
+            {
                 Entries.RemoveRange(Plies + 1, Entries.Count - Plies - 1);
+            }
         }
 
         public bool DoMove(Move move)
@@ -88,7 +91,11 @@ namespace chess_pos_db_gui
             TruncateToCurrent();
 
             ChessGame pos = new ChessGame(Current().GCD);
-            if (!pos.IsValidMove(move)) return false;
+            if (!pos.IsValidMove(move))
+            {
+                return false;
+            }
+
             pos.MakeMove(move, true);
             Entries.Add(new ChessBoardHistoryEntry(pos));
             ++Plies;
@@ -107,7 +114,11 @@ namespace chess_pos_db_gui
 
             ChessGame pos = new ChessGame(Current().GCD);
             Move move = San.ParseSan(pos, san);
-            if (move == null) return false;
+            if (move == null)
+            {
+                return false;
+            }
+
             pos.MakeMove(move, false);
             Entries.Add(new ChessBoardHistoryEntry(pos));
             ++Plies;
@@ -140,7 +151,11 @@ namespace chess_pos_db_gui
 
         public ChessBoardHistoryEntry Next()
         {
-            if (Plies == Entries.Count() - 1) return null;
+            if (Plies == Entries.Count() - 1)
+            {
+                return null;
+            }
+
             return Entries[Plies + 1];
         }
 

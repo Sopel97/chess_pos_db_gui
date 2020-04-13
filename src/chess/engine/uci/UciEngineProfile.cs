@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Json;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
@@ -25,7 +22,7 @@ namespace chess_pos_db_gui
                 engine.Quit();
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }

@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Json;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace chess_pos_db_gui
@@ -29,7 +21,7 @@ namespace chess_pos_db_gui
 
         private void FillProfileListBox()
         {
-            foreach(var profile in Profiles.Profiles)
+            foreach (var profile in Profiles.Profiles)
             {
                 profilesListBox.Items.Add(profile.Name);
             }
@@ -62,7 +54,7 @@ namespace chess_pos_db_gui
             var form = new CreateEngineProfileForm(Profiles);
             form.ShowDialog();
             var newProfile = form.Profile;
-            if(newProfile != null)
+            if (newProfile != null)
             {
                 AddProfile(newProfile);
             }

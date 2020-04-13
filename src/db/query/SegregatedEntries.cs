@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Json;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
@@ -16,7 +13,7 @@ namespace chess_pos_db_gui
         {
             var e = new SegregatedEntries();
 
-            foreach(KeyValuePair<string, JsonValue> byLevel in json)
+            foreach (KeyValuePair<string, JsonValue> byLevel in json)
             {
                 GameLevel level = GameLevelHelper.FromString(byLevel.Key).First();
                 foreach (KeyValuePair<string, JsonValue> byResult in byLevel.Value)
@@ -43,7 +40,9 @@ namespace chess_pos_db_gui
         public Entry Get(GameLevel level, GameResult result)
         {
             if (Entries.TryGetValue(new Origin(level, result), out Entry e))
+            {
                 return e;
+            }
 
             return null;
         }
@@ -62,7 +61,7 @@ namespace chess_pos_db_gui
         public Origin(GameLevel level, GameResult result)
         {
             Level = level;
-            this.Result = result;
+            Result = result;
         }
     }
 }

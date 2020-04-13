@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Json;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
@@ -15,7 +11,7 @@ namespace chess_pos_db_gui
         {
             var result = new QueryResponse();
 
-            foreach(JsonValue entry in json["results"])
+            foreach (JsonValue entry in json["results"])
             {
                 result.Results.Add(ResultForRoot.FromJson(entry));
             }

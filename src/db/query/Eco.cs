@@ -15,9 +15,15 @@ namespace chess_pos_db_gui
 
         public static Eco FromString(string str)
         {
-            if (str.Length != 3) throw new ArgumentException();
+            if (str.Length != 3)
+            {
+                throw new ArgumentException();
+            }
 
-            if (str[0] < 'A' || str[0] > 'E') throw new ArgumentException();
+            if (str[0] < 'A' || str[0] > 'E')
+            {
+                throw new ArgumentException();
+            }
 
             return new Eco
             {

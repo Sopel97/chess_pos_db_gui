@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
@@ -30,7 +27,7 @@ namespace chess_pos_db_gui
         public AggregatedEntry(SegregatedEntries entries, List<GameLevel> levels) :
             this()
         {
-            foreach(KeyValuePair<Origin, Entry> entry in entries)
+            foreach (KeyValuePair<Origin, Entry> entry in entries)
             {
                 if (levels.Contains(entry.Key.Level))
                 {

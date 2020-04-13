@@ -1,14 +1,12 @@
 ﻿using chess_pos_db_gui.src.chess;
+
 using ChessDotNet;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Json;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace chess_pos_db_gui
 {
@@ -91,7 +89,7 @@ namespace chess_pos_db_gui
 
         private IList<UciOption> GetChangedOptions()
         {
-            var changedOptions = new List<UciOption>(); 
+            var changedOptions = new List<UciOption>();
             var zippedOptions = CurrentOptions.Zip(AppliedOptions, (current, applied) => new { Current = current, Applied = applied });
             foreach (var ca in zippedOptions)
             {
@@ -110,7 +108,10 @@ namespace chess_pos_db_gui
 
         private void ReceiveMessage(Object sender, DataReceivedEventArgs e)
         {
-            if (e.Data == null) return;
+            if (e.Data == null)
+            {
+                return;
+            }
 
             System.Diagnostics.Debug.WriteLine("Received: " + e.Data);
 
@@ -146,10 +147,14 @@ namespace chess_pos_db_gui
         private void SetId(string id)
         {
             var parts = id.Split(new char[] { ' ' });
-            if (parts.Length < 3) return;
+            if (parts.Length < 3)
+            {
+                return;
+            }
+
             var value = parts.Skip(2).Aggregate((a, b) => a + " " + b);
 
-            switch(parts[1])
+            switch (parts[1])
             {
                 case "name":
                     {
@@ -267,7 +272,7 @@ namespace chess_pos_db_gui
 
         private void UpdateUciOptionsWhileNotSearching()
         {
-            foreach(var opt in GetChangedOptions())
+            foreach (var opt in GetChangedOptions())
             {
                 SendMessage(opt.GetSetOptionString());
                 AppliedOptions.First((UciOption o) => o.GetName() == opt.GetName()).CopyValueFrom(opt);
@@ -279,7 +284,7 @@ namespace chess_pos_db_gui
             }
 
             PvCount = 1;
-            foreach(var opt in AppliedOptions)
+            foreach (var opt in AppliedOptions)
             {
                 if (opt.GetName() == "MultiPV")
                 {
@@ -292,7 +297,10 @@ namespace chess_pos_db_gui
         public void UpdateUciOptions()
         {
             var changedOptions = GetChangedOptions();
-            if (changedOptions.Count == 0) return;
+            if (changedOptions.Count == 0)
+            {
+                return;
+            }
 
             if (IsSearching)
             {
@@ -310,7 +318,7 @@ namespace chess_pos_db_gui
         public IList<JsonValue> GetOverridedOptions()
         {
             var overrided = new List<JsonValue>();
-            foreach(var opt in AppliedOptions)
+            foreach (var opt in AppliedOptions)
             {
                 if (!opt.IsDefault())
                 {
@@ -322,7 +330,7 @@ namespace chess_pos_db_gui
 
         public void OverrideOptions(IList<JsonValue> optionsOverrides)
         {
-            foreach(var json in optionsOverrides)
+            foreach (var json in optionsOverrides)
             {
                 string name = json["name"];
                 string value = json["value"];
@@ -385,12 +393,35 @@ namespace chess_pos_db_gui
             string ranks = "12345678";
             string promotions = "qrbk";
 
-            if (s.Length > 5) return false;
-            if (s == "0000") return true;
-            if (files.IndexOf(s[0]) == -1) return false;
-            if (ranks.IndexOf(s[1]) == -1) return false;
-            if (files.IndexOf(s[2]) == -1) return false;
-            if (ranks.IndexOf(s[3]) == -1) return false;
+            if (s.Length > 5)
+            {
+                return false;
+            }
+
+            if (s == "0000")
+            {
+                return true;
+            }
+
+            if (files.IndexOf(s[0]) == -1)
+            {
+                return false;
+            }
+
+            if (ranks.IndexOf(s[1]) == -1)
+            {
+                return false;
+            }
+
+            if (files.IndexOf(s[2]) == -1)
+            {
+                return false;
+            }
+
+            if (ranks.IndexOf(s[3]) == -1)
+            {
+                return false;
+            }
 
             if (s.Length == 5)
             {
@@ -404,7 +435,7 @@ namespace chess_pos_db_gui
         {
             var list = new List<string>();
 
-            while(parts.Count > 0)
+            while (parts.Count > 0)
             {
                 var part = parts.Peek();
                 if (IsValidUciMove(part))
@@ -677,14 +708,20 @@ namespace chess_pos_db_gui
         public bool IsLegal()
         {
             var lan = PV.Or(new List<string>()).FirstOrDefault();
-            if (lan == null || lan == "0000") return false;
+            if (lan == null || lan == "0000")
+            {
+                return false;
+            }
 
             ChessGame game = new ChessGame(Fen);
             var from = lan.Substring(0, 2);
             var to = lan.Substring(2, 2);
             Player player = game.WhoseTurn;
             var move = lan.Length == 5 ? new ChessDotNet.Move(from, to, player, lan[4]) : new ChessDotNet.Move(from, to, player);
-            if(game.MakeMove(move, false) == MoveType.Invalid) return false;
+            if (game.MakeMove(move, false) == MoveType.Invalid)
+            {
+                return false;
+            }
 
             return true;
         }
@@ -782,11 +819,16 @@ namespace chess_pos_db_gui
 
             switch (type)
             {
-                case "check": return CheckUciOption.ParseFromParts(name, defaultValue);
-                case "spin": return SpinUciOption.ParseFromParts(name, defaultValue, min, max);
-                case "combo": return ComboUciOption.ParseFromParts(name, defaultValue, vars);
-                case "string": return StringUciOption.ParseFromParts(name, defaultValue);
-                default: return null;
+                case "check":
+                    return CheckUciOption.ParseFromParts(name, defaultValue);
+                case "spin":
+                    return SpinUciOption.ParseFromParts(name, defaultValue, min, max);
+                case "combo":
+                    return ComboUciOption.ParseFromParts(name, defaultValue, vars);
+                case "string":
+                    return StringUciOption.ParseFromParts(name, defaultValue);
+                default:
+                    return null;
             }
         }
     }
@@ -876,7 +918,11 @@ namespace chess_pos_db_gui
 
         public override void CopyValueFrom(UciOption other)
         {
-            if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
+            if (this.GetType() != other.GetType())
+            {
+                throw new ArgumentException("Option type different");
+            }
+
             Value = ((CheckUciOption)other).Value;
         }
         public void SetValue(bool value)
@@ -907,8 +953,8 @@ namespace chess_pos_db_gui
         public override JsonValue NameValueToJson()
         {
             return new JsonObject(
-                new KeyValuePair<string, JsonValue>[]{ 
-                    new KeyValuePair<string, JsonValue>( "name", Name ), 
+                new KeyValuePair<string, JsonValue>[]{
+                    new KeyValuePair<string, JsonValue>( "name", Name ),
                     new KeyValuePair<string, JsonValue>( "value", ToString() )
                 });
         }
@@ -955,9 +1001,9 @@ namespace chess_pos_db_gui
             var maxopt = max == null ? Optional<long>.CreateEmpty() : Optional<long>.Create(long.Parse(max));
             var def = defaultValue == null ? minopt.Or(0) : long.Parse(defaultValue);
             return new SpinUciOption(
-                name, 
-                def, 
-                minopt.Or(def), 
+                name,
+                def,
+                minopt.Or(def),
                 maxopt.Or(def)
                 );
         }
@@ -980,7 +1026,11 @@ namespace chess_pos_db_gui
 
         public override void CopyValueFrom(UciOption other)
         {
-            if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
+            if (this.GetType() != other.GetType())
+            {
+                throw new ArgumentException("Option type different");
+            }
+
             Value = ((SpinUciOption)other).Value;
         }
         public override void SetValue(string value)
@@ -1078,7 +1128,11 @@ namespace chess_pos_db_gui
 
         public override void CopyValueFrom(UciOption other)
         {
-            if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
+            if (this.GetType() != other.GetType())
+            {
+                throw new ArgumentException("Option type different");
+            }
+
             Value = ((ComboUciOption)other).Value;
         }
         public override void SetValue(string value)
@@ -1165,7 +1219,11 @@ namespace chess_pos_db_gui
 
         public override void CopyValueFrom(UciOption other)
         {
-            if (this.GetType() != other.GetType()) throw new ArgumentException("Option type different");
+            if (this.GetType() != other.GetType())
+            {
+                throw new ArgumentException("Option type different");
+            }
+
             Value = ((StringUciOption)other).Value;
         }
         public override void SetValue(string value)

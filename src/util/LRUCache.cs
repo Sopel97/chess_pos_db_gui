@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace chess_pos_db_gui
 {
@@ -25,8 +21,7 @@ namespace chess_pos_db_gui
 
         public V Get(K key)
         {
-            LinkedListNode<LRUCacheItem<K, V>> node;
-            if (cacheMap.TryGetValue(key, out node))
+            if (cacheMap.TryGetValue(key, out LinkedListNode<LRUCacheItem<K, V>> node))
             {
                 V value = node.Value.value;
                 lruList.Remove(node);

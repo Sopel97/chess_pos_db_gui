@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Json;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
@@ -32,7 +30,7 @@ namespace chess_pos_db_gui
             {
                 var collidingProcessses = System.Diagnostics.Process.GetProcessesByName(processName);
                 System.Diagnostics.Debug.WriteLine("Killing " + collidingProcessses.Length + " colliding processes...");
-                foreach(var process in collidingProcessses)
+                foreach (var process in collidingProcessses)
                 {
                     process.Kill();
                 }
@@ -48,10 +46,10 @@ namespace chess_pos_db_gui
             Process.StartInfo.RedirectStandardInput = true;
             Process.StartInfo.UseShellExecute = false;
             Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            Process.StartInfo.CreateNoWindow = true; 
+            Process.StartInfo.CreateNoWindow = true;
             Process.Start();
 
-            while(numTries-- > 0)
+            while (numTries-- > 0)
             {
                 try
                 {
@@ -109,7 +107,10 @@ namespace chess_pos_db_gui
         {
             lock (Lock)
             {
-                if (IsOpen) Close();
+                if (IsOpen)
+                {
+                    Close();
+                }
 
                 Path = path;
                 path = path.Replace("\\", "\\\\"); // we stringify it naively to json so we need to escape manually
@@ -127,7 +128,10 @@ namespace chess_pos_db_gui
                     }
                     else if (json.ContainsKey("finished"))
                     {
-                        if (json["finished"] == true) break;
+                        if (json["finished"] == true)
+                        {
+                            break;
+                        }
                     }
                 }
 
@@ -156,7 +160,7 @@ namespace chess_pos_db_gui
         public QueryResponse Query(string fen)
         {
             string query = "{\"command\":\"query\", \"query\":{\"continuations\":{\"fetch_children\":true,\"fetch_first_game\":true,\"fetch_first_game_for_each_child\":true,\"fetch_last_game\":false,\"fetch_last_game_for_each_child\":false},\"levels\":[\"human\",\"engine\",\"server\"],\"positions\":[{\"fen\":\"" + fen + "\"}],\"results\":[\"win\",\"loss\",\"draw\"],\"token\":\"toktok\",\"transpositions\":{\"fetch_children\":true,\"fetch_first_game\":true,\"fetch_first_game_for_each_child\":true,\"fetch_last_game\":false,\"fetch_last_game_for_each_child\":false}}}";
-            return ExecuteQuery(query);   
+            return ExecuteQuery(query);
         }
         public QueryResponse Query(string fen, string san)
         {
@@ -168,7 +172,11 @@ namespace chess_pos_db_gui
         {
             lock (Lock)
             {
-                if (!IsOpen) return;
+                if (!IsOpen)
+                {
+                    return;
+                }
+
                 Path = "";
                 IsOpen = false;
 
@@ -215,14 +223,20 @@ namespace chess_pos_db_gui
             uint xoredSize = size ^ xorValue;
 
             byte[] sizeStr = new byte[8];
-            sizeStr[0] = (byte)(size % 256); size /= 256;
-            sizeStr[1] = (byte)(size % 256); size /= 256;
-            sizeStr[2] = (byte)(size % 256); size /= 256;
+            sizeStr[0] = (byte)(size % 256);
+            size /= 256;
+            sizeStr[1] = (byte)(size % 256);
+            size /= 256;
+            sizeStr[2] = (byte)(size % 256);
+            size /= 256;
             sizeStr[3] = (byte)(size);
 
-            sizeStr[4] = (byte)(xoredSize % 256); xoredSize /= 256;
-            sizeStr[5] = (byte)(xoredSize % 256); xoredSize /= 256;
-            sizeStr[6] = (byte)(xoredSize % 256); xoredSize /= 256;
+            sizeStr[4] = (byte)(xoredSize % 256);
+            xoredSize /= 256;
+            sizeStr[5] = (byte)(xoredSize % 256);
+            xoredSize /= 256;
+            sizeStr[6] = (byte)(xoredSize % 256);
+            xoredSize /= 256;
             sizeStr[7] = (byte)(xoredSize);
 
             stream.Write(sizeStr, 0, 8);
@@ -235,20 +249,26 @@ namespace chess_pos_db_gui
             uint xorValue = 3173045653u;
 
             byte[] readLengthBuffer = new byte[8];
-            if(stream.Read(readLengthBuffer, 0, 8) != 8)
+            if (stream.Read(readLengthBuffer, 0, 8) != 8)
             {
                 throw new InvalidDataException("Message length not received in one packet.");
             }
             uint length = 0;
-            length += (uint)(readLengthBuffer[3]); length *= 256;
-            length += (uint)(readLengthBuffer[2]); length *= 256;
-            length += (uint)(readLengthBuffer[1]); length *= 256;
-            length += (uint)(readLengthBuffer[0]);
+            length += readLengthBuffer[3];
+            length *= 256;
+            length += readLengthBuffer[2];
+            length *= 256;
+            length += readLengthBuffer[1];
+            length *= 256;
+            length += readLengthBuffer[0];
             uint lengthXor = 0;
-            lengthXor += (uint)(readLengthBuffer[7]); lengthXor *= 256;
-            lengthXor += (uint)(readLengthBuffer[6]); lengthXor *= 256;
-            lengthXor += (uint)(readLengthBuffer[5]); lengthXor *= 256;
-            lengthXor += (uint)(readLengthBuffer[4]);
+            lengthXor += readLengthBuffer[7];
+            lengthXor *= 256;
+            lengthXor += readLengthBuffer[6];
+            lengthXor *= 256;
+            lengthXor += readLengthBuffer[5];
+            lengthXor *= 256;
+            lengthXor += readLengthBuffer[4];
             lengthXor ^= xorValue;
 
             if (length != lengthXor)
@@ -267,7 +287,7 @@ namespace chess_pos_db_gui
 
             byte[] readBuffer = new byte[length];
             int totalRead = 0;
-            while(totalRead < length)
+            while (totalRead < length)
             {
                 int leftToRead = (int)length - totalRead;
                 totalRead += stream.Read(readBuffer, totalRead, leftToRead);

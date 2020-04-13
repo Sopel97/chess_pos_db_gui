@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Json;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
@@ -21,7 +18,10 @@ namespace chess_pos_db_gui
         public static Date FromString(string str)
         {
             string[] parts = str.Split('.');
-            if (parts.Length != 3) throw new ArgumentException();
+            if (parts.Length != 3)
+            {
+                throw new ArgumentException();
+            }
 
             return new Date
             {
@@ -79,13 +79,25 @@ namespace chess_pos_db_gui
 
             int y0 = Year.Or(0);
             int y1 = other.Year.Or(0);
-            if (y0 < y1) return true;
-            else if (y1 < y0) return false;
+            if (y0 < y1)
+            {
+                return true;
+            }
+            else if (y1 < y0)
+            {
+                return false;
+            }
 
             int m0 = Month.Or(0);
             int m1 = other.Month.Or(0);
-            if (m0 < m1) return true;
-            else if (m1 < m0) return false;
+            if (m0 < m1)
+            {
+                return true;
+            }
+            else if (m1 < m0)
+            {
+                return false;
+            }
 
             int d0 = Day.Or(0);
             int d1 = other.Day.Or(0);

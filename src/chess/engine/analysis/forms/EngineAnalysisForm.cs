@@ -1,14 +1,11 @@
 ﻿using ChessDotNet;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
 using System.Windows.Forms;
 
 namespace chess_pos_db_gui
@@ -116,7 +113,10 @@ namespace chess_pos_db_gui
 
         private static MoveWithSan LanToMoveWithSan(string fen, string lan)
         {
-            if (lan == null || lan == "0000") return new MoveWithSan(null, "null");
+            if (lan == null || lan == "0000")
+            {
+                return new MoveWithSan(null, "null");
+            }
 
             ChessGame game = new ChessGame(fen);
             var from = lan.Substring(0, 2);
@@ -131,7 +131,7 @@ namespace chess_pos_db_gui
         private string StringifyPV(string fen, IList<string> lans)
         {
             ChessGame game = new ChessGame(fen);
-            foreach(var lan in lans)
+            foreach (var lan in lans)
             {
                 var from = lan.Substring(0, 2);
                 var to = lan.Substring(2, 2);
@@ -301,7 +301,10 @@ namespace chess_pos_db_gui
                     break;
                 }
 
-                if (info.Fen != Fen) continue;
+                if (info.Fen != Fen)
+                {
+                    continue;
+                }
 
                 foreach (var _ in info.Score)
                 {
@@ -310,7 +313,10 @@ namespace chess_pos_db_gui
                 }
             }
 
-            if (responseByMove.Count == 0) return;
+            if (responseByMove.Count == 0)
+            {
+                return;
+            }
 
             var newAnalysisData = AnalysisData.Copy();
 
@@ -348,7 +354,7 @@ namespace chess_pos_db_gui
                     return true;
                 }));
             }
-            catch(Exception)
+            catch (Exception)
             {
 
             }

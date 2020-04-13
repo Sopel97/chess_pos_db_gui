@@ -1,10 +1,8 @@
 ﻿using ChessDotNet;
 using ChessDotNet.Pieces;
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
@@ -116,11 +114,23 @@ namespace chess_pos_db_gui
                 var validMoves = new List<Move>();
                 for (int r = 0; r < game.BoardHeight; r++)
                 {
-                    if (rankRestriction != -1 && r != 8 - rankRestriction) continue;
+                    if (rankRestriction != -1 && r != 8 - rankRestriction)
+                    {
+                        continue;
+                    }
+
                     for (int f = 0; f < game.BoardWidth; f++)
                     {
-                        if (fileRestriction != File.None && f != (int)fileRestriction) continue;
-                        if (board[r][f] != piece) continue;
+                        if (fileRestriction != File.None && f != (int)fileRestriction)
+                        {
+                            continue;
+                        }
+
+                        if (board[r][f] != piece)
+                        {
+                            continue;
+                        }
+
                         var m = new Move(new Position((File)f, 8 - r), destination, player, promotion);
                         if (game.IsValidMove(m))
                         {
@@ -128,8 +138,16 @@ namespace chess_pos_db_gui
                         }
                     }
                 }
-                if (validMoves.Count == 0) throw new ArgumentException("Invalid move.");
-                if (validMoves.Count > 1) throw new ArgumentException("Ambiguous move.");
+                if (validMoves.Count == 0)
+                {
+                    throw new ArgumentException("Invalid move.");
+                }
+
+                if (validMoves.Count > 1)
+                {
+                    throw new ArgumentException("Ambiguous move.");
+                }
+
                 return validMoves[0];
             }
         }

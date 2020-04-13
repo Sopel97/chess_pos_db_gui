@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Json;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Json;
 
 namespace chess_pos_db_gui
 {
@@ -22,10 +18,12 @@ namespace chess_pos_db_gui
         {
             return new GameHeader(
                 json["game_id"],
-                GameResultHelper.FromStringPgnFormat(new GameResultPgnFormat(), json["result"]).First(),
+                GameResultHelper.FromStringPgnFormat(json["result"]).First(),
                 Date.FromJson(json["date"]),
                 Eco.FromJson(json["eco"]),
-                json.ContainsKey("ply_count") ? Optional<ushort>.Create(json["ply_count"]) : Optional<ushort>.CreateEmpty(),
+                json.ContainsKey("ply_count") 
+                    ? Optional<ushort>.Create(json["ply_count"]) 
+                    : Optional<ushort>.CreateEmpty(),
                 json["event"],
                 json["white"],
                 json["black"]
@@ -33,13 +31,13 @@ namespace chess_pos_db_gui
         }
 
         public GameHeader(
-            uint gameId, 
-            GameResult result, 
-            Date date, 
-            Eco eco, 
-            Optional<ushort> plyCount, 
-            string @event, 
-            string white, 
+            uint gameId,
+            GameResult result,
+            Date date,
+            Eco eco,
+            Optional<ushort> plyCount,
+            string @event,
+            string white,
             string black
             )
         {
@@ -55,8 +53,15 @@ namespace chess_pos_db_gui
 
         public bool IsBefore(GameHeader gameHeader)
         {
-            if (this.Date.IsBefore(gameHeader.Date)) return true;
-            if (gameHeader.Date.IsBefore(this.Date)) return false;
+            if (this.Date.IsBefore(gameHeader.Date))
+            {
+                return true;
+            }
+
+            if (gameHeader.Date.IsBefore(this.Date))
+            {
+                return false;
+            }
 
             return GameId < gameHeader.GameId;
         }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
@@ -66,7 +62,7 @@ namespace chess_pos_db_gui
                 return eval < 0 ? 0.0 : 1.0;
             }
 
-            return 1.0 / (1.0 + Math.Exp((double)-eval / 90.0));
+            return 1.0 / (1.0 + Math.Exp(-eval / 90.0));
         }
 
         public Score(int v)
@@ -111,9 +107,15 @@ namespace chess_pos_db_gui
 
         public int CompareTo(object b)
         {
-            if (b == null) return 1;
+            if (b == null)
+            {
+                return 1;
+            }
 
-            if (!(b is Score bb)) throw new ArgumentException("rhs is not a Score");
+            if (!(b is Score bb))
+            {
+                throw new ArgumentException("rhs is not a Score");
+            }
 
             return Value.CompareTo(bb.Value);
         }

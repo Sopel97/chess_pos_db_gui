@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using chess_pos_db_gui.src.chess;
+
 using ChessDotNet;
 using ChessDotNet.Pieces;
+
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
 using System.Reflection;
-using chess_pos_db_gui.src.chess;
+using System.Windows.Forms;
 
 namespace chess_pos_db_gui
 {
@@ -266,9 +265,9 @@ namespace chess_pos_db_gui
             var game = History.Current();
             var board = game.GetBoard();
 
-            for(int x = 0; x < 8; ++x)
+            for (int x = 0; x < 8; ++x)
             {
-                for(int y = 0; y < 8; ++y)
+                for (int y = 0; y < 8; ++y)
                 {
                     Piece piece = board[y][x];
                     if (piece != null)
@@ -321,8 +320,8 @@ namespace chess_pos_db_gui
             int move = c / 2 + BaseMoveNumber;
             bool isWhite = c % 2 == 0;
 
-            return 
-                isWhite 
+            return
+                isWhite
                 ? (move.ToString() + ".")
                 : (move.ToString() + "...");
         }
@@ -394,21 +393,31 @@ namespace chess_pos_db_gui
 
         private bool DoMove(Move move, bool silent = false)
         {
-            if (!History.IsMoveValid(move)) return false;
+            if (!History.IsMoveValid(move))
+            {
+                return false;
+            }
 
             // We only synch when te move was valid
-            if (!silent) SynchronizeMoveListWithHistory();
+            if (!silent)
+            {
+                SynchronizeMoveListWithHistory();
+            }
 
             History.DoMove(move);
             AddMoveToMoveHistory(History.Current().Move, silent);
-            if (!silent) moveHistoryGridView.Refresh();
-            if (!silent) chessBoardPanel.Refresh();
+            if (!silent)
+            {
+                moveHistoryGridView.Refresh();
+                chessBoardPanel.Refresh();
+            }
+
             return true;
         }
 
         private void RemoveLastMovesFromMoveHistory(int count)
         {
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 Player player = Plies % 2 == 0 ? Player.Black : Player.White;
                 --Plies;
@@ -426,7 +435,10 @@ namespace chess_pos_db_gui
 
         private bool TryPerformMoveBasedOnMouseDrag(Point? from, Point? to)
         {
-            if (from == null || to == null) return false;
+            if (from == null || to == null)
+            {
+                return false;
+            }
 
             Position fromSquare = PointToSquare(from.Value);
             Position toSquare = PointToSquare(to.Value);
@@ -438,7 +450,10 @@ namespace chess_pos_db_gui
 
         private void SetSelection(int beforePly)
         {
-            if (beforePly < FirstPly || beforePly > Plies) return;
+            if (beforePly < FirstPly || beforePly > Plies)
+            {
+                return;
+            }
 
             if (beforePly == 0)
             {
@@ -483,7 +498,10 @@ namespace chess_pos_db_gui
                 MoveHistory.Last().BlackDetailedMove = move;
             }
 
-            if (!silent) SetSelection(Plies);
+            if (!silent)
+            {
+                SetSelection(Plies);
+            }
         }
 
         private void ChessBoardPanel_MouseDown(object sender, MouseEventArgs e)
@@ -499,19 +517,27 @@ namespace chess_pos_db_gui
 
         private void MoveHistoryGridView_SelectionChanged(object sender, EventArgs e)
         {
-            if (moveHistoryGridView.SelectedCells.Count == 0) return;
+            if (moveHistoryGridView.SelectedCells.Count == 0)
+            {
+                return;
+            }
 
             var cell = moveHistoryGridView.SelectedCells[0];
 
             int row = cell.RowIndex;
             int col = cell.ColumnIndex;
             int ply = row * 2 + col;
-            if (ply > Plies) return;
+            if (ply > Plies)
+            {
+                return;
+            }
 
             History.SetCurrent(ply);
             string fen = History.Current().GetFen();
             if (!Resetting)
+            {
                 UpdateFenTextBox(fen);
+            }
 
             chessBoardPanel.Refresh();
         }
@@ -587,7 +613,7 @@ namespace chess_pos_db_gui
         }
 
         private void SetFenButton_Click(object sender, EventArgs e)
-        { 
+        {
             using (var form = new FenInputForm())
             {
                 form.ShowDialog();
@@ -611,7 +637,7 @@ namespace chess_pos_db_gui
                     {
                         pgnReader.ReadPgnFromString(movetext);
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         MessageBox.Show("Invalid PGN.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
@@ -625,7 +651,11 @@ namespace chess_pos_db_gui
         public String GetNextMoveSan()
         {
             var e = History.Next();
-            if (e == null) return null;
+            if (e == null)
+            {
+                return null;
+            }
+
             return e.Move.SAN;
         }
 
@@ -647,25 +677,42 @@ namespace chess_pos_db_gui
         private int _No;
         private DetailedMove _WhiteDetailedMove;
         private DetailedMove _BlackDetailedMove;
-        public int No {
+        public int No
+        {
             get { return _No; }
             set { _No = value; base["No"] = (value + BaseMoveNumber - 1).ToString() + "."; }
         }
-        public DetailedMove WhiteDetailedMove {
+        public DetailedMove WhiteDetailedMove
+        {
             get { return _WhiteDetailedMove; }
-            set {
+            set
+            {
                 _WhiteDetailedMove = value;
-                if (value != null) base["WhiteMove"] = value.SAN;
-                else base["WhiteMove"] = "";
+                if (value != null)
+                {
+                    base["WhiteMove"] = value.SAN;
+                }
+                else
+                {
+                    base["WhiteMove"] = "";
+                }
             }
         }
-        public DetailedMove BlackDetailedMove {
+        public DetailedMove BlackDetailedMove
+        {
             get { return _BlackDetailedMove; }
-            set {
+            set
+            {
                 _BlackDetailedMove = value;
-                if (value != null) base["BlackMove"] = value.SAN;
-                else base["BlackMove"] = "";
-            } 
+                if (value != null)
+                {
+                    base["BlackMove"] = value.SAN;
+                }
+                else
+                {
+                    base["BlackMove"] = "";
+                }
+            }
         }
 
         public MoveHistoryDataRow(DataRowBuilder builder, int n) :

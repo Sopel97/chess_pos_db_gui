@@ -1,17 +1,14 @@
 ﻿using chess_pos_db_gui.src.app.chessdbcn;
+
 using ChessDotNet;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.IO;
-using System.Json;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -245,7 +242,10 @@ namespace chess_pos_db_gui
             // from 0% and 100% perf. This means adjusting them results in other values
             // even if expected perf is 50%. So if the perf is borderling we just copy it.
             double eps = 0.001;
-            if (actualPerf < eps || actualPerf > 1.0 - eps) return actualPerf;
+            if (actualPerf < eps || actualPerf > 1.0 - eps)
+            {
+                return actualPerf;
+            }
 
             var actualElo = EloCalculator.GetEloFromPerformance(actualPerf);
             var expectedElo = EloCalculator.GetEloFromPerformance(expectedPerf);
@@ -300,7 +300,10 @@ namespace chess_pos_db_gui
                 AnalysisForm.OnPositionChanged(chessBoard.GetFen());
             }
 
-            if (!Database.IsOpen) return;
+            if (!Database.IsOpen)
+            {
+                return;
+            }
 
             if (autoQueryCheckbox.Checked)
             {
@@ -395,9 +398,15 @@ namespace chess_pos_db_gui
                 usedDraws += entry.DrawCount - nonEngineEntry.DrawCount;
                 usedLosses += entry.LossCount - nonEngineEntry.LossCount;
             }
-            if (useAnyGames && usedGameCount == 0) return 0.0;
+            if (useAnyGames && usedGameCount == 0)
+            {
+                return 0.0;
+            }
 
-            if (useEvalWeight && score == null && Math.Abs(entry.EloDiff / (long)entry.Count) > maxAllowedEloDiff) return 0.0;
+            if (useEvalWeight && score == null && Math.Abs(entry.EloDiff / (long)entry.Count) > maxAllowedEloDiff)
+            {
+                return 0.0;
+            }
 
             double humanWeight = useHumanWeight ? (double)humanWeightNumericUpDown.Value : 0.0;
             double engineWeight = useEngineWeight ? (double)engineWeightNumericUpDown.Value : 0.0;
@@ -411,7 +420,7 @@ namespace chess_pos_db_gui
                 ulong totalWins = entry.WinCount;
                 ulong totalDraws = entry.DrawCount;
                 ulong totalLosses = totalCount - totalWins - totalDraws;
-                double totalPerf = ((double)totalWins + (double)totalDraws * 0.5) / (double)totalCount;
+                double totalPerf = (totalWins + totalDraws * 0.5) / totalCount;
                 double totalEloError = EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses);
                 double expectedTotalPerf = EloCalculator.GetExpectedPerformance((entry.EloDiff) / (double)totalCount);
                 if (chessBoard.CurrentPlayer() == Player.Black)
@@ -433,7 +442,7 @@ namespace chess_pos_db_gui
                 ulong engineWins = entry.WinCount - nonEngineEntry.WinCount;
                 ulong engineDraws = entry.DrawCount - nonEngineEntry.DrawCount;
                 ulong engineLosses = engineCount - engineWins - engineDraws;
-                double enginePerf = ((double)engineWins + (double)engineDraws * 0.5) / (double)engineCount;
+                double enginePerf = (engineWins + engineDraws * 0.5) / engineCount;
                 double engineEloError = EloCalculator.EloError99pct(engineWins, engineDraws, engineLosses);
                 double expectedEnginePerf = EloCalculator.GetExpectedPerformance((entry.EloDiff - nonEngineEntry.EloDiff) / (double)engineCount);
                 if (chessBoard.CurrentPlayer() == Player.Black)
@@ -455,7 +464,7 @@ namespace chess_pos_db_gui
                 ulong humanWins = nonEngineEntry.WinCount;
                 ulong humanDraws = nonEngineEntry.DrawCount;
                 ulong humanLosses = humanCount - humanWins - humanDraws;
-                double humanPerf = ((double)humanWins + (double)humanDraws * 0.5) / (double)humanCount;
+                double humanPerf = (humanWins + humanDraws * 0.5) / humanCount;
                 double humanEloError = EloCalculator.EloError99pct(humanWins, humanDraws, humanLosses);
                 double expectedHumanPerf = EloCalculator.GetExpectedPerformance(nonEngineEntry.EloDiff / (double)humanCount);
                 if (chessBoard.CurrentPlayer() == Player.Black)
@@ -474,8 +483,15 @@ namespace chess_pos_db_gui
 
             double penalizePerf(double perf, double numGames)
             {
-                if (numGames >= penaltyFromCountThreshold) return perf;
-                if (numGames == 0) return minPerf;
+                if (numGames >= penaltyFromCountThreshold)
+                {
+                    return perf;
+                }
+
+                if (numGames == 0)
+                {
+                    return minPerf;
+                }
 
                 double r = ((numGames + 1.0) / (penaltyFromCountThreshold + 1));
                 double penalty = 1 - Math.Log(r);
@@ -495,8 +511,8 @@ namespace chess_pos_db_gui
             // if eval is not present then assume 0.5 but penalize moves with low game count
             double evalGoodness =
                 Math.Pow(
-                    score != null 
-                    ? score.Perf 
+                    score != null
+                    ? score.Perf
                     : EloCalculator.GetExpectedPerformance(-EloCalculator.EloError99pct(usedWins, usedDraws, usedLosses))
                     , evalWeight);
 
@@ -546,7 +562,7 @@ namespace chess_pos_db_gui
                     {
                         header.White,
                         header.Black,
-                        header.Result.ToStringPgnFormat(new GameResultPgnFormat()),
+                        header.Result.ToStringPgnFormat(),
                         header.Eco,
                         header.PlyCount.Or(0) / 2,
                         header.Event,
@@ -578,7 +594,7 @@ namespace chess_pos_db_gui
             row["DrawCount"] = entry.DrawCount;
             row["LossCount"] = entry.LossCount;
 
-            var averageEloDiff = entry.Count > 0 ? (double)entry.EloDiff / (double)entry.Count : 0.0;
+            var averageEloDiff = entry.Count > 0 ? entry.EloDiff / (double)entry.Count : 0.0;
             var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
             var adjustedPerf = GetAdjustedPerformance(entry.Perf, expectedPerf);
             if (chessBoard.CurrentPlayer() == Player.White)
@@ -592,7 +608,7 @@ namespace chess_pos_db_gui
                 row["AdjustedPerf"] = 1.0 - adjustedPerf;
             }
             row["DrawPct"] = (entry.DrawRate);
-            row["HumanPct"] = ((double)nonEngineEntry.Count / (double)entry.Count);
+            row["HumanPct"] = (nonEngineEntry.Count / (double)entry.Count);
 
             row["AvgEloDiff"] =
                 entry.Count == 0
@@ -613,7 +629,7 @@ namespace chess_pos_db_gui
                 row["Event"] = header.Event;
                 row["White"] = header.White;
                 row["Black"] = header.Black;
-                row["Result"] = header.Result.ToStringPgnUnicodeFormat(new GameResultPgnUnicodeFormat());
+                row["Result"] = header.Result.ToStringPgnUnicodeFormat();
                 row["Eco"] = header.Eco.ToString();
                 row["PlyCount"] = header.PlyCount.FirstOrDefault();
             }
@@ -626,7 +642,7 @@ namespace chess_pos_db_gui
         private void UpdateGoodness(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, Score score)
         {
             System.Data.DataRow row = null;
-            foreach(System.Data.DataRow r in TabulatedData.Rows)
+            foreach (System.Data.DataRow r in TabulatedData.Rows)
             {
                 if (((MoveWithSan)r["Move"]).San == move)
                 {
@@ -634,7 +650,10 @@ namespace chess_pos_db_gui
                     break;
                 }
             }
-            if (row == null) return;
+            if (row == null)
+            {
+                return;
+            }
 
             row["Goodness"] = CalculateGoodness(entry, nonEngineEntry, score);
         }
@@ -657,7 +676,7 @@ namespace chess_pos_db_gui
             row["DrawCount"] = total.DrawCount;
             row["LossCount"] = total.LossCount;
 
-            var averageEloDiff = total.Count > 0 ? (double)total.EloDiff / (double)total.Count : 0.0;
+            var averageEloDiff = total.Count > 0 ? total.EloDiff / (double)total.Count : 0.0;
             var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
             var adjustedPerf = GetAdjustedPerformance(total.Perf, expectedPerf);
             if (chessBoard.CurrentPlayer() == Player.White)
@@ -671,7 +690,7 @@ namespace chess_pos_db_gui
                 row["AdjustedPerf"] = 1.0 - adjustedPerf;
             }
             row["DrawPct"] = (total.DrawRate);
-            row["HumanPct"] = ((double)totalNonEngine.Count / (double)total.Count);
+            row["HumanPct"] = (totalNonEngine.Count / (double)total.Count);
 
             row["AvgEloDiff"] =
                 total.Count == 0
@@ -691,7 +710,7 @@ namespace chess_pos_db_gui
         private Score GetBestScore(Dictionary<Move, Score> scores)
         {
             Score best = null;
-            foreach(KeyValuePair<Move, Score> entry in scores)
+            foreach (KeyValuePair<Move, Score> entry in scores)
             {
                 if (best == null || (entry.Value.Value > best.Value))
                 {
@@ -702,9 +721,9 @@ namespace chess_pos_db_gui
         }
 
         private void Populate(
-            Dictionary<string, AggregatedEntry> entries, 
-            IEnumerable<string> continuationMoves, 
-            Dictionary<string, AggregatedEntry> nonEngineEntries, 
+            Dictionary<string, AggregatedEntry> entries,
+            IEnumerable<string> continuationMoves,
+            Dictionary<string, AggregatedEntry> nonEngineEntries,
             Dictionary<Move, Score> scores
             )
         {
@@ -717,7 +736,10 @@ namespace chess_pos_db_gui
             Score bestScore = GetBestScore(scores);
             foreach (KeyValuePair<string, AggregatedEntry> entry in entries)
             {
-                if (hideEmpty && IsEmpty(entry.Value)) continue;
+                if (hideEmpty && IsEmpty(entry.Value))
+                {
+                    continue;
+                }
 
                 if (!nonEngineEntries.ContainsKey(entry.Key))
                 {
@@ -763,14 +785,17 @@ namespace chess_pos_db_gui
 
             foreach (KeyValuePair<string, AggregatedEntry> entry in entries)
             {
-                if (hideEmpty && IsEmpty(entry.Value)) continue;
+                if (hideEmpty && IsEmpty(entry.Value))
+                {
+                    continue;
+                }
 
                 if (!nonEngineEntries.ContainsKey(entry.Key))
                 {
                     nonEngineEntries.Add(entry.Key, new AggregatedEntry());
                 }
 
-                if(entry.Key != "--")
+                if (entry.Key != "--")
                 {
                     scores.TryGetValue(chessBoard.SanToMove(entry.Key), out Score score);
                     UpdateGoodness(entry.Key, entry.Value, nonEngineEntries[entry.Key], score);
@@ -846,9 +871,17 @@ namespace chess_pos_db_gui
             Dictionary<string, AggregatedEntry> aggregatedNonEngineEntries = new Dictionary<string, AggregatedEntry>();
             if (levels.Contains(GameLevel.Human) || levels.Contains(GameLevel.Server))
             {
-                var nonEngineLevels = new List<GameLevel> {};
-                if (levels.Contains(GameLevel.Human)) nonEngineLevels.Add(GameLevel.Human);
-                if (levels.Contains(GameLevel.Server)) nonEngineLevels.Add(GameLevel.Server);
+                var nonEngineLevels = new List<GameLevel> { };
+                if (levels.Contains(GameLevel.Human))
+                {
+                    nonEngineLevels.Add(GameLevel.Human);
+                }
+
+                if (levels.Contains(GameLevel.Server))
+                {
+                    nonEngineLevels.Add(GameLevel.Server);
+                }
+
                 foreach (Select select in selects)
                 {
                     Gather(res, select, nonEngineLevels, ref aggregatedNonEngineEntries);
@@ -874,8 +907,16 @@ namespace chess_pos_db_gui
             if (levels.Contains(GameLevel.Human) || levels.Contains(GameLevel.Server))
             {
                 var nonEngineLevels = new List<GameLevel> { };
-                if (levels.Contains(GameLevel.Human)) nonEngineLevels.Add(GameLevel.Human);
-                if (levels.Contains(GameLevel.Server)) nonEngineLevels.Add(GameLevel.Server);
+                if (levels.Contains(GameLevel.Human))
+                {
+                    nonEngineLevels.Add(GameLevel.Human);
+                }
+
+                if (levels.Contains(GameLevel.Server))
+                {
+                    nonEngineLevels.Add(GameLevel.Server);
+                }
+
                 foreach (Select select in selects)
                 {
                     Gather(res, select, nonEngineLevels, ref aggregatedNonEngineEntries);
@@ -933,36 +974,71 @@ namespace chess_pos_db_gui
 
         private void LevelHumanCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (levelHumanCheckBox.Checked) Levels.Add(GameLevel.Human);
-            else Levels.Remove(GameLevel.Human);
+            if (levelHumanCheckBox.Checked)
+            {
+                Levels.Add(GameLevel.Human);
+            }
+            else
+            {
+                Levels.Remove(GameLevel.Human);
+            }
+
             Repopulate();
         }
 
         private void LevelEngineCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (levelEngineCheckBox.Checked) Levels.Add(GameLevel.Engine);
-            else Levels.Remove(GameLevel.Engine);
+            if (levelEngineCheckBox.Checked)
+            {
+                Levels.Add(GameLevel.Engine);
+            }
+            else
+            {
+                Levels.Remove(GameLevel.Engine);
+            }
+
             Repopulate();
         }
 
         private void LevelServerCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (levelServerCheckBox.Checked) Levels.Add(GameLevel.Server);
-            else Levels.Remove(GameLevel.Server);
+            if (levelServerCheckBox.Checked)
+            {
+                Levels.Add(GameLevel.Server);
+            }
+            else
+            {
+                Levels.Remove(GameLevel.Server);
+            }
+
             Repopulate();
         }
 
         private void TypeContinuationsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (typeContinuationsCheckBox.Checked) Selects.Add(chess_pos_db_gui.Select.Continuations);
-            else Selects.Remove(chess_pos_db_gui.Select.Continuations);
+            if (typeContinuationsCheckBox.Checked)
+            {
+                Selects.Add(chess_pos_db_gui.Select.Continuations);
+            }
+            else
+            {
+                Selects.Remove(chess_pos_db_gui.Select.Continuations);
+            }
+
             Repopulate();
         }
 
         private void TypeTranspositionsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (typeTranspositionsCheckBox.Checked) Selects.Add(chess_pos_db_gui.Select.Transpositions);
-            else Selects.Remove(chess_pos_db_gui.Select.Transpositions);
+            if (typeTranspositionsCheckBox.Checked)
+            {
+                Selects.Add(chess_pos_db_gui.Select.Transpositions);
+            }
+            else
+            {
+                Selects.Remove(chess_pos_db_gui.Select.Transpositions);
+            }
+
             Repopulate();
         }
 
@@ -986,7 +1062,10 @@ namespace chess_pos_db_gui
 
         private bool TryUpdateDataFromCache()
         {
-            if (!Database.IsOpen) return false;
+            if (!Database.IsOpen)
+            {
+                return false;
+            }
 
             var e = new QueryQueueEntry(chessBoard);
 
@@ -1023,7 +1102,10 @@ namespace chess_pos_db_gui
 
         private void QueryAsyncToCache(QueryQueueEntry sig)
         {
-            if (!Database.IsOpen) return;
+            if (!Database.IsOpen)
+            {
+                return;
+            }
 
             try
             {
@@ -1084,13 +1166,13 @@ namespace chess_pos_db_gui
             QueueMutex.ReleaseMutex();
             AnyOutstandingQuery.Signal();
         }
-        
+
         private void RunQueryThread()
         {
-            for(; ; )
+            for (; ; )
             {
                 QueueMutex.WaitOne();
-                while(QueryQueue.IsEmpty() && !EndQueryThread)
+                while (QueryQueue.IsEmpty() && !EndQueryThread)
                 {
                     AnyOutstandingQuery.Wait(QueueMutex);
                 }
@@ -1110,7 +1192,11 @@ namespace chess_pos_db_gui
 
         private void UpdateData()
         {
-            if (!Database.IsOpen) return;
+            if (!Database.IsOpen)
+            {
+                return;
+            }
+
             ScheduleUpdateDataAsync();
         }
 
@@ -1198,7 +1284,10 @@ namespace chess_pos_db_gui
 
         private void EntriesGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.RowIndex >= entriesGridView.Rows.Count || e.ColumnIndex != 0) return;
+            if (e.RowIndex < 0 || e.RowIndex >= entriesGridView.Rows.Count || e.ColumnIndex != 0)
+            {
+                return;
+            }
 
             if (IsEntryDataUpToDate)
             {
@@ -1207,7 +1296,9 @@ namespace chess_pos_db_gui
                 {
                     var san = cell.Value.ToString();
                     if (san != "--" && san != "Total")
+                    {
                         chessBoard.DoMove(san);
+                    }
                 }
             }
         }
@@ -1309,9 +1400,18 @@ namespace chess_pos_db_gui
             }
             else
             {
-                if (isTransposition && isGoodGoodness) row.DefaultCellStyle.BackColor = Color.DarkGreen;
-                else if (isTransposition && !isGoodGoodness) row.DefaultCellStyle.BackColor = Color.LightGray;
-                else if (!isTransposition && isGoodGoodness) row.DefaultCellStyle.BackColor = Color.LightGreen;
+                if (isTransposition && isGoodGoodness)
+                {
+                    row.DefaultCellStyle.BackColor = Color.DarkGreen;
+                }
+                else if (isTransposition && !isGoodGoodness)
+                {
+                    row.DefaultCellStyle.BackColor = Color.LightGray;
+                }
+                else if (!isTransposition && isGoodGoodness)
+                {
+                    row.DefaultCellStyle.BackColor = Color.LightGreen;
+                }
             }
 
             var nextSan = chessBoard.GetNextMoveSan();
@@ -1349,7 +1449,7 @@ namespace chess_pos_db_gui
 
         private void EngineWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            if(engineWeightCheckbox.Checked)
+            if (engineWeightCheckbox.Checked)
             {
                 UpdateGoodness();
             }
@@ -1357,7 +1457,7 @@ namespace chess_pos_db_gui
 
         private void EvalWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            if(evaluationWeightCheckbox.Checked)
+            if (evaluationWeightCheckbox.Checked)
             {
                 UpdateGoodness();
             }

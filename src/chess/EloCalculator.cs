@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace chess_pos_db_gui
 {
@@ -42,14 +38,17 @@ namespace chess_pos_db_gui
 
         public static double EloError99pct(ulong engineWins, ulong engineDraws, ulong engineLosses)
         {
-            double total = (double)(engineWins + engineDraws + engineLosses);
+            double total = engineWins + engineDraws + engineLosses;
 
-            if (total < 2) return maxElo * 2;
+            if (total < 2)
+            {
+                return maxElo * 2;
+            }
 
-            double drawRatio = (double)engineDraws / total;
-           
+            double drawRatio = engineDraws / total;
+
             double z = 2.58;
-            double perf = ((double)engineWins + (double)engineDraws * 0.5) / total;
+            double perf = (engineWins + engineDraws * 0.5) / total;
 
             return Math.Min(1600.0 * z * ComputeS(perf, drawRatio, total) / Math.Log(10), maxElo * 2);
         }
