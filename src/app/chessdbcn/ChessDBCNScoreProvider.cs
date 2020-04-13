@@ -27,11 +27,11 @@ namespace chess_pos_db_gui.src.app.chessdbcn
                 );
         }
 
-        public Dictionary<Move, Score> GetScores(string fen)
+        public Dictionary<Move, ChessDBCNScore> GetScores(string fen)
         {
             const string urlParameters = "?action=queryall&board={0}";
 
-            Dictionary<Move, Score> scores = new Dictionary<Move, Score>();
+            Dictionary<Move, ChessDBCNScore> scores = new Dictionary<Move, ChessDBCNScore>();
 
             try
             {
@@ -59,7 +59,7 @@ namespace chess_pos_db_gui.src.app.chessdbcn
                         {
                             try
                             {
-                                scores.Add(Lan.LanToMove(fen, moveStr), new Score(scoreStr));
+                                scores.Add(Lan.LanToMove(fen, moveStr), new ChessDBCNScore(scoreStr));
                             }
                             catch
                             {

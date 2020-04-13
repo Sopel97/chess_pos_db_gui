@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace chess_pos_db_gui
 {
-    class Score : IComparable
+    class ChessDBCNScore : IComparable
     {
         private static readonly int knownResultThreashold = 18000;
         private static readonly int cursedDtz0 = 20000;
@@ -65,24 +65,24 @@ namespace chess_pos_db_gui
             return 1.0 / (1.0 + Math.Exp(-eval / 90.0));
         }
 
-        public Score(int v)
+        public ChessDBCNScore(int v)
         {
             Value = v;
             Perf = 0;
         }
 
-        public Score(string str)
+        public ChessDBCNScore(string str)
         {
             Value = ValueFromString(str);
             Perf = str == null ? Double.NaN : WinPctFromEval(Value);
         }
-        public Score(int v, double pct)
+        public ChessDBCNScore(int v, double pct)
         {
             Value = v;
             Perf = pct;
         }
 
-        public Score(string value, string winpct)
+        public ChessDBCNScore(string value, string winpct)
         {
             Value = ValueFromString(value);
             Perf = WinPctFromString(winpct);
@@ -112,7 +112,7 @@ namespace chess_pos_db_gui
                 return 1;
             }
 
-            if (!(b is Score bb))
+            if (!(b is ChessDBCNScore bb))
             {
                 throw new ArgumentException("rhs is not a Score");
             }

@@ -91,7 +91,7 @@ namespace chess_pos_db_gui
             TabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
             TabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
             TabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
-            TabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
+            TabulatedData.Columns.Add(new DataColumn("Eval", typeof(ChessDBCNScore)));
             TabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
             TabulatedData.Columns.Add(new DataColumn("Goodness", typeof(double)));
             TabulatedData.Columns.Add(new DataColumn("White", typeof(string)));
@@ -114,7 +114,7 @@ namespace chess_pos_db_gui
             TotalTabulatedData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
             TotalTabulatedData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
             TotalTabulatedData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
-            TotalTabulatedData.Columns.Add(new DataColumn("Eval", typeof(Score)));
+            TotalTabulatedData.Columns.Add(new DataColumn("Eval", typeof(ChessDBCNScore)));
             TotalTabulatedData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
 
             MakeDoubleBuffered(entriesGridView);
@@ -266,7 +266,7 @@ namespace chess_pos_db_gui
             Database?.Dispose();
         }
 
-        private Dictionary<Move, Score> GetChessdbcnScores(string fen)
+        private Dictionary<Move, ChessDBCNScore> GetChessdbcnScores(string fen)
         {
             return ScoreProvider.GetScores(fen);
         }
@@ -358,7 +358,7 @@ namespace chess_pos_db_gui
          * c = pow(Ev_Perf, Eval_weight)
          * goodness = pow(a*b*c, 1.0/weight_sum)
          */
-        private double CalculateGoodness(AggregatedEntry entry, AggregatedEntry nonEngineEntry, Score score)
+        private double CalculateGoodness(AggregatedEntry entry, AggregatedEntry nonEngineEntry, ChessDBCNScore score)
         {
             long maxAllowedEloDiff = 400;
 
@@ -572,7 +572,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Populate(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, bool isOnlyTransposition, Score score)
+        private void Populate(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, bool isOnlyTransposition, ChessDBCNScore score)
         {
             long maxDisplayedEloDiff = 400;
 
@@ -639,7 +639,7 @@ namespace chess_pos_db_gui
             TabulatedData.Rows.Add(row);
         }
 
-        private void UpdateGoodness(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, Score score)
+        private void UpdateGoodness(string move, AggregatedEntry entry, AggregatedEntry nonEngineEntry, ChessDBCNScore score)
         {
             System.Data.DataRow row = null;
             foreach (System.Data.DataRow r in TabulatedData.Rows)
@@ -663,7 +663,7 @@ namespace chess_pos_db_gui
             return entry.Count == 0;
         }
 
-        private void PopulateTotal(AggregatedEntry total, AggregatedEntry totalNonEngine, Score totalScore)
+        private void PopulateTotal(AggregatedEntry total, AggregatedEntry totalNonEngine, ChessDBCNScore totalScore)
         {
             long maxDisplayedEloDiff = 400;
 
@@ -707,10 +707,10 @@ namespace chess_pos_db_gui
             TotalTabulatedData.Rows.InsertAt(row, 0);
         }
 
-        private Score GetBestScore(Dictionary<Move, Score> scores)
+        private ChessDBCNScore GetBestScore(Dictionary<Move, ChessDBCNScore> scores)
         {
-            Score best = null;
-            foreach (KeyValuePair<Move, Score> entry in scores)
+            ChessDBCNScore best = null;
+            foreach (KeyValuePair<Move, ChessDBCNScore> entry in scores)
             {
                 if (best == null || (entry.Value.Value > best.Value))
                 {
@@ -724,7 +724,7 @@ namespace chess_pos_db_gui
             Dictionary<string, AggregatedEntry> entries,
             IEnumerable<string> continuationMoves,
             Dictionary<string, AggregatedEntry> nonEngineEntries,
-            Dictionary<Move, Score> scores
+            Dictionary<Move, ChessDBCNScore> scores
             )
         {
             Clear();
@@ -733,7 +733,7 @@ namespace chess_pos_db_gui
 
             AggregatedEntry total = new AggregatedEntry();
             AggregatedEntry totalNonEngine = new AggregatedEntry();
-            Score bestScore = GetBestScore(scores);
+            ChessDBCNScore bestScore = GetBestScore(scores);
             foreach (KeyValuePair<string, AggregatedEntry> entry in entries)
             {
                 if (hideEmpty && IsEmpty(entry.Value))
@@ -752,7 +752,7 @@ namespace chess_pos_db_gui
                 }
                 else
                 {
-                    scores.TryGetValue(chessBoard.SanToMove(entry.Key), out Score score);
+                    scores.TryGetValue(chessBoard.SanToMove(entry.Key), out ChessDBCNScore score);
                     Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), score);
                 }
 
@@ -776,7 +776,7 @@ namespace chess_pos_db_gui
         private void UpdateGoodness(
             Dictionary<string, AggregatedEntry> entries,
             Dictionary<string, AggregatedEntry> nonEngineEntries,
-            Dictionary<Move, Score> scores
+            Dictionary<Move, ChessDBCNScore> scores
             )
         {
             entriesGridView.SuspendLayout();
@@ -797,7 +797,7 @@ namespace chess_pos_db_gui
 
                 if (entry.Key != "--")
                 {
-                    scores.TryGetValue(chessBoard.SanToMove(entry.Key), out Score score);
+                    scores.TryGetValue(chessBoard.SanToMove(entry.Key), out ChessDBCNScore score);
                     UpdateGoodness(entry.Key, entry.Value, nonEngineEntries[entry.Key], score);
                 }
             }
@@ -1113,7 +1113,7 @@ namespace chess_pos_db_gui
                 ;
                 var scores = queryEvalCheckBox.Checked
                     ? Task.Run(() => GetChessdbcnScores(sig.CurrentFen))
-                    : Task.FromResult(new Dictionary<Move, Score>());
+                    : Task.FromResult(new Dictionary<Move, ChessDBCNScore>());
 
                 if (sig.San == "--")
                 {
@@ -1635,9 +1635,9 @@ namespace chess_pos_db_gui
     class CacheEntry
     {
         public QueryResponse Stats { get; set; }
-        public Dictionary<Move, Score> Scores { get; set; }
+        public Dictionary<Move, ChessDBCNScore> Scores { get; set; }
 
-        public CacheEntry(QueryResponse stats, Dictionary<Move, Score> scores)
+        public CacheEntry(QueryResponse stats, Dictionary<Move, ChessDBCNScore> scores)
         {
             Stats = stats;
             Scores = scores;
