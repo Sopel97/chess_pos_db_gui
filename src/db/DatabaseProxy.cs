@@ -387,6 +387,16 @@ namespace chess_pos_db_gui
             }
         }
 
+        internal IList<string> GetSupportedExtensionsForType(string name)
+        {
+            if (SupportManifests == null)
+            {
+                FetchSupportManifest();
+            }
+
+            return SupportManifests[name].SupportedExtensions;
+        }
+
         public void Create(JsonValue json, Action<JsonValue> callback)
         {
             lock (Lock)

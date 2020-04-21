@@ -128,6 +128,7 @@
             this.databaseFormatComboBox.Name = "databaseFormatComboBox";
             this.databaseFormatComboBox.Size = new System.Drawing.Size(440, 21);
             this.databaseFormatComboBox.TabIndex = 9;
+            this.databaseFormatComboBox.SelectedValueChanged += new System.EventHandler(this.DatabaseFormatComboBox_SelectedValueChanged);
             // 
             // clearTempFolderButton
             // 
@@ -261,7 +262,7 @@
             this.addHumanPgnsButton.Name = "addHumanPgnsButton";
             this.addHumanPgnsButton.Size = new System.Drawing.Size(110, 26);
             this.addHumanPgnsButton.TabIndex = 1;
-            this.addHumanPgnsButton.Text = "Add PGN Files";
+            this.addHumanPgnsButton.Text = "Add Files";
             this.addHumanPgnsButton.UseVisualStyleBackColor = true;
             this.addHumanPgnsButton.Click += new System.EventHandler(this.AddHumanPgnsButton_Click);
             // 
@@ -353,7 +354,7 @@
             this.addEnginePgnsButton.Name = "addEnginePgnsButton";
             this.addEnginePgnsButton.Size = new System.Drawing.Size(110, 26);
             this.addEnginePgnsButton.TabIndex = 3;
-            this.addEnginePgnsButton.Text = "Add PGN Files";
+            this.addEnginePgnsButton.Text = "Add Files";
             this.addEnginePgnsButton.UseVisualStyleBackColor = true;
             this.addEnginePgnsButton.Click += new System.EventHandler(this.AddEnginePgnsButton_Click);
             // 
@@ -410,7 +411,7 @@
             this.addServerPgnsButton.Name = "addServerPgnsButton";
             this.addServerPgnsButton.Size = new System.Drawing.Size(110, 26);
             this.addServerPgnsButton.TabIndex = 3;
-            this.addServerPgnsButton.Text = "Add PGN Files";
+            this.addServerPgnsButton.Text = "Add Files";
             this.addServerPgnsButton.UseVisualStyleBackColor = true;
             this.addServerPgnsButton.Click += new System.EventHandler(this.AddServerPgnsButton_Click);
             // 

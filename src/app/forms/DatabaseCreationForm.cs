@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Json;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -22,6 +23,8 @@ namespace chess_pos_db_gui
         public bool KeepFormAlive { get; private set; }
 
         private readonly DatabaseProxy database;
+
+        private IList<string> SupportedExtensions { get; set; }
 
         public DatabaseCreationForm(DatabaseProxy db)
         {
@@ -64,11 +67,13 @@ namespace chess_pos_db_gui
 
         private void DatabaseCreationForm_Load(object sender, EventArgs e)
         {
-            foreach (var type in database.GetSupportedDatabaseTypes())
+            var supported = database.GetSupportedDatabaseTypes();
+            foreach (var type in supported)
             {
                 databaseFormatComboBox.Items.Add(type);
-                databaseFormatComboBox.SelectedItem = type;
             }
+
+            databaseFormatComboBox.SelectedItem = supported[supported.Count - 1];
         }
 
         private void AddPath(DataGridView dgv, string path)
@@ -86,11 +91,11 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void AddPgns(DataGridView dgv)
+        private void AddFiles(DataGridView dgv)
         {
             using (OpenFileDialog browser = new OpenFileDialog())
             {
-                browser.Filter = "PGN Files (*.pgn)|*.pgn|All files (*.*)|*.*";
+                browser.Filter = GetCurrentFilesFilter();
                 browser.CheckFileExists = true;
                 browser.Multiselect = true;
                 browser.ValidateNames = true;
@@ -102,19 +107,29 @@ namespace chess_pos_db_gui
             }
         }
 
+        private string GetCurrentFilesFilter()
+        {
+            var parts = SupportedExtensions.Select(ext => "*" + ext);
+
+            return string.Format(
+                "Chess game files ({0})|{0}",
+                string.Join(";", parts)
+                );
+        }
+
         private void AddHumanPgnsButton_Click(object sender, EventArgs e)
         {
-            AddPgns(humanPgnsDataGridView);
+            AddFiles(humanPgnsDataGridView);
         }
 
         private void AddEnginePgnsButton_Click(object sender, EventArgs e)
         {
-            AddPgns(enginePgnsDataGridView);
+            AddFiles(enginePgnsDataGridView);
         }
 
         private void AddServerPgnsButton_Click(object sender, EventArgs e)
         {
-            AddPgns(serverPgnsDataGridView);
+            AddFiles(serverPgnsDataGridView);
         }
 
         private List<JsonValue> GetPgns(DataGridView dgv)
@@ -378,6 +393,42 @@ namespace chess_pos_db_gui
             {
                 row.DefaultCellStyle.BackColor = Color.LimeGreen;
             }
+        }
+
+        private bool HasCompatibileExtension(string path)
+        {
+            return SupportedExtensions.Contains(
+                System.IO.Path.GetExtension(path)
+                );
+        }
+
+        private void FilterFileLists()
+        {
+            FilterFileList(humanPgnsDataGridView);
+            FilterFileList(enginePgnsDataGridView);
+            FilterFileList(serverPgnsDataGridView);
+        }
+
+        private void FilterFileList(DataGridView dgv)
+        {
+            for (int i = 0; i < dgv.Rows.Count; ++i)
+            {
+                if (!HasCompatibileExtension(dgv[0, i].Value as string))
+                {
+                    dgv.Rows.RemoveAt(i);
+                    --i;
+                }
+            }
+        }
+
+        private void DatabaseFormatComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            SupportedExtensions =
+                database.GetSupportedExtensionsForType(
+                    (string)databaseFormatComboBox.SelectedItem
+                    );
+
+            FilterFileLists();
         }
     }
 }
