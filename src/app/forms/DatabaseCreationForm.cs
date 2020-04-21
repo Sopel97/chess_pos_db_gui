@@ -64,10 +64,11 @@ namespace chess_pos_db_gui
 
         private void DatabaseCreationForm_Load(object sender, EventArgs e)
         {
-            databaseFormatComboBox.Items.Add("db_alpha");
-            databaseFormatComboBox.Items.Add("db_beta");
-            databaseFormatComboBox.Items.Add("db_delta");
-            databaseFormatComboBox.SelectedItem = "db_delta";
+            foreach (var type in database.GetSupportedDatabaseTypes())
+            {
+                databaseFormatComboBox.Items.Add(type);
+                databaseFormatComboBox.SelectedItem = type;
+            }
         }
 
         private void AddPath(DataGridView dgv, string path)
