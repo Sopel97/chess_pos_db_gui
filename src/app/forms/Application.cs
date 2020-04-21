@@ -211,6 +211,7 @@ namespace chess_pos_db_gui
             try
             {
                 Database = new DatabaseProxy(DatabaseTcpClientIp, DatabaseTcpClientPort);
+                Database.FetchSupportManifest();
                 QueryExecutor = new QueryExecutor(Database);
                 QueryExecutor.DataReceived += OnDataReceived;
             }

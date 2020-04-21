@@ -18,7 +18,10 @@ namespace chess_pos_db_gui
 
         public string Path { get; private set; }
 
+        private Dictionary<string, DatabaseSupportManifest> SupportManifests { get; set; } = null;
+
         private readonly object Lock = new object();
+
 
         public DatabaseProxy(string address, int port, int numTries = 3, int msBetweenTries = 1000)
         {
@@ -75,6 +78,39 @@ namespace chess_pos_db_gui
                     throw;
                 }
             }
+        }
+
+        public void FetchSupportManifest()
+        {
+            lock (Lock)
+            {
+                var stream = Client.GetStream();
+                SendMessage(stream, "{\"command\":\"support\"}");
+
+                var response = ReceiveMessage(stream);
+                var json = JsonValue.Parse(response);
+                if (json.ContainsKey("error"))
+                {
+                    throw new InvalidDataException("Cannot fetch database info.");
+                }
+
+                SupportManifests = new Dictionary<string, DatabaseSupportManifest>();
+                JsonObject supportManifestsJson = json["support_manifests"] as JsonObject;
+                foreach (string key in supportManifestsJson.Keys)
+                {
+                    SupportManifests.Add(key, new DatabaseSupportManifest(supportManifestsJson[key]));
+                }
+            }
+        }
+
+        public IList<string> GetSupportedDatabaseTypes()
+        {
+            if (SupportManifests == null)
+            {
+                FetchSupportManifest();
+            }
+
+            return new List<string>(SupportManifests.Keys);
         }
 
         public DatabaseInfo GetInfo()
@@ -383,6 +419,21 @@ namespace chess_pos_db_gui
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public class DatabaseSupportManifest
+    {
+        public IList<string> SupportedExtensions { get; private set; }
+
+        public DatabaseSupportManifest(JsonValue json)
+        {
+            SupportedExtensions = new List<string>();
+
+            foreach(JsonValue ext in json["supported_file_types"])
+            {
+                SupportedExtensions.Add(ext);
             }
         }
     }
