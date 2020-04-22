@@ -147,8 +147,8 @@ namespace chess_pos_db_gui
             analysisDataGridView.Columns["Score"].MinimumWidth = 60;
             analysisDataGridView.Columns["Score"].HeaderText = "Score";
             analysisDataGridView.Columns["Score"].ToolTipText = "Score of the move in pawns for the side to move.";
-            analysisDataGridView.Columns["Time"].MinimumWidth = 110;
-            analysisDataGridView.Columns["Time"].HeaderText = "Time [hh:mm:ss]";
+            analysisDataGridView.Columns["Time"].MinimumWidth = 60;
+            analysisDataGridView.Columns["Time"].HeaderText = "Time";
             analysisDataGridView.Columns["Time"].ToolTipText = "Time spend to produce the move";
             analysisDataGridView.Columns["Nodes"].HeaderText = "Nodes";
             analysisDataGridView.Columns["Nodes"].MinimumWidth = 60;
