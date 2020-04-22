@@ -1,4 +1,5 @@
 ﻿using chess_pos_db_gui.src.chess;
+using chess_pos_db_gui.src.chess.engine.analysis;
 using chess_pos_db_gui.src.util;
 using ChessDotNet;
 
@@ -28,12 +29,22 @@ namespace chess_pos_db_gui
 
         private DataTable AnalysisData { get; set; }
 
+        private DataTable EmbeddedAnalysisData { get; set; }
+
+        private System.Windows.Forms.DataGridView EmbeddedAnalysisDataGridView { get; set; }
+
         private string Fen { get; set; }
         private bool IsScoreSortDescending { get; set; }
 
         private DataGridViewColumn SortedColumn { get; set; }
 
-        public EngineAnalysisForm()
+        private EmbeddedAnalysisHandler EmbeddedHandler { get; set; }
+
+        private System.Windows.Forms.Panel EmbeddedAnalysisPanel { get; set; }
+
+        private bool IsEmbedded { get; set; }
+
+        public EngineAnalysisForm(EmbeddedAnalysisHandler embeddedHandler = null)
         {
             InitializeComponent();
 
@@ -57,6 +68,20 @@ namespace chess_pos_db_gui
 
             analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
+            EmbeddedAnalysisData = new DataTable();
+            EmbeddedAnalysisData.Columns.Add(new DataColumn("Move", typeof(MoveWithSan)));
+            EmbeddedAnalysisData.Columns.Add(new DataColumn("D/SD", typeof(int)));
+            EmbeddedAnalysisData.Columns.Add(new DataColumn("Score", typeof(UciScore)));
+            EmbeddedAnalysisData.Columns.Add(new DataColumn("Time", typeof(TimeSpan)));
+            EmbeddedAnalysisData.Columns.Add(new DataColumn("Nodes", typeof(long)));
+            EmbeddedAnalysisData.Columns.Add(new DataColumn("NPS", typeof(long)));
+            EmbeddedAnalysisData.Columns.Add(new DataColumn("TBHits", typeof(long)));
+            EmbeddedAnalysisData.Columns.Add(new DataColumn("ScoreInt", typeof(int)));
+            EmbeddedAnalysisData.Columns.Add(new DataColumn("MultiPV", typeof(int)));
+
+            EmbeddedAnalysisDataGridView = new DataGridView();
+            WinFormsControlUtil.MakeDoubleBuffered(EmbeddedAnalysisDataGridView);
+
             foreach (DataGridViewColumn column in analysisDataGridView.Columns)
             {
                 if (column.ValueType == typeof(long) || column.ValueType == typeof(int))
@@ -70,6 +95,13 @@ namespace chess_pos_db_gui
             closeToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Enabled = false;
             toggleAnalyzeButton.Enabled = false;
+
+            IsEmbedded = false;
+            EmbeddedHandler = embeddedHandler;
+            if (EmbeddedHandler == null)
+            {
+                embedButton.Enabled = false;
+            }
 
             PendingInfoResponses = new BlockingQueue<UciInfoResponse>();
 
@@ -120,6 +152,33 @@ namespace chess_pos_db_gui
             analysisDataGridView.Columns["PV"].HeaderText = "PV";
             analysisDataGridView.Columns["PV"].ToolTipText = "The principal variation - engine's predicted line";
             analysisDataGridView.Columns["ScoreInt"].Visible = false;
+        }
+
+        private void SetupEmbeddedColumns()
+        {
+            EmbeddedAnalysisDataGridView.Columns["Move"].MinimumWidth = 50;
+            EmbeddedAnalysisDataGridView.Columns["Move"].HeaderText = "Move";
+            EmbeddedAnalysisDataGridView.Columns["Move"].ToolTipText = "Move suggested by the engine";
+            EmbeddedAnalysisDataGridView.Columns["D/SD"].MinimumWidth = 40;
+            EmbeddedAnalysisDataGridView.Columns["D/SD"].HeaderText = "D";
+            EmbeddedAnalysisDataGridView.Columns["D/SD"].ToolTipText = "The depth/selective depth in plies reached by the engine";
+            EmbeddedAnalysisDataGridView.Columns["Score"].MinimumWidth = 60;
+            EmbeddedAnalysisDataGridView.Columns["Score"].HeaderText = "Score";
+            EmbeddedAnalysisDataGridView.Columns["Score"].ToolTipText = "Score of the move in pawns for the side to move.";
+            EmbeddedAnalysisDataGridView.Columns["Time"].MinimumWidth = 60;
+            EmbeddedAnalysisDataGridView.Columns["Time"].HeaderText = "Time";
+            EmbeddedAnalysisDataGridView.Columns["Time"].ToolTipText = "Time spend to produce the move";
+            EmbeddedAnalysisDataGridView.Columns["Nodes"].HeaderText = "Nodes";
+            EmbeddedAnalysisDataGridView.Columns["Nodes"].MinimumWidth = 50;
+            EmbeddedAnalysisDataGridView.Columns["Nodes"].ToolTipText = "Number of nodes examined";
+            EmbeddedAnalysisDataGridView.Columns["NPS"].HeaderText = "NPS";
+            EmbeddedAnalysisDataGridView.Columns["NPS"].MinimumWidth = 50;
+            EmbeddedAnalysisDataGridView.Columns["NPS"].ToolTipText = "Average number of nodes being examined per second";
+            EmbeddedAnalysisDataGridView.Columns["TBHits"].HeaderText = "TBHits";
+            EmbeddedAnalysisDataGridView.Columns["TBHits"].MinimumWidth = 60;
+            EmbeddedAnalysisDataGridView.Columns["TBHits"].ToolTipText = "Number of successful tablebase lookups";
+            EmbeddedAnalysisDataGridView.Columns["ScoreInt"].Visible = false;
+            EmbeddedAnalysisDataGridView.Columns["MultiPV"].Visible = false;
         }
 
         private void OptionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -491,6 +550,46 @@ namespace chess_pos_db_gui
             if (SortedColumn != null && SortedColumn.Name == "Score")
             {
                 column.HeaderCell.SortGlyphDirection = IsScoreSortDescending ? SortOrder.Descending : SortOrder.Ascending;
+            }
+        }
+
+        private void ClearEmbeddedAnalysisPanel()
+        {
+            EmbeddedAnalysisDataGridView.Parent = null;
+            EmbeddedAnalysisDataGridView.DataSource = null;
+        }
+
+        private void SetupEmbeddedAnalysisPanel()
+        {
+            EmbeddedAnalysisDataGridView.Parent = EmbeddedAnalysisPanel;
+            EmbeddedAnalysisDataGridView.DataSource = EmbeddedAnalysisData;
+            EmbeddedAnalysisDataGridView.AutoSize = true;
+            EmbeddedAnalysisDataGridView.Dock = DockStyle.Fill;
+            SetupEmbeddedColumns();
+            EmbeddedAnalysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
+        }
+
+        private void EmbedButton_Click(object sender, EventArgs e)
+        {
+            if (EmbeddedHandler != null)
+            {
+                EmbeddedAnalysisPanel = EmbeddedHandler.PrepareAndGetEmbeddedAnalysisPanel();
+                SetupEmbeddedAnalysisPanel();
+                IsEmbedded = true;
+                Hide();
+            }
+        }
+
+        private void EngineAnalysisForm_VisibleChanged(object sender, EventArgs e)
+        {
+            if (Visible)
+            {
+                if (IsEmbedded)
+                {
+                    EmbeddedHandler.OnEmbeddedAnalysisEnded();
+                    ClearEmbeddedAnalysisPanel();
+                    IsEmbedded = false;
+                }
             }
         }
     }

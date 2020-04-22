@@ -1,6 +1,7 @@
 ﻿using chess_pos_db_gui.src.app;
 using chess_pos_db_gui.src.app.chessdbcn;
 using chess_pos_db_gui.src.chess;
+using chess_pos_db_gui.src.chess.engine.analysis;
 using chess_pos_db_gui.src.util;
 using ChessDotNet;
 
@@ -17,6 +18,33 @@ namespace chess_pos_db_gui
 {
     public partial class Application : Form
     {
+        class ApplicationEmbeddedAnalysisHandler : EmbeddedAnalysisHandler
+        {
+            private readonly int embeddedAnalysisPanelHeight = 100;
+
+            private readonly Application application;
+
+            public ApplicationEmbeddedAnalysisHandler(Application application)
+            {
+                this.application = application;
+            }
+
+            public override System.Windows.Forms.Panel PrepareAndGetEmbeddedAnalysisPanel()
+            {
+                application.analysisAndBoardSplitContainer.SplitterDistance = embeddedAnalysisPanelHeight;
+                application.analysisAndBoardSplitContainer.IsSplitterFixed = true;
+                application.analysisAndBoardSplitContainer.FixedPanel = FixedPanel.Panel1;
+                return application.analysisAndBoardSplitContainer.Panel1;
+            }
+
+            public override void OnEmbeddedAnalysisEnded()
+            {
+                application.analysisAndBoardSplitContainer.SplitterDistance = 0;
+                application.analysisAndBoardSplitContainer.IsSplitterFixed = true;
+                application.analysisAndBoardSplitContainer.FixedPanel = FixedPanel.Panel1;
+            }
+        }
+
         private string DatabaseTcpClientIp { get; set; } = "127.0.0.1";
         private int DatabaseTcpClientPort { get; set; } = 1234;
         private DatabaseProxy Database { get; set; }
@@ -198,6 +226,8 @@ namespace chess_pos_db_gui
 
             WinFormsControlUtil.SetThousandSeparator(entriesGridView);
             WinFormsControlUtil.SetThousandSeparator(totalEntriesGridView);
+
+            analysisAndBoardSplitContainer.SplitterDistance = 0;
 
             fenRichTextBox.Text = FenProvider.StartPos;
         }
@@ -1132,8 +1162,12 @@ namespace chess_pos_db_gui
         {
             if (AnalysisForm == null)
             {
-                AnalysisForm = new EngineAnalysisForm();
+                AnalysisForm = new EngineAnalysisForm(new ApplicationEmbeddedAnalysisHandler(this));
                 AnalysisForm.FormClosed += OnOptionsFormClosed;
+                AnalysisForm.Show();
+            }
+            else if (!AnalysisForm.Visible)
+            {
                 AnalysisForm.Show();
             }
         }

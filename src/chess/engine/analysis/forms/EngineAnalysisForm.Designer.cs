@@ -40,6 +40,7 @@
             this.toggleAnalyzeButton = new System.Windows.Forms.Button();
             this.engineIdAuthorLabel = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.embedButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.analysisDataGridView)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -142,11 +143,23 @@
             this.engineIdAuthorLabel.TabIndex = 6;
             this.engineIdAuthorLabel.Text = "ENGINE ID";
             // 
+            // embedButton
+            // 
+            this.embedButton.Location = new System.Drawing.Point(93, 66);
+            this.embedButton.Name = "embedButton";
+            this.embedButton.Size = new System.Drawing.Size(75, 23);
+            this.embedButton.TabIndex = 7;
+            this.embedButton.Text = "Embed";
+            this.toolTip1.SetToolTip(this.embedButton, "Start/stop analysis.");
+            this.embedButton.UseVisualStyleBackColor = true;
+            this.embedButton.Click += new System.EventHandler(this.EmbedButton_Click);
+            // 
             // EngineAnalysisForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.embedButton);
             this.Controls.Add(this.engineIdAuthorLabel);
             this.Controls.Add(this.toggleAnalyzeButton);
             this.Controls.Add(this.analysisDataGridView);
@@ -157,6 +170,7 @@
             this.Name = "EngineAnalysisForm";
             this.Text = "Engine Analysis";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EngineAnalysisForm_FormClosing);
+            this.VisibleChanged += new System.EventHandler(this.EngineAnalysisForm_VisibleChanged);
             ((System.ComponentModel.ISupportInitialize)(this.analysisDataGridView)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -178,5 +192,6 @@
         private System.Windows.Forms.Button toggleAnalyzeButton;
         private System.Windows.Forms.Label engineIdAuthorLabel;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button embedButton;
     }
 }
