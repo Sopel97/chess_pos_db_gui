@@ -246,11 +246,11 @@ namespace chess_pos_db_gui
         {
             Engine.AnalysisStarted += OnAnalysisStarted;
 
+            FillEngineIdInfo();
+
             toggleAnalyzeButton.Enabled = true;
             optionsToolStripMenuItem.Enabled = true;
             closeToolStripMenuItem.Enabled = true;
-
-            FillEngineIdInfo();
             UpdateAnalysisButtonName();
 
             OptionsForm = new EngineOptionsForm(Engine.ScratchOptions);
