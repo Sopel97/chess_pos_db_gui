@@ -43,6 +43,10 @@ namespace chess_pos_db_gui
 
         private System.Windows.Forms.Panel EmbeddedAnalysisPanel { get; set; }
 
+        private System.Windows.Forms.Button EmbeddedToggleAnalysisButton { get; set; }
+
+        private System.Windows.Forms.Label EmbeddedEngineIdLabel { get; set; }
+
         private bool IsEmbedded { get; set; }
 
         public EngineAnalysisForm(EmbeddedAnalysisHandler embeddedHandler = null)
@@ -80,7 +84,6 @@ namespace chess_pos_db_gui
             EmbeddedAnalysisData.Columns.Add(new DataColumn("ScoreInt", typeof(int)));
             EmbeddedAnalysisData.Columns.Add(new DataColumn("MultiPV", typeof(int)));
 
-
             EmbeddedAnalysisDataGridView = new DataGridView();
             EmbeddedAnalysisDataGridView.AllowUserToAddRows = false;
             EmbeddedAnalysisDataGridView.AllowUserToDeleteRows = false;
@@ -99,7 +102,12 @@ namespace chess_pos_db_gui
                 }
             }
 
+            EmbeddedToggleAnalysisButton = new Button();
+
+            EmbeddedEngineIdLabel = new Label();
+
             UpdateAnalysisButtonName();
+            EmbeddedToggleAnalysisButton.Enabled = false;
             closeToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Enabled = false;
             toggleAnalyzeButton.Enabled = false;
@@ -230,6 +238,8 @@ namespace chess_pos_db_gui
             enginePathLabel.Text = "Path: " + Engine.Path;
             engineIdNameLabel.Text = "Name: " + Engine.IdName;
             engineIdAuthorLabel.Text = "Author: " + Engine.IdAuthor;
+
+            EmbeddedEngineIdLabel.Text = "Name: " + Engine.IdName;
         }
 
         private void ClearEngineIdInfo()
@@ -237,6 +247,8 @@ namespace chess_pos_db_gui
             enginePathLabel.Text = "Path: ";
             engineIdNameLabel.Text = "Name: ";
             engineIdAuthorLabel.Text = "Author: ";
+
+            EmbeddedEngineIdLabel.Text = "Name: ";
         }
 
         private void LoadEngine(UciEngineProfile profile)
@@ -257,6 +269,7 @@ namespace chess_pos_db_gui
 
             FillEngineIdInfo();
 
+            EmbeddedToggleAnalysisButton.Enabled = true;
             toggleAnalyzeButton.Enabled = true;
             optionsToolStripMenuItem.Enabled = true;
             closeToolStripMenuItem.Enabled = true;
@@ -300,6 +313,7 @@ namespace chess_pos_db_gui
                 Engine = null;
             }
 
+            EmbeddedToggleAnalysisButton.Enabled = false;
             toggleAnalyzeButton.Enabled = false;
             optionsToolStripMenuItem.Enabled = false;
             closeToolStripMenuItem.Enabled = false;
@@ -617,6 +631,11 @@ namespace chess_pos_db_gui
                 (Engine != null && Engine.IsSearching)
                 ? "Stop" 
                 : "Start";
+
+            EmbeddedToggleAnalysisButton.Text =
+                (Engine != null && Engine.IsSearching)
+                ? "Stop"
+                : "Start";
         }
 
         private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -671,18 +690,36 @@ namespace chess_pos_db_gui
             EmbeddedAnalysisDataGridView.Parent = null;
             EmbeddedAnalysisDataGridView.DataSource = null;
             EmbeddedAnalysisDataGridView.CellFormatting -= OnEmbeddedAnalysisDataGridViewCellFormatting;
+
+            EmbeddedToggleAnalysisButton.Parent = null;
+
+            EmbeddedEngineIdLabel.Parent = null;
         }
 
         private void SetupEmbeddedAnalysisPanel()
         {
+            EmbeddedToggleAnalysisButton.Parent = EmbeddedAnalysisPanel;
+            EmbeddedToggleAnalysisButton.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+            EmbeddedToggleAnalysisButton.Size = new System.Drawing.Size(75, 23);
+            EmbeddedToggleAnalysisButton.Location = new System.Drawing.Point(3, 3);
+
+            EmbeddedEngineIdLabel.Parent = EmbeddedAnalysisPanel;
+            EmbeddedEngineIdLabel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+            EmbeddedEngineIdLabel.AutoSize = true;
+            EmbeddedToggleAnalysisButton.Location = new System.Drawing.Point(81, 3);
+
             EmbeddedAnalysisDataGridView.Parent = EmbeddedAnalysisPanel;
+            EmbeddedAnalysisDataGridView.Location = new System.Drawing.Point(3, 29);
             EmbeddedAnalysisDataGridView.DataSource = EmbeddedAnalysisData;
             EmbeddedAnalysisDataGridView.AutoSize = true;
-            EmbeddedAnalysisDataGridView.Dock = DockStyle.Fill;
+            EmbeddedAnalysisDataGridView.Dock = DockStyle.None;
+            EmbeddedAnalysisDataGridView.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
             SetupEmbeddedColumns();
             TransferDataToEmbedded();
             EmbeddedAnalysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
+
             EmbeddedAnalysisDataGridView.CellFormatting += OnEmbeddedAnalysisDataGridViewCellFormatting;
+            EmbeddedToggleAnalysisButton.Click += ToggleAnalyzeButton_Click;
         }
 
         private string NumberToShortString(long number)
