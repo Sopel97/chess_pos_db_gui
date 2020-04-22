@@ -526,7 +526,6 @@ namespace chess_pos_db_gui
         {
             if (LastFen != fen)
             {
-                fenTextBox.Text = fen;
                 onPositionChanged?.Invoke(this, new EventArgs());
                 LastFen = fen;
             }
@@ -554,7 +553,7 @@ namespace chess_pos_db_gui
 
         private void CopyFenButton_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(fenTextBox.Text);
+            Clipboard.SetText(LastFen);
         }
 
         private void ResetButton_Click(object sender, EventArgs e)

@@ -880,8 +880,8 @@ namespace chess_pos_db_gui
 
                 databaseInfoRichTextBox.Text =
                     "Path: " + info.Path + Environment.NewLine
-                    + "Games: " + info.TotalNumGames().ToString("N0") + Environment.NewLine
-                    + "Plies: " + info.TotalNumPositions().ToString("N0") + Environment.NewLine
+                    + "Games: " + info.TotalNumGames().ToString("N0")
+                    + " | Plies: " + info.TotalNumPositions().ToString("N0") + Environment.NewLine
                     + "Avg game length: " + averageMovesPerGame.ToString("N0") + " moves";
             }
             else
