@@ -79,7 +79,9 @@ namespace chess_pos_db_gui
             EmbeddedAnalysisData.Columns.Add(new DataColumn("ScoreInt", typeof(int)));
             EmbeddedAnalysisData.Columns.Add(new DataColumn("MultiPV", typeof(int)));
 
+
             EmbeddedAnalysisDataGridView = new DataGridView();
+            EmbeddedAnalysisDataGridView.AllowUserToAddRows = false;
             WinFormsControlUtil.MakeDoubleBuffered(EmbeddedAnalysisDataGridView);
 
             foreach (DataGridViewColumn column in analysisDataGridView.Columns)
