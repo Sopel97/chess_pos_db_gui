@@ -638,6 +638,7 @@ namespace chess_pos_db_gui
         {
             EmbeddedAnalysisDataGridView.Parent = null;
             EmbeddedAnalysisDataGridView.DataSource = null;
+            EmbeddedAnalysisDataGridView.CellFormatting -= OnEmbeddedAnalysisDataGridViewCellFormatting;
         }
 
         private void SetupEmbeddedAnalysisPanel()
