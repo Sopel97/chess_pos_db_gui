@@ -86,6 +86,7 @@ namespace chess_pos_db_gui
             EmbeddedAnalysisDataGridView.AllowUserToOrderColumns = false;
             EmbeddedAnalysisDataGridView.AllowUserToResizeRows = false;
             EmbeddedAnalysisDataGridView.ReadOnly = true;
+            EmbeddedAnalysisDataGridView.ScrollBars = ScrollBars.None;
             WinFormsControlUtil.MakeDoubleBuffered(EmbeddedAnalysisDataGridView);
 
             foreach (DataGridViewColumn column in analysisDataGridView.Columns)
@@ -168,20 +169,20 @@ namespace chess_pos_db_gui
             EmbeddedAnalysisDataGridView.Columns["D/SD"].MinimumWidth = 40;
             EmbeddedAnalysisDataGridView.Columns["D/SD"].HeaderText = "D/SD";
             EmbeddedAnalysisDataGridView.Columns["D/SD"].ToolTipText = "The depth/selective depth in plies reached by the engine";
-            EmbeddedAnalysisDataGridView.Columns["Score"].MinimumWidth = 60;
+            EmbeddedAnalysisDataGridView.Columns["Score"].MinimumWidth = 45;
             EmbeddedAnalysisDataGridView.Columns["Score"].HeaderText = "Score";
             EmbeddedAnalysisDataGridView.Columns["Score"].ToolTipText = "Score of the move in pawns for the side to move.";
             EmbeddedAnalysisDataGridView.Columns["Time"].MinimumWidth = 60;
             EmbeddedAnalysisDataGridView.Columns["Time"].HeaderText = "Time";
             EmbeddedAnalysisDataGridView.Columns["Time"].ToolTipText = "Time spend to produce the move";
             EmbeddedAnalysisDataGridView.Columns["Nodes"].HeaderText = "Nodes";
-            EmbeddedAnalysisDataGridView.Columns["Nodes"].MinimumWidth = 50;
+            EmbeddedAnalysisDataGridView.Columns["Nodes"].MinimumWidth = 45;
             EmbeddedAnalysisDataGridView.Columns["Nodes"].ToolTipText = "Number of nodes examined";
             EmbeddedAnalysisDataGridView.Columns["NPS"].HeaderText = "NPS";
-            EmbeddedAnalysisDataGridView.Columns["NPS"].MinimumWidth = 50;
+            EmbeddedAnalysisDataGridView.Columns["NPS"].MinimumWidth = 45;
             EmbeddedAnalysisDataGridView.Columns["NPS"].ToolTipText = "Average number of nodes being examined per second";
             EmbeddedAnalysisDataGridView.Columns["TBHits"].HeaderText = "TBHits";
-            EmbeddedAnalysisDataGridView.Columns["TBHits"].MinimumWidth = 60;
+            EmbeddedAnalysisDataGridView.Columns["TBHits"].MinimumWidth = 45;
             EmbeddedAnalysisDataGridView.Columns["TBHits"].ToolTipText = "Number of successful tablebase lookups";
             EmbeddedAnalysisDataGridView.Columns["ScoreInt"].Visible = false;
             EmbeddedAnalysisDataGridView.Columns["MultiPV"].Visible = false;
