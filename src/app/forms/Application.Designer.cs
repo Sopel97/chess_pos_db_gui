@@ -51,7 +51,6 @@
             this.analysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analysisAndBoardSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.firstGameInfoGroupBox = new System.Windows.Forms.GroupBox();
             this.fenRichTextBox = new System.Windows.Forms.RichTextBox();
             this.firstGameInfoRichTextBox = new System.Windows.Forms.RichTextBox();
@@ -75,6 +74,8 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
+            this.profilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -281,8 +282,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.databaseToolStripMenuItem,
-            this.toolsToolStripMenuItem,
-            this.analysisToolStripMenuItem});
+            this.analysisToolStripMenuItem,
+            this.toolsToolStripMenuItem});
             this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -333,23 +334,24 @@
             // epdDumpToolStripMenuItem
             // 
             this.epdDumpToolStripMenuItem.Name = "epdDumpToolStripMenuItem";
-            this.epdDumpToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.epdDumpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.epdDumpToolStripMenuItem.Text = "Epd dump";
             this.epdDumpToolStripMenuItem.Click += new System.EventHandler(this.EpdDumpToolStripMenuItem_Click);
             // 
             // analysisToolStripMenuItem
             // 
             this.analysisToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.setupToolStripMenuItem});
+            this.setupToolStripMenuItem,
+            this.profilesToolStripMenuItem});
             this.analysisToolStripMenuItem.Name = "analysisToolStripMenuItem";
-            this.analysisToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
-            this.analysisToolStripMenuItem.Text = "Analysis";
+            this.analysisToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
+            this.analysisToolStripMenuItem.Text = "Engine";
             // 
             // setupToolStripMenuItem
             // 
             this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
-            this.setupToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
-            this.setupToolStripMenuItem.Text = "Setup";
+            this.setupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.setupToolStripMenuItem.Text = "Analysis";
             this.setupToolStripMenuItem.Click += new System.EventHandler(this.SetupToolStripMenuItem_Click);
             // 
             // analysisAndBoardSplitContainer
@@ -369,16 +371,6 @@
             this.analysisAndBoardSplitContainer.Size = new System.Drawing.Size(424, 422);
             this.analysisAndBoardSplitContainer.SplitterDistance = 150;
             this.analysisAndBoardSplitContainer.TabIndex = 3;
-            // 
-            // chessBoard
-            // 
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(424, 268);
-            this.chessBoard.TabIndex = 0;
             // 
             // firstGameInfoGroupBox
             // 
@@ -694,6 +686,23 @@
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
             // 
+            // chessBoard
+            // 
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.Size = new System.Drawing.Size(424, 268);
+            this.chessBoard.TabIndex = 0;
+            // 
+            // profilesToolStripMenuItem
+            // 
+            this.profilesToolStripMenuItem.Name = "profilesToolStripMenuItem";
+            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.profilesToolStripMenuItem.Text = "Profiles";
+            this.profilesToolStripMenuItem.Click += new System.EventHandler(this.ProfilesToolStripMenuItem_Click);
+            // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -787,6 +796,7 @@
         private System.Windows.Forms.ToolStripMenuItem setupToolStripMenuItem;
         private System.Windows.Forms.RichTextBox fenRichTextBox;
         private System.Windows.Forms.SplitContainer analysisAndBoardSplitContainer;
+        private System.Windows.Forms.ToolStripMenuItem profilesToolStripMenuItem;
     }
 }
 

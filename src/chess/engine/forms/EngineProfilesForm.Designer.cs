@@ -32,6 +32,7 @@
             this.confirmButton = new System.Windows.Forms.Button();
             this.addProfileButton = new System.Windows.Forms.Button();
             this.removeProfileButton = new System.Windows.Forms.Button();
+            this.optionsButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // profilesListBox
@@ -78,11 +79,23 @@
             this.removeProfileButton.UseVisualStyleBackColor = true;
             this.removeProfileButton.Click += new System.EventHandler(this.RemoveProfileButton_Click);
             // 
+            // optionsButton
+            // 
+            this.optionsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.optionsButton.Location = new System.Drawing.Point(172, 232);
+            this.optionsButton.Name = "optionsButton";
+            this.optionsButton.Size = new System.Drawing.Size(74, 23);
+            this.optionsButton.TabIndex = 4;
+            this.optionsButton.Text = "Options";
+            this.optionsButton.UseVisualStyleBackColor = true;
+            this.optionsButton.Click += new System.EventHandler(this.OptionsButton_Click);
+            // 
             // EngineProfilesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 262);
+            this.Controls.Add(this.optionsButton);
             this.Controls.Add(this.removeProfileButton);
             this.Controls.Add(this.addProfileButton);
             this.Controls.Add(this.confirmButton);
@@ -100,5 +113,6 @@
         private System.Windows.Forms.Button confirmButton;
         private System.Windows.Forms.Button addProfileButton;
         private System.Windows.Forms.Button removeProfileButton;
+        private System.Windows.Forms.Button optionsButton;
     }
 }

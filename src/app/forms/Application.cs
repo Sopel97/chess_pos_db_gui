@@ -60,6 +60,10 @@ namespace chess_pos_db_gui
             }
         }
 
+        private static readonly string engineProfilesPath = "data/engine_profiles.json";
+
+        private UciEngineProfileStorage EngineProfiles { get; set; }
+
         private string DatabaseTcpClientIp { get; set; } = "127.0.0.1";
         private int DatabaseTcpClientPort { get; set; } = 1234;
         private DatabaseProxy Database { get; set; }
@@ -87,6 +91,8 @@ namespace chess_pos_db_gui
             CacheEntry = null;
             TabulatedData = new DataTable();
             TotalTabulatedData = new DataTable();
+
+            EngineProfiles = new UciEngineProfileStorage(engineProfilesPath);
 
             BestGoodness = 0.0;
 
@@ -1181,7 +1187,7 @@ namespace chess_pos_db_gui
             if (AnalysisForm == null)
             {
                 EmbeddedHandler = new ApplicationEmbeddedAnalysisHandler(this);
-                AnalysisForm = new EngineAnalysisForm(EmbeddedHandler);
+                AnalysisForm = new EngineAnalysisForm(EngineProfiles, EmbeddedHandler);
                 AnalysisForm.FormClosed += OnAnalysisFormClosed;
                 AnalysisForm.Show();
             }
@@ -1207,6 +1213,19 @@ namespace chess_pos_db_gui
             if (gamesWeightCheckbox.Checked)
             {
                 UpdateGoodness();
+            }
+        }
+
+        private void ProfilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (AnalysisForm == null)
+            {
+                var form = new EngineProfilesForm(EngineProfiles, EngineProfilesFormMode.Manage);
+                form.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("You have to stop analysis to manage engine profiles.");
             }
         }
     }

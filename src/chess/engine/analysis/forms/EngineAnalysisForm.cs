@@ -16,10 +16,9 @@ namespace chess_pos_db_gui
 {
     public partial class EngineAnalysisForm : Form
     {
-        private static readonly string profilesPath = "data/engine_profiles.json";
         private static readonly int maxEmbeddedAnalysisRows = 3;
 
-        private UciEngineProfileStorage Profiles { get; set; }
+        private UciEngineProfileStorage EngineProfiles { get; set; }
 
         private EngineOptionsForm OptionsForm { get; set; }
 
@@ -46,9 +45,11 @@ namespace chess_pos_db_gui
 
         private bool IsEmbedded { get; set; }
 
-        public EngineAnalysisForm(EmbeddedAnalysisHandler embeddedHandler = null)
+        public EngineAnalysisForm(UciEngineProfileStorage profiles, EmbeddedAnalysisHandler embeddedHandler = null)
         {
             InitializeComponent();
+
+            EngineProfiles = profiles;
 
             EmbeddedControl = new EmbeddedEngineAnalysisControl();
 
@@ -112,8 +113,6 @@ namespace chess_pos_db_gui
 
             Fen = FenProvider.StartPos;
             SideToMove = Player.White;
-
-            Profiles = new UciEngineProfileStorage(profilesPath);
 
             InfoUpdateTimer = new System.Timers.Timer
             {
@@ -275,7 +274,7 @@ namespace chess_pos_db_gui
             }
             UpdateAnalysisButtonName();
 
-            OptionsForm = new EngineOptionsForm(Engine.ScratchOptions);
+            OptionsForm = new EngineOptionsForm(Engine.ScratchOptions, true);
             OptionsForm.FormClosing += OnOptionsFormClosing;
             OptionsForm.VisibleChanged += OnOptionsFormVisibilityChanged;
 
@@ -641,7 +640,7 @@ namespace chess_pos_db_gui
 
         private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = new EngineProfilesForm(Profiles);
+            var form = new EngineProfilesForm(EngineProfiles, EngineProfilesFormMode.Select);
             form.ShowDialog();
             if (form.SelectedProfile != null)
             {

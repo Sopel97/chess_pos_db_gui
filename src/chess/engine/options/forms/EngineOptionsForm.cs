@@ -10,9 +10,13 @@ namespace chess_pos_db_gui
 
         public bool Discard { get; private set; }
 
-        public EngineOptionsForm(IList<UciOption> options)
+        private bool CloseInsteadOfHide { get; set; }
+
+        public EngineOptionsForm(IList<UciOption> options, bool close = false)
         {
             InitializeComponent();
+
+            CloseInsteadOfHide = close;
 
             SuspendLayout();
             OptionControls = new List<UciOptionLinkedControl>();
@@ -50,25 +54,36 @@ namespace chess_pos_db_gui
 
         private void EngineOptionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DiscardChanges();
-
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
-                Hide();
+                DiscardChanges();
+                HideOrClose();
             }
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
             SaveChanges();
-            Hide();
+            HideOrClose();
         }
 
         private void DiscardButton_Click(object sender, EventArgs e)
         {
             DiscardChanges();
-            Hide();
+            HideOrClose();
+        }
+
+        private void HideOrClose()
+        {
+            if (CloseInsteadOfHide)
+            {
+                Close();
+            }
+            else
+            {
+                Hide();
+            }
         }
     }
 }

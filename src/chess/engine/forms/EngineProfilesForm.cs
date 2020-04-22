@@ -4,15 +4,33 @@ using System.Windows.Forms;
 
 namespace chess_pos_db_gui
 {
+    public enum EngineProfilesFormMode
+    {
+        Manage,
+        Select
+    }
+
     public partial class EngineProfilesForm : Form
     {
         private UciEngineProfileStorage Profiles { get; set; }
 
         public UciEngineProfile SelectedProfile { get; private set; }
 
-        public EngineProfilesForm(UciEngineProfileStorage profiles)
+        public EngineProfilesFormMode Mode { get; private set; }
+
+        public EngineProfilesForm(UciEngineProfileStorage profiles, EngineProfilesFormMode mode)
         {
             InitializeComponent();
+
+            Mode = mode;
+            if (Mode == EngineProfilesFormMode.Manage)
+            {
+                confirmButton.Visible = false;
+            }
+            else
+            {
+                optionsButton.Visible = false;
+            }
 
             Profiles = profiles;
 
@@ -76,6 +94,28 @@ namespace chess_pos_db_gui
             {
                 SelectedProfile = GetProfileByName((string)selection);
                 Close();
+            }
+        }
+
+        private void OptionsButton_Click(object sender, EventArgs e)
+        {
+            var selection = profilesListBox.SelectedItem;
+            if (selection != null)
+            {
+                var profileName = (string)selection;
+                var profile = GetProfileByName(profileName);
+                var engine = new UciEngineProxy(profile);
+                using (var optionsForm = new EngineOptionsForm(engine.ScratchOptions))
+                {
+                    optionsForm.ShowDialog();
+
+                    if (!optionsForm.Discard)
+                    {
+                        engine.UpdateUciOptions();
+                    }
+                }
+
+                engine.Quit();
             }
         }
     }
