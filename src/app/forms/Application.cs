@@ -1074,17 +1074,14 @@ namespace chess_pos_db_gui
             }
             else
             {
-                if (isTransposition && isGoodGoodness)
-                {
-                    row.DefaultCellStyle.BackColor = Color.DarkGreen;
-                }
-                else if (isTransposition && !isGoodGoodness)
+                if (isTransposition)
                 {
                     row.DefaultCellStyle.BackColor = Color.LightGray;
                 }
-                else if (!isTransposition && isGoodGoodness)
+
+                if (isGoodGoodness)
                 {
-                    row.DefaultCellStyle.BackColor = Color.LightGreen;
+                    row.Cells[0].Style.BackColor = Color.LightGreen;
                 }
             }
 
