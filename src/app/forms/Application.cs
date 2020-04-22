@@ -24,6 +24,8 @@ namespace chess_pos_db_gui
 
             private readonly Application application;
 
+            private EngineAnalysisForm ResponsibleEntity { get; set; }
+
             public ApplicationEmbeddedAnalysisHandler(Application application)
             {
                 this.application = application;
@@ -37,11 +39,24 @@ namespace chess_pos_db_gui
                 return application.analysisAndBoardSplitContainer.Panel1;
             }
 
+            public override void OnEmbeddedAnalysisStarted(EngineAnalysisForm form)
+            {
+                ResponsibleEntity = form;
+            }
+
             public override void OnEmbeddedAnalysisEnded()
             {
                 application.analysisAndBoardSplitContainer.SplitterDistance = 0;
                 application.analysisAndBoardSplitContainer.IsSplitterFixed = true;
                 application.analysisAndBoardSplitContainer.FixedPanel = FixedPanel.Panel1;
+            }
+
+            public override void Dispose()
+            {
+                if (ResponsibleEntity != null)
+                {
+                    ResponsibleEntity.ForceStopEmbeddedAnalysis(this);
+                }
             }
         }
 
@@ -60,6 +75,8 @@ namespace chess_pos_db_gui
         private bool IsEntryDataUpToDate { get; set; } = false;
 
         private EngineAnalysisForm AnalysisForm { get; set; }
+
+        private EmbeddedAnalysisHandler EmbeddedHandler { get; set; }
 
         private QueryExecutor QueryExecutor { get; set; }
 
@@ -1086,6 +1103,10 @@ namespace chess_pos_db_gui
 
         private void Application_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (EmbeddedHandler != null)
+            {
+                EmbeddedHandler.Dispose();
+            }
             QueryExecutor.Dispose();
         }
 
@@ -1162,8 +1183,9 @@ namespace chess_pos_db_gui
         {
             if (AnalysisForm == null)
             {
-                AnalysisForm = new EngineAnalysisForm(new ApplicationEmbeddedAnalysisHandler(this));
-                AnalysisForm.FormClosed += OnOptionsFormClosed;
+                EmbeddedHandler = new ApplicationEmbeddedAnalysisHandler(this);
+                AnalysisForm = new EngineAnalysisForm(EmbeddedHandler);
+                AnalysisForm.FormClosed += OnAnalysisFormClosed;
                 AnalysisForm.Show();
             }
             else if (!AnalysisForm.Visible)
@@ -1172,8 +1194,14 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void OnOptionsFormClosed(object sender, FormClosedEventArgs e)
+        private void OnAnalysisFormClosed(object sender, FormClosedEventArgs e)
         {
+            if (EmbeddedHandler != null)
+            {
+                EmbeddedHandler.Dispose();
+            }
+
+            EmbeddedHandler = null;
             AnalysisForm = null;
         }
 

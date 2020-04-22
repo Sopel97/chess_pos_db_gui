@@ -36,6 +36,8 @@ namespace chess_pos_db_gui
         private EmbeddedEngineAnalysisControl EmbeddedControl { get; set; }
 
         private string Fen { get; set; }
+        private Player SideToMove { get; set; }
+
         private bool IsScoreSortDescending { get; set; }
 
         private DataGridViewColumn SortedColumn { get; set; }
@@ -109,6 +111,7 @@ namespace chess_pos_db_gui
             PendingInfoResponses = new BlockingQueue<UciInfoResponse>();
 
             Fen = FenProvider.StartPos;
+            SideToMove = Player.White;
 
             Profiles = new UciEngineProfileStorage(profilesPath);
 
@@ -121,6 +124,13 @@ namespace chess_pos_db_gui
             InfoUpdateTimer.Enabled = true;
 
             ClearEngineIdInfo();
+        }
+
+        public void ForceStopEmbeddedAnalysis(EmbeddedAnalysisHandler handler)
+        {
+            EmbeddedHandler.OnEmbeddedAnalysisEnded();
+            ClearEmbeddedAnalysisPanel();
+            IsEmbedded = false;
         }
 
         private void SetupColumns()
@@ -516,6 +526,11 @@ namespace chess_pos_db_gui
             PendingInfoResponses.Enqueue(info);
         }
 
+        private int GetSideToMoveScoreMultiplier()
+        {
+            return SideToMove == Player.White ? 1 : -1;
+        }
+
         private void FillRowFromInfo(DataRow row, UciInfoResponse info)
         {
             row["Move"] = Lan.LanToMoveWithSan(info.Fen, info.PV.Or(new List<string>()).FirstOrDefault());
@@ -523,7 +538,7 @@ namespace chess_pos_db_gui
             row["SelDepth"] = info.SelDepth.Or(0);
             var score = info.Score.Or(new UciScore(0, UciScoreType.Cp, UciScoreBoundType.Exact));
             row["Score"] = score;
-            row["ScoreInt"] = score.ToInteger();
+            row["ScoreInt"] = score.ToInteger() * GetSideToMoveScoreMultiplier();
             row["Time"] = TimeSpan.FromSeconds(info.Time.Or(0) / 1000);
             row["Nodes"] = info.Nodes.Or(0);
             row["NPS"] = info.Nps.Or(0);
@@ -538,7 +553,7 @@ namespace chess_pos_db_gui
             row["D/SD"] = new KeyValuePair<int, int>(info.Depth.Or(0), info.SelDepth.Or(0));
             var score = info.Score.Or(new UciScore(0, UciScoreType.Cp, UciScoreBoundType.Exact));
             row["Score"] = score;
-            row["ScoreInt"] = score.ToInteger();
+            row["ScoreInt"] = score.ToInteger() * GetSideToMoveScoreMultiplier();
             row["Time"] = TimeSpan.FromSeconds(info.Time.Or(0) / 1000);
             row["Nodes"] = info.Nodes.Or(0);
             row["NPS"] = info.Nps.Or(0);
@@ -644,6 +659,7 @@ namespace chess_pos_db_gui
             if (Fen != fen)
             {
                 Fen = fen;
+                SideToMove = new ChessGame(Fen).WhoseTurn;
                 Engine.SetPosition(fen);
             }
         }
@@ -750,6 +766,7 @@ namespace chess_pos_db_gui
             {
                 var panel = EmbeddedHandler.PrepareAndGetEmbeddedAnalysisPanel();
                 SetupEmbeddedAnalysisPanel(panel);
+                EmbeddedHandler.OnEmbeddedAnalysisStarted(this);
                 IsEmbedded = true;
                 Hide();
             }

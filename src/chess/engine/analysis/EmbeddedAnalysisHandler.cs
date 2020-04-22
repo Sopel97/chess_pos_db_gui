@@ -11,5 +11,9 @@ namespace chess_pos_db_gui.src.chess.engine.analysis
         public abstract System.Windows.Forms.Panel PrepareAndGetEmbeddedAnalysisPanel();
 
         public abstract void OnEmbeddedAnalysisEnded();
+
+        public abstract void OnEmbeddedAnalysisStarted(EngineAnalysisForm form);
+
+        public abstract void Dispose();
     }
 }
