@@ -20,7 +20,7 @@ namespace chess_pos_db_gui
     {
         class ApplicationEmbeddedAnalysisHandler : EmbeddedAnalysisHandler
         {
-            private readonly int embeddedAnalysisPanelHeight = 100;
+            private readonly int embeddedAnalysisPanelHeight = 130;
 
             private readonly Application application;
 

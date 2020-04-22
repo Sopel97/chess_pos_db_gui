@@ -55,6 +55,12 @@
     <Compile Include="src\app\chessdbcn\ChessDBCNScoreProvider.cs" />
     <Compile Include="src\app\GoodnessCalculator.cs" />
     <Compile Include="src\app\QueryCacheEntry.cs" />
+    <Compile Include="src\chess\engine\analysis\controls\EmbeddedEngineAnalysisControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\chess\engine\analysis\controls\EmbeddedEngineAnalysisControl.Designer.cs">
+      <DependentUpon>EmbeddedEngineAnalysisControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\chess\engine\analysis\EmbeddedAnalysisHandler.cs" />
     <Compile Include="src\chess\engine\uci\UciUtil.cs" />
     <Compile Include="src\chess\MoveWithSan.cs" />
@@ -169,6 +175,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\app\board\controls\ChessBoard.resx">
       <DependentUpon>ChessBoard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\chess\engine\analysis\controls\EmbeddedEngineAnalysisControl.resx">
+      <DependentUpon>EmbeddedEngineAnalysisControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\chess\engine\forms\CreateEngineProfileForm.resx">
       <DependentUpon>CreateEngineProfileForm.cs</DependentUpon>
