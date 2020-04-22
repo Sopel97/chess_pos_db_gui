@@ -448,6 +448,7 @@
             this.tooltip.SetToolTip(this.openCheckBox, "When enabled the database will automatically open after the process is finished. " +
         "This will allow queries to be made instantly after closing this window.");
             this.openCheckBox.UseVisualStyleBackColor = true;
+            this.openCheckBox.CheckedChanged += new System.EventHandler(this.OpenCheckBox_CheckedChanged);
             // 
             // buildButton
             // 

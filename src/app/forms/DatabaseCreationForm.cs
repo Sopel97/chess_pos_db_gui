@@ -11,8 +11,9 @@ namespace chess_pos_db_gui
     public partial class DatabaseCreationForm : Form
     {
         private bool finishedWithErrors = true;
+        private bool openAfterFinished = true;
 
-        public bool OpenAfterFinished { get { return openCheckBox.Checked && !finishedWithErrors; } }
+        public bool OpenAfterFinished { get { return openAfterFinished && !finishedWithErrors; } }
 
         public string DatabasePath { get { return destinationFolderTextBox.Text; } }
 
@@ -263,6 +264,17 @@ namespace chess_pos_db_gui
 
                 if (InvokeRequired)
                 {
+                    Invoke(new Action(EnableInput));
+                }
+                else
+                {
+                    EnableInput();
+                }
+
+                KeepFormAlive = false;
+
+                if (InvokeRequired)
+                {
                     Invoke(new Action(Close));
                 }
                 else
@@ -429,6 +441,11 @@ namespace chess_pos_db_gui
                     );
 
             FilterFileLists();
+        }
+
+        private void OpenCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            openAfterFinished = openCheckBox.Checked;
         }
     }
 }
