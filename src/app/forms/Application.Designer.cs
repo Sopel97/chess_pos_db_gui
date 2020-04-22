@@ -73,6 +73,7 @@
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.chessBoard = new chess_pos_db_gui.ChessBoard();
+            this.fenRichTextBox = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -349,6 +350,7 @@
             // 
             // firstGameInfoGroupBox
             // 
+            this.firstGameInfoGroupBox.Controls.Add(this.fenRichTextBox);
             this.firstGameInfoGroupBox.Controls.Add(this.firstGameInfoRichTextBox);
             this.firstGameInfoGroupBox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.firstGameInfoGroupBox.Location = new System.Drawing.Point(0, 422);
@@ -361,11 +363,10 @@
             // 
             this.firstGameInfoRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.firstGameInfoRichTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.firstGameInfoRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.firstGameInfoRichTextBox.Location = new System.Drawing.Point(3, 16);
+            this.firstGameInfoRichTextBox.Location = new System.Drawing.Point(3, 10);
             this.firstGameInfoRichTextBox.Name = "firstGameInfoRichTextBox";
             this.firstGameInfoRichTextBox.ReadOnly = true;
-            this.firstGameInfoRichTextBox.Size = new System.Drawing.Size(418, 31);
+            this.firstGameInfoRichTextBox.Size = new System.Drawing.Size(418, 13);
             this.firstGameInfoRichTextBox.TabIndex = 0;
             this.firstGameInfoRichTextBox.Text = "";
             this.firstGameInfoRichTextBox.WordWrap = false;
@@ -660,6 +661,18 @@
             this.chessBoard.Size = new System.Drawing.Size(424, 419);
             this.chessBoard.TabIndex = 0;
             // 
+            // fenRichTextBox
+            // 
+            this.fenRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fenRichTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.fenRichTextBox.Location = new System.Drawing.Point(3, 29);
+            this.fenRichTextBox.Name = "fenRichTextBox";
+            this.fenRichTextBox.ReadOnly = true;
+            this.fenRichTextBox.Size = new System.Drawing.Size(418, 13);
+            this.fenRichTextBox.TabIndex = 1;
+            this.fenRichTextBox.Text = "";
+            this.fenRichTextBox.WordWrap = false;
+            // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -748,6 +761,7 @@
         private System.Windows.Forms.CheckBox gamesWeightCheckbox;
         private System.Windows.Forms.ToolStripMenuItem analysisToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setupToolStripMenuItem;
+        private System.Windows.Forms.RichTextBox fenRichTextBox;
     }
 }
 

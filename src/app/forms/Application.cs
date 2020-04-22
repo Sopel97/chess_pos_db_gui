@@ -1,5 +1,6 @@
 ﻿using chess_pos_db_gui.src.app;
 using chess_pos_db_gui.src.app.chessdbcn;
+using chess_pos_db_gui.src.chess;
 using chess_pos_db_gui.src.util;
 using ChessDotNet;
 
@@ -197,6 +198,8 @@ namespace chess_pos_db_gui
 
             WinFormsControlUtil.SetThousandSeparator(entriesGridView);
             WinFormsControlUtil.SetThousandSeparator(totalEntriesGridView);
+
+            fenRichTextBox.Text = FenProvider.StartPos;
         }
 
         private void OnProcessExit(object sender, EventArgs e)
@@ -240,10 +243,14 @@ namespace chess_pos_db_gui
 
         private void OnPositionChanged(object sender, EventArgs e)
         {
+            var fen = chessBoard.GetFen();
+
             if (AnalysisForm != null)
             {
-                AnalysisForm.OnPositionChanged(chessBoard.GetFen());
+                AnalysisForm.OnPositionChanged(fen);
             }
+
+            fenRichTextBox.Text = fen;
 
             if (!Database.IsOpen)
             {
@@ -311,7 +318,7 @@ namespace chess_pos_db_gui
             foreach (GameHeader header in entry.FirstGame)
             {
                 firstGameInfoRichTextBox.Text = string.Format(
-                    "{0} - {1} {2}\n[{3}] ({4}) {5} {6}",
+                    "{0} - {1} {2} [{3}] ({4}) {5} {6}",
                     new object[]
                     {
                         header.White,
