@@ -82,6 +82,10 @@ namespace chess_pos_db_gui
 
             EmbeddedAnalysisDataGridView = new DataGridView();
             EmbeddedAnalysisDataGridView.AllowUserToAddRows = false;
+            EmbeddedAnalysisDataGridView.AllowUserToDeleteRows = false;
+            EmbeddedAnalysisDataGridView.AllowUserToOrderColumns = false;
+            EmbeddedAnalysisDataGridView.AllowUserToResizeRows = false;
+            EmbeddedAnalysisDataGridView.ReadOnly = true;
             WinFormsControlUtil.MakeDoubleBuffered(EmbeddedAnalysisDataGridView);
 
             foreach (DataGridViewColumn column in analysisDataGridView.Columns)
@@ -326,6 +330,8 @@ namespace chess_pos_db_gui
 
         private void ApplyNewEmbeddedAnalysisData(DataTable newAnalysisData)
         {
+            const int maxRows = 3;
+
             try
             {
                 Invoke(new MethodInvoker(delegate ()
@@ -335,7 +341,7 @@ namespace chess_pos_db_gui
                     EmbeddedAnalysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                     var oldSortOrder = EmbeddedAnalysisDataGridView.SortOrder;
                     var oldSortedColumn = oldSortOrder == SortOrder.None ? 0 : EmbeddedAnalysisDataGridView.SortedColumn.Index;
-                    RemoveSuperfluousInfoRows(EmbeddedAnalysisData);
+                    RemoveSuperfluousInfoRows(EmbeddedAnalysisData, maxRows);
                     EmbeddedAnalysisDataGridView.DataSource = EmbeddedAnalysisData;
                     SetupEmbeddedColumns();
                     if (oldSortOrder != SortOrder.None)
@@ -466,10 +472,9 @@ namespace chess_pos_db_gui
                    );
         }
 
-        private void RemoveSuperfluousInfoRow(DataTable dt)
+        private void RemoveSuperfluousInfoRow(DataTable dt, int maxRows)
         {
-            var maxNumPvs = Engine.PvCount;
-            if (dt.Rows.Count > maxNumPvs)
+            if (dt.Rows.Count > maxRows)
             {
                 System.Data.DataRow rowToRemove = dt.Rows[0];
                 foreach (System.Data.DataRow row in dt.Rows)
@@ -483,12 +488,20 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void RemoveSuperfluousInfoRows(DataTable dt)
+        private void RemoveSuperfluousInfoRows(DataTable dt, int maxRows = -1)
         {
-            var maxNumPvs = Engine.PvCount;
-            while (dt.Rows.Count > maxNumPvs)
+            if (maxRows == -1)
             {
-                RemoveSuperfluousInfoRow(dt);
+                maxRows = Engine.PvCount;
+            }
+            else if (Engine.PvCount < maxRows)
+            {
+                maxRows = Engine.PvCount;
+            }
+
+            while (dt.Rows.Count > maxRows)
+            {
+                RemoveSuperfluousInfoRow(dt, maxRows);
             }
         }
 
