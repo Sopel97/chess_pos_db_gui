@@ -103,6 +103,7 @@ namespace chess_pos_db_gui
             closeToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Enabled = false;
             toggleAnalyzeButton.Enabled = false;
+            embedButton.Enabled = false;
 
             IsEmbedded = false;
             EmbeddedHandler = embeddedHandler;
@@ -259,6 +260,10 @@ namespace chess_pos_db_gui
             toggleAnalyzeButton.Enabled = true;
             optionsToolStripMenuItem.Enabled = true;
             closeToolStripMenuItem.Enabled = true;
+            if (EmbeddedHandler != null)
+            {
+                embedButton.Enabled = true;
+            }
             UpdateAnalysisButtonName();
 
             OptionsForm = new EngineOptionsForm(Engine.ScratchOptions);
@@ -298,6 +303,7 @@ namespace chess_pos_db_gui
             toggleAnalyzeButton.Enabled = false;
             optionsToolStripMenuItem.Enabled = false;
             closeToolStripMenuItem.Enabled = false;
+            embedButton.Enabled = false;
 
             ClearEngineIdInfo();
             UpdateAnalysisButtonName();
@@ -640,7 +646,7 @@ namespace chess_pos_db_gui
         private void AnalysisDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             DataGridViewColumn column = analysisDataGridView.Columns[e.ColumnIndex];
-            if (column.Name == "Move")
+            if (column.Name == "Score")
             {
                 IsScoreSortDescending = (SortedColumn == null || !IsScoreSortDescending);
                 var dir = IsScoreSortDescending ? ListSortDirection.Descending : ListSortDirection.Ascending;
