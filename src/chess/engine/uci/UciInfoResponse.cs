@@ -69,18 +69,25 @@ namespace chess_pos_db_gui
                 type = UciScoreType.Mate;
             }
 
-            string valuestr = parts.Dequeue();
+            string valuestr = "0";
+            if (parts.Count != 0)
+            {
+                valuestr = parts.Dequeue();
 
-            string boundstr = parts.Peek();
-            if (boundstr == "lowerbound")
-            {
-                boundType = UciScoreBoundType.LowerBound;
-                parts.Dequeue();
-            }
-            else if (boundstr == "upperbound")
-            {
-                boundType = UciScoreBoundType.UpperBound;
-                parts.Dequeue();
+                if (parts.Count != 0)
+                {
+                    string boundstr = parts.Peek();
+                    if (boundstr == "lowerbound")
+                    {
+                        boundType = UciScoreBoundType.LowerBound;
+                        parts.Dequeue();
+                    }
+                    else if (boundstr == "upperbound")
+                    {
+                        boundType = UciScoreBoundType.UpperBound;
+                        parts.Dequeue();
+                    }
+                }
             }
 
             return Optional<UciScore>.Create(new UciScore(

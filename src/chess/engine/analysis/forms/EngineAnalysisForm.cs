@@ -70,7 +70,7 @@ namespace chess_pos_db_gui
 
             EmbeddedAnalysisData = new DataTable();
             EmbeddedAnalysisData.Columns.Add(new DataColumn("Move", typeof(MoveWithSan)));
-            EmbeddedAnalysisData.Columns.Add(new DataColumn("D/SD", typeof(int)));
+            EmbeddedAnalysisData.Columns.Add(new DataColumn("D/SD", typeof(KeyValuePair<int, int>)));
             EmbeddedAnalysisData.Columns.Add(new DataColumn("Score", typeof(UciScore)));
             EmbeddedAnalysisData.Columns.Add(new DataColumn("Time", typeof(TimeSpan)));
             EmbeddedAnalysisData.Columns.Add(new DataColumn("Nodes", typeof(long)));
@@ -160,7 +160,7 @@ namespace chess_pos_db_gui
             EmbeddedAnalysisDataGridView.Columns["Move"].HeaderText = "Move";
             EmbeddedAnalysisDataGridView.Columns["Move"].ToolTipText = "Move suggested by the engine";
             EmbeddedAnalysisDataGridView.Columns["D/SD"].MinimumWidth = 40;
-            EmbeddedAnalysisDataGridView.Columns["D/SD"].HeaderText = "D";
+            EmbeddedAnalysisDataGridView.Columns["D/SD"].HeaderText = "D/SD";
             EmbeddedAnalysisDataGridView.Columns["D/SD"].ToolTipText = "The depth/selective depth in plies reached by the engine";
             EmbeddedAnalysisDataGridView.Columns["Score"].MinimumWidth = 60;
             EmbeddedAnalysisDataGridView.Columns["Score"].HeaderText = "Score";
@@ -322,6 +322,36 @@ namespace chess_pos_db_gui
             UpdateAnalysisButtonName();
         }
 
+        private void ApplyNewEmbeddedAnalysisData(DataTable newAnalysisData)
+        {
+            try
+            {
+                Invoke(new MethodInvoker(delegate ()
+                {
+                    EmbeddedAnalysisData = newAnalysisData;
+
+                    EmbeddedAnalysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                    var oldSortOrder = EmbeddedAnalysisDataGridView.SortOrder;
+                    var oldSortedColumn = oldSortOrder == SortOrder.None ? 0 : EmbeddedAnalysisDataGridView.SortedColumn.Index;
+                    RemoveSuperfluousInfoRows(EmbeddedAnalysisData);
+                    EmbeddedAnalysisDataGridView.DataSource = EmbeddedAnalysisData;
+                    SetupEmbeddedColumns();
+                    if (oldSortOrder != SortOrder.None)
+                    {
+                        EmbeddedAnalysisDataGridView.Sort(
+                            EmbeddedAnalysisDataGridView.Columns[oldSortedColumn],
+                            oldSortOrder == SortOrder.Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending
+                            );
+                    }
+                    EmbeddedAnalysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
+                }));
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
         private void ApplyNewAnalysisData(DataTable newAnalysisData)
         {
             try
@@ -366,6 +396,20 @@ namespace chess_pos_db_gui
             }
         }
 
+        private void UpdateEmbeddedAnalysisData(DataTable newAnalysisData, Dictionary<string, UciInfoResponse> responseByMove)
+        {
+            // update only one info per move
+            foreach (KeyValuePair<string, UciInfoResponse> response in responseByMove)
+            {
+                var info = response.Value;
+                var move = Lan.LanToMoveWithSan(info.Fen, response.Key);
+                var multipv = info.MultiPV.Or(0);
+                System.Data.DataRow row = FindOrCreateRowByMoveOrMultiPV(newAnalysisData, move, multipv);
+
+                FillEmbeddedRowFromInfo(row, info);
+            }
+        }
+
         private void ProcessPendingInfoReponses(object sender, System.Timers.ElapsedEventArgs e)
         {
             Dictionary<string, UciInfoResponse> responseByMove = new Dictionary<string, UciInfoResponse>();
@@ -396,11 +440,18 @@ namespace chess_pos_db_gui
                 return;
             }
 
-            var newAnalysisData = AnalysisData.Copy();
-
-            UpdateAnalysisData(newAnalysisData, responseByMove);
-
-            ApplyNewAnalysisData(newAnalysisData);
+            if (IsEmbedded)
+            {
+                var newAnalysisData = EmbeddedAnalysisData.Copy();
+                UpdateEmbeddedAnalysisData(newAnalysisData, responseByMove);
+                ApplyNewEmbeddedAnalysisData(newAnalysisData);
+            }
+            else
+            {
+                var newAnalysisData = AnalysisData.Copy();
+                UpdateAnalysisData(newAnalysisData, responseByMove);
+                ApplyNewAnalysisData(newAnalysisData);
+            }
         }
 
         private bool IsLhsMoreSuperfluousThanRhs(System.Data.DataRow lhs, System.Data.DataRow rhs)
@@ -458,6 +509,20 @@ namespace chess_pos_db_gui
             row["MultiPV"] = info.MultiPV.Or(0);
             row["TBHits"] = info.TBHits.Or(0);
             row["PV"] = Lan.PVToString(info.Fen, info.PV.FirstOrDefault());
+        }
+
+        private void FillEmbeddedRowFromInfo(DataRow row, UciInfoResponse info)
+        {
+            row["Move"] = Lan.LanToMoveWithSan(info.Fen, info.PV.Or(new List<string>()).FirstOrDefault());
+            row["D/SD"] = new KeyValuePair<int, int>(info.Depth.Or(0), info.SelDepth.Or(0));
+            var score = info.Score.Or(new UciScore(0, UciScoreType.Cp, UciScoreBoundType.Exact));
+            row["Score"] = score;
+            row["ScoreInt"] = score.ToInteger();
+            row["Time"] = TimeSpan.FromSeconds(info.Time.Or(0) / 1000);
+            row["Nodes"] = info.Nodes.Or(0);
+            row["NPS"] = info.Nps.Or(0);
+            row["MultiPV"] = info.MultiPV.Or(0);
+            row["TBHits"] = info.TBHits.Or(0);
         }
 
         private System.Data.DataRow FindOrCreateRowByMoveOrMultiPV(DataTable dt, MoveWithSan move, int multipv)
@@ -533,7 +598,7 @@ namespace chess_pos_db_gui
         private void AnalysisDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             DataGridViewColumn column = analysisDataGridView.Columns[e.ColumnIndex];
-            if (column.Name == "Score")
+            if (column.Name == "Move")
             {
                 IsScoreSortDescending = (SortedColumn == null || !IsScoreSortDescending);
                 var dir = IsScoreSortDescending ? ListSortDirection.Descending : ListSortDirection.Ascending;
@@ -567,6 +632,56 @@ namespace chess_pos_db_gui
             EmbeddedAnalysisDataGridView.Dock = DockStyle.Fill;
             SetupEmbeddedColumns();
             EmbeddedAnalysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
+            EmbeddedAnalysisDataGridView.CellFormatting += OnEmbeddedAnalysisDataGridViewCellFormatting;
+        }
+
+        private string NumberToShortString(long number)
+        {
+            if (number >= 1_000_000_000_000)
+                return ((double)number / 1_000_000_000_000).ToString("0.##") + "T";
+
+            if (number >= 1_000_000_000)
+                return ((double)number / 1_000_000_000).ToString("0.##") + "B";
+
+            if (number >= 1_000_000)
+                return ((double)number / 1_000_000).ToString("0.##") + "M";
+
+            if (number >= 1_000)
+                return ((double)number / 1_000).ToString("0.##") + "k";
+
+            return number.ToString();
+        }
+
+        private void OnEmbeddedAnalysisDataGridViewCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            var column = EmbeddedAnalysisDataGridView.Columns[e.ColumnIndex];
+            var columnName = column.Name;
+
+            if (columnName == "D/SD")
+            {
+                if (e.Value == null || e.Value.GetType() != typeof(KeyValuePair<int, int>))
+                {
+                    e.Value = "";
+                }
+                else
+                {
+                    var kv = (KeyValuePair<int, int>)e.Value;
+                    e.Value = kv.Key.ToString() + "/" + kv.Value.ToString();
+                }
+                e.FormattingApplied = true;
+            }
+            else if (columnName == "Nodes" || columnName == "NPS" || columnName == "TBHits")
+            {
+                if (e.Value == null || e.Value.GetType() != typeof(long))
+                {
+                    e.Value = "";
+                }
+                else
+                {
+                    e.Value = NumberToShortString((long)e.Value);
+                }
+                e.FormattingApplied = true;
+            }
         }
 
         private void EmbedButton_Click(object sender, EventArgs e)
