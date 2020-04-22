@@ -64,11 +64,11 @@
             // engineIdNameLabel
             // 
             this.engineIdNameLabel.AutoSize = true;
+            this.engineIdNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.engineIdNameLabel.Location = new System.Drawing.Point(84, 8);
             this.engineIdNameLabel.Name = "engineIdNameLabel";
-            this.engineIdNameLabel.Size = new System.Drawing.Size(41, 13);
+            this.engineIdNameLabel.Size = new System.Drawing.Size(0, 13);
             this.engineIdNameLabel.TabIndex = 2;
-            this.engineIdNameLabel.Text = "Name: ";
             // 
             // EmbeddedEngineAnalysisControl
             // 

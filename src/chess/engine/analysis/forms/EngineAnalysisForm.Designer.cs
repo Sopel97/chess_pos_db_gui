@@ -48,18 +48,20 @@
             // engineIdNameLabel
             // 
             this.engineIdNameLabel.AutoSize = true;
+            this.engineIdNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.engineIdNameLabel.Location = new System.Drawing.Point(12, 37);
             this.engineIdNameLabel.Name = "engineIdNameLabel";
-            this.engineIdNameLabel.Size = new System.Drawing.Size(62, 13);
+            this.engineIdNameLabel.Size = new System.Drawing.Size(71, 13);
             this.engineIdNameLabel.TabIndex = 1;
             this.engineIdNameLabel.Text = "ENGINE ID";
             // 
             // enginePathLabel
             // 
             this.enginePathLabel.AutoSize = true;
+            this.enginePathLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.enginePathLabel.Location = new System.Drawing.Point(12, 24);
             this.enginePathLabel.Name = "enginePathLabel";
-            this.enginePathLabel.Size = new System.Drawing.Size(80, 13);
+            this.enginePathLabel.Size = new System.Drawing.Size(91, 13);
             this.enginePathLabel.TabIndex = 2;
             this.enginePathLabel.Text = "ENGINE PATH";
             // 
@@ -137,9 +139,10 @@
             // engineIdAuthorLabel
             // 
             this.engineIdAuthorLabel.AutoSize = true;
+            this.engineIdAuthorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.engineIdAuthorLabel.Location = new System.Drawing.Point(12, 50);
             this.engineIdAuthorLabel.Name = "engineIdAuthorLabel";
-            this.engineIdAuthorLabel.Size = new System.Drawing.Size(62, 13);
+            this.engineIdAuthorLabel.Size = new System.Drawing.Size(71, 13);
             this.engineIdAuthorLabel.TabIndex = 6;
             this.engineIdAuthorLabel.Text = "ENGINE ID";
             // 

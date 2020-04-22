@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
@@ -50,7 +50,10 @@
             this.epdDumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.analysisAndBoardSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.firstGameInfoGroupBox = new System.Windows.Forms.GroupBox();
+            this.fenRichTextBox = new System.Windows.Forms.RichTextBox();
             this.firstGameInfoRichTextBox = new System.Windows.Forms.RichTextBox();
             this.goodnessGroupBox = new System.Windows.Forms.GroupBox();
             this.gamesWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
@@ -72,9 +75,6 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.fenRichTextBox = new System.Windows.Forms.RichTextBox();
-            this.analysisAndBoardSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -87,6 +87,9 @@
             this.splitContainer1.SuspendLayout();
             this.databaseInfoGroupBox.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.analysisAndBoardSplitContainer)).BeginInit();
+            this.analysisAndBoardSplitContainer.Panel2.SuspendLayout();
+            this.analysisAndBoardSplitContainer.SuspendLayout();
             this.firstGameInfoGroupBox.SuspendLayout();
             this.goodnessGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gamesWeightNumericUpDown)).BeginInit();
@@ -96,9 +99,6 @@
             this.displayGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).BeginInit();
             this.queryGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.analysisAndBoardSplitContainer)).BeginInit();
-            this.analysisAndBoardSplitContainer.Panel2.SuspendLayout();
-            this.analysisAndBoardSplitContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -109,14 +109,14 @@
             this.entriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.entriesGridView.Location = new System.Drawing.Point(3, 153);
@@ -124,7 +124,7 @@
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(605, 405);
+            this.entriesGridView.Size = new System.Drawing.Size(604, 405);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -352,6 +352,34 @@
             this.setupToolStripMenuItem.Text = "Setup";
             this.setupToolStripMenuItem.Click += new System.EventHandler(this.SetupToolStripMenuItem_Click);
             // 
+            // analysisAndBoardSplitContainer
+            // 
+            this.analysisAndBoardSplitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.analysisAndBoardSplitContainer.IsSplitterFixed = true;
+            this.analysisAndBoardSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.analysisAndBoardSplitContainer.Name = "analysisAndBoardSplitContainer";
+            this.analysisAndBoardSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.analysisAndBoardSplitContainer.Panel1MinSize = 0;
+            // 
+            // analysisAndBoardSplitContainer.Panel2
+            // 
+            this.analysisAndBoardSplitContainer.Panel2.Controls.Add(this.chessBoard);
+            this.analysisAndBoardSplitContainer.Size = new System.Drawing.Size(424, 422);
+            this.analysisAndBoardSplitContainer.SplitterDistance = 150;
+            this.analysisAndBoardSplitContainer.TabIndex = 3;
+            // 
+            // chessBoard
+            // 
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.Size = new System.Drawing.Size(424, 268);
+            this.chessBoard.TabIndex = 0;
+            // 
             // firstGameInfoGroupBox
             // 
             this.firstGameInfoGroupBox.Controls.Add(this.fenRichTextBox);
@@ -363,10 +391,23 @@
             this.firstGameInfoGroupBox.TabIndex = 2;
             this.firstGameInfoGroupBox.TabStop = false;
             // 
+            // fenRichTextBox
+            // 
+            this.fenRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fenRichTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.fenRichTextBox.Location = new System.Drawing.Point(3, 29);
+            this.fenRichTextBox.Name = "fenRichTextBox";
+            this.fenRichTextBox.ReadOnly = true;
+            this.fenRichTextBox.Size = new System.Drawing.Size(418, 13);
+            this.fenRichTextBox.TabIndex = 1;
+            this.fenRichTextBox.Text = "";
+            this.fenRichTextBox.WordWrap = false;
+            // 
             // firstGameInfoRichTextBox
             // 
             this.firstGameInfoRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.firstGameInfoRichTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.firstGameInfoRichTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.firstGameInfoRichTextBox.Location = new System.Drawing.Point(3, 10);
             this.firstGameInfoRichTextBox.Name = "firstGameInfoRichTextBox";
             this.firstGameInfoRichTextBox.ReadOnly = true;
@@ -589,7 +630,7 @@
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(605, 45);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(604, 45);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -653,46 +694,6 @@
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
             // 
-            // fenRichTextBox
-            // 
-            this.fenRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.fenRichTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.fenRichTextBox.Location = new System.Drawing.Point(3, 29);
-            this.fenRichTextBox.Name = "fenRichTextBox";
-            this.fenRichTextBox.ReadOnly = true;
-            this.fenRichTextBox.Size = new System.Drawing.Size(418, 13);
-            this.fenRichTextBox.TabIndex = 1;
-            this.fenRichTextBox.Text = "";
-            this.fenRichTextBox.WordWrap = false;
-            // 
-            // analysisAndBoardSplitContainer
-            // 
-            this.analysisAndBoardSplitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.analysisAndBoardSplitContainer.IsSplitterFixed = true;
-            this.analysisAndBoardSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.analysisAndBoardSplitContainer.Name = "analysisAndBoardSplitContainer";
-            this.analysisAndBoardSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.analysisAndBoardSplitContainer.Panel1MinSize = 0;
-            // 
-            // analysisAndBoardSplitContainer.Panel2
-            // 
-            this.analysisAndBoardSplitContainer.Panel2.Controls.Add(this.chessBoard);
-            this.analysisAndBoardSplitContainer.Size = new System.Drawing.Size(424, 422);
-            this.analysisAndBoardSplitContainer.SplitterDistance = 150;
-            this.analysisAndBoardSplitContainer.TabIndex = 3;
-            // 
-            // chessBoard
-            // 
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(424, 268);
-            this.chessBoard.TabIndex = 0;
-            // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -720,6 +721,9 @@
             this.databaseInfoGroupBox.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.analysisAndBoardSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.analysisAndBoardSplitContainer)).EndInit();
+            this.analysisAndBoardSplitContainer.ResumeLayout(false);
             this.firstGameInfoGroupBox.ResumeLayout(false);
             this.goodnessGroupBox.ResumeLayout(false);
             this.goodnessGroupBox.PerformLayout();
@@ -732,9 +736,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).EndInit();
             this.queryGroupBox.ResumeLayout(false);
             this.queryGroupBox.PerformLayout();
-            this.analysisAndBoardSplitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.analysisAndBoardSplitContainer)).EndInit();
-            this.analysisAndBoardSplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

@@ -246,7 +246,7 @@ namespace chess_pos_db_gui
 
             analysisAndBoardSplitContainer.SplitterDistance = 0;
 
-            fenRichTextBox.Text = FenProvider.StartPos;
+            fenRichTextBox.Text = "Fen: " + FenProvider.StartPos;
         }
 
         private void OnProcessExit(object sender, EventArgs e)
@@ -297,7 +297,7 @@ namespace chess_pos_db_gui
                 AnalysisForm.OnPositionChanged(fen);
             }
 
-            fenRichTextBox.Text = fen;
+            fenRichTextBox.Text = "Fen: " + fen;
 
             if (!Database.IsOpen)
             {

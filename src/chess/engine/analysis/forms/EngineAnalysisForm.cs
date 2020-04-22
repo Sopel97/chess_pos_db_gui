@@ -235,7 +235,7 @@ namespace chess_pos_db_gui
             engineIdNameLabel.Text = "Name: " + Engine.IdName;
             engineIdAuthorLabel.Text = "Author: " + Engine.IdAuthor;
 
-            EmbeddedControl.EngineIdNameLabel.Text = "Name: " + Engine.IdName;
+            EmbeddedControl.EngineIdNameLabel.Text = Engine.IdName;
         }
 
         private void ClearEngineIdInfo()
@@ -244,7 +244,7 @@ namespace chess_pos_db_gui
             engineIdNameLabel.Text = "Name: ";
             engineIdAuthorLabel.Text = "Author: ";
 
-            EmbeddedControl.EngineIdNameLabel.Text = "Name: ";
+            EmbeddedControl.EngineIdNameLabel.Text = "";
         }
 
         private void LoadEngine(UciEngineProfile profile)
