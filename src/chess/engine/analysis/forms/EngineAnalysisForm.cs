@@ -16,6 +16,7 @@ namespace chess_pos_db_gui
     public partial class EngineAnalysisForm : Form
     {
         private static readonly string profilesPath = "data/engine_profiles.json";
+        private static readonly int maxEmbeddedAnalysisRows = 3;
 
         private UciEngineProfileStorage Profiles { get; set; }
 
@@ -331,8 +332,6 @@ namespace chess_pos_db_gui
 
         private void ApplyNewEmbeddedAnalysisData(DataTable newAnalysisData)
         {
-            const int maxRows = 3;
-
             try
             {
                 Invoke(new MethodInvoker(delegate ()
@@ -342,7 +341,7 @@ namespace chess_pos_db_gui
                     EmbeddedAnalysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                     var oldSortOrder = EmbeddedAnalysisDataGridView.SortOrder;
                     var oldSortedColumn = oldSortOrder == SortOrder.None ? 0 : EmbeddedAnalysisDataGridView.SortedColumn.Index;
-                    RemoveSuperfluousInfoRows(EmbeddedAnalysisData, maxRows);
+                    RemoveSuperfluousInfoRows(EmbeddedAnalysisData, maxEmbeddedAnalysisRows);
                     EmbeddedAnalysisDataGridView.DataSource = EmbeddedAnalysisData;
                     SetupEmbeddedColumns();
                     if (oldSortOrder != SortOrder.None)
@@ -541,6 +540,33 @@ namespace chess_pos_db_gui
             row["TBHits"] = info.TBHits.Or(0);
         }
 
+        private void FillEmbeddedRowFromNormal(DataRow row, DataRow from)
+        {
+            row["Move"] = from["Move"];
+            row["D/SD"] = new KeyValuePair<int, int>((int)from["Depth"], (int)from["SelDepth"]);
+            row["Score"] = from["Score"];
+            row["ScoreInt"] = from["ScoreInt"];
+            row["Time"] = from["Time"];
+            row["Nodes"] = from["Nodes"];
+            row["NPS"] = from["NPS"];
+            row["MultiPV"] = from["MultiPV"];
+            row["TBHits"] = from["TBHits"];
+        }
+
+        private void TransferDataToEmbedded()
+        {
+            EmbeddedAnalysisData.Clear();
+
+            foreach (DataRow from in AnalysisData.Rows)
+            {
+                System.Data.DataRow row = EmbeddedAnalysisData.NewRow();
+                FillEmbeddedRowFromNormal(row, from);
+                EmbeddedAnalysisData.Rows.Add(row);
+            }
+
+            RemoveSuperfluousInfoRows(EmbeddedAnalysisData, maxEmbeddedAnalysisRows);
+        }
+
         private System.Data.DataRow FindOrCreateRowByMoveOrMultiPV(DataTable dt, MoveWithSan move, int multipv)
         {
             System.Data.DataRow row = null;
@@ -648,6 +674,7 @@ namespace chess_pos_db_gui
             EmbeddedAnalysisDataGridView.AutoSize = true;
             EmbeddedAnalysisDataGridView.Dock = DockStyle.Fill;
             SetupEmbeddedColumns();
+            TransferDataToEmbedded();
             EmbeddedAnalysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
             EmbeddedAnalysisDataGridView.CellFormatting += OnEmbeddedAnalysisDataGridViewCellFormatting;
         }
