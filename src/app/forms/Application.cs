@@ -88,6 +88,7 @@ namespace chess_pos_db_gui
         }
 
         private static readonly string engineProfilesPath = "data/engine_profiles.json";
+        private static readonly string settingsPath = "data/appliction/settings.json";
 
         private UciEngineProfileStorage EngineProfiles { get; set; }
 
@@ -289,6 +290,8 @@ namespace chess_pos_db_gui
 
         private void Application_Load(object sender, EventArgs e)
         {
+            LoadSettings();
+
             try
             {
                 Database = new DatabaseProxy(DatabaseTcpClientIp, DatabaseTcpClientPort);
@@ -1136,6 +1139,75 @@ namespace chess_pos_db_gui
                 EmbeddedHandler.Dispose();
             }
             QueryExecutor.Dispose();
+
+            SaveSettings();
+        }
+
+        private void SaveSettings()
+        {
+            var settings = GatherSerializableSettings();
+            settings.Serialize(settingsPath);
+        }
+
+        private void LoadSettings()
+        {
+            var settings = SerializableSettings.Deserialize(settingsPath);
+            ApplySerializableSettings(settings);
+        }
+
+        private void ApplySerializableSettings(SerializableSettings settings)
+        {
+            autoQueryCheckbox.Checked = settings.AutoQueryCheckBoxChecked;
+            queryEvalCheckBox.Checked = settings.QueryEvalCheckBoxChecked;
+            levelHumanCheckBox.Checked = settings.LevelHumanCheckBoxChecked;
+            levelEngineCheckBox.Checked = settings.LevelEngineCheckBoxChecked;
+            levelServerCheckBox.Checked = settings.LevelServerCheckBoxChecked;
+            hideNeverPlayedCheckBox.Checked = settings.HideNeverPlayedCheckBoxChecked;
+            typeContinuationsCheckBox.Checked = settings.TypeContinuationsCheckBoxChecked;
+            typeTranspositionsCheckBox.Checked = settings.TypeTranspositionsCheckBoxChecked;
+            humanWeightCheckbox.Checked = settings.HumanWeightCheckBoxChecked;
+            gamesWeightCheckbox.Checked = settings.GamesWeightCheckBoxChecked;
+            engineWeightCheckbox.Checked = settings.EngineWeightCheckBoxChecked;
+            evaluationWeightCheckbox.Checked = settings.EvaluationWeightCheckBoxChecked;
+            combineHECheckbox.Checked = settings.CombineHECheckBoxChecked;
+            goodnessUseCountCheckbox.Checked = settings.GoodnessUseCountCheckBoxChecked;
+            goodnessNormalizeCheckbox.Checked = settings.GoodnessNormalizeCheckBoxChecked;
+            gamesWeightNumericUpDown.Value = settings.GamesWeightNumericUpDownValue;
+            humanWeightNumericUpDown.Value = settings.HumanWeightNumericUpDownValue;
+            engineWeightNumericUpDown.Value = settings.EngineWeightNumericUpDownValue;
+            evalWeightNumericUpDown.Value = settings.EvalWeightNumericUpDownValue;
+            splitChessAndData.SplitterDistance = settings.SplitChessAndDataSplitterDistance;
+            Width = settings.FormWidth;
+            Height = settings.FormHeight;
+        }
+
+        private SerializableSettings GatherSerializableSettings()
+        {
+            return new SerializableSettings
+            {
+                AutoQueryCheckBoxChecked = autoQueryCheckbox.Checked,
+                QueryEvalCheckBoxChecked = queryEvalCheckBox.Checked,
+                LevelHumanCheckBoxChecked = levelHumanCheckBox.Checked,
+                LevelEngineCheckBoxChecked = levelEngineCheckBox.Checked,
+                LevelServerCheckBoxChecked = levelServerCheckBox.Checked,
+                HideNeverPlayedCheckBoxChecked = hideNeverPlayedCheckBox.Checked,
+                TypeContinuationsCheckBoxChecked = typeContinuationsCheckBox.Checked,
+                TypeTranspositionsCheckBoxChecked = typeTranspositionsCheckBox.Checked,
+                HumanWeightCheckBoxChecked = humanWeightCheckbox.Checked,
+                GamesWeightCheckBoxChecked = gamesWeightCheckbox.Checked,
+                EngineWeightCheckBoxChecked = engineWeightCheckbox.Checked,
+                EvaluationWeightCheckBoxChecked = evaluationWeightCheckbox.Checked,
+                CombineHECheckBoxChecked = combineHECheckbox.Checked,
+                GoodnessUseCountCheckBoxChecked = goodnessUseCountCheckbox.Checked,
+                GoodnessNormalizeCheckBoxChecked = goodnessNormalizeCheckbox.Checked,
+                GamesWeightNumericUpDownValue = gamesWeightNumericUpDown.Value,
+                HumanWeightNumericUpDownValue = humanWeightNumericUpDown.Value,
+                EngineWeightNumericUpDownValue = engineWeightNumericUpDown.Value,
+                EvalWeightNumericUpDownValue = evalWeightNumericUpDown.Value,
+                SplitChessAndDataSplitterDistance = splitChessAndData.SplitterDistance,
+                FormWidth = Width,
+                FormHeight = Height
+            };
         }
 
         private void HideNeverPlayedCheckBox_CheckedChanged(object sender, EventArgs e)

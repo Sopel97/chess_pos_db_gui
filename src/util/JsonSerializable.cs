@@ -23,6 +23,11 @@ namespace chess_pos_db_gui.src.util
 
         public void Serialize(string path)
         {
+            if (!File.Exists(path))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
+
             using (StreamWriter sw = new StreamWriter(path))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
