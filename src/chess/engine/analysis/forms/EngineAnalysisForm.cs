@@ -9,14 +9,20 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace chess_pos_db_gui
 {
     public partial class EngineAnalysisForm : Form
     {
+        private class SerializableSettings : JsonSerializable<SerializableSettings>
+        {
+            public int FormWidth { get; set; } = 816;
+            public int FormHeight { get; set; } = 488;
+        }
+
         private static readonly int maxEmbeddedAnalysisRows = 3;
+        private static readonly string settingsPath = "data/engine_analysis_form/settings.json";
 
         private UciEngineProfileStorage EngineProfiles { get; set; }
 
@@ -329,6 +335,8 @@ namespace chess_pos_db_gui
             }
 
             InfoUpdateTimer.Dispose();
+
+            SaveSettings();
         }
 
         private void ToggleAnalyzeButton_Click(object sender, EventArgs e)
@@ -782,6 +790,38 @@ namespace chess_pos_db_gui
                     IsEmbedded = false;
                 }
             }
+        }
+
+        private void SaveSettings()
+        {
+            var settings = GatherSerializableSettings();
+            settings.Serialize(settingsPath);
+        }
+
+        private void LoadSettings()
+        {
+            var settings = SerializableSettings.Deserialize(settingsPath);
+            ApplySerializableSettings(settings);
+        }
+
+        private void ApplySerializableSettings(SerializableSettings settings)
+        {
+            Width = settings.FormWidth;
+            Height = settings.FormHeight;
+        }
+
+        private SerializableSettings GatherSerializableSettings()
+        {
+            return new SerializableSettings
+            {
+                FormWidth = Width,
+                FormHeight = Height
+            };
+        }
+
+        private void EngineAnalysisForm_Load(object sender, EventArgs e)
+        {
+            LoadSettings();
         }
     }
 }

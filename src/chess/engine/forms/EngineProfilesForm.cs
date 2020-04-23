@@ -1,4 +1,5 @@
-﻿using System;
+﻿using chess_pos_db_gui.src.util;
+using System;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -12,6 +13,14 @@ namespace chess_pos_db_gui
 
     public partial class EngineProfilesForm : Form
     {
+        private class SerializableSettings : JsonSerializable<SerializableSettings>
+        {
+            public int FormWidth { get; set; } = 400;
+            public int FormHeight { get; set; } = 300;
+        }
+
+        private static readonly string settingsPath = "data/engine_profiles_form/settings.json";
+
         private UciEngineProfileStorage Profiles { get; set; }
 
         public UciEngineProfile SelectedProfile { get; private set; }
@@ -117,6 +126,43 @@ namespace chess_pos_db_gui
 
                 engine.Quit();
             }
+        }
+
+        private void SaveSettings()
+        {
+            var settings = GatherSerializableSettings();
+            settings.Serialize(settingsPath);
+        }
+
+        private void LoadSettings()
+        {
+            var settings = SerializableSettings.Deserialize(settingsPath);
+            ApplySerializableSettings(settings);
+        }
+
+        private void ApplySerializableSettings(SerializableSettings settings)
+        {
+            Width = settings.FormWidth;
+            Height = settings.FormHeight;
+        }
+
+        private SerializableSettings GatherSerializableSettings()
+        {
+            return new SerializableSettings
+            {
+                FormWidth = Width,
+                FormHeight = Height
+            };
+        }
+
+        private void EngineProfilesForm_Load(object sender, EventArgs e)
+        {
+            LoadSettings();
+        }
+
+        private void EngineProfilesForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveSettings();
         }
     }
 }

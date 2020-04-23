@@ -173,6 +173,7 @@
             this.Name = "EngineAnalysisForm";
             this.Text = "Engine Analysis";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EngineAnalysisForm_FormClosing);
+            this.Load += new System.EventHandler(this.EngineAnalysisForm_Load);
             this.VisibleChanged += new System.EventHandler(this.EngineAnalysisForm_VisibleChanged);
             ((System.ComponentModel.ISupportInitialize)(this.analysisDataGridView)).EndInit();
             this.menuStrip1.ResumeLayout(false);

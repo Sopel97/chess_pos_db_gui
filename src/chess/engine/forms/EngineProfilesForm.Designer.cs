@@ -103,6 +103,8 @@
             this.MinimumSize = new System.Drawing.Size(400, 300);
             this.Name = "EngineProfilesForm";
             this.Text = "Engine profiles";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EngineProfilesForm_FormClosing);
+            this.Load += new System.EventHandler(this.EngineProfilesForm_Load);
             this.ResumeLayout(false);
 
         }
