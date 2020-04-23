@@ -289,8 +289,6 @@ namespace chess_pos_db_gui
 
         private void Application_Load(object sender, EventArgs e)
         {
-            chessBoard.LoadImages("assets/graphics");
-
             try
             {
                 Database = new DatabaseProxy(DatabaseTcpClientIp, DatabaseTcpClientPort);

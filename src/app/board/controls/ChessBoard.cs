@@ -288,6 +288,9 @@ namespace chess_pos_db_gui
 
         private void ChessBoard_Load(object sender, EventArgs e)
         {
+            BoardImageWhite = DefaultBitmap;
+            BoardImageBlack = DefaultBitmap;
+
             WhitePawn = DefaultBitmap;
             WhiteKnight = DefaultBitmap;
             WhiteBishop = DefaultBitmap;
@@ -301,6 +304,11 @@ namespace chess_pos_db_gui
             BlackRook = DefaultBitmap;
             BlackQueen = DefaultBitmap;
             BlackKing = DefaultBitmap;
+
+            if (!DesignMode)
+            {
+                LoadImages("assets/graphics");
+            }
 
             UpdatePieceImagesDictionary();
 
