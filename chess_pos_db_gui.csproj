@@ -36,6 +36,9 @@
     <Reference Include="ChessDotNet, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\ChessDotNet.0.11.0\lib\netstandard1.3\ChessDotNet.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Json, Version=2.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -151,6 +154,7 @@
     <Compile Include="src\db\query\GameHeader.cs" />
     <Compile Include="src\db\query\GameLevel.cs" />
     <Compile Include="src\db\query\GameResult.cs" />
+    <Compile Include="src\util\JsonSerializable.cs" />
     <Compile Include="src\util\LRUCache.cs" />
     <Compile Include="src\util\Optional.cs" />
     <Compile Include="src\app\forms\PgnInputForm.cs">

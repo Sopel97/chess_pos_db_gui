@@ -4,12 +4,13 @@ using chess_pos_db_gui.src.chess;
 using chess_pos_db_gui.src.chess.engine.analysis;
 using chess_pos_db_gui.src.util;
 using ChessDotNet;
-
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -18,7 +19,7 @@ namespace chess_pos_db_gui
 {
     public partial class Application : Form
     {
-        class ApplicationEmbeddedAnalysisHandler : EmbeddedAnalysisHandler
+        private class ApplicationEmbeddedAnalysisHandler : EmbeddedAnalysisHandler
         {
             private readonly int embeddedAnalysisPanelHeight = 130;
 
@@ -58,6 +59,32 @@ namespace chess_pos_db_gui
                     ResponsibleEntity.ForceStopEmbeddedAnalysis(this);
                 }
             }
+        }
+
+        private class SerializableSettings : JsonSerializable<SerializableSettings>
+        {
+            public bool AutoQueryCheckBoxChecked { get; set; } = true;
+            public bool QueryEvalCheckBoxChecked { get; set; } = true;
+            public bool LevelHumanCheckBoxChecked { get; set; } = true;
+            public bool LevelEngineCheckBoxChecked { get; set; } = true;
+            public bool LevelServerCheckBoxChecked { get; set; } = true;
+            public bool HideNeverPlayedCheckBoxChecked { get; set; } = false;
+            public bool TypeContinuationsCheckBoxChecked { get; set; } = true;
+            public bool TypeTranspositionsCheckBoxChecked { get; set; } = true;
+            public bool HumanWeightCheckBoxChecked { get; set; } = true;
+            public bool GamesWeightCheckBoxChecked { get; set; } = true;
+            public bool EngineWeightCheckBoxChecked { get; set; } = true;
+            public bool EvaluationWeightCheckBoxChecked { get; set; } = true;
+            public bool CombineHECheckBoxChecked { get; set; } = false;
+            public bool GoodnessUseCountCheckBoxChecked { get; set; } = true;
+            public bool GoodnessNormalizeCheckBoxChecked { get; set; } = true;
+            public decimal GamesWeightNumericUpDownValue { get; set; } = 1;
+            public decimal HumanWeightNumericUpDownValue { get; set; } = 1;
+            public decimal EngineWeightNumericUpDownValue { get; set; } = 3;
+            public decimal EvalWeightNumericUpDownValue { get; set; } = 2;
+            public int SplitChessAndDataSplitterDistance { get; set; } = 428;
+            public int FormWidth { get; set; } = 1075;
+            public int FormHeight { get; set; } = 600;
         }
 
         private static readonly string engineProfilesPath = "data/engine_profiles.json";
@@ -1229,5 +1256,4 @@ namespace chess_pos_db_gui
             }
         }
     }
-
 }
