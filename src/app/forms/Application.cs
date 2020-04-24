@@ -159,7 +159,6 @@ namespace chess_pos_db_gui
             TabulatedData.Columns.Add(new DataColumn("Eco", typeof(string)));
             TabulatedData.Columns.Add(new DataColumn("PlyCount", typeof(ushort)));
             TabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
-            TabulatedData.Columns.Add(new DataColumn("GameId", typeof(uint)));
             TabulatedData.Columns.Add(new DataColumn("IsOnlyTransposition", typeof(bool)));
 
             TotalTabulatedData.Columns.Add(new DataColumn("Move", typeof(string)));
@@ -274,9 +273,6 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["PlyCount"].ToolTipText = "The length in plies of the first game with this position.";
             entriesGridView.Columns["PlyCount"].MinimumWidth = 40;
             entriesGridView.Columns["PlyCount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            entriesGridView.Columns["GameId"].MinimumWidth = 35;
-            entriesGridView.Columns["GameId"].HeaderText = "Game\u00A0ID";
-            entriesGridView.Columns["GameId"].ToolTipText = "The internal game id of the first game with this position.";
             entriesGridView.Columns["Event"].MinimumWidth = 35;
             entriesGridView.Columns["White"].MinimumWidth = 35;
             entriesGridView.Columns["Black"].MinimumWidth = 35;
@@ -510,7 +506,6 @@ namespace chess_pos_db_gui
 
             foreach (GameHeader header in entry.FirstGame)
             {
-                row["GameId"] = header.GameId;
                 row["Date"] = header.Date.ToStringOmitUnknown();
                 row["Event"] = header.Event;
                 row["White"] = header.White;
