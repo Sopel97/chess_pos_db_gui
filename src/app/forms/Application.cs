@@ -405,10 +405,7 @@ namespace chess_pos_db_gui
                 {
                     if (row["Goodness"] != null)
                     {
-                        if (((MoveWithSan)row[0]).San != San.NullMove)
-                        {
-                            row["Goodness"] = (double)row["Goodness"] / highest;
-                        }
+                        row["Goodness"] = (double)row["Goodness"] / highest;
                     }
                 }
             }
@@ -491,18 +488,8 @@ namespace chess_pos_db_gui
 
             PopulateCommon(row, entry, nonEngineEntry, score);
 
-            if (san == San.NullMove)
-            {
-                row["Move"] = new MoveWithSan(null, san);
-                row["Goodness"] = double.PositiveInfinity;
-
-                PopulateFirstGameInfo(entry);
-            }
-            else
-            {
-                row["Move"] = new MoveWithSan(San.ParseSan(fen, san), san);
-                row["Goodness"] = CalculateGoodness(entry, nonEngineEntry, score);
-            }
+            row["Move"] = new MoveWithSan(San.ParseSan(fen, san), san);
+            row["Goodness"] = CalculateGoodness(entry, nonEngineEntry, score);
 
             foreach (GameHeader header in entry.FirstGame)
             {
@@ -521,18 +508,17 @@ namespace chess_pos_db_gui
         }
 
         private void PopulateTotal(
+            string name,
             AggregatedEntry total, 
             AggregatedEntry totalNonEngine, 
             ChessDBCNScore totalScore
             )
         {
-            TotalTabulatedData.Clear();
-
             var row = TotalTabulatedData.NewRow();
 
             PopulateCommon(row, total, totalNonEngine, totalScore);
 
-            row["Move"] = "Total";
+            row["Move"] = name;
 
             TotalTabulatedData.Rows.InsertAt(row, 0);
         }
@@ -607,7 +593,8 @@ namespace chess_pos_db_gui
 
                 if (entry.Key == San.NullMove)
                 {
-                    Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), bestScore);
+                    PopulateTotal("Root", entry.Value, nonEngineEntries[entry.Key], bestScore);
+                    PopulateFirstGameInfo(entry.Value);
                 }
                 else
                 {
@@ -620,7 +607,7 @@ namespace chess_pos_db_gui
                 }
             }
 
-            PopulateTotal(total, totalNonEngine, bestScore);
+            PopulateTotal("Children", total, totalNonEngine, bestScore);
 
             if (goodnessNormalizeCheckbox.Checked)
             {
@@ -685,10 +672,7 @@ namespace chess_pos_db_gui
             {
                 if (row["Goodness"] != null)
                 {
-                    if (((MoveWithSan)row[0]).San != San.NullMove)
-                    {
-                        goodness = Math.Max(goodness, (double)row["Goodness"]);
-                    }
+                    goodness = Math.Max(goodness, (double)row["Goodness"]);
                 }
             }
 
@@ -794,7 +778,10 @@ namespace chess_pos_db_gui
         private void Clear()
         {
             TabulatedData.Clear();
+            TotalTabulatedData.Clear();
+
             entriesGridView.Refresh();
+            totalEntriesGridView.Refresh();
 
             firstGameInfoRichTextBox.Clear();
         }
@@ -1037,10 +1024,7 @@ namespace chess_pos_db_gui
                 if (cell.ColumnIndex == 0)
                 {
                     var san = cell.Value.ToString();
-                    if (san != San.NullMove && san != "Total")
-                    {
-                        chessBoard.DoMove(san);
-                    }
+                    chessBoard.DoMove(san);
                 }
             }
         }
@@ -1123,8 +1107,8 @@ namespace chess_pos_db_gui
             var row = entriesGridView.Rows[e.RowIndex];
             var isTransposition = Convert.ToBoolean(row.Cells["IsOnlyTransposition"].Value);
             var goodness = row.Cells["Goodness"].Value;
-            var isGoodGoodness = goodness != null && (double)goodness > 0.0 && (double)goodness <= 1.1 && (double)goodness >= goodGoodnessTheshold * BestGoodness;
-            var isBadGoodness = goodness == null || ((double)goodness <= 1.1 && (double)goodness < badGoodnessTheshold * BestGoodness);
+            var isGoodGoodness = goodness != null && (double)goodness > 0.0 && (double)goodness >= goodGoodnessTheshold * BestGoodness;
+            var isBadGoodness = goodness == null || (double)goodness < badGoodnessTheshold * BestGoodness;
             if ((ulong)row.Cells["Count"].Value == 0)
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(0xAA, 0xAA, 0xAA);
