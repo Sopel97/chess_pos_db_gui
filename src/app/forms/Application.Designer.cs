@@ -125,7 +125,7 @@
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(602, 405);
+            this.entriesGridView.Size = new System.Drawing.Size(601, 405);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -375,8 +375,8 @@
             // analysisAndBoardSplitContainer.Panel2
             // 
             this.analysisAndBoardSplitContainer.Panel2.Controls.Add(this.chessBoard);
-            this.analysisAndBoardSplitContainer.Size = new System.Drawing.Size(424, 422);
-            this.analysisAndBoardSplitContainer.SplitterDistance = 150;
+            this.analysisAndBoardSplitContainer.Size = new System.Drawing.Size(424, 402);
+            this.analysisAndBoardSplitContainer.SplitterDistance = 142;
             this.analysisAndBoardSplitContainer.TabIndex = 3;
             // 
             // chessBoard
@@ -386,7 +386,7 @@
             this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
             this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
             this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(424, 268);
+            this.chessBoard.Size = new System.Drawing.Size(424, 256);
             this.chessBoard.TabIndex = 0;
             // 
             // firstGameInfoGroupBox
@@ -394,9 +394,9 @@
             this.firstGameInfoGroupBox.Controls.Add(this.fenRichTextBox);
             this.firstGameInfoGroupBox.Controls.Add(this.firstGameInfoRichTextBox);
             this.firstGameInfoGroupBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.firstGameInfoGroupBox.Location = new System.Drawing.Point(0, 422);
+            this.firstGameInfoGroupBox.Location = new System.Drawing.Point(0, 408);
             this.firstGameInfoGroupBox.Name = "firstGameInfoGroupBox";
-            this.firstGameInfoGroupBox.Size = new System.Drawing.Size(424, 50);
+            this.firstGameInfoGroupBox.Size = new System.Drawing.Size(424, 64);
             this.firstGameInfoGroupBox.TabIndex = 2;
             this.firstGameInfoGroupBox.TabStop = false;
             // 
@@ -406,7 +406,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fenRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.fenRichTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.fenRichTextBox.Location = new System.Drawing.Point(3, 29);
+            this.fenRichTextBox.Location = new System.Drawing.Point(3, 43);
             this.fenRichTextBox.Name = "fenRichTextBox";
             this.fenRichTextBox.ReadOnly = true;
             this.fenRichTextBox.Size = new System.Drawing.Size(415, 15);
@@ -424,7 +424,7 @@
             this.firstGameInfoRichTextBox.Location = new System.Drawing.Point(3, 10);
             this.firstGameInfoRichTextBox.Name = "firstGameInfoRichTextBox";
             this.firstGameInfoRichTextBox.ReadOnly = true;
-            this.firstGameInfoRichTextBox.Size = new System.Drawing.Size(415, 13);
+            this.firstGameInfoRichTextBox.Size = new System.Drawing.Size(415, 27);
             this.firstGameInfoRichTextBox.TabIndex = 0;
             this.firstGameInfoRichTextBox.Text = "";
             this.firstGameInfoRichTextBox.WordWrap = false;
@@ -643,7 +643,7 @@
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(602, 45);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(601, 45);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
