@@ -1122,10 +1122,14 @@ namespace chess_pos_db_gui
 
         private void EntriesGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
+            const double goodGoodnessTheshold = 0.95;
+            const double badGoodnessTheshold = 0.8;
+
             var row = entriesGridView.Rows[e.RowIndex];
             var isTransposition = Convert.ToBoolean(row.Cells["IsOnlyTransposition"].Value);
             var goodness = row.Cells["Goodness"].Value;
-            var isGoodGoodness = goodness != null && (double)goodness > 0.0 && (double)goodness <= 1.1 && (double)goodness >= 0.9 * BestGoodness;
+            var isGoodGoodness = goodness != null && (double)goodness > 0.0 && (double)goodness <= 1.1 && (double)goodness >= goodGoodnessTheshold * BestGoodness;
+            var isBadGoodness = goodness == null || ((double)goodness <= 1.1 && (double)goodness < badGoodnessTheshold * BestGoodness);
             if ((ulong)row.Cells["Count"].Value == 0)
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(0xAA, 0xAA, 0xAA);
@@ -1139,7 +1143,11 @@ namespace chess_pos_db_gui
 
                 if (isGoodGoodness)
                 {
-                    row.Cells[0].Style.BackColor = Color.LightGreen;
+                    row.Cells[0].Style.ForeColor = Color.Green;
+                }
+                else if (isBadGoodness)
+                {
+                    row.Cells[0].Style.ForeColor = Color.Red;
                 }
             }
 
