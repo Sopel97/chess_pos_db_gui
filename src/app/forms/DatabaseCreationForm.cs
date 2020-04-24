@@ -351,6 +351,28 @@ namespace chess_pos_db_gui
 
         private async void BuildButton_Click(object sender, EventArgs e)
         {
+            if (destinationFolderTextBox.Text == "")
+            {
+                MessageBox.Show("You need to specify the destination.");
+                return;
+            }
+
+            var result = MessageBox.Show(
+                string.Format(
+                    "Are you sure you want to create a database of type {0}?\n" +
+                    "This may take a long time. Make sure you selected everything correctly",
+                    (string)(databaseFormatComboBox.SelectedItem)
+                    ), 
+                "Confirmation", 
+                MessageBoxButtons.YesNo, 
+                MessageBoxIcon.Question
+                );
+
+            if (result != DialogResult.Yes)
+            {
+                return;
+            }
+
             DisableInput();
 
             JsonObject request = new JsonObject
