@@ -125,7 +125,7 @@
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(603, 405);
+            this.entriesGridView.Size = new System.Drawing.Size(602, 405);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -402,25 +402,29 @@
             // 
             // fenRichTextBox
             // 
+            this.fenRichTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.fenRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.fenRichTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.fenRichTextBox.Location = new System.Drawing.Point(3, 29);
             this.fenRichTextBox.Name = "fenRichTextBox";
             this.fenRichTextBox.ReadOnly = true;
-            this.fenRichTextBox.Size = new System.Drawing.Size(418, 13);
+            this.fenRichTextBox.Size = new System.Drawing.Size(415, 15);
             this.fenRichTextBox.TabIndex = 1;
             this.fenRichTextBox.Text = "";
             this.fenRichTextBox.WordWrap = false;
             // 
             // firstGameInfoRichTextBox
             // 
+            this.firstGameInfoRichTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.firstGameInfoRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.firstGameInfoRichTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.firstGameInfoRichTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.firstGameInfoRichTextBox.Location = new System.Drawing.Point(3, 10);
             this.firstGameInfoRichTextBox.Name = "firstGameInfoRichTextBox";
             this.firstGameInfoRichTextBox.ReadOnly = true;
-            this.firstGameInfoRichTextBox.Size = new System.Drawing.Size(418, 13);
+            this.firstGameInfoRichTextBox.Size = new System.Drawing.Size(415, 13);
             this.firstGameInfoRichTextBox.TabIndex = 0;
             this.firstGameInfoRichTextBox.Text = "";
             this.firstGameInfoRichTextBox.WordWrap = false;
@@ -639,7 +643,7 @@
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(603, 45);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(602, 45);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
