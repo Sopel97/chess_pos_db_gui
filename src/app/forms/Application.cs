@@ -293,7 +293,7 @@ namespace chess_pos_db_gui
 
             entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
-            entriesGridView.Sort(entriesGridView.Columns["Count"], ListSortDirection.Descending);
+            entriesGridView.Sort(entriesGridView.Columns["Goodness"], ListSortDirection.Descending);
 
             WinFormsControlUtil.SetThousandSeparator(entriesGridView);
             WinFormsControlUtil.SetThousandSeparator(totalEntriesGridView);
