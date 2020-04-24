@@ -62,6 +62,7 @@
             this.buildButton = new System.Windows.Forms.Button();
             this.mergeCheckBox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.whatsDatabaseFormatButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -90,6 +91,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.whatsDatabaseFormatButton);
             this.splitContainer1.Panel1.Controls.Add(this.databaseFormatLabel);
             this.splitContainer1.Panel1.Controls.Add(this.databaseFormatComboBox);
             this.splitContainer1.Panel1.Controls.Add(this.clearTempFolderButton);
@@ -134,7 +136,7 @@
             // 
             this.clearTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.clearTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.clearTempFolderButton.Location = new System.Drawing.Point(586, 38);
+            this.clearTempFolderButton.Location = new System.Drawing.Point(594, 38);
             this.clearTempFolderButton.Name = "clearTempFolderButton";
             this.clearTempFolderButton.Size = new System.Drawing.Size(26, 19);
             this.clearTempFolderButton.TabIndex = 8;
@@ -170,7 +172,7 @@
             this.setDestinationFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.setDestinationFolderButton.Location = new System.Drawing.Point(541, 12);
             this.setDestinationFolderButton.Name = "setDestinationFolderButton";
-            this.setDestinationFolderButton.Size = new System.Drawing.Size(39, 19);
+            this.setDestinationFolderButton.Size = new System.Drawing.Size(47, 19);
             this.setDestinationFolderButton.TabIndex = 5;
             this.setDestinationFolderButton.Text = "...";
             this.setDestinationFolderButton.UseVisualStyleBackColor = true;
@@ -182,7 +184,7 @@
             this.setTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.setTempFolderButton.Location = new System.Drawing.Point(541, 38);
             this.setTempFolderButton.Name = "setTempFolderButton";
-            this.setTempFolderButton.Size = new System.Drawing.Size(39, 19);
+            this.setTempFolderButton.Size = new System.Drawing.Size(47, 19);
             this.setTempFolderButton.TabIndex = 4;
             this.setTempFolderButton.Text = "...";
             this.setTempFolderButton.UseVisualStyleBackColor = true;
@@ -482,6 +484,18 @@
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
             // 
+            // whatsDatabaseFormatButton
+            // 
+            this.whatsDatabaseFormatButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.whatsDatabaseFormatButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.whatsDatabaseFormatButton.Location = new System.Drawing.Point(541, 63);
+            this.whatsDatabaseFormatButton.Name = "whatsDatabaseFormatButton";
+            this.whatsDatabaseFormatButton.Size = new System.Drawing.Size(79, 23);
+            this.whatsDatabaseFormatButton.TabIndex = 11;
+            this.whatsDatabaseFormatButton.Text = "What\'s this?";
+            this.whatsDatabaseFormatButton.UseVisualStyleBackColor = true;
+            this.whatsDatabaseFormatButton.Click += new System.EventHandler(this.WhatsDatabaseFormatButton_Click);
+            // 
             // DatabaseCreationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -549,5 +563,6 @@
         private System.Windows.Forms.ProgressBar mergeProgressBar;
         private System.Windows.Forms.Label mergeProgressLabel;
         private System.Windows.Forms.ToolTip tooltip;
+        private System.Windows.Forms.Button whatsDatabaseFormatButton;
     }
 }
