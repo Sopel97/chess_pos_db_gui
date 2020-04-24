@@ -652,6 +652,27 @@ namespace chess_pos_db_gui
                 MessageBox.Show("No text in clipboard.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void MoveHistoryGridView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!moveHistoryGridView.Focused)
+            {
+                return;
+            }
+
+            switch (e.KeyCode)
+            {
+                case Keys.Left:
+                    SetSelection(BoardHistory.Plies - 1);
+                    e.Handled = true;
+                    break;
+
+                case Keys.Right:
+                    SetSelection(BoardHistory.Plies + 1);
+                    e.Handled = true;
+                    break;
+            }
+        }
     }
     internal class MoveHistoryDataRow : DataRow
     {

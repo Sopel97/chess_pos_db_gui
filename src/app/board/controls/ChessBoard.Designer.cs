@@ -37,10 +37,10 @@
             this.splitBoardAndMoves = new System.Windows.Forms.SplitContainer();
             this.splitFenAndControls = new System.Windows.Forms.SplitContainer();
             this.button1 = new System.Windows.Forms.Button();
-            this.setPgnButton = new System.Windows.Forms.Button();
-            this.setFenButton = new System.Windows.Forms.Button();
             this.flipBoardButton = new System.Windows.Forms.Button();
+            this.setPgnButton = new System.Windows.Forms.Button();
             this.resetButton = new System.Windows.Forms.Button();
+            this.setFenButton = new System.Windows.Forms.Button();
             this.copyFenButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.moveHistoryGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitBoardAndMoves)).BeginInit();
@@ -91,6 +91,7 @@
             this.moveHistoryGridView.Size = new System.Drawing.Size(133, 277);
             this.moveHistoryGridView.TabIndex = 0;
             this.moveHistoryGridView.SelectionChanged += new System.EventHandler(this.MoveHistoryGridView_SelectionChanged);
+            this.moveHistoryGridView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MoveHistoryGridView_KeyDown);
             // 
             // goToStartButton
             // 
@@ -203,30 +204,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
-            // setPgnButton
-            // 
-            this.setPgnButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.setPgnButton.Location = new System.Drawing.Point(327, 3);
-            this.setPgnButton.Name = "setPgnButton";
-            this.setPgnButton.Size = new System.Drawing.Size(66, 20);
-            this.setPgnButton.TabIndex = 10;
-            this.setPgnButton.Text = "Set PGN";
-            this.setPgnButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.setPgnButton.UseVisualStyleBackColor = true;
-            this.setPgnButton.Click += new System.EventHandler(this.SetPgnButton_Click);
-            // 
-            // setFenButton
-            // 
-            this.setFenButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.setFenButton.Location = new System.Drawing.Point(255, 3);
-            this.setFenButton.Name = "setFenButton";
-            this.setFenButton.Size = new System.Drawing.Size(66, 20);
-            this.setFenButton.TabIndex = 9;
-            this.setFenButton.Text = "Set FEN";
-            this.setFenButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.setFenButton.UseVisualStyleBackColor = true;
-            this.setFenButton.Click += new System.EventHandler(this.SetFenButton_Click);
-            // 
             // flipBoardButton
             // 
             this.flipBoardButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -239,6 +216,18 @@
             this.flipBoardButton.UseVisualStyleBackColor = true;
             this.flipBoardButton.Click += new System.EventHandler(this.FlipBoardButton_Click);
             // 
+            // setPgnButton
+            // 
+            this.setPgnButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.setPgnButton.Location = new System.Drawing.Point(327, 3);
+            this.setPgnButton.Name = "setPgnButton";
+            this.setPgnButton.Size = new System.Drawing.Size(66, 20);
+            this.setPgnButton.TabIndex = 10;
+            this.setPgnButton.Text = "Set PGN";
+            this.setPgnButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.setPgnButton.UseVisualStyleBackColor = true;
+            this.setPgnButton.Click += new System.EventHandler(this.SetPgnButton_Click);
+            // 
             // resetButton
             // 
             this.resetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -250,6 +239,18 @@
             this.resetButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.resetButton.UseVisualStyleBackColor = true;
             this.resetButton.Click += new System.EventHandler(this.ResetButton_Click);
+            // 
+            // setFenButton
+            // 
+            this.setFenButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.setFenButton.Location = new System.Drawing.Point(255, 3);
+            this.setFenButton.Name = "setFenButton";
+            this.setFenButton.Size = new System.Drawing.Size(66, 20);
+            this.setFenButton.TabIndex = 9;
+            this.setFenButton.Text = "Set FEN";
+            this.setFenButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.setFenButton.UseVisualStyleBackColor = true;
+            this.setFenButton.Click += new System.EventHandler(this.SetFenButton_Click);
             // 
             // copyFenButton
             // 
