@@ -177,10 +177,10 @@
             // splitFenAndControls.Panel1
             // 
             this.splitFenAndControls.Panel1.Controls.Add(this.button1);
-            this.splitFenAndControls.Panel1.Controls.Add(this.setPgnButton);
-            this.splitFenAndControls.Panel1.Controls.Add(this.setFenButton);
             this.splitFenAndControls.Panel1.Controls.Add(this.flipBoardButton);
+            this.splitFenAndControls.Panel1.Controls.Add(this.setPgnButton);
             this.splitFenAndControls.Panel1.Controls.Add(this.resetButton);
+            this.splitFenAndControls.Panel1.Controls.Add(this.setFenButton);
             this.splitFenAndControls.Panel1.Controls.Add(this.copyFenButton);
             this.splitFenAndControls.Panel1MinSize = 26;
             // 
@@ -194,7 +194,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button1.Location = new System.Drawing.Point(75, 3);
+            this.button1.Location = new System.Drawing.Point(183, 3);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(66, 20);
             this.button1.TabIndex = 11;
@@ -206,7 +206,7 @@
             // setPgnButton
             // 
             this.setPgnButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.setPgnButton.Location = new System.Drawing.Point(219, 3);
+            this.setPgnButton.Location = new System.Drawing.Point(327, 3);
             this.setPgnButton.Name = "setPgnButton";
             this.setPgnButton.Size = new System.Drawing.Size(66, 20);
             this.setPgnButton.TabIndex = 10;
@@ -218,7 +218,7 @@
             // setFenButton
             // 
             this.setFenButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.setFenButton.Location = new System.Drawing.Point(147, 3);
+            this.setFenButton.Location = new System.Drawing.Point(255, 3);
             this.setFenButton.Name = "setFenButton";
             this.setFenButton.Size = new System.Drawing.Size(66, 20);
             this.setFenButton.TabIndex = 9;
@@ -230,7 +230,7 @@
             // flipBoardButton
             // 
             this.flipBoardButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.flipBoardButton.Location = new System.Drawing.Point(345, 3);
+            this.flipBoardButton.Location = new System.Drawing.Point(57, 3);
             this.flipBoardButton.Name = "flipBoardButton";
             this.flipBoardButton.Size = new System.Drawing.Size(48, 20);
             this.flipBoardButton.TabIndex = 8;
@@ -242,7 +242,7 @@
             // resetButton
             // 
             this.resetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.resetButton.Location = new System.Drawing.Point(291, 3);
+            this.resetButton.Location = new System.Drawing.Point(3, 3);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(48, 20);
             this.resetButton.TabIndex = 7;
@@ -254,7 +254,7 @@
             // copyFenButton
             // 
             this.copyFenButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.copyFenButton.Location = new System.Drawing.Point(3, 3);
+            this.copyFenButton.Location = new System.Drawing.Point(111, 3);
             this.copyFenButton.Name = "copyFenButton";
             this.copyFenButton.Size = new System.Drawing.Size(66, 20);
             this.copyFenButton.TabIndex = 6;
