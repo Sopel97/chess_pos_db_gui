@@ -280,7 +280,7 @@ namespace chess_pos_db_gui
 
             analysisAndBoardSplitContainer.SplitterDistance = 0;
 
-            fenRichTextBox.Text = "Fen: " + FenProvider.StartPos;
+            fenRichTextBox.Text = "FEN: " + FenProvider.StartPos;
         }
 
         private void OnProcessExit(object sender, EventArgs e)
