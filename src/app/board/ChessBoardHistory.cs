@@ -1,5 +1,5 @@
 ﻿using ChessDotNet;
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -147,10 +147,18 @@ namespace chess_pos_db_gui
             return Entries[Plies + 1];
         }
 
-        internal bool IsMoveValid(Move move)
+        public bool IsMoveValid(Move move)
         {
             ChessGame pos = new ChessGame(Current().GCD);
             return pos.IsValidMove(move);
+        }
+
+        public bool NeedsToBePromotion(Move move)
+        {
+            Move moveAsPromotion = new Move(move.OriginalPosition, move.NewPosition, move.Player, 'Q');
+            return
+                IsMoveValid(moveAsPromotion)
+                && !IsMoveValid(move);
         }
     }
 }

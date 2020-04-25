@@ -39,7 +39,7 @@ namespace chess_pos_db_gui.src.chess
 
             if (move.Length > 4)
             {
-                promotion = move[4];
+                promotion = move.ToUpper()[4];
                 move = move.Remove(move.Length - 1, 1);
             }
 

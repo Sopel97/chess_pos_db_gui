@@ -1,4 +1,5 @@
 ﻿using chess_pos_db_gui.src.app.board;
+using chess_pos_db_gui.src.app.board.forms;
 using chess_pos_db_gui.src.chess;
 using chess_pos_db_gui.src.util;
 using ChessDotNet;
@@ -345,6 +346,22 @@ namespace chess_pos_db_gui
 
             Player player = BoardHistory.Current().GCD.WhoseTurn;
             Move move = new Move(fromSquare, toSquare, player);
+            if (BoardHistory.NeedsToBePromotion(move))
+            {
+                using (var dialog = new PromotionSelectionForm(PieceImages, player))
+                {
+                    var result = dialog.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        move.Promotion = dialog.PromotedPieceType;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
             return DoMove(move);
         }
 
