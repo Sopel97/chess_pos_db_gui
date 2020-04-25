@@ -14,7 +14,6 @@ using System.Windows.Forms;
 
 namespace chess_pos_db_gui
 {
-
     public partial class ChessBoard : UserControl
     {
         private static readonly Bitmap DefaultBitmap = CreateDefaultBitmap();
@@ -23,8 +22,8 @@ namespace chess_pos_db_gui
 
         private MoveHistoryTable MoveHistory { get; set; }
 
-        private BoardTheme BoardImages { get; set; }
-        private PieceTheme PieceImages { get; set; }
+        public BoardTheme BoardImages { get; set; }
+        public PieceTheme PieceImages { get; set; }
 
         private Point? MouseFrom { get; set; }
         private Point? MouseTo { get; set; }

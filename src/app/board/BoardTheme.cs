@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui.src.app.board
 {
-    class BoardTheme
+    public class BoardTheme
     {
         public Image LightSquare { get; private set; }
         public Image DarkSquare { get; private set; }

@@ -1,4 +1,5 @@
 ﻿using chess_pos_db_gui.src.app;
+using chess_pos_db_gui.src.app.board;
 using chess_pos_db_gui.src.app.chessdbcn;
 using chess_pos_db_gui.src.chess;
 using chess_pos_db_gui.src.chess.engine.analysis;
@@ -111,6 +112,8 @@ namespace chess_pos_db_gui
         private EmbeddedAnalysisHandler EmbeddedHandler { get; set; }
 
         private QueryExecutor QueryExecutor { get; set; }
+
+        private ThemeDatabase Themes { get; set; }
 
         private int PrevFirstVisibleRow { get; set; } = -1;
         private int PrevFirstVisibleColumn { get; set; } = -1;
@@ -311,6 +314,8 @@ namespace chess_pos_db_gui
             analysisAndBoardSplitContainer.SplitterDistance = 0;
 
             fenRichTextBox.Text = "FEN: " + FenProvider.StartPos;
+
+            Themes = new ThemeDatabase("assets/graphics");
         }
 
         private void OnProcessExit(object sender, EventArgs e)

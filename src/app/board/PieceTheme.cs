@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui.src.app.board
 {
-    class PieceTheme
+    public class PieceTheme
     {
         private Dictionary<Piece, Image> PieceImages { get; set; }
 
