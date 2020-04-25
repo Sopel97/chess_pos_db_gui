@@ -32,9 +32,9 @@
             this.pieceThemesListBox = new System.Windows.Forms.ListBox();
             this.boardThemesLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.boardPreviewPanel = new System.Windows.Forms.Panel();
             this.confirmButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.SuspendLayout();
             // 
             // boardThemesListBox
@@ -73,16 +73,10 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "Piece Themes:";
             // 
-            // boardPreviewPanel
-            // 
-            this.boardPreviewPanel.Location = new System.Drawing.Point(194, 12);
-            this.boardPreviewPanel.Name = "boardPreviewPanel";
-            this.boardPreviewPanel.Size = new System.Drawing.Size(418, 418);
-            this.boardPreviewPanel.TabIndex = 4;
-            // 
             // confirmButton
             // 
-            this.confirmButton.Location = new System.Drawing.Point(456, 436);
+            this.confirmButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.confirmButton.Location = new System.Drawing.Point(552, 408);
             this.confirmButton.Name = "confirmButton";
             this.confirmButton.Size = new System.Drawing.Size(75, 23);
             this.confirmButton.TabIndex = 5;
@@ -92,7 +86,8 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(537, 436);
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelButton.Location = new System.Drawing.Point(633, 408);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 6;
@@ -100,18 +95,33 @@
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
+            // chessBoard
+            // 
+            this.chessBoard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.chessBoard.BoardImages = null;
+            this.chessBoard.Location = new System.Drawing.Point(191, 9);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.PieceImages = null;
+            this.chessBoard.Size = new System.Drawing.Size(520, 396);
+            this.chessBoard.TabIndex = 7;
+            // 
             // ThemeSelectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 467);
+            this.ClientSize = new System.Drawing.Size(720, 442);
+            this.Controls.Add(this.chessBoard);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.confirmButton);
-            this.Controls.Add(this.boardPreviewPanel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.boardThemesLabel);
             this.Controls.Add(this.pieceThemesListBox);
             this.Controls.Add(this.boardThemesListBox);
+            this.MinimumSize = new System.Drawing.Size(736, 480);
             this.Name = "ThemeSelectionForm";
             this.Text = "Theme Selection";
             this.ResumeLayout(false);
@@ -125,8 +135,8 @@
         private System.Windows.Forms.ListBox pieceThemesListBox;
         private System.Windows.Forms.Label boardThemesLabel;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel boardPreviewPanel;
         private System.Windows.Forms.Button confirmButton;
         private System.Windows.Forms.Button cancelButton;
+        private ChessBoard chessBoard;
     }
 }

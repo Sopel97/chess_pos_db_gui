@@ -25,6 +25,8 @@ namespace chess_pos_db_gui.src.app.board.forms
             SelectedBoardTheme = currentBoardTheme;
             SelectedPieceTheme = currentPieceTheme;
 
+            chessBoard.SetThemes(SelectedBoardTheme, SelectedPieceTheme);
+
             confirmButton.DialogResult = DialogResult.OK;
             cancelButton.DialogResult = DialogResult.Cancel;
 
@@ -55,11 +57,13 @@ namespace chess_pos_db_gui.src.app.board.forms
         private void BoardThemesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             SelectedBoardTheme = Themes.BoardThemes[(string)boardThemesListBox.SelectedItem];
+            chessBoard.SetThemes(SelectedBoardTheme, SelectedPieceTheme);
         }
 
         private void PieceThemesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             SelectedPieceTheme = Themes.PieceThemes[(string)pieceThemesListBox.SelectedItem];
+            chessBoard.SetThemes(SelectedBoardTheme, SelectedPieceTheme);
         }
     }
 }
