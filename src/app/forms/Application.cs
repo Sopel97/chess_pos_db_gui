@@ -354,7 +354,7 @@ namespace chess_pos_db_gui
                 AnalysisForm.OnPositionChanged(fen);
             }
 
-            fenRichTextBox.Text = "Fen: " + fen;
+            fenRichTextBox.Text = "FEN: " + fen;
 
             if (!Database.IsOpen)
             {
@@ -811,6 +811,7 @@ namespace chess_pos_db_gui
                     entriesGridView.Columns["AdjustedPerf"].HeaderText = "ABl%";
                     totalEntriesGridView.Columns["AdjustedPerf"].HeaderText = "ABl%";
                 }
+
                 Populate(CacheEntry, Selects.ToList(), Levels.ToList());
             }
         }
@@ -1114,30 +1115,48 @@ namespace chess_pos_db_gui
             var isBadGoodness = goodness == null || (double)goodness < badGoodnessTheshold * BestGoodness;
             if ((ulong)row.Cells["Count"].Value == 0)
             {
-                row.DefaultCellStyle.BackColor = Color.FromArgb(0xAA, 0xAA, 0xAA);
+                if (!row.DefaultCellStyle.BackColor.Equals(Color.DarkGray))
+                {
+                    row.DefaultCellStyle.BackColor = Color.DarkGray;
+                }
             }
             else
             {
                 if (isTransposition)
                 {
-                    row.DefaultCellStyle.BackColor = Color.LightGray;
+                    if (!row.DefaultCellStyle.BackColor.Equals(Color.LightGray))
+                    {
+                        row.DefaultCellStyle.BackColor = Color.LightGray;
+                    }
                 }
                 else
                 {
-                    row.DefaultCellStyle.BackColor = Color.White;
+                    if (!row.DefaultCellStyle.BackColor.Equals(Color.White))
+                    {
+                        row.DefaultCellStyle.BackColor = Color.White;
+                    }
                 }
 
                 if (isGoodGoodness)
                 {
-                    row.Cells[0].Style.ForeColor = Color.Green;
+                    if (!row.Cells[0].Style.ForeColor.Equals(Color.Green))
+                    {
+                        row.Cells[0].Style.ForeColor = Color.Green;
+                    }
                 }
                 else if (isBadGoodness)
                 {
-                    row.Cells[0].Style.ForeColor = Color.Red;
+                    if (!row.Cells[0].Style.ForeColor.Equals(Color.Red))
+                    {
+                        row.Cells[0].Style.ForeColor = Color.Red;
+                    }
                 }
                 else
                 {
-                    row.Cells[0].Style.ForeColor = Color.Black;
+                    if (!row.Cells[0].Style.ForeColor.Equals(Color.Black))
+                    {
+                        row.Cells[0].Style.ForeColor = Color.Black;
+                    }
                 }
             }
 
@@ -1149,7 +1168,10 @@ namespace chess_pos_db_gui
             }
             else
             {
-                row.DefaultCellStyle.Font = entriesGridView.Font;
+                if (row.DefaultCellStyle.Font != null && !row.DefaultCellStyle.Font.Equals(entriesGridView.Font))
+                {
+                    row.DefaultCellStyle.Font = entriesGridView.Font;
+                }
             }
         }
 
