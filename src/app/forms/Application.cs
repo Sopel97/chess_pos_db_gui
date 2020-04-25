@@ -111,6 +111,9 @@ namespace chess_pos_db_gui
 
         private QueryExecutor QueryExecutor { get; set; }
 
+        private int PrevFirstVisibleRow { get; set; } = -1;
+        private int PrevFirstVisibleColumn { get; set; } = -1;
+
         public Application()
         {
             Levels = new HashSet<GameLevel>();
@@ -792,6 +795,8 @@ namespace chess_pos_db_gui
         {
             WinFormsControlUtil.SuspendDrawing(entriesGridView);
 
+            SaveViewScroll();
+
             if (Selects.Count == 0 || Levels.Count == 0 || CacheEntry == null)
             {
                 Clear();
@@ -816,15 +821,43 @@ namespace chess_pos_db_gui
                 Populate(CacheEntry, Selects.ToList(), Levels.ToList());
             }
 
+            entriesGridView.ClearSelection();
+            ReloadViewScroll();
+
             WinFormsControlUtil.ResumeDrawing(entriesGridView);
+        }
+
+        private void ReloadViewScroll()
+        {
+            if (PrevFirstVisibleRow != -1)
+            {
+                entriesGridView.FirstDisplayedScrollingRowIndex = Math.Min(PrevFirstVisibleRow, entriesGridView.Rows.Count - 1);
+            }
+            else if (entriesGridView.Rows.Count > 0)
+            {
+                entriesGridView.FirstDisplayedScrollingRowIndex = 0;
+            }
+
+            if (PrevFirstVisibleColumn != -1)
+            {
+                entriesGridView.FirstDisplayedScrollingColumnIndex = PrevFirstVisibleColumn;
+            }
+        }
+
+        private void SaveViewScroll()
+        {
+            if (entriesGridView.Rows.Count > 0)
+            {
+                PrevFirstVisibleColumn = entriesGridView.FirstDisplayedScrollingColumnIndex;
+                PrevFirstVisibleRow = entriesGridView.FirstDisplayedScrollingRowIndex;
+            }
         }
 
         private void UpdateGoodness()
         {
             WinFormsControlUtil.SuspendDrawing(entriesGridView);
 
-            var col = entriesGridView.FirstDisplayedScrollingColumnIndex;
-            var row = entriesGridView.FirstDisplayedScrollingRowIndex;
+            SaveViewScroll();
 
             if (Selects.Count == 0 || Levels.Count == 0 || CacheEntry == null)
             {
@@ -837,8 +870,6 @@ namespace chess_pos_db_gui
             }
 
             entriesGridView.ClearSelection();
-            entriesGridView.FirstDisplayedScrollingRowIndex = row;
-            entriesGridView.FirstDisplayedScrollingColumnIndex = col;
 
             WinFormsControlUtil.ResumeDrawing(entriesGridView);
         }
@@ -943,6 +974,8 @@ namespace chess_pos_db_gui
             {
                 return;
             }
+
+            SaveViewScroll();
 
             Clear();
             ScheduleUpdateDataAsync();
