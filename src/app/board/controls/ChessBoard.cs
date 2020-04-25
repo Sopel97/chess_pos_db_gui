@@ -1,4 +1,5 @@
-﻿using chess_pos_db_gui.src.chess;
+﻿using chess_pos_db_gui.src.app.board;
+using chess_pos_db_gui.src.chess;
 using chess_pos_db_gui.src.util;
 using ChessDotNet;
 using ChessDotNet.Pieces;
@@ -22,22 +23,8 @@ namespace chess_pos_db_gui
 
         private MoveHistoryTable MoveHistory { get; set; }
 
-        private Image BoardImageWhite { get; set; }
-        private Image BoardImageBlack { get; set; }
-        private Image WhitePawn { get; set; }
-        private Image WhiteKnight { get; set; }
-        private Image WhiteBishop { get; set; }
-        private Image WhiteRook { get; set; }
-        private Image WhiteQueen { get; set; }
-        private Image WhiteKing { get; set; }
-        private Image BlackPawn { get; set; }
-        private Image BlackKnight { get; set; }
-        private Image BlackBishop { get; set; }
-        private Image BlackRook { get; set; }
-        private Image BlackQueen { get; set; }
-        private Image BlackKing { get; set; }
-
-        private Dictionary<Piece, Image> PieceImages { get; set; }
+        private BoardTheme BoardImages { get; set; }
+        private PieceTheme PieceImages { get; set; }
 
         private Point? MouseFrom { get; set; }
         private Point? MouseTo { get; set; }
@@ -68,8 +55,6 @@ namespace chess_pos_db_gui
             InitializeComponent();
 
             BoardHistory = new ChessBoardHistory();
-
-            PieceImages = new Dictionary<Piece, Image>();
 
             MouseFrom = null;
             MouseTo = null;
@@ -147,53 +132,12 @@ namespace chess_pos_db_gui
             IsSettingPosition = false;
         }
 
-        public void LoadImages(string path)
+        public void LoadImages()
         {
-            BoardImageWhite = Image.FromFile(path + "/board_w.png");
-            BoardImageBlack = Image.FromFile(path + "/board_b.png");
-
-            WhitePawn = Image.FromFile(path + "/white_pawn.png");
-            WhiteKnight = Image.FromFile(path + "/white_knight.png");
-            WhiteBishop = Image.FromFile(path + "/white_bishop.png");
-            WhiteRook = Image.FromFile(path + "/white_rook.png");
-            WhiteQueen = Image.FromFile(path + "/white_queen.png");
-            WhiteKing = Image.FromFile(path + "/white_king.png");
-
-            BlackPawn = Image.FromFile(path + "/black_pawn.png");
-            BlackKnight = Image.FromFile(path + "/black_knight.png");
-            BlackBishop = Image.FromFile(path + "/black_bishop.png");
-            BlackRook = Image.FromFile(path + "/black_rook.png");
-            BlackQueen = Image.FromFile(path + "/black_queen.png");
-            BlackKing = Image.FromFile(path + "/black_king.png");
-
-            UpdatePieceImagesDictionary();
+            BoardImages = new BoardTheme("assets/graphics/board_sets/chess24");
+            PieceImages = new PieceTheme("assets/graphics/piece_sets/chess24");
 
             chessBoardPanel.Refresh();
-        }
-
-        private void UpdatePieceImagesDictionary()
-        {
-            PieceImages.Clear();
-
-            PieceImages.Add(new Pawn(Player.White), WhitePawn);
-            PieceImages.Add(new Knight(Player.White), WhiteKnight);
-            PieceImages.Add(new Bishop(Player.White), WhiteBishop);
-            PieceImages.Add(new Rook(Player.White), WhiteRook);
-            PieceImages.Add(new Queen(Player.White), WhiteQueen);
-            PieceImages.Add(new King(Player.White), WhiteKing);
-
-            PieceImages.Add(new Pawn(Player.Black), BlackPawn);
-            PieceImages.Add(new Knight(Player.Black), BlackKnight);
-            PieceImages.Add(new Bishop(Player.Black), BlackBishop);
-            PieceImages.Add(new Rook(Player.Black), BlackRook);
-            PieceImages.Add(new Queen(Player.Black), BlackQueen);
-            PieceImages.Add(new King(Player.Black), BlackKing);
-        }
-
-        private void DrawBoard(Graphics g)
-        {
-            var img = IsBoardFlipped ? BoardImageBlack : BoardImageWhite;
-            g.DrawImage(img, 0, 0, chessBoardPanel.Width, chessBoardPanel.Height);
         }
 
         private Rectangle GetSquareHitbox(int file, int rank)
@@ -213,7 +157,7 @@ namespace chess_pos_db_gui
             float x = sw * file;
             float y = sh * rank;
 
-            return new Rectangle((int)x, (int)y, (int)sw, (int)sh);
+            return new Rectangle((int)x, (int)y, (int)sw + 1, (int)sh + 1);
         }
 
         private Position ConvertPointToSquare(Point point)
@@ -242,18 +186,24 @@ namespace chess_pos_db_gui
             return new Position((File)x, 8 - y); //y is in range 1-8
         }
 
-        private void DrawOnSquare(Graphics g, Image img, int file, int rank)
+        private void DrawSquare(Graphics g, Piece piece, int file, int rank)
         {
-            g.DrawImage(img, GetSquareHitbox(file, rank));
+            var rect = GetSquareHitbox(file, rank);
+            var squareImg =
+                (file + rank) % 2 == 0
+                ? BoardImages.LightSquare
+                : BoardImages.DarkSquare;
+
+            g.DrawImage(squareImg, rect);
+
+            if (piece != null)
+            {
+                var pieceImg = PieceImages.GetImageForPiece(piece);
+                g.DrawImage(pieceImg, rect);
+            }
         }
 
-        private void DrawPiece(Graphics g, Piece piece, int file, int rank)
-        {
-            Image img = PieceImages[piece];
-            DrawOnSquare(g, img, file, rank);
-        }
-
-        private void DrawPieces(Graphics g)
+        private void DrawSquares(Graphics g)
         {
             var game = BoardHistory.Current();
             var board = game.GetBoard();
@@ -263,10 +213,7 @@ namespace chess_pos_db_gui
                 for (int y = 0; y < 8; ++y)
                 {
                     Piece piece = board[y][x];
-                    if (piece != null)
-                    {
-                        DrawPiece(g, piece, x, y);
-                    }
+                    DrawSquare(g, piece, x, y);
                 }
             }
         }
@@ -275,8 +222,7 @@ namespace chess_pos_db_gui
         {
             Graphics g = e.Graphics;
 
-            DrawBoard(g);
-            DrawPieces(g);
+            DrawSquares(g);
         }
 
         private static Bitmap CreateDefaultBitmap()
@@ -288,29 +234,10 @@ namespace chess_pos_db_gui
 
         private void ChessBoard_Load(object sender, EventArgs e)
         {
-            BoardImageWhite = DefaultBitmap;
-            BoardImageBlack = DefaultBitmap;
-
-            WhitePawn = DefaultBitmap;
-            WhiteKnight = DefaultBitmap;
-            WhiteBishop = DefaultBitmap;
-            WhiteRook = DefaultBitmap;
-            WhiteQueen = DefaultBitmap;
-            WhiteKing = DefaultBitmap;
-
-            BlackPawn = DefaultBitmap;
-            BlackKnight = DefaultBitmap;
-            BlackBishop = DefaultBitmap;
-            BlackRook = DefaultBitmap;
-            BlackQueen = DefaultBitmap;
-            BlackKing = DefaultBitmap;
-
             if (!DesignMode)
             {
-                LoadImages("assets/graphics");
+                LoadImages();
             }
-
-            UpdatePieceImagesDictionary();
 
             SetPosition(FenProvider.StartPos);
         }

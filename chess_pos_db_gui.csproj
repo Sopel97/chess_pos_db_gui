@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\app\board\BoardTheme.cs" />
+    <Compile Include="src\app\board\PieceTheme.cs" />
     <Compile Include="src\app\chessdbcn\ChessDBCNScoreProvider.cs" />
     <Compile Include="src\app\GoodnessCalculator.cs" />
     <Compile Include="src\app\QueryCacheEntry.cs" />

@@ -15,6 +15,8 @@ namespace chess_pos_db_gui.src.app.board
 
         public PieceTheme(string path)
         {
+            PieceImages = new Dictionary<Piece, Image>();
+
             PieceImages.Add(new Pawn(Player.White), Image.FromFile(path + "/white_pawn.png"));
             PieceImages.Add(new Knight(Player.White), Image.FromFile(path + "/white_knight.png"));
             PieceImages.Add(new Bishop(Player.White), Image.FromFile(path + "/white_bishop.png"));
