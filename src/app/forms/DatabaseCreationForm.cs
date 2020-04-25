@@ -195,7 +195,6 @@ namespace chess_pos_db_gui
                 else
                 {
                     row.Cells[1].Value = ((int)(progress * 100)).ToString() + "%";
-                    row.Selected = true;
                 }
             }
         }
