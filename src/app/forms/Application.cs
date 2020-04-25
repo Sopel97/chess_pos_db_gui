@@ -1122,6 +1122,10 @@ namespace chess_pos_db_gui
                 {
                     row.DefaultCellStyle.BackColor = Color.LightGray;
                 }
+                else
+                {
+                    row.DefaultCellStyle.BackColor = Color.White;
+                }
 
                 if (isGoodGoodness)
                 {
@@ -1131,6 +1135,10 @@ namespace chess_pos_db_gui
                 {
                     row.Cells[0].Style.ForeColor = Color.Red;
                 }
+                else
+                {
+                    row.Cells[0].Style.ForeColor = Color.Black;
+                }
             }
 
             var nextSan = chessBoard.GetNextMoveSan();
@@ -1138,6 +1146,10 @@ namespace chess_pos_db_gui
             if (nextSan != null && ((MoveWithSan)row.Cells["Move"].Value).San == nextSan.Replace('#', '+'))
             {
                 row.DefaultCellStyle.Font = new Font(entriesGridView.Font, FontStyle.Bold);
+            }
+            else
+            {
+                row.DefaultCellStyle.Font = entriesGridView.Font;
             }
         }
 
