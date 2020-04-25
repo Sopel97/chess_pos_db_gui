@@ -53,9 +53,11 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.epdDumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analysisAndBoardSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.firstGameInfoGroupBox = new System.Windows.Forms.GroupBox();
             this.fenRichTextBox = new System.Windows.Forms.RichTextBox();
             this.firstGameInfoRichTextBox = new System.Windows.Forms.RichTextBox();
+            this.totalDataHelpButton = new System.Windows.Forms.Button();
             this.goodnessGroupBox = new System.Windows.Forms.GroupBox();
             this.gamesWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.gamesWeightCheckbox = new System.Windows.Forms.CheckBox();
@@ -76,7 +78,6 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -126,8 +127,9 @@
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
+            this.entriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(601, 384);
+            this.entriesGridView.Size = new System.Drawing.Size(599, 384);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -222,6 +224,7 @@
             // 
             // splitChessAndData.Panel2
             // 
+            this.splitChessAndData.Panel2.Controls.Add(this.totalDataHelpButton);
             this.splitChessAndData.Panel2.Controls.Add(this.goodnessGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.displayGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.totalEntriesGridView);
@@ -381,6 +384,16 @@
             this.analysisAndBoardSplitContainer.SplitterDistance = 142;
             this.analysisAndBoardSplitContainer.TabIndex = 3;
             // 
+            // chessBoard
+            // 
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.Size = new System.Drawing.Size(424, 256);
+            this.chessBoard.TabIndex = 0;
+            // 
             // firstGameInfoGroupBox
             // 
             this.firstGameInfoGroupBox.Controls.Add(this.fenRichTextBox);
@@ -420,6 +433,19 @@
             this.firstGameInfoRichTextBox.TabIndex = 0;
             this.firstGameInfoRichTextBox.Text = "";
             this.firstGameInfoRichTextBox.WordWrap = false;
+            // 
+            // totalDataHelpButton
+            // 
+            this.totalDataHelpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.totalDataHelpButton.Location = new System.Drawing.Point(3, 102);
+            this.totalDataHelpButton.Margin = new System.Windows.Forms.Padding(0);
+            this.totalDataHelpButton.Name = "totalDataHelpButton";
+            this.totalDataHelpButton.Size = new System.Drawing.Size(50, 21);
+            this.totalDataHelpButton.TabIndex = 7;
+            this.totalDataHelpButton.Text = "?";
+            this.tooltip.SetToolTip(this.totalDataHelpButton, "Click me!");
+            this.totalDataHelpButton.UseVisualStyleBackColor = true;
+            this.totalDataHelpButton.Click += new System.EventHandler(this.TotalDataHelpButton_Click);
             // 
             // goodnessGroupBox
             // 
@@ -642,9 +668,10 @@
             this.totalEntriesGridView.Name = "totalEntriesGridView";
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
+            this.totalEntriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.totalEntriesGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(601, 66);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(599, 66);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -707,16 +734,6 @@
             this.tooltip.AutoPopDelay = 10000;
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
-            // 
-            // chessBoard
-            // 
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.Size = new System.Drawing.Size(424, 256);
-            this.chessBoard.TabIndex = 0;
             // 
             // Application
             // 
@@ -812,6 +829,7 @@
         private System.Windows.Forms.RichTextBox fenRichTextBox;
         private System.Windows.Forms.SplitContainer analysisAndBoardSplitContainer;
         private System.Windows.Forms.ToolStripMenuItem profilesToolStripMenuItem;
+        private System.Windows.Forms.Button totalDataHelpButton;
     }
 }
 

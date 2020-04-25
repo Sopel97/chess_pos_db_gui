@@ -295,6 +295,9 @@ namespace chess_pos_db_gui
 
             entriesGridView.Sort(entriesGridView.Columns["Goodness"], ListSortDirection.Descending);
 
+            totalDataHelpButton.Width = totalEntriesGridView.RowHeadersWidth;
+            totalDataHelpButton.Height = totalEntriesGridView.ColumnHeadersHeight;
+
             WinFormsControlUtil.SetThousandSeparator(entriesGridView);
             WinFormsControlUtil.SetThousandSeparator(totalEntriesGridView);
 
@@ -1335,6 +1338,33 @@ namespace chess_pos_db_gui
             {
                 MessageBox.Show("You have to stop analysis to manage engine profiles.");
             }
+        }
+
+        private void TotalDataHelpButton_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                "When a database is loaded and queried this table shows 2 rows:\n\n" +
+                "Children: The sum of values for each move possible on the board.\n\n" +
+                "Root: The values for the position currently on the board. " +
+                "Note, this row is often diffrent to Children because of " +
+                "transpositions and/or games ending. \n" +
+                "For example if the a game ends in this position it will not provide " +
+                "values for moves, which makes for less Children games than Root games. " +
+                "Alternatively, if some moves transpose and transpositions are not filtered out " +
+                "then there will be more Children games than Root games.\n" +
+                "It is important to understand that filtering of transpositions/continuations " +
+                "works for the Root positions just as it works for moves. " +
+                "For example if only continuations are enabled the move that lead " +
+                "to the position on the board does matter when querying the database " +
+                "and in result the transpositions to the current position will not be included. " +
+                "Similarily you can check how many times the current position arised solely by transpositions " +
+                "by filtering out continuations. For example, by entering moves Nf3 Nf6 Ng1 Ng8 and filtering " +
+                "out transpositions you can see how many times the start position arised by playing Ng8 and " +
+                "what moves were played then.",
+                "Help",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+                );
         }
     }
 }
