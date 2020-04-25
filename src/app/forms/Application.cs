@@ -32,17 +32,14 @@ namespace chess_pos_db_gui
                 this.application = application;
             }
 
-            public override System.Windows.Forms.Panel PrepareAndGetEmbeddedAnalysisPanel()
+            public override System.Windows.Forms.Panel PrepareAndGetEmbeddedAnalysisPanel(EngineAnalysisForm form)
             {
+                ResponsibleEntity = form;
+
                 application.analysisAndBoardSplitContainer.SplitterDistance = embeddedAnalysisPanelHeight;
                 application.analysisAndBoardSplitContainer.IsSplitterFixed = true;
                 application.analysisAndBoardSplitContainer.FixedPanel = FixedPanel.Panel1;
                 return application.analysisAndBoardSplitContainer.Panel1;
-            }
-
-            public override void OnEmbeddedAnalysisStarted(EngineAnalysisForm form)
-            {
-                ResponsibleEntity = form;
             }
 
             public override void OnEmbeddedAnalysisEnded()
@@ -50,6 +47,8 @@ namespace chess_pos_db_gui
                 application.analysisAndBoardSplitContainer.SplitterDistance = 0;
                 application.analysisAndBoardSplitContainer.IsSplitterFixed = true;
                 application.analysisAndBoardSplitContainer.FixedPanel = FixedPanel.Panel1;
+
+                ResponsibleEntity = null;
             }
 
             public override void Dispose()

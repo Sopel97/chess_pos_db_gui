@@ -8,11 +8,9 @@ namespace chess_pos_db_gui.src.chess.engine.analysis
 {
     public abstract class EmbeddedAnalysisHandler
     {
-        public abstract System.Windows.Forms.Panel PrepareAndGetEmbeddedAnalysisPanel();
+        public abstract System.Windows.Forms.Panel PrepareAndGetEmbeddedAnalysisPanel(EngineAnalysisForm form);
 
         public abstract void OnEmbeddedAnalysisEnded();
-
-        public abstract void OnEmbeddedAnalysisStarted(EngineAnalysisForm form);
 
         public abstract void Dispose();
     }

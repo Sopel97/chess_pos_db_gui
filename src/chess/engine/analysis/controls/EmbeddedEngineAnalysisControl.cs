@@ -23,22 +23,28 @@ namespace chess_pos_db_gui.src.chess.engine.analysis.controls
         private bool IsScoreSortDescending { get; set; }
         private DataGridViewColumn SortedColumn { get; set; }
 
+        public bool IsAttacked => ParentPanel != null;
+
         public EmbeddedEngineAnalysisControl()
         {
             InitializeComponent();
         }
 
-        public void Attach(Panel panel)
+        public void Attach(Panel panel, DataTable embeddedAnalysisData)
         {
             ParentPanel = panel;
             Parent = ParentPanel;
             Dock = DockStyle.Fill;
+
+            analysisDataGridView.DataSource = embeddedAnalysisData;
+            analysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
         }
 
         public void Detach()
         {
             ParentPanel = null;
             Parent = null;
+            Dock = DockStyle.None;
         }
 
         private void AnalysisDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)

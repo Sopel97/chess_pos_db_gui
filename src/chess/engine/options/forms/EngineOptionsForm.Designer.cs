@@ -76,6 +76,7 @@
             this.Name = "EngineOptionsForm";
             this.Text = "Engine Options";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EngineOptionsForm_FormClosing);
+            this.VisibleChanged += new System.EventHandler(this.EngineOptionsForm_VisibleChanged);
             this.ResumeLayout(false);
 
         }

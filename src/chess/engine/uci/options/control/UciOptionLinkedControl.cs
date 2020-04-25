@@ -19,6 +19,16 @@
             return LinkedControl.Panel;
         }
 
+        public void Enable()
+        {
+            LinkedControl.Control.Enabled = true;
+        }
+
+        public void Disable()
+        {
+            LinkedControl.Control.Enabled = false;
+        }
+
         public abstract void ResetControlValue();
 
         public abstract void UpdateLinkedOptionValue();

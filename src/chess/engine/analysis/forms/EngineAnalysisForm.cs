@@ -280,7 +280,7 @@ namespace chess_pos_db_gui
             }
             UpdateAnalysisButtonName();
 
-            OptionsForm = new EngineOptionsForm(Engine.ScratchOptions, true);
+            OptionsForm = new EngineOptionsForm(Engine.ScratchOptions, false);
             OptionsForm.FormClosing += OnOptionsFormClosing;
             OptionsForm.VisibleChanged += OnOptionsFormVisibilityChanged;
 
@@ -323,6 +323,10 @@ namespace chess_pos_db_gui
             ClearEngineIdInfo();
             UpdateAnalysisButtonName();
 
+            if (OptionsForm != null)
+            {
+                OptionsForm.Dispose();
+            }
             OptionsForm = null;
         }
 
@@ -696,8 +700,6 @@ namespace chess_pos_db_gui
 
         private void ClearEmbeddedAnalysisPanel()
         {
-            EmbeddedControl.AnalysisDataGridView.Parent = null;
-            EmbeddedControl.AnalysisDataGridView.DataSource = null;
             EmbeddedControl.AnalysisDataGridView.CellFormatting -= OnEmbeddedAnalysisDataGridViewCellFormatting;
             EmbeddedControl.ToggleAnalysisButton.Click -= ToggleAnalyzeButton_Click;
 
@@ -706,10 +708,7 @@ namespace chess_pos_db_gui
 
         private void SetupEmbeddedAnalysisPanel(Panel panel)
         {
-            EmbeddedControl.Attach(panel);
-
-            EmbeddedControl.AnalysisDataGridView.DataSource = EmbeddedAnalysisData;
-            EmbeddedControl.AnalysisDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
+            EmbeddedControl.Attach(panel, EmbeddedAnalysisData);
 
             EmbeddedControl.AnalysisDataGridView.CellFormatting += OnEmbeddedAnalysisDataGridViewCellFormatting;
             EmbeddedControl.ToggleAnalysisButton.Click += ToggleAnalyzeButton_Click;
@@ -771,9 +770,8 @@ namespace chess_pos_db_gui
         {
             if (EmbeddedHandler != null)
             {
-                var panel = EmbeddedHandler.PrepareAndGetEmbeddedAnalysisPanel();
+                var panel = EmbeddedHandler.PrepareAndGetEmbeddedAnalysisPanel(this);
                 SetupEmbeddedAnalysisPanel(panel);
-                EmbeddedHandler.OnEmbeddedAnalysisStarted(this);
                 IsEmbedded = true;
                 Hide();
             }
@@ -785,9 +783,9 @@ namespace chess_pos_db_gui
             {
                 if (IsEmbedded)
                 {
+                    IsEmbedded = false;
                     EmbeddedHandler.OnEmbeddedAnalysisEnded();
                     ClearEmbeddedAnalysisPanel();
-                    IsEmbedded = false;
                 }
             }
         }

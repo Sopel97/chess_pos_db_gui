@@ -45,10 +45,6 @@ namespace chess_pos_db_gui
 
         private void DiscardChanges()
         {
-            foreach (var opt in OptionControls)
-            {
-                opt.ResetControlValue();
-            }
             Discard = true;
         }
 
@@ -56,9 +52,9 @@ namespace chess_pos_db_gui
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                e.Cancel = true;
                 DiscardChanges();
-                HideOrClose();
+                e.Cancel = true;
+                Hide();
             }
         }
 
@@ -83,6 +79,25 @@ namespace chess_pos_db_gui
             else
             {
                 Hide();
+            }
+        }
+
+        private void EngineOptionsForm_VisibleChanged(object sender, EventArgs e)
+        {
+            if (Visible)
+            {
+                foreach (var opt in OptionControls)
+                {
+                    opt.ResetControlValue();
+                    opt.Enable();
+                }
+            }
+            else
+            {
+                foreach (var opt in OptionControls)
+                {
+                    opt.Disable();
+                }
             }
         }
     }
