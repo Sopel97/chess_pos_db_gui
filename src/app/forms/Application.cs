@@ -791,6 +791,8 @@ namespace chess_pos_db_gui
 
         private void Repopulate()
         {
+            WinFormsControlUtil.SuspendDrawing(entriesGridView);
+
             if (Selects.Count == 0 || Levels.Count == 0 || CacheEntry == null)
             {
                 Clear();
@@ -814,18 +816,32 @@ namespace chess_pos_db_gui
 
                 Populate(CacheEntry, Selects.ToList(), Levels.ToList());
             }
+
+            WinFormsControlUtil.ResumeDrawing(entriesGridView);
         }
 
         private void UpdateGoodness()
         {
+            WinFormsControlUtil.SuspendDrawing(entriesGridView);
+
+            var col = entriesGridView.FirstDisplayedScrollingColumnIndex;
+            var row = entriesGridView.FirstDisplayedScrollingRowIndex;
+
             if (Selects.Count == 0 || Levels.Count == 0 || CacheEntry == null)
             {
+                WinFormsControlUtil.ResumeDrawing(entriesGridView);
                 return;
             }
             else
             {
                 UpdateGoodness(CacheEntry, Selects.ToList(), Levels.ToList());
             }
+
+            entriesGridView.ClearSelection();
+            entriesGridView.FirstDisplayedScrollingRowIndex = row;
+            entriesGridView.FirstDisplayedScrollingColumnIndex = col;
+
+            WinFormsControlUtil.ResumeDrawing(entriesGridView);
         }
 
         private void LevelHumanCheckBox_CheckedChanged(object sender, EventArgs e)

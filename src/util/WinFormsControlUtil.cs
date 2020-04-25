@@ -1,11 +1,28 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace chess_pos_db_gui.src.util
 {
     static class WinFormsControlUtil
     {
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
+
+        private const int WM_SETREDRAW = 11;
+
+        public static void SuspendDrawing(Control control)
+        {
+            SendMessage(control.Handle, WM_SETREDRAW, false, 0);
+        }
+
+        public static void ResumeDrawing(Control control)
+        {
+            SendMessage(control.Handle, WM_SETREDRAW, true, 0);
+            control.Refresh();
+        }
+
         public static void MakeDoubleBuffered(System.Windows.Forms.Control control)
         {
             Type dgvType = control.GetType();
