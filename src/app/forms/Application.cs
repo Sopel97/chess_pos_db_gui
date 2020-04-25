@@ -836,7 +836,7 @@ namespace chess_pos_db_gui
 
         private void ReloadViewScroll()
         {
-            if (PrevFirstVisibleRow != -1)
+            if (PrevFirstVisibleRow >= 0 && PrevFirstVisibleRow < entriesGridView.Rows.Count)
             {
                 entriesGridView.FirstDisplayedScrollingRowIndex = Math.Min(PrevFirstVisibleRow, entriesGridView.Rows.Count - 1);
             }
@@ -845,7 +845,7 @@ namespace chess_pos_db_gui
                 entriesGridView.FirstDisplayedScrollingRowIndex = 0;
             }
 
-            if (PrevFirstVisibleColumn != -1)
+            if (PrevFirstVisibleColumn >= 1 && PrevFirstVisibleColumn < entriesGridView.Columns.Count)
             {
                 entriesGridView.FirstDisplayedScrollingColumnIndex = PrevFirstVisibleColumn;
             }

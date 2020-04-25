@@ -37,14 +37,10 @@ namespace chess_pos_db_gui.src.chess
             Position destination = null;
             char? promotion = null;
 
-            if (move.Length > 2)
+            if (move.Length > 4)
             {
-                string possiblePromotionPiece = move.Substring(move.Length - 2).ToUpperInvariant();
-                if (possiblePromotionPiece[0] == '=')
-                {
-                    promotion = possiblePromotionPiece[1];
-                    move = move.Remove(move.Length - 2, 2);
-                }
+                promotion = move[4];
+                move = move.Remove(move.Length - 1, 1);
             }
 
             if (move.ToUpperInvariant() == "O-O")
