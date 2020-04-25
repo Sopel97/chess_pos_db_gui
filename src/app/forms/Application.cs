@@ -224,7 +224,7 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["Eval"].HeaderText = "Ev";
             totalEntriesGridView.Columns["Eval"].ToolTipText = "Engine evaluation. Based on noobpwnftw's https://chessdb.cn/queryc_en/";
             totalEntriesGridView.Columns["EvalPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            totalEntriesGridView.Columns["EvalPct"].MinimumWidth = 30;
+            totalEntriesGridView.Columns["EvalPct"].MinimumWidth = 35;
             totalEntriesGridView.Columns["EvalPct"].HeaderText = "Ev%";
             totalEntriesGridView.Columns["EvalPct"].ToolTipText = "The expected performance based on evaluation.";
 
@@ -265,8 +265,8 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["AvgEloDiff"].HeaderText = "ΔE";
             entriesGridView.Columns["AvgEloDiff"].ToolTipText = totalEntriesGridView.Columns["AvgEloDiff"].ToolTipText;
             entriesGridView.Columns["AvgEloDiff"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            entriesGridView.Columns["Result"].MinimumWidth = 30;
-            entriesGridView.Columns["Result"].HeaderText = "";
+            entriesGridView.Columns["Result"].MinimumWidth = 45;
+            entriesGridView.Columns["Result"].HeaderText = "Result";
             entriesGridView.Columns["Result"].ToolTipText = "The result of the first game with this position.";
             entriesGridView.Columns["Eco"].HeaderText = "ECO";
             entriesGridView.Columns["Eco"].ToolTipText = "The ECO code reported in the first game with this position.";
@@ -877,6 +877,7 @@ namespace chess_pos_db_gui
             }
 
             entriesGridView.ClearSelection();
+            ReloadViewScroll();
 
             WinFormsControlUtil.ResumeDrawing(entriesGridView);
         }
