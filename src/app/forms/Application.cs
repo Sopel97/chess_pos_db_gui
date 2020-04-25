@@ -273,10 +273,10 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["PlyCount"].ToolTipText = "The length in plies of the first game with this position.";
             entriesGridView.Columns["PlyCount"].MinimumWidth = 40;
             entriesGridView.Columns["PlyCount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            entriesGridView.Columns["Event"].MinimumWidth = 35;
-            entriesGridView.Columns["White"].MinimumWidth = 35;
-            entriesGridView.Columns["Black"].MinimumWidth = 35;
-            entriesGridView.Columns["Date"].MinimumWidth = 35;
+            entriesGridView.Columns["Event"].MinimumWidth = 50;
+            entriesGridView.Columns["White"].MinimumWidth = 50;
+            entriesGridView.Columns["Black"].MinimumWidth = 50;
+            entriesGridView.Columns["Date"].MinimumWidth = 40;
             entriesGridView.Columns["Eval"].MinimumWidth = 35;
             entriesGridView.Columns["Eval"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["Eval"].HeaderText = "Ev";
