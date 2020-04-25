@@ -1,5 +1,6 @@
 ﻿using chess_pos_db_gui.src.app;
 using chess_pos_db_gui.src.app.board;
+using chess_pos_db_gui.src.app.board.forms;
 using chess_pos_db_gui.src.app.chessdbcn;
 using chess_pos_db_gui.src.chess;
 using chess_pos_db_gui.src.chess.engine.analysis;
@@ -1460,6 +1461,22 @@ namespace chess_pos_db_gui
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information
                 );
+        }
+
+        private void ThemesToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var boardTheme = chessBoard.BoardImages;
+            var pieceTheme = chessBoard.PieceImages;
+            using (var dialog = new ThemeSelectionForm(Themes, boardTheme, pieceTheme))
+            {
+                var result = dialog.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    chessBoard.BoardImages = dialog.SelectedBoardTheme;
+                    chessBoard.PieceImages = dialog.SelectedPieceTheme;
+                    chessBoard.Refresh();
+                }
+            }
         }
     }
 }

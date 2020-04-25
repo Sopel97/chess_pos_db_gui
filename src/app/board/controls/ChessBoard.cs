@@ -219,6 +219,11 @@ namespace chess_pos_db_gui
 
         private void ChessBoardPanel_Paint(object sender, PaintEventArgs e)
         {
+            if (DesignMode)
+            {
+                return;
+            }
+
             Graphics g = e.Graphics;
 
             DrawSquares(g);

@@ -10,8 +10,9 @@ namespace chess_pos_db_gui.src.app.board
     public class ThemeDatabase
     {
         private string Path { get; set; }
-        private Dictionary<string, BoardTheme> BoardThemes { get; set; }
-        private Dictionary<string, PieceTheme> PieceThemes { get; set; }
+
+        public Dictionary<string, BoardTheme> BoardThemes { get; private set; }
+        public Dictionary<string, PieceTheme> PieceThemes { get; private set; }
 
         public ThemeDatabase(string path)
         {
@@ -34,21 +35,10 @@ namespace chess_pos_db_gui.src.app.board
             var boardThemeDirs = Directory.GetDirectories(baseBoardSetsPath, "*", SearchOption.TopDirectoryOnly);
             foreach (var dir in boardThemeDirs)
             {
-                string directoryName = System.IO.Path.GetFileName(dir.TrimEnd(System.IO.Path.DirectorySeparatorChar));
                 try
                 {
                     var theme = new BoardTheme(dir);
-                    string name = directoryName;
-                    try
-                    {
-                        name = File.ReadAllText(dir + "/name");
-                    }
-                    catch(Exception)
-                    {
-
-                    }
-
-                    BoardThemes.Add(name, theme);
+                    BoardThemes.Add(theme.Name, theme);
                 }
                 catch(Exception)
                 {
@@ -63,17 +53,7 @@ namespace chess_pos_db_gui.src.app.board
                 try
                 {
                     var theme = new PieceTheme(dir);
-                    string name = directoryName;
-                    try
-                    {
-                        name = File.ReadAllText(dir + "/name");
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-
-                    PieceThemes.Add(name, theme);
+                    PieceThemes.Add(theme.Name, theme);
                 }
                 catch (Exception)
                 {

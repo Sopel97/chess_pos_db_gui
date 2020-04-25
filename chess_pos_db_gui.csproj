@@ -56,6 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\app\board\BoardTheme.cs" />
+    <Compile Include="src\app\board\forms\ThemeSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\app\board\forms\ThemeSelectionForm.Designer.cs">
+      <DependentUpon>ThemeSelectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\app\board\PieceTheme.cs" />
     <Compile Include="src\app\board\ThemeDatabase.cs" />
     <Compile Include="src\app\chessdbcn\ChessDBCNScoreProvider.cs" />
@@ -177,6 +183,9 @@
     <Compile Include="src\db\query\Select.cs" />
     <Compile Include="src\chess\engine\uci\UciEngineProxy.cs" />
     <Compile Include="src\util\WinFormsControlUtil.cs" />
+    <EmbeddedResource Include="src\app\board\forms\ThemeSelectionForm.resx">
+      <DependentUpon>ThemeSelectionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\app\forms\Application.resx">
       <DependentUpon>Application.cs</DependentUpon>
     </EmbeddedResource>

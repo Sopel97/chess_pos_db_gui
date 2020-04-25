@@ -11,6 +11,8 @@ namespace chess_pos_db_gui.src.app.board
 {
     public class PieceTheme
     {
+        public string Name { get; private set; }
+
         private Dictionary<Piece, Image> PieceImages { get; set; }
 
         public PieceTheme(string path)
@@ -30,6 +32,16 @@ namespace chess_pos_db_gui.src.app.board
             PieceImages.Add(new Rook(Player.Black), Image.FromFile(path + "/black_rook.png"));
             PieceImages.Add(new Queen(Player.Black), Image.FromFile(path + "/black_queen.png"));
             PieceImages.Add(new King(Player.Black), Image.FromFile(path + "/black_king.png"));
+
+            Name = System.IO.Path.GetFileName(path.TrimEnd(System.IO.Path.DirectorySeparatorChar));
+            try
+            {
+                Name = System.IO.File.ReadAllText(path + "/name");
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         public Image GetImageForPiece(Piece piece)
