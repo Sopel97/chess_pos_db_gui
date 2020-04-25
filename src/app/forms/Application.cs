@@ -1369,9 +1369,9 @@ namespace chess_pos_db_gui
                 "For example if only continuations are enabled the move that lead " +
                 "to the position on the board does matter when querying the database " +
                 "and in result the transpositions to the current position will not be included. " +
-                "Similarily you can check how many times the current position arised solely by transpositions " +
+                "Similarily you can check how many times the current position was obtained solely by transpositions " +
                 "by filtering out continuations. For example, by entering moves Nf3 Nf6 Ng1 Ng8 and filtering " +
-                "out transpositions you can see how many times the start position arised by playing Ng8 and " +
+                "out transpositions you can see how many times the start position was obtained by playing Ng8 and " +
                 "what moves were played then.",
                 "Help",
                 MessageBoxButtons.OK,
