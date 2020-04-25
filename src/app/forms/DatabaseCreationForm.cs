@@ -254,7 +254,7 @@ namespace chess_pos_db_gui
                 database.Create(request, ProgressCallback);
                 finishedWithErrors = false;
                 MessageBox.Show(
-                    string.Format("Finished.\nGames imported: {0}\nGames skipped: {1}\nPosition imported: {2}",
+                    string.Format("Finished.\nGames imported: {0}\nGames skipped: {1}\nPositions imported: {2}",
                         NumGames,
                         NumSkippedGames,
                         NumPositions

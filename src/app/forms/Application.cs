@@ -272,7 +272,7 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["Eco"].ToolTipText = "The ECO code reported in the first game with this position.";
             entriesGridView.Columns["Eco"].MinimumWidth = 35;
             entriesGridView.Columns["Eco"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            entriesGridView.Columns["PlyCount"].HeaderText = "Plies";
+            entriesGridView.Columns["PlyCount"].HeaderText = "Ply";
             entriesGridView.Columns["PlyCount"].ToolTipText = "The length in plies of the first game with this position.";
             entriesGridView.Columns["PlyCount"].MinimumWidth = 40;
             entriesGridView.Columns["PlyCount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
