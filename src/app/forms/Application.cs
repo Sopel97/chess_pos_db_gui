@@ -88,6 +88,7 @@ namespace chess_pos_db_gui
 
         private static readonly string engineProfilesPath = "data/engine_profiles.json";
         private static readonly string settingsPath = "data/appliction/settings.json";
+        private static readonly double insignificantGoodnessTheshold = 0.01;
 
         private UciEngineProfileStorage EngineProfiles { get; set; }
 
@@ -412,7 +413,9 @@ namespace chess_pos_db_gui
             {
                 foreach (DataRow row in TabulatedData.Rows)
                 {
-                    if (row["Goodness"] != null)
+                    // We want to keep values below insignificantGoodnessTheshold so
+                    // that they become blank.
+                    if (row["Goodness"] != null && (double)row["Goodness"] >= insignificantGoodnessTheshold)
                     {
                         row["Goodness"] = (double)row["Goodness"] / highest;
                     }
@@ -1098,7 +1101,7 @@ namespace chess_pos_db_gui
 
             if (columnName == "Goodness")
             {
-                if (IsInvalidDouble(e.Value) || Math.Abs((double)e.Value) < 0.01)
+                if (IsInvalidDouble(e.Value) || Math.Abs((double)e.Value) < insignificantGoodnessTheshold)
                 {
                     e.Value = "";
                 }
