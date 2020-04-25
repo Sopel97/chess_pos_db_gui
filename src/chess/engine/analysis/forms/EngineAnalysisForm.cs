@@ -170,6 +170,7 @@ namespace chess_pos_db_gui
             analysisDataGridView.Columns["PV"].HeaderText = "PV";
             analysisDataGridView.Columns["PV"].ToolTipText = "The principal variation - engine's predicted line";
             analysisDataGridView.Columns["ScoreInt"].Visible = false;
+            analysisDataGridView.Columns["MultiPV"].Visible = false;
         }
 
         private void SetupEmbeddedColumns()
