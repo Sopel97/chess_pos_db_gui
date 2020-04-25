@@ -24,6 +24,16 @@ namespace chess_pos_db_gui.src.app.board
             DiscoverThemes();
         }
 
+        public BoardTheme GetAnyBoardTheme()
+        {
+            return BoardThemes.FirstOrDefault().Value;
+        }
+
+        public PieceTheme GetAnyPieceTheme()
+        {
+            return PieceThemes.FirstOrDefault().Value;
+        }
+
         private void DiscoverThemes()
         {
             BoardThemes.Clear();

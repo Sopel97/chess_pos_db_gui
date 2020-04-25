@@ -16,8 +16,6 @@ namespace chess_pos_db_gui
 {
     public partial class ChessBoard : UserControl
     {
-        private static readonly Bitmap DefaultBitmap = CreateDefaultBitmap();
-
         private ChessBoardHistory BoardHistory { get; set; }
 
         private MoveHistoryTable MoveHistory { get; set; }
@@ -131,10 +129,10 @@ namespace chess_pos_db_gui
             IsSettingPosition = false;
         }
 
-        public void LoadImages()
+        public void SetThemes(BoardTheme board, PieceTheme piece)
         {
-            BoardImages = new BoardTheme("assets/graphics/board_sets/chess24");
-            PieceImages = new PieceTheme("assets/graphics/piece_sets/chess24");
+            BoardImages = board;
+            PieceImages = piece;
 
             chessBoardPanel.Refresh();
         }
@@ -224,25 +222,18 @@ namespace chess_pos_db_gui
                 return;
             }
 
+            if (BoardImages == null || PieceImages == null)
+            {
+                return;
+            }
+
             Graphics g = e.Graphics;
 
             DrawSquares(g);
         }
 
-        private static Bitmap CreateDefaultBitmap()
-        {
-            var bmp = new Bitmap(8, 8);
-            Graphics.FromImage(bmp).Clear(Color.Red);
-            return bmp;
-        }
-
         private void ChessBoard_Load(object sender, EventArgs e)
         {
-            if (!DesignMode)
-            {
-                LoadImages();
-            }
-
             SetPosition(FenProvider.StartPos);
         }
 

@@ -86,6 +86,8 @@ namespace chess_pos_db_gui
             public int SplitChessAndDataSplitterDistance { get; set; } = 428;
             public int FormWidth { get; set; } = 1075;
             public int FormHeight { get; set; } = 600;
+            public string BoardThemeName { get; set; } = null;
+            public string PieceThemeName { get; set; } = null;
         }
 
         private static readonly string engineProfilesPath = "data/engine_profiles.json";
@@ -1248,7 +1250,11 @@ namespace chess_pos_db_gui
             {
                 EmbeddedHandler.Dispose();
             }
-            QueryExecutor.Dispose();
+
+            if (QueryExecutor != null)
+            {
+                QueryExecutor.Dispose();
+            }
 
             SaveSettings();
         }
@@ -1289,6 +1295,30 @@ namespace chess_pos_db_gui
             splitChessAndData.SplitterDistance = settings.SplitChessAndDataSplitterDistance;
             Width = settings.FormWidth;
             Height = settings.FormHeight;
+
+            BoardTheme boardTheme = null;
+            PieceTheme pieceTheme = null;
+            if (settings.BoardThemeName != null)
+            {
+                boardTheme = Themes.BoardThemes[settings.BoardThemeName];
+            }
+
+            if (boardTheme == null)
+            {
+                boardTheme = Themes.GetAnyBoardTheme();
+            }
+
+            if (settings.PieceThemeName != null)
+            {
+                pieceTheme = Themes.PieceThemes[settings.PieceThemeName];
+            }
+
+            if (pieceTheme == null)
+            {
+                pieceTheme = Themes.GetAnyPieceTheme();
+            }
+
+            chessBoard.SetThemes(boardTheme, pieceTheme);
         }
 
         private SerializableSettings GatherSerializableSettings()
@@ -1316,7 +1346,9 @@ namespace chess_pos_db_gui
                 EvalWeightNumericUpDownValue = evalWeightNumericUpDown.Value,
                 SplitChessAndDataSplitterDistance = splitChessAndData.SplitterDistance,
                 FormWidth = Width,
-                FormHeight = Height
+                FormHeight = Height,
+                BoardThemeName = chessBoard.BoardImages?.Name,
+                PieceThemeName = chessBoard.PieceImages?.Name
             };
         }
 
@@ -1472,9 +1504,10 @@ namespace chess_pos_db_gui
                 var result = dialog.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    chessBoard.BoardImages = dialog.SelectedBoardTheme;
-                    chessBoard.PieceImages = dialog.SelectedPieceTheme;
-                    chessBoard.Refresh();
+                    chessBoard.SetThemes(
+                        dialog.SelectedBoardTheme,
+                        dialog.SelectedPieceTheme
+                        );
                 }
             }
         }
