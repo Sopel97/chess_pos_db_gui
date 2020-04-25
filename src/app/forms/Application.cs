@@ -288,9 +288,9 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["EvalPct"].HeaderText = "Ev%";
             entriesGridView.Columns["EvalPct"].ToolTipText = "The expected performance based on evaluation. Also sometimes reported by chessdbcn.";
             entriesGridView.Columns["Goodness"].HeaderText = "QI";
+            entriesGridView.Columns["Goodness"].ToolTipText = "Quality Index. This value represents the calcualated quality of the move based on available data and user set weights.";
             entriesGridView.Columns["Goodness"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["Goodness"].MinimumWidth = 40;
-            entriesGridView.Columns["Goodness"].ToolTipText = "The quality of the move calculated from various empirical factors extracted from the data";
             entriesGridView.Columns["IsOnlyTransposition"].Visible = false;
 
             entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
