@@ -39,8 +39,8 @@ namespace chess_pos_db_gui.src.app.board
             BoardThemes.Clear();
             PieceThemes.Clear();
 
-            var baseBoardSetsPath = Path + "/board_sets/";
-            var basePieceSetsPath = Path + "/piece_sets/";
+            var baseBoardSetsPath = Path + "/board_themes/";
+            var basePieceSetsPath = Path + "/piece_themes/";
 
             var boardThemeDirs = Directory.GetDirectories(baseBoardSetsPath, "*", SearchOption.TopDirectoryOnly);
             foreach (var dir in boardThemeDirs)
