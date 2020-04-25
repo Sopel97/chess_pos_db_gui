@@ -425,7 +425,7 @@ namespace chess_pos_db_gui
             foreach (GameHeader header in entry.FirstGame)
             {
                 firstGameInfoRichTextBox.Text = string.Format(
-                    "{0} - {1} {2} [{3}] ({4})\n{5} {6}",
+                    "{0} - {1} {2}\n[{3}] ({4}) {5} {6}",
                     new object[]
                     {
                         header.White,
