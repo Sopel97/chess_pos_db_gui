@@ -8,15 +8,17 @@ namespace chess_pos_db_gui
     public partial class PgnInputForm : Form
     {
         public bool WasCancelled { get; private set; }
-        public string Pgn { get; private set; }
         public string MoveText { get; private set; }
 
         public PgnInputForm()
         {
             InitializeComponent();
 
+            okButton.DialogResult = DialogResult.OK;
+            cancelButton.DialogResult = DialogResult.Cancel;
+
             WasCancelled = false;
-            Pgn = "";
+            MoveText = "";
 
             if (Clipboard.ContainsText())
             {
@@ -36,7 +38,7 @@ namespace chess_pos_db_gui
         private void OkButton_Click(object sender, EventArgs e)
         {
             WasCancelled = false;
-            Pgn = StripPgnHeader(pgnTextBox.Text);
+            MoveText = StripPgnHeader(pgnTextBox.Text);
             Close();
         }
 
@@ -44,6 +46,14 @@ namespace chess_pos_db_gui
         {
             WasCancelled = true;
             Close();
+        }
+
+        private void PgnInputForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (DialogResult == DialogResult.Cancel)
+            {
+                WasCancelled = true;
+            }
         }
     }
 }

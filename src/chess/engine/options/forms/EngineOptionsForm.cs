@@ -16,6 +16,9 @@ namespace chess_pos_db_gui
         {
             InitializeComponent();
 
+            saveButton.DialogResult = DialogResult.OK;
+            discardButton.DialogResult = DialogResult.Cancel;
+
             CloseInsteadOfHide = close;
 
             SuspendLayout();
@@ -50,7 +53,7 @@ namespace chess_pos_db_gui
 
         private void EngineOptionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
+            if (DialogResult == DialogResult.Cancel)
             {
                 DiscardChanges();
                 e.Cancel = true;

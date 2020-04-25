@@ -71,6 +71,7 @@
             this.Controls.Add(this.pgnTextBox);
             this.Name = "PgnInputForm";
             this.Text = "Set PGN";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PgnInputForm_FormClosing);
             this.ResumeLayout(false);
 
         }
