@@ -7,6 +7,7 @@ namespace chess_pos_db_gui
     {
         public RootPosition Position { get; set; }
         public Dictionary<Select, SelectResult> ResultsBySelect { get; set; }
+        public Dictionary<string, SegregatedEntries> Retractions { get; set; }
 
         public static ResultForRoot FromJson(JsonValue json)
         {
@@ -23,19 +24,28 @@ namespace chess_pos_db_gui
                 }
             }
 
-            return result;
-        }
+            if (json.ContainsKey("retractions"))
+            {
+                foreach (KeyValuePair<string, JsonValue> entry in json["retractions"])
+                {
+                    var entries = SegregatedEntries.FromJson(entry.Value);
+                    result.Retractions.Add(entry.Key, entries);
+                }
+            }
 
-        public ResultForRoot()
-        {
-            Position = null;
-            ResultsBySelect = new Dictionary<Select, SelectResult>();
+            return result;
         }
 
         public ResultForRoot(RootPosition position)
         {
             Position = position;
             ResultsBySelect = new Dictionary<Select, SelectResult>();
+            Retractions = new Dictionary<string, SegregatedEntries>();
+        }
+
+        public ResultForRoot() :
+            this(null)
+        {
         }
     }
 
