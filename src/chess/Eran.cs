@@ -44,53 +44,73 @@ namespace chess_pos_db_gui.src.chess
                 ? Player.White
                 : Player.Black;
 
-            rmove.Move = new Move((Position)null, null, prevPlayer);
-
-            Piece movedPiece = TryMakePieceFromChar(ran[0], prevPlayer);
-            if (movedPiece != null)
+            if (ran == "O-O" || ran == "O-O-O")
             {
-                ran = ran.Substring(1);
-            }
-
-            {
-                int fromSquareFile = ran[0] - 'a';
-                int fromSquareRank = ran[1] - '1';
-                rmove.Move.OriginalPosition = new Position((File)fromSquareFile, fromSquareRank);
-                ran = ran.Substring(2);
-            }
-
-            if (ran[0] == '-')
-            {
-                ran = ran.Substring(1);
-            }
-            else if (ran[0] == 'x')
-            {
-                rmove.CapturedPiece = TryMakePieceFromChar(ran[1], game.WhoseTurn);
-                if (rmove.CapturedPiece == null)
+                if (ran == "O-O")
                 {
-                    rmove.CapturedPiece = new Pawn(game.WhoseTurn);
-                    ran = ran.Substring(1);
+                    int r = prevPlayer == Player.White ? 1 : 8;
+                    var origin = new Position(File.E, r);
+                    var destination = new Position(File.G, r);
+                    rmove.Move = new Move(origin, destination, prevPlayer, null);
                 }
                 else
                 {
-                    ran = ran.Substring(2);
+                    int r = prevPlayer == Player.White ? 1 : 8;
+                    var origin = new Position(File.E, r);
+                    var destination = new Position(File.C, r);
+                    rmove.Move = new Move(origin, destination, prevPlayer, null);
                 }
             }
             else
             {
-                throw new ArgumentException("Invalid ERAN");
-            }
+                rmove.Move = new Move((Position)null, null, prevPlayer);
 
-            {
-                int toSquareFile = ran[0] - 'a';
-                int toSquareRank = ran[1] - '1';
-                rmove.Move.NewPosition = new Position((File)toSquareFile, toSquareRank);
-                ran = ran.Substring(2);
-            }
+                Piece movedPiece = TryMakePieceFromChar(ran[0], prevPlayer);
+                if (movedPiece != null)
+                {
+                    ran = ran.Substring(1);
+                }
 
-            if (ran.Length > 0 && ran[0] == '=')
-            {
-                rmove.Move.Promotion = ran[1];
+                {
+                    int fromSquareFile = ran[0] - 'a';
+                    int fromSquareRank = ran[1] - '1';
+                    rmove.Move.OriginalPosition = new Position((File)fromSquareFile, fromSquareRank + 1);
+                    ran = ran.Substring(2);
+                }
+
+                if (ran[0] == '-')
+                {
+                    ran = ran.Substring(1);
+                }
+                else if (ran[0] == 'x')
+                {
+                    rmove.CapturedPiece = TryMakePieceFromChar(ran[1], game.WhoseTurn);
+                    if (rmove.CapturedPiece == null)
+                    {
+                        rmove.CapturedPiece = new Pawn(game.WhoseTurn);
+                        ran = ran.Substring(1);
+                    }
+                    else
+                    {
+                        ran = ran.Substring(2);
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid ERAN");
+                }
+
+                {
+                    int toSquareFile = ran[0] - 'a';
+                    int toSquareRank = ran[1] - '1';
+                    rmove.Move.NewPosition = new Position((File)toSquareFile, toSquareRank + 1);
+                    ran = ran.Substring(2);
+                }
+
+                if (ran.Length > 0 && ran[0] == '=')
+                {
+                    rmove.Move.Promotion = ran[1];
+                }
             }
 
             // castling rights
@@ -111,7 +131,7 @@ namespace chess_pos_db_gui.src.chess
             {
                 int epSquareFile = oldEpSquare[0] - 'a';
                 int epSquareRank = oldEpSquare[1] - '1';
-                rmove.OldEpSquare = new Position((File)epSquareFile, epSquareRank);
+                rmove.OldEpSquare = new Position((File)epSquareFile, epSquareRank + 1);
             }
 
             return rmove;

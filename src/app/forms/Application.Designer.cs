@@ -56,9 +56,11 @@
             this.themesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.themesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.analysisAndBoardSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.firstGameInfoGroupBox = new System.Windows.Forms.GroupBox();
             this.fenRichTextBox = new System.Windows.Forms.RichTextBox();
             this.firstGameInfoRichTextBox = new System.Windows.Forms.RichTextBox();
+            this.entriesRetractionsSplitPanel = new System.Windows.Forms.SplitContainer();
             this.retractionsGridView = new System.Windows.Forms.DataGridView();
             this.totalDataHelpButton = new System.Windows.Forms.Button();
             this.goodnessGroupBox = new System.Windows.Forms.GroupBox();
@@ -81,8 +83,6 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.entriesRetractionsSplitPanel = new System.Windows.Forms.SplitContainer();
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -99,6 +99,10 @@
             this.analysisAndBoardSplitContainer.Panel2.SuspendLayout();
             this.analysisAndBoardSplitContainer.SuspendLayout();
             this.firstGameInfoGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.entriesRetractionsSplitPanel)).BeginInit();
+            this.entriesRetractionsSplitPanel.Panel1.SuspendLayout();
+            this.entriesRetractionsSplitPanel.Panel2.SuspendLayout();
+            this.entriesRetractionsSplitPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.retractionsGridView)).BeginInit();
             this.goodnessGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gamesWeightNumericUpDown)).BeginInit();
@@ -108,10 +112,6 @@
             this.displayGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).BeginInit();
             this.queryGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.entriesRetractionsSplitPanel)).BeginInit();
-            this.entriesRetractionsSplitPanel.Panel1.SuspendLayout();
-            this.entriesRetractionsSplitPanel.Panel2.SuspendLayout();
-            this.entriesRetractionsSplitPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -137,7 +137,7 @@
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(612, 270);
+            this.entriesGridView.Size = new System.Drawing.Size(611, 270);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -408,6 +408,18 @@
             this.analysisAndBoardSplitContainer.SplitterDistance = 142;
             this.analysisAndBoardSplitContainer.TabIndex = 3;
             // 
+            // chessBoard
+            // 
+            this.chessBoard.BoardImages = null;
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.PieceImages = null;
+            this.chessBoard.Size = new System.Drawing.Size(424, 256);
+            this.chessBoard.TabIndex = 0;
+            // 
             // firstGameInfoGroupBox
             // 
             this.firstGameInfoGroupBox.Controls.Add(this.fenRichTextBox);
@@ -448,6 +460,27 @@
             this.firstGameInfoRichTextBox.Text = "";
             this.firstGameInfoRichTextBox.WordWrap = false;
             // 
+            // entriesRetractionsSplitPanel
+            // 
+            this.entriesRetractionsSplitPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.entriesRetractionsSplitPanel.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.entriesRetractionsSplitPanel.Location = new System.Drawing.Point(3, 174);
+            this.entriesRetractionsSplitPanel.Name = "entriesRetractionsSplitPanel";
+            this.entriesRetractionsSplitPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // entriesRetractionsSplitPanel.Panel1
+            // 
+            this.entriesRetractionsSplitPanel.Panel1.Controls.Add(this.entriesGridView);
+            // 
+            // entriesRetractionsSplitPanel.Panel2
+            // 
+            this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsGridView);
+            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(611, 381);
+            this.entriesRetractionsSplitPanel.SplitterDistance = 270;
+            this.entriesRetractionsSplitPanel.TabIndex = 9;
+            // 
             // retractionsGridView
             // 
             this.retractionsGridView.AllowUserToAddRows = false;
@@ -471,8 +504,9 @@
             this.retractionsGridView.RowHeadersWidth = 20;
             this.retractionsGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.retractionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.retractionsGridView.Size = new System.Drawing.Size(612, 107);
+            this.retractionsGridView.Size = new System.Drawing.Size(611, 107);
             this.retractionsGridView.TabIndex = 8;
+            this.retractionsGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.retractionsGridView_CellContentDoubleClick);
             this.retractionsGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RetractionsGridView_CellFormatting);
             // 
             // totalDataHelpButton
@@ -712,7 +746,7 @@
             this.totalEntriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.totalEntriesGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(611, 66);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(610, 66);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -776,39 +810,6 @@
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
             // 
-            // entriesRetractionsSplitPanel
-            // 
-            this.entriesRetractionsSplitPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.entriesRetractionsSplitPanel.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.entriesRetractionsSplitPanel.Location = new System.Drawing.Point(3, 174);
-            this.entriesRetractionsSplitPanel.Name = "entriesRetractionsSplitPanel";
-            this.entriesRetractionsSplitPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // entriesRetractionsSplitPanel.Panel1
-            // 
-            this.entriesRetractionsSplitPanel.Panel1.Controls.Add(this.entriesGridView);
-            // 
-            // entriesRetractionsSplitPanel.Panel2
-            // 
-            this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsGridView);
-            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(612, 381);
-            this.entriesRetractionsSplitPanel.SplitterDistance = 270;
-            this.entriesRetractionsSplitPanel.TabIndex = 9;
-            // 
-            // chessBoard
-            // 
-            this.chessBoard.BoardImages = null;
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.PieceImages = null;
-            this.chessBoard.Size = new System.Drawing.Size(424, 256);
-            this.chessBoard.TabIndex = 0;
-            // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -840,6 +841,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.analysisAndBoardSplitContainer)).EndInit();
             this.analysisAndBoardSplitContainer.ResumeLayout(false);
             this.firstGameInfoGroupBox.ResumeLayout(false);
+            this.entriesRetractionsSplitPanel.Panel1.ResumeLayout(false);
+            this.entriesRetractionsSplitPanel.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.entriesRetractionsSplitPanel)).EndInit();
+            this.entriesRetractionsSplitPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.retractionsGridView)).EndInit();
             this.goodnessGroupBox.ResumeLayout(false);
             this.goodnessGroupBox.PerformLayout();
@@ -852,10 +857,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).EndInit();
             this.queryGroupBox.ResumeLayout(false);
             this.queryGroupBox.PerformLayout();
-            this.entriesRetractionsSplitPanel.Panel1.ResumeLayout(false);
-            this.entriesRetractionsSplitPanel.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.entriesRetractionsSplitPanel)).EndInit();
-            this.entriesRetractionsSplitPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

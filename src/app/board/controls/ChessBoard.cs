@@ -88,13 +88,19 @@ namespace chess_pos_db_gui
             return BoardHistory.Current().GetSan();
         }
 
-        private void SetGame(ChessGame game)
+        public void SetGame(ChessGame game)
         {
-            SetPosition(FenProvider.StartPos);
+            SetGame(FenProvider.StartPos, game);
+        }
+
+        public void SetGame(string startpos, ChessGame game)
+        {
+            SetPosition(startpos);
             foreach (var move in game.Moves)
             {
                 DoMove(move.SAN, true);
             }
+            SetSelection(FirstPly);
         }
 
         private void SetPosition(string fen)
@@ -297,7 +303,7 @@ namespace chess_pos_db_gui
             return DoMove(move, silent);
         }
 
-        private bool DoMove(Move move, bool silent = false)
+        public bool DoMove(Move move, bool silent = false)
         {
             if (!BoardHistory.IsMoveValid(move))
             {

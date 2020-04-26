@@ -1720,5 +1720,16 @@ namespace chess_pos_db_gui
                 }
             }
         }
+
+        private void retractionsGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var reverseMove = (retractionsGridView[0, e.RowIndex].Value as ReverseMoveWithEran).ReverseMove;
+            var fen = chessBoard.GetFen();
+            var game = new ChessGame(fen);
+            var prevGame = reverseMove.AppliedTo(game);
+            var prevFen = prevGame.GetFen();
+            prevGame.MakeMove(reverseMove.Move, true);
+            chessBoard.SetGame(prevFen, prevGame);
+        }
     }
 }
