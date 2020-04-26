@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
@@ -59,6 +59,7 @@
             this.firstGameInfoGroupBox = new System.Windows.Forms.GroupBox();
             this.fenRichTextBox = new System.Windows.Forms.RichTextBox();
             this.firstGameInfoRichTextBox = new System.Windows.Forms.RichTextBox();
+            this.retractionsGridView = new System.Windows.Forms.DataGridView();
             this.totalDataHelpButton = new System.Windows.Forms.Button();
             this.goodnessGroupBox = new System.Windows.Forms.GroupBox();
             this.gamesWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
@@ -80,7 +81,7 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.retractionsGridView = new System.Windows.Forms.DataGridView();
+            this.entriesRetractionsSplitPanel = new System.Windows.Forms.SplitContainer();
             this.chessBoard = new chess_pos_db_gui.ChessBoard();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
@@ -98,6 +99,7 @@
             this.analysisAndBoardSplitContainer.Panel2.SuspendLayout();
             this.analysisAndBoardSplitContainer.SuspendLayout();
             this.firstGameInfoGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.retractionsGridView)).BeginInit();
             this.goodnessGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gamesWeightNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.evalWeightNumericUpDown)).BeginInit();
@@ -106,7 +108,10 @@
             this.displayGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).BeginInit();
             this.queryGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.retractionsGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.entriesRetractionsSplitPanel)).BeginInit();
+            this.entriesRetractionsSplitPanel.Panel1.SuspendLayout();
+            this.entriesRetractionsSplitPanel.Panel2.SuspendLayout();
+            this.entriesRetractionsSplitPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -115,8 +120,6 @@
             this.entriesGridView.AllowUserToDeleteRows = false;
             this.entriesGridView.AllowUserToResizeColumns = false;
             this.entriesGridView.AllowUserToResizeRows = false;
-            this.entriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -126,14 +129,15 @@
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.entriesGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.entriesGridView.Location = new System.Drawing.Point(3, 174);
+            this.entriesGridView.Location = new System.Drawing.Point(0, 0);
             this.entriesGridView.Name = "entriesGridView";
             this.entriesGridView.ReadOnly = true;
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(612, 275);
+            this.entriesGridView.Size = new System.Drawing.Size(612, 270);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -228,14 +232,13 @@
             // 
             // splitChessAndData.Panel2
             // 
-            this.splitChessAndData.Panel2.Controls.Add(this.retractionsGridView);
+            this.splitChessAndData.Panel2.Controls.Add(this.entriesRetractionsSplitPanel);
             this.splitChessAndData.Panel2.Controls.Add(this.totalDataHelpButton);
             this.splitChessAndData.Panel2.Controls.Add(this.goodnessGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.displayGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.totalEntriesGridView);
             this.splitChessAndData.Panel2.Controls.Add(this.queryGroupBox);
             this.splitChessAndData.Panel2.Controls.Add(this.levelSelectionGroupBox);
-            this.splitChessAndData.Panel2.Controls.Add(this.entriesGridView);
             this.splitChessAndData.Panel2MinSize = 620;
             this.splitChessAndData.Size = new System.Drawing.Size(1059, 562);
             this.splitChessAndData.SplitterDistance = 428;
@@ -444,6 +447,33 @@
             this.firstGameInfoRichTextBox.TabIndex = 0;
             this.firstGameInfoRichTextBox.Text = "";
             this.firstGameInfoRichTextBox.WordWrap = false;
+            // 
+            // retractionsGridView
+            // 
+            this.retractionsGridView.AllowUserToAddRows = false;
+            this.retractionsGridView.AllowUserToDeleteRows = false;
+            this.retractionsGridView.AllowUserToResizeColumns = false;
+            this.retractionsGridView.AllowUserToResizeRows = false;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.retractionsGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.retractionsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.retractionsGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.retractionsGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.retractionsGridView.Location = new System.Drawing.Point(0, 0);
+            this.retractionsGridView.Name = "retractionsGridView";
+            this.retractionsGridView.ReadOnly = true;
+            this.retractionsGridView.RowHeadersWidth = 20;
+            this.retractionsGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.retractionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.retractionsGridView.Size = new System.Drawing.Size(612, 107);
+            this.retractionsGridView.TabIndex = 8;
+            this.retractionsGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RetractionsGridView_CellFormatting);
             // 
             // totalDataHelpButton
             // 
@@ -682,7 +712,7 @@
             this.totalEntriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.totalEntriesGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(612, 66);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(611, 66);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -746,34 +776,26 @@
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
             // 
-            // retractionsGridView
+            // entriesRetractionsSplitPanel
             // 
-            this.retractionsGridView.AllowUserToAddRows = false;
-            this.retractionsGridView.AllowUserToDeleteRows = false;
-            this.retractionsGridView.AllowUserToResizeColumns = false;
-            this.retractionsGridView.AllowUserToResizeRows = false;
-            this.retractionsGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.entriesRetractionsSplitPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.retractionsGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.retractionsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.retractionsGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.retractionsGridView.Location = new System.Drawing.Point(3, 455);
-            this.retractionsGridView.Name = "retractionsGridView";
-            this.retractionsGridView.ReadOnly = true;
-            this.retractionsGridView.RowHeadersWidth = 20;
-            this.retractionsGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.retractionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.retractionsGridView.Size = new System.Drawing.Size(612, 97);
-            this.retractionsGridView.TabIndex = 8;
-            this.retractionsGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RetractionsGridView_CellFormatting);
+            this.entriesRetractionsSplitPanel.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.entriesRetractionsSplitPanel.Location = new System.Drawing.Point(3, 174);
+            this.entriesRetractionsSplitPanel.Name = "entriesRetractionsSplitPanel";
+            this.entriesRetractionsSplitPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // entriesRetractionsSplitPanel.Panel1
+            // 
+            this.entriesRetractionsSplitPanel.Panel1.Controls.Add(this.entriesGridView);
+            // 
+            // entriesRetractionsSplitPanel.Panel2
+            // 
+            this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsGridView);
+            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(612, 381);
+            this.entriesRetractionsSplitPanel.SplitterDistance = 270;
+            this.entriesRetractionsSplitPanel.TabIndex = 9;
             // 
             // chessBoard
             // 
@@ -818,6 +840,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.analysisAndBoardSplitContainer)).EndInit();
             this.analysisAndBoardSplitContainer.ResumeLayout(false);
             this.firstGameInfoGroupBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.retractionsGridView)).EndInit();
             this.goodnessGroupBox.ResumeLayout(false);
             this.goodnessGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gamesWeightNumericUpDown)).EndInit();
@@ -829,7 +852,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).EndInit();
             this.queryGroupBox.ResumeLayout(false);
             this.queryGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.retractionsGridView)).EndInit();
+            this.entriesRetractionsSplitPanel.Panel1.ResumeLayout(false);
+            this.entriesRetractionsSplitPanel.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.entriesRetractionsSplitPanel)).EndInit();
+            this.entriesRetractionsSplitPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -886,6 +912,7 @@
         private System.Windows.Forms.ToolStripMenuItem themesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem themesToolStripMenuItem1;
         private System.Windows.Forms.DataGridView retractionsGridView;
+        private System.Windows.Forms.SplitContainer entriesRetractionsSplitPanel;
     }
 }
 

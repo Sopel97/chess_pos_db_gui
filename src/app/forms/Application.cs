@@ -84,6 +84,7 @@ namespace chess_pos_db_gui
             public decimal EngineWeightNumericUpDownValue { get; set; } = 3;
             public decimal EvalWeightNumericUpDownValue { get; set; } = 2;
             public int SplitChessAndDataSplitterDistance { get; set; } = 428;
+            public int EntriesRetractionsSplitPanelSplitterDistance { get; set; } = 270;
             public int FormWidth { get; set; } = 1075;
             public int FormHeight { get; set; } = 600;
             public string BoardThemeName { get; set; } = null;
@@ -1499,6 +1500,7 @@ namespace chess_pos_db_gui
             engineWeightNumericUpDown.Value = settings.EngineWeightNumericUpDownValue;
             evalWeightNumericUpDown.Value = settings.EvalWeightNumericUpDownValue;
             splitChessAndData.SplitterDistance = settings.SplitChessAndDataSplitterDistance;
+            entriesRetractionsSplitPanel.SplitterDistance = settings.EntriesRetractionsSplitPanelSplitterDistance;
             Width = settings.FormWidth;
             Height = settings.FormHeight;
 
@@ -1551,6 +1553,7 @@ namespace chess_pos_db_gui
                 EngineWeightNumericUpDownValue = engineWeightNumericUpDown.Value,
                 EvalWeightNumericUpDownValue = evalWeightNumericUpDown.Value,
                 SplitChessAndDataSplitterDistance = splitChessAndData.SplitterDistance,
+                EntriesRetractionsSplitPanelSplitterDistance = entriesRetractionsSplitPanel.SplitterDistance,
                 FormWidth = Width,
                 FormHeight = Height,
                 BoardThemeName = chessBoard.BoardImages?.Name,
