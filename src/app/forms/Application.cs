@@ -808,7 +808,7 @@ namespace chess_pos_db_gui
 
         private void Repopulate()
         {
-            //WinFormsControlUtil.SuspendDrawing(entriesGridView);
+            WinFormsControlUtil.SuspendDrawing(entriesGridView);
 
             SaveViewScroll();
 
@@ -839,7 +839,7 @@ namespace chess_pos_db_gui
             entriesGridView.ClearSelection();
             ReloadViewScroll();
 
-            //WinFormsControlUtil.ResumeDrawing(entriesGridView);
+            WinFormsControlUtil.ResumeDrawing(entriesGridView);
         }
 
         private void ReloadViewScroll()
