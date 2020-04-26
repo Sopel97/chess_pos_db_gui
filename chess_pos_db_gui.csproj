@@ -81,6 +81,7 @@
     </Compile>
     <Compile Include="src\chess\engine\analysis\EmbeddedAnalysisHandler.cs" />
     <Compile Include="src\chess\engine\uci\UciUtil.cs" />
+    <Compile Include="src\chess\Eran.cs" />
     <Compile Include="src\chess\MoveWithSan.cs" />
     <Compile Include="src\app\QueryQueueEntry.cs" />
     <Compile Include="src\app\QueryExecutor.cs" />
@@ -101,6 +102,8 @@
     <Compile Include="src\chess\engine\uci\UciScore.cs" />
     <Compile Include="src\chess\FenProvider.cs" />
     <Compile Include="src\chess\Lan.cs" />
+    <Compile Include="src\chess\ReverseMove.cs" />
+    <Compile Include="src\chess\ReverseMoveWithEran.cs" />
     <Compile Include="src\db\query\AggregatedEntry.cs" />
     <Compile Include="src\app\forms\Application.cs">
       <SubType>Form</SubType>

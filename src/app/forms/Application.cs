@@ -173,7 +173,7 @@ namespace chess_pos_db_gui
             TabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
             TabulatedData.Columns.Add(new DataColumn("IsOnlyTransposition", typeof(bool)));
 
-            RetractionsData.Columns.Add(new DataColumn("Move", typeof(string)));
+            RetractionsData.Columns.Add(new DataColumn("Move", typeof(ReverseMoveWithEran)));
             RetractionsData.Columns.Add(new DataColumn("Count", typeof(ulong)));
             RetractionsData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
             RetractionsData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
@@ -1020,7 +1020,7 @@ namespace chess_pos_db_gui
                 row["EvalPct"] = totalScore.Perf;
             }
 
-            row["Move"] = eran;
+            row["Move"] = new ReverseMoveWithEran(Eran.ParseEran(fen, eran), eran);
             row["Goodness"] = CalculateGoodness(total, totalNonEngine, totalScore);
 
             foreach (GameHeader header in total.FirstGame)
