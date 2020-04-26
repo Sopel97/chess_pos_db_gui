@@ -1358,6 +1358,16 @@ namespace chess_pos_db_gui
             }
         }
 
+        private void RetractionsGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            ApplyCommonCellFormatting(retractionsGridView, e);
+
+            if (e.FormattingApplied)
+            {
+                return;
+            }
+        }
+
         private void TotalEntriesGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             ApplyCommonCellFormatting(totalEntriesGridView, e);

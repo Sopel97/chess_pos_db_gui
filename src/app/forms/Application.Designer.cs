@@ -773,6 +773,7 @@
             this.retractionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.retractionsGridView.Size = new System.Drawing.Size(612, 97);
             this.retractionsGridView.TabIndex = 8;
+            this.retractionsGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RetractionsGridView_CellFormatting);
             // 
             // chessBoard
             // 
