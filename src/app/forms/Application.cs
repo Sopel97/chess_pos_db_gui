@@ -1480,6 +1480,8 @@ namespace chess_pos_db_gui
 
         private void ApplySerializableSettings(SerializableSettings settings)
         {
+            Width = settings.FormWidth;
+            Height = settings.FormHeight;
             autoQueryCheckbox.Checked = settings.AutoQueryCheckBoxChecked;
             queryEvalCheckBox.Checked = settings.QueryEvalCheckBoxChecked;
             levelHumanCheckBox.Checked = settings.LevelHumanCheckBoxChecked;
@@ -1501,8 +1503,6 @@ namespace chess_pos_db_gui
             evalWeightNumericUpDown.Value = settings.EvalWeightNumericUpDownValue;
             splitChessAndData.SplitterDistance = settings.SplitChessAndDataSplitterDistance;
             entriesRetractionsSplitPanel.SplitterDistance = settings.EntriesRetractionsSplitPanelSplitterDistance;
-            Width = settings.FormWidth;
-            Height = settings.FormHeight;
 
             BoardTheme boardTheme = null;
             PieceTheme pieceTheme = null;
