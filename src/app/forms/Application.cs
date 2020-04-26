@@ -105,6 +105,7 @@ namespace chess_pos_db_gui
 
         private QueryCacheEntry CacheEntry { get; set; }
         private DataTable TabulatedData { get; set; }
+        private DataTable RetractionsData { get; set; }
         private DataTable TotalTabulatedData { get; set; }
 
         private double BestGoodness { get; set; }
@@ -127,6 +128,7 @@ namespace chess_pos_db_gui
             Selects = new HashSet<Select>();
             CacheEntry = null;
             TabulatedData = new DataTable();
+            RetractionsData = new DataTable();
             TotalTabulatedData = new DataTable();
 
             EngineProfiles = new UciEngineProfileStorage(engineProfilesPath);
@@ -170,6 +172,28 @@ namespace chess_pos_db_gui
             TabulatedData.Columns.Add(new DataColumn("Event", typeof(string)));
             TabulatedData.Columns.Add(new DataColumn("IsOnlyTransposition", typeof(bool)));
 
+            RetractionsData.Columns.Add(new DataColumn("Move", typeof(string)));
+            RetractionsData.Columns.Add(new DataColumn("Count", typeof(ulong)));
+            RetractionsData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
+            RetractionsData.Columns.Add(new DataColumn("DrawCount", typeof(ulong)));
+            RetractionsData.Columns.Add(new DataColumn("LossCount", typeof(ulong)));
+            RetractionsData.Columns.Add(new DataColumn("Perf", typeof(double)));
+            RetractionsData.Columns.Add(new DataColumn("DrawPct", typeof(double)));
+            RetractionsData.Columns.Add(new DataColumn("HumanPct", typeof(double)));
+            RetractionsData.Columns.Add(new DataColumn("AvgEloDiff", typeof(double)));
+            RetractionsData.Columns.Add(new DataColumn("AdjustedPerf", typeof(double)));
+            RetractionsData.Columns.Add(new DataColumn("Eval", typeof(ChessDBCNScore)));
+            RetractionsData.Columns.Add(new DataColumn("EvalPct", typeof(double)));
+            RetractionsData.Columns.Add(new DataColumn("Goodness", typeof(double)));
+            RetractionsData.Columns.Add(new DataColumn("White", typeof(string)));
+            RetractionsData.Columns.Add(new DataColumn("Black", typeof(string)));
+            RetractionsData.Columns.Add(new DataColumn("Result", typeof(string)));
+            RetractionsData.Columns.Add(new DataColumn("Date", typeof(string)));
+            RetractionsData.Columns.Add(new DataColumn("Eco", typeof(string)));
+            RetractionsData.Columns.Add(new DataColumn("PlyCount", typeof(ushort)));
+            RetractionsData.Columns.Add(new DataColumn("Event", typeof(string)));
+            RetractionsData.Columns.Add(new DataColumn("IsOnlyTransposition", typeof(bool)));
+
             TotalTabulatedData.Columns.Add(new DataColumn("Move", typeof(string)));
             TotalTabulatedData.Columns.Add(new DataColumn("Count", typeof(ulong)));
             TotalTabulatedData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
@@ -188,6 +212,9 @@ namespace chess_pos_db_gui
 
             WinFormsControlUtil.MakeDoubleBuffered(totalEntriesGridView);
             totalEntriesGridView.DataSource = TotalTabulatedData;
+
+            WinFormsControlUtil.MakeDoubleBuffered(retractionsGridView);
+            retractionsGridView.DataSource = RetractionsData;
 
             totalEntriesGridView.Columns["Move"].Frozen = true;
             totalEntriesGridView.Columns["Move"].MinimumWidth = 50;
@@ -307,6 +334,78 @@ namespace chess_pos_db_gui
             entriesGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
             entriesGridView.Sort(entriesGridView.Columns["Goodness"], ListSortDirection.Descending);
+
+            retractionsGridView.Columns["Move"].Frozen = true;
+            retractionsGridView.Columns["Move"].MinimumWidth = 50;
+            retractionsGridView.Columns["Move"].ToolTipText = "The move leading to the position for which stats are displayed.";
+            retractionsGridView.Columns["Count"].HeaderText = "N";
+            retractionsGridView.Columns["Count"].MinimumWidth = 30;
+            retractionsGridView.Columns["Count"].ToolTipText = totalEntriesGridView.Columns["Count"].ToolTipText;
+            retractionsGridView.Columns["WinCount"].HeaderText = "+";
+            retractionsGridView.Columns["WinCount"].MinimumWidth = 30;
+            retractionsGridView.Columns["WinCount"].ToolTipText = totalEntriesGridView.Columns["WinCount"].ToolTipText;
+            retractionsGridView.Columns["DrawCount"].HeaderText = "=";
+            retractionsGridView.Columns["DrawCount"].MinimumWidth = 30;
+            retractionsGridView.Columns["DrawCount"].ToolTipText = totalEntriesGridView.Columns["DrawCount"].ToolTipText;
+            retractionsGridView.Columns["LossCount"].HeaderText = "-";
+            retractionsGridView.Columns["LossCount"].MinimumWidth = 30;
+            retractionsGridView.Columns["LossCount"].ToolTipText = totalEntriesGridView.Columns["LossCount"].ToolTipText;
+            retractionsGridView.Columns["Perf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            retractionsGridView.Columns["Perf"].HeaderText = "Wh%";
+            retractionsGridView.Columns["Perf"].ToolTipText = totalEntriesGridView.Columns["Perf"].ToolTipText;
+            retractionsGridView.Columns["Perf"].MinimumWidth = 42;
+            retractionsGridView.Columns["AdjustedPerf"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            retractionsGridView.Columns["AdjustedPerf"].HeaderText = "AWh%";
+            retractionsGridView.Columns["AdjustedPerf"].ToolTipText = totalEntriesGridView.Columns["AdjustedPerf"].ToolTipText;
+            retractionsGridView.Columns["AdjustedPerf"].MinimumWidth = 48;
+            retractionsGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            retractionsGridView.Columns["DrawPct"].MinimumWidth = 30;
+            retractionsGridView.Columns["DrawPct"].HeaderText = "D%";
+            retractionsGridView.Columns["DrawPct"].ToolTipText = totalEntriesGridView.Columns["DrawPct"].ToolTipText;
+            retractionsGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            retractionsGridView.Columns["HumanPct"].MinimumWidth = 30;
+            retractionsGridView.Columns["HumanPct"].HeaderText = "H%";
+            retractionsGridView.Columns["HumanPct"].ToolTipText = totalEntriesGridView.Columns["HumanPct"].ToolTipText;
+            retractionsGridView.Columns["AvgEloDiff"].MinimumWidth = 30;
+            retractionsGridView.Columns["AvgEloDiff"].HeaderText = "ΔE";
+            retractionsGridView.Columns["AvgEloDiff"].ToolTipText = totalEntriesGridView.Columns["AvgEloDiff"].ToolTipText;
+            retractionsGridView.Columns["AvgEloDiff"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            retractionsGridView.Columns["Result"].MinimumWidth = 45;
+            retractionsGridView.Columns["Result"].HeaderText = "Result";
+            retractionsGridView.Columns["Result"].ToolTipText = "The result of the first game with this position.";
+            retractionsGridView.Columns["Eco"].HeaderText = "ECO";
+            retractionsGridView.Columns["Eco"].ToolTipText = "The ECO code reported in the first game with this position.";
+            retractionsGridView.Columns["Eco"].MinimumWidth = 35;
+            retractionsGridView.Columns["Eco"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            retractionsGridView.Columns["PlyCount"].HeaderText = "Ply";
+            retractionsGridView.Columns["PlyCount"].ToolTipText = "The length in plies of the first game with this position.";
+            retractionsGridView.Columns["PlyCount"].MinimumWidth = 40;
+            retractionsGridView.Columns["PlyCount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            retractionsGridView.Columns["Event"].MinimumWidth = 50;
+            retractionsGridView.Columns["Event"].ToolTipText = "Even at which this position was first achieved.";
+            retractionsGridView.Columns["White"].MinimumWidth = 50;
+            retractionsGridView.Columns["White"].ToolTipText = "White player for the first game achieving this position.";
+            retractionsGridView.Columns["Black"].MinimumWidth = 50;
+            retractionsGridView.Columns["Black"].ToolTipText = "Black player for the first game achieving this position.";
+            retractionsGridView.Columns["Date"].MinimumWidth = 40;
+            retractionsGridView.Columns["Date"].ToolTipText = "Date of the first game achieving this position.";
+            retractionsGridView.Columns["Eval"].MinimumWidth = 35;
+            retractionsGridView.Columns["Eval"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            retractionsGridView.Columns["Eval"].HeaderText = "Ev";
+            retractionsGridView.Columns["Eval"].ToolTipText = totalEntriesGridView.Columns["Eval"].ToolTipText;
+            retractionsGridView.Columns["EvalPct"].MinimumWidth = 35;
+            retractionsGridView.Columns["EvalPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            retractionsGridView.Columns["EvalPct"].HeaderText = "Ev%";
+            retractionsGridView.Columns["EvalPct"].ToolTipText = totalEntriesGridView.Columns["EvalPct"].ToolTipText;
+            retractionsGridView.Columns["Goodness"].HeaderText = "QI";
+            retractionsGridView.Columns["Goodness"].ToolTipText = "Quality Index. This value represents the calcualated quality of the move based on available data and user set weights.";
+            retractionsGridView.Columns["Goodness"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            retractionsGridView.Columns["Goodness"].MinimumWidth = 40;
+            retractionsGridView.Columns["IsOnlyTransposition"].Visible = false;
+
+            retractionsGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
+
+            retractionsGridView.Sort(retractionsGridView.Columns["Goodness"], ListSortDirection.Descending);
 
             totalDataHelpButton.Width = totalEntriesGridView.RowHeadersWidth;
             totalDataHelpButton.Height = totalEntriesGridView.ColumnHeadersHeight;
@@ -799,9 +898,11 @@ namespace chess_pos_db_gui
         {
             TabulatedData.Clear();
             TotalTabulatedData.Clear();
+            RetractionsData.Clear();
 
             entriesGridView.Refresh();
             totalEntriesGridView.Refresh();
+            retractionsGridView.Refresh();
 
             firstGameInfoRichTextBox.Clear();
         }
@@ -809,6 +910,8 @@ namespace chess_pos_db_gui
         private void Repopulate()
         {
             WinFormsControlUtil.SuspendDrawing(entriesGridView);
+            WinFormsControlUtil.SuspendDrawing(totalEntriesGridView);
+            WinFormsControlUtil.SuspendDrawing(retractionsGridView);
 
             SaveViewScroll();
 
@@ -834,12 +937,105 @@ namespace chess_pos_db_gui
                 }
 
                 Populate(CacheEntry, Selects.ToList(), Levels.ToList());
+                PopulateRetractions(CacheEntry, Levels.ToList());
             }
 
             entriesGridView.ClearSelection();
             ReloadViewScroll();
 
             WinFormsControlUtil.ResumeDrawing(entriesGridView);
+            WinFormsControlUtil.ResumeDrawing(totalEntriesGridView);
+            WinFormsControlUtil.ResumeDrawing(retractionsGridView);
+        }
+
+        private void PopulateRetractions(QueryCacheEntry cache, List<GameLevel> levels)
+        {
+            var retractions = cache.Stats.Results[0].Retractions;
+            var bestScore = GetBestScore(cache.Scores);
+
+            foreach (var kv in retractions)
+            {
+                AggregatedEntry total = new AggregatedEntry(kv.Value, levels);
+                AggregatedEntry nonEngine = new AggregatedEntry();
+
+                var nonEngineLevels = new List<GameLevel> { };
+                if (levels.Contains(GameLevel.Human) || levels.Contains(GameLevel.Server))
+                {
+                    if (levels.Contains(GameLevel.Human))
+                    {
+                        nonEngineLevels.Add(GameLevel.Human);
+                    }
+
+                    if (levels.Contains(GameLevel.Server))
+                    {
+                        nonEngineLevels.Add(GameLevel.Server);
+                    }
+
+                    nonEngine = new AggregatedEntry(kv.Value, nonEngineLevels);
+                }
+
+                PopulateRetraction(kv.Key, total, nonEngine, bestScore);
+            }
+        }
+
+        private void PopulateRetraction(string eran, AggregatedEntry total, AggregatedEntry totalNonEngine, ChessDBCNScore totalScore)
+        {
+            var fen = chessBoard.GetFen();
+
+            var row = RetractionsData.NewRow();
+
+            long maxDisplayedEloDiff = 400;
+
+            row["Count"] = total.Count;
+            row["WinCount"] = total.WinCount;
+            row["DrawCount"] = total.DrawCount;
+            row["LossCount"] = total.LossCount;
+
+            var averageEloDiff = total.Count > 0 ? total.TotalEloDiff / (double)total.Count : 0.0;
+            var expectedPerf = EloCalculator.GetExpectedPerformance(averageEloDiff);
+            var adjustedPerf = EloCalculator.GetAdjustedPerformance(total.Perf, expectedPerf);
+            if (chessBoard.SideToMove() == Player.White)
+            {
+                row["Perf"] = total.Perf;
+                row["AdjustedPerf"] = adjustedPerf;
+            }
+            else
+            {
+                row["Perf"] = 1.0 - total.Perf;
+                row["AdjustedPerf"] = 1.0 - adjustedPerf;
+            }
+            row["DrawPct"] = (total.DrawRate);
+            row["HumanPct"] = (totalNonEngine.Count / (double)total.Count);
+
+            row["AvgEloDiff"] =
+                total.Count == 0
+                ? double.NaN
+                : Math.Min(maxDisplayedEloDiff, Math.Max(-maxDisplayedEloDiff, (long)Math.Round(averageEloDiff)));
+
+            // score is always for side to move
+            if (totalScore != null)
+            {
+                row["Eval"] = totalScore;
+                row["EvalPct"] = totalScore.Perf;
+            }
+
+            row["Move"] = eran;
+            row["Goodness"] = CalculateGoodness(total, totalNonEngine, totalScore);
+
+            foreach (GameHeader header in total.FirstGame)
+            {
+                row["Date"] = header.Date.ToStringOmitUnknown();
+                row["Event"] = header.Event;
+                row["White"] = header.White;
+                row["Black"] = header.Black;
+                row["Result"] = header.Result.ToStringPgnUnicodeFormat();
+                row["Eco"] = header.Eco.ToString();
+                row["PlyCount"] = header.PlyCount.FirstOrDefault();
+            }
+
+            row["IsOnlyTransposition"] = false;
+
+            RetractionsData.Rows.Add(row);
         }
 
         private void ReloadViewScroll()
