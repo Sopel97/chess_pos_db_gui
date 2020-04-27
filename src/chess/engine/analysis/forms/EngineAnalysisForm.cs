@@ -91,6 +91,8 @@ namespace chess_pos_db_gui
             EmbeddedAnalysisData.Columns.Add(new DataColumn("MultiPV", typeof(int)));
 
             WinFormsControlUtil.MakeDoubleBuffered(EmbeddedControl.AnalysisDataGridView);
+            EmbeddedControl.AnalysisDataGridView.ColumnHeadersDefaultCellStyle = 
+                analysisDataGridView.ColumnHeadersDefaultCellStyle;
 
             foreach (DataGridViewColumn column in analysisDataGridView.Columns)
             {
@@ -164,8 +166,8 @@ namespace chess_pos_db_gui
             analysisDataGridView.Columns["MultiPV"].HeaderText = "MultiPV";
             analysisDataGridView.Columns["MultiPV"].MinimumWidth = 40;
             analysisDataGridView.Columns["MultiPV"].ToolTipText = "Engines internal id of the line";
-            analysisDataGridView.Columns["TBHits"].HeaderText = "TBHits";
-            analysisDataGridView.Columns["TBHits"].MinimumWidth = 60;
+            analysisDataGridView.Columns["TBHits"].HeaderText = "TB\u00A0Hits";
+            analysisDataGridView.Columns["TBHits"].MinimumWidth = 55;
             analysisDataGridView.Columns["TBHits"].ToolTipText = "Number of successful tablebase lookups";
             analysisDataGridView.Columns["PV"].HeaderText = "PV";
             analysisDataGridView.Columns["PV"].ToolTipText = "The principal variation - engine's predicted line";
@@ -193,8 +195,8 @@ namespace chess_pos_db_gui
             EmbeddedControl.AnalysisDataGridView.Columns["NPS"].HeaderText = "NPS";
             EmbeddedControl.AnalysisDataGridView.Columns["NPS"].MinimumWidth = 45;
             EmbeddedControl.AnalysisDataGridView.Columns["NPS"].ToolTipText = "Average number of nodes being examined per second";
-            EmbeddedControl.AnalysisDataGridView.Columns["TBHits"].HeaderText = "TBHits";
-            EmbeddedControl.AnalysisDataGridView.Columns["TBHits"].MinimumWidth = 45;
+            EmbeddedControl.AnalysisDataGridView.Columns["TBHits"].HeaderText = "TB\u00A0Hits";
+            EmbeddedControl.AnalysisDataGridView.Columns["TBHits"].MinimumWidth = 55;
             EmbeddedControl.AnalysisDataGridView.Columns["TBHits"].ToolTipText = "Number of successful tablebase lookups";
             EmbeddedControl.AnalysisDataGridView.Columns["ScoreInt"].Visible = false;
             EmbeddedControl.AnalysisDataGridView.Columns["MultiPV"].Visible = false;
