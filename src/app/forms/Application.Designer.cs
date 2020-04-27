@@ -137,7 +137,7 @@
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(611, 270);
+            this.entriesGridView.Size = new System.Drawing.Size(610, 270);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -477,7 +477,7 @@
             // entriesRetractionsSplitPanel.Panel2
             // 
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsGridView);
-            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(611, 381);
+            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(610, 381);
             this.entriesRetractionsSplitPanel.SplitterDistance = 270;
             this.entriesRetractionsSplitPanel.TabIndex = 9;
             // 
@@ -504,7 +504,7 @@
             this.retractionsGridView.RowHeadersWidth = 20;
             this.retractionsGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.retractionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.retractionsGridView.Size = new System.Drawing.Size(611, 107);
+            this.retractionsGridView.Size = new System.Drawing.Size(610, 107);
             this.retractionsGridView.TabIndex = 8;
             this.retractionsGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.retractionsGridView_CellContentDoubleClick);
             this.retractionsGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RetractionsGridView_CellFormatting);
@@ -746,7 +746,7 @@
             this.totalEntriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.totalEntriesGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(610, 66);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(609, 66);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);

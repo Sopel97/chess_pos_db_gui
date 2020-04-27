@@ -102,7 +102,7 @@ namespace chess_pos_db_gui
                 return "DTZ " + sign + (cursedDtz0 - abs).ToString();
             }
 
-            return Value.ToString();
+            return (Value / 100.0).ToString("#0.00");
         }
 
         public int CompareTo(object b)

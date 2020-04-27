@@ -254,9 +254,9 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["AvgEloDiff"].ToolTipText = "The average elo difference between two players. WhiteElo - BlackElo.";
             totalEntriesGridView.Columns["AvgEloDiff"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["Eval"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            totalEntriesGridView.Columns["Eval"].MinimumWidth = 30;
+            totalEntriesGridView.Columns["Eval"].MinimumWidth = 40;
             totalEntriesGridView.Columns["Eval"].HeaderText = "Ev";
-            totalEntriesGridView.Columns["Eval"].ToolTipText = "Engine evaluation. Based on noobpwnftw's https://chessdb.cn/queryc_en/";
+            totalEntriesGridView.Columns["Eval"].ToolTipText = "Engine evaluation based on Stockfish analysis provided by https://chessdb.cn/queryc_en/.";
             totalEntriesGridView.Columns["EvalPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["EvalPct"].MinimumWidth = 35;
             totalEntriesGridView.Columns["EvalPct"].HeaderText = "Ev%";
@@ -318,7 +318,7 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["Black"].ToolTipText = "Black player for the first game achieving this position.";
             entriesGridView.Columns["Date"].MinimumWidth = 40;
             entriesGridView.Columns["Date"].ToolTipText = "Date of the first game achieving this position.";
-            entriesGridView.Columns["Eval"].MinimumWidth = 35;
+            entriesGridView.Columns["Eval"].MinimumWidth = 40;
             entriesGridView.Columns["Eval"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["Eval"].HeaderText = "Ev";
             entriesGridView.Columns["Eval"].ToolTipText = totalEntriesGridView.Columns["Eval"].ToolTipText;
@@ -390,7 +390,7 @@ namespace chess_pos_db_gui
             retractionsGridView.Columns["Black"].ToolTipText = "Black player for the first game achieving this position.";
             retractionsGridView.Columns["Date"].MinimumWidth = 40;
             retractionsGridView.Columns["Date"].ToolTipText = "Date of the first game achieving this position.";
-            retractionsGridView.Columns["Eval"].MinimumWidth = 35;
+            retractionsGridView.Columns["Eval"].MinimumWidth = 40;
             retractionsGridView.Columns["Eval"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             retractionsGridView.Columns["Eval"].HeaderText = "Ev";
             retractionsGridView.Columns["Eval"].ToolTipText = totalEntriesGridView.Columns["Eval"].ToolTipText;
@@ -417,6 +417,15 @@ namespace chess_pos_db_gui
             analysisAndBoardSplitContainer.SplitterDistance = 0;
 
             fenRichTextBox.Text = "FEN: " + FenProvider.StartPos;
+            ContextMenuStrip fenRichTextBoxContextMenu = new ContextMenuStrip()
+            {
+                ShowImageMargin = false
+            };
+
+            ToolStripMenuItem fenRichTextBoxCopy = new ToolStripMenuItem("Copy");
+            fenRichTextBoxCopy.Click += (sender, e) => Clipboard.SetText(fenRichTextBox.Text.Substring(5));
+            fenRichTextBoxContextMenu.Items.Add(fenRichTextBoxCopy);
+            fenRichTextBox.ContextMenuStrip = fenRichTextBoxContextMenu;
 
             Themes = new ThemeDatabase("assets/graphics");
         }
