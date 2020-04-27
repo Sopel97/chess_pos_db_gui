@@ -92,7 +92,7 @@ namespace chess_pos_db_gui
         }
 
         private static readonly string engineProfilesPath = "data/engine_profiles.json";
-        private static readonly string settingsPath = "data/appliction/settings.json";
+        private static readonly string settingsPath = "data/application/settings.json";
         private static readonly double insignificantGoodnessTheshold = 0.01;
 
         private UciEngineProfileStorage EngineProfiles { get; set; }
