@@ -307,13 +307,10 @@ namespace chess_pos_db_gui
             mergeCheckBox.Enabled = true;
             openCheckBox.Enabled = true;
             databaseFormatComboBox.Enabled = true;
-            humanPgnsDataGridView.AllowUserToAddRows = true;
             humanPgnsDataGridView.AllowUserToDeleteRows = true;
             humanPgnsDataGridView.ReadOnly = false;
-            enginePgnsDataGridView.AllowUserToAddRows = true;
             enginePgnsDataGridView.AllowUserToDeleteRows = true;
             enginePgnsDataGridView.ReadOnly = false;
-            serverPgnsDataGridView.AllowUserToAddRows = true;
             serverPgnsDataGridView.AllowUserToDeleteRows = true;
             serverPgnsDataGridView.ReadOnly = false;
             addHumanPgnsButton.Enabled = true;
@@ -332,13 +329,10 @@ namespace chess_pos_db_gui
             mergeCheckBox.Enabled = false;
             openCheckBox.Enabled = false;
             databaseFormatComboBox.Enabled = false;
-            humanPgnsDataGridView.AllowUserToAddRows = false;
             humanPgnsDataGridView.AllowUserToDeleteRows = false;
             humanPgnsDataGridView.ReadOnly = true;
-            enginePgnsDataGridView.AllowUserToAddRows = false;
             enginePgnsDataGridView.AllowUserToDeleteRows = false;
             enginePgnsDataGridView.ReadOnly = true;
-            serverPgnsDataGridView.AllowUserToAddRows = false;
             serverPgnsDataGridView.AllowUserToDeleteRows = false;
             serverPgnsDataGridView.ReadOnly = true;
             addHumanPgnsButton.Enabled = false;
@@ -350,9 +344,23 @@ namespace chess_pos_db_gui
 
         private async void BuildButton_Click(object sender, EventArgs e)
         {
-            if (destinationFolderTextBox.Text == "")
+            var dir = destinationFolderTextBox.Text;
+
+            if (dir == "")
             {
                 MessageBox.Show("You need to specify the destination.");
+                return;
+            }
+
+            if (!System.IO.Directory.Exists(dir))
+            {
+                MessageBox.Show("Destination directory doesn't exist.");
+                return;
+            }
+
+            if (System.IO.Directory.EnumerateFileSystemEntries(dir).Any())
+            {
+                MessageBox.Show("Destination directory is not empty. You need to empty it before proceeding.");
                 return;
             }
 
@@ -377,7 +385,7 @@ namespace chess_pos_db_gui
             JsonObject request = new JsonObject
             {
                 { "command", "create" },
-                { "destination_path", destinationFolderTextBox.Text },
+                { "destination_path", dir },
                 { "merge", mergeCheckBox.Checked },
                 { "report_progress", true },
                 { "database_format", databaseFormatComboBox.Text },
@@ -401,31 +409,30 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void HumanPgnsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        private void PaintIfCompleted(DataGridViewRow row)
         {
-            var row = humanPgnsDataGridView.Rows[e.RowIndex];
-            if (row.Cells[1].Value.Equals("100%"))
+            if (row.Cells[1].Value != null && row.Cells[1].Value.Equals("100%"))
             {
                 row.DefaultCellStyle.BackColor = Color.LimeGreen;
             }
+        }
+
+        private void HumanPgnsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            var row = humanPgnsDataGridView.Rows[e.RowIndex];
+            PaintIfCompleted(row);
         }
 
         private void EnginePgnsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             var row = enginePgnsDataGridView.Rows[e.RowIndex];
-            if (row.Cells[1].Value.Equals("100%"))
-            {
-                row.DefaultCellStyle.BackColor = Color.LimeGreen;
-            }
+            PaintIfCompleted(row);
         }
 
         private void ServerPgnsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             var row = serverPgnsDataGridView.Rows[e.RowIndex];
-            if (row.Cells[1].Value.Equals("100%"))
-            {
-                row.DefaultCellStyle.BackColor = Color.LimeGreen;
-            }
+            PaintIfCompleted(row);
         }
 
         private bool HasCompatibileExtension(string path)

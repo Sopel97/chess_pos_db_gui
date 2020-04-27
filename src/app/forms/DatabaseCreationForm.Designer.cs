@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.whatsDatabaseFormatButton = new System.Windows.Forms.Button();
             this.databaseFormatLabel = new System.Windows.Forms.Label();
             this.databaseFormatComboBox = new System.Windows.Forms.ComboBox();
             this.clearTempFolderButton = new System.Windows.Forms.Button();
@@ -62,7 +63,6 @@
             this.buildButton = new System.Windows.Forms.Button();
             this.mergeCheckBox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.whatsDatabaseFormatButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -109,6 +109,18 @@
             this.splitContainer1.Size = new System.Drawing.Size(624, 602);
             this.splitContainer1.SplitterDistance = 90;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // whatsDatabaseFormatButton
+            // 
+            this.whatsDatabaseFormatButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.whatsDatabaseFormatButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.whatsDatabaseFormatButton.Location = new System.Drawing.Point(541, 63);
+            this.whatsDatabaseFormatButton.Name = "whatsDatabaseFormatButton";
+            this.whatsDatabaseFormatButton.Size = new System.Drawing.Size(79, 23);
+            this.whatsDatabaseFormatButton.TabIndex = 11;
+            this.whatsDatabaseFormatButton.Text = "What\'s this?";
+            this.whatsDatabaseFormatButton.UseVisualStyleBackColor = true;
+            this.whatsDatabaseFormatButton.Click += new System.EventHandler(this.WhatsDatabaseFormatButton_Click);
             // 
             // databaseFormatLabel
             // 
@@ -283,6 +295,7 @@
             this.humanPgnsDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.humanPgnsDataGridView.Location = new System.Drawing.Point(6, 38);
             this.humanPgnsDataGridView.Name = "humanPgnsDataGridView";
+            this.humanPgnsDataGridView.ReadOnly = true;
             this.humanPgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.humanPgnsDataGridView.Size = new System.Drawing.Size(604, 335);
             this.humanPgnsDataGridView.TabIndex = 0;
@@ -330,6 +343,7 @@
             this.enginePgnsDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.enginePgnsDataGridView.Location = new System.Drawing.Point(6, 38);
             this.enginePgnsDataGridView.Name = "enginePgnsDataGridView";
+            this.enginePgnsDataGridView.ReadOnly = true;
             this.enginePgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.enginePgnsDataGridView.Size = new System.Drawing.Size(604, 335);
             this.enginePgnsDataGridView.TabIndex = 4;
@@ -387,6 +401,7 @@
             this.serverPgnsDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.serverPgnsDataGridView.Location = new System.Drawing.Point(6, 38);
             this.serverPgnsDataGridView.Name = "serverPgnsDataGridView";
+            this.serverPgnsDataGridView.ReadOnly = true;
             this.serverPgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.serverPgnsDataGridView.Size = new System.Drawing.Size(604, 335);
             this.serverPgnsDataGridView.TabIndex = 4;
@@ -483,18 +498,6 @@
             this.tooltip.AutoPopDelay = 10000;
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
-            // 
-            // whatsDatabaseFormatButton
-            // 
-            this.whatsDatabaseFormatButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.whatsDatabaseFormatButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.whatsDatabaseFormatButton.Location = new System.Drawing.Point(541, 63);
-            this.whatsDatabaseFormatButton.Name = "whatsDatabaseFormatButton";
-            this.whatsDatabaseFormatButton.Size = new System.Drawing.Size(79, 23);
-            this.whatsDatabaseFormatButton.TabIndex = 11;
-            this.whatsDatabaseFormatButton.Text = "What\'s this?";
-            this.whatsDatabaseFormatButton.UseVisualStyleBackColor = true;
-            this.whatsDatabaseFormatButton.Click += new System.EventHandler(this.WhatsDatabaseFormatButton_Click);
             // 
             // DatabaseCreationForm
             // 
