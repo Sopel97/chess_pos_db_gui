@@ -727,7 +727,7 @@ namespace chess_pos_db_gui
                 }
             }
 
-            PopulateTotal("Children", total, totalNonEngine, bestScore);
+            PopulateTotal("Total", total, totalNonEngine, bestScore);
 
             if (goodnessNormalizeCheckbox.Checked)
             {
@@ -1681,14 +1681,14 @@ namespace chess_pos_db_gui
         {
             MessageBox.Show(
                 "When a database is loaded and queried this table shows 2 rows:\n\n" +
-                "Children: The sum of values for each move possible on the board.\n\n" +
+                "Total: The sum of values for each move possible on the board.\n\n" +
                 "Root: The values for the position currently on the board. " +
-                "Note, this row is often diffrent to Children because of " +
+                "Note, this row is often diffrent than Total because of " +
                 "transpositions and/or games ending. \n" +
                 "For example if the a game ends in this position it will not provide " +
-                "values for moves, which makes for less Children games than Root games. " +
+                "values for moves, which makes for less Total games than Root games. " +
                 "Alternatively, if some moves transpose and transpositions are not filtered out " +
-                "then there will be more Children games than Root games.\n" +
+                "then there will be more games after Root than Root games.\n" +
                 "It is important to understand that filtering of transpositions/continuations " +
                 "works for the Root positions just as it works for moves. " +
                 "For example if only continuations are enabled the move that lead " +
