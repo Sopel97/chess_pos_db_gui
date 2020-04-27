@@ -198,11 +198,22 @@ namespace chess_pos_db_gui
         private void DrawSquare(Graphics g, Piece piece, int file, int rank)
         {
             var rect = GetSquareHitbox(file, rank);
+
             var biggerRect = EnlargeRect(rect, 2);
+
+            bool isLightSquare = (file + rank) % 2 == 0;
+
             var squareImg =
-                (file + rank) % 2 == 0
+                isLightSquare
                 ? BoardImages.LightSquare
                 : BoardImages.DarkSquare;
+
+            var font = BoardImages.Config.Indicators.Font;
+
+            var brush =
+                isLightSquare
+                ? BoardImages.Config.Indicators.LightSquareBrush
+                : BoardImages.Config.Indicators.DarkSquareBrush;
 
             g.DrawImage(squareImg, rect);
 
@@ -218,11 +229,11 @@ namespace chess_pos_db_gui
 
             if (file == indicatorFile)
             {
-                var text = string.Empty + "abcdefgh"[rank];
+                var text = string.Empty + "abcdefgh"[7-rank];
                 g.DrawString(
                     text, 
-                    BoardImages.Config.Indicators.Font, 
-                    BoardImages.Config.Indicators.Brush, 
+                    font, 
+                    brush, 
                     biggerRect, 
                     BoardImages.Config.Indicators.RankIndicatorFormat
                     );
@@ -233,8 +244,8 @@ namespace chess_pos_db_gui
                 var text = string.Empty + "12345678"[file];
                 g.DrawString(
                     text,
-                    BoardImages.Config.Indicators.Font,
-                    BoardImages.Config.Indicators.Brush,
+                    font,
+                    brush,
                     biggerRect,
                     BoardImages.Config.Indicators.FileIndicatorFormat
                     );

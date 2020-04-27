@@ -35,7 +35,8 @@ namespace chess_pos_db_gui.src.app.board
     public class BoardThemeIndicatorsConfig
     {
         public Font Font { get; private set; }
-        public Brush Brush { get; private set; }
+        public Brush LightSquareBrush { get; private set; }
+        public Brush DarkSquareBrush { get; private set; }
         public int RelativeFile { get; private set; }
         public int RelativeRank { get; private set; }
         public StringFormat RankIndicatorFormat { get; private set; }
@@ -52,7 +53,8 @@ namespace chess_pos_db_gui.src.app.board
                 fontStyle |= FontStyle.Italic;
             config.Font = new Font(json["font"], json["font_size"], fontStyle);
 
-            config.Brush = new SolidBrush(ColorTranslator.FromHtml(json["color"]));
+            config.LightSquareBrush = new SolidBrush(ColorTranslator.FromHtml(json["color_on_light_squares"]));
+            config.DarkSquareBrush = new SolidBrush(ColorTranslator.FromHtml(json["color_on_dark_squares"]));
 
             {
                 string fileIndicatorSide = json["file_indicator_side"];
