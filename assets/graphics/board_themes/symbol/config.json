@@ -1,0 +1,16 @@
+{
+    "indicators" : {
+        "font" : "Segoe UI",
+        "font_size" : 11,
+        "color_on_light_squares" : "#000000",
+        "color_on_dark_squares" : "#000000",
+        "bold" : true,
+        "italic" : false,
+        "file_indicator_side" : "bottom",
+        "rank_indicator_side" : "left",
+        "rank_indicator_horizontal_align" : "left",
+        "rank_indicator_vertical_align" : "top",
+        "file_indicator_horizontal_align" : "right",
+        "file_indicator_vertical_align" : "bottom"
+    }
+}
