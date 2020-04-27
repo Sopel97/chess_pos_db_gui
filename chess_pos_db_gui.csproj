@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\app\board\BoardThemeConfig.cs" />
     <Compile Include="src\app\board\BoardTheme.cs" />
     <Compile Include="src\app\board\forms\PromotionSelectionForm.cs">
       <SubType>Form</SubType>

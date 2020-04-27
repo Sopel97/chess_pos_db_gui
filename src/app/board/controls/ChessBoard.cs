@@ -152,28 +152,28 @@ namespace chess_pos_db_gui
                 rank = 7 - rank;
             }
 
-            float w = chessBoardPanel.Width;
-            float h = chessBoardPanel.Height;
+            int w = chessBoardPanel.Width;
+            int h = chessBoardPanel.Height;
 
-            float sw = w / 8;
-            float sh = h / 8;
+            int sw = w / 8;
+            int sh = h / 8;
 
-            float x = sw * file;
-            float y = sh * rank;
+            int x = sw * file;
+            int y = sh * rank;
 
-            return new Rectangle((int)x, (int)y, (int)sw + 1, (int)sh + 1);
+            return new Rectangle(x, y, sw, sh);
         }
 
         private Position ConvertPointToSquare(Point point)
         {
-            float w = chessBoardPanel.Width;
-            float h = chessBoardPanel.Height;
+            int w = chessBoardPanel.Width;
+            int h = chessBoardPanel.Height;
 
-            float sw = w / 8;
-            float sh = h / 8;
+            int sw = w / 8;
+            int sh = h / 8;
 
-            int x = (int)(point.X / sw);
-            int y = (int)(point.Y / sh);
+            int x = point.X / sw;
+            int y = point.Y / sh;
 
             x = Math.Min(x, 7);
             x = Math.Max(x, 0);
@@ -190,15 +190,55 @@ namespace chess_pos_db_gui
             return new Position((File)x, 8 - y); //y is in range 1-8
         }
 
+        private Rectangle EnlargeRect(Rectangle rect, int d)
+        {
+            return new Rectangle(rect.X - d, rect.Y - d, rect.Width + 2 * d, rect.Height + 2 * d);
+        }
+
         private void DrawSquare(Graphics g, Piece piece, int file, int rank)
         {
             var rect = GetSquareHitbox(file, rank);
+            var biggerRect = EnlargeRect(rect, 2);
             var squareImg =
                 (file + rank) % 2 == 0
                 ? BoardImages.LightSquare
                 : BoardImages.DarkSquare;
 
             g.DrawImage(squareImg, rect);
+
+            var indicatorFile =
+                IsBoardFlipped
+                ? 7 - BoardImages.Config.Indicators.RelativeFile
+                : BoardImages.Config.Indicators.RelativeFile;
+
+            var indicatorRank =
+                IsBoardFlipped
+                ? 7 - BoardImages.Config.Indicators.RelativeRank
+                : BoardImages.Config.Indicators.RelativeRank;
+
+            if (file == indicatorFile)
+            {
+                var text = string.Empty + "abcdefgh"[rank];
+                g.DrawString(
+                    text, 
+                    BoardImages.Config.Indicators.Font, 
+                    BoardImages.Config.Indicators.Brush, 
+                    biggerRect, 
+                    BoardImages.Config.Indicators.RankIndicatorFormat
+                    );
+            }
+
+            if (rank == indicatorRank)
+            {
+                var text = string.Empty + "12345678"[file];
+                g.DrawString(
+                    text,
+                    BoardImages.Config.Indicators.Font,
+                    BoardImages.Config.Indicators.Brush,
+                    biggerRect,
+                    BoardImages.Config.Indicators.FileIndicatorFormat
+                    );
+            }
 
             if (piece != null)
             {

@@ -15,6 +15,8 @@ namespace chess_pos_db_gui.src.app.board
         public Image LightSquare { get; private set; }
         public Image DarkSquare { get; private set; }
 
+        public BoardThemeConfig Config { get; private set; }
+
         public BoardTheme(string path)
         {
             try
@@ -31,6 +33,8 @@ namespace chess_pos_db_gui.src.app.board
                 {
 
                 }
+
+                Config = BoardThemeConfig.FromJsonFile(path + "/config.json");
             }
             catch (System.IO.FileNotFoundException)
             {
