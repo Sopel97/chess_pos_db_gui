@@ -413,6 +413,7 @@ namespace chess_pos_db_gui
 
             WinFormsControlUtil.SetThousandSeparator(entriesGridView);
             WinFormsControlUtil.SetThousandSeparator(totalEntriesGridView);
+            WinFormsControlUtil.SetThousandSeparator(retractionsGridView);
 
             analysisAndBoardSplitContainer.SplitterDistance = 0;
 
