@@ -246,8 +246,8 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["DrawPct"].HeaderText = "D%";
             totalEntriesGridView.Columns["DrawPct"].ToolTipText = "The % of games that ended in a draw.";
             totalEntriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            totalEntriesGridView.Columns["HumanPct"].MinimumWidth = 30;
-            totalEntriesGridView.Columns["HumanPct"].HeaderText = "H%";
+            totalEntriesGridView.Columns["HumanPct"].MinimumWidth = 42;
+            totalEntriesGridView.Columns["HumanPct"].HeaderText = "Hu%";
             totalEntriesGridView.Columns["HumanPct"].ToolTipText = "The % of games being played by humans (Human + Server).";
             totalEntriesGridView.Columns["AvgEloDiff"].MinimumWidth = 30;
             totalEntriesGridView.Columns["AvgEloDiff"].HeaderText = "ΔE";
@@ -292,8 +292,8 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["DrawPct"].HeaderText = "D%";
             entriesGridView.Columns["DrawPct"].ToolTipText = totalEntriesGridView.Columns["DrawPct"].ToolTipText;
             entriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            entriesGridView.Columns["HumanPct"].MinimumWidth = 30;
-            entriesGridView.Columns["HumanPct"].HeaderText = "H%";
+            entriesGridView.Columns["HumanPct"].MinimumWidth = 42;
+            entriesGridView.Columns["HumanPct"].HeaderText = "Hu%";
             entriesGridView.Columns["HumanPct"].ToolTipText = totalEntriesGridView.Columns["HumanPct"].ToolTipText;
             entriesGridView.Columns["AvgEloDiff"].MinimumWidth = 30;
             entriesGridView.Columns["AvgEloDiff"].HeaderText = "ΔE";
@@ -364,8 +364,8 @@ namespace chess_pos_db_gui
             retractionsGridView.Columns["DrawPct"].HeaderText = "D%";
             retractionsGridView.Columns["DrawPct"].ToolTipText = totalEntriesGridView.Columns["DrawPct"].ToolTipText;
             retractionsGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            retractionsGridView.Columns["HumanPct"].MinimumWidth = 30;
-            retractionsGridView.Columns["HumanPct"].HeaderText = "H%";
+            retractionsGridView.Columns["HumanPct"].MinimumWidth = 42;
+            retractionsGridView.Columns["HumanPct"].HeaderText = "Hu%";
             retractionsGridView.Columns["HumanPct"].ToolTipText = totalEntriesGridView.Columns["HumanPct"].ToolTipText;
             retractionsGridView.Columns["AvgEloDiff"].MinimumWidth = 30;
             retractionsGridView.Columns["AvgEloDiff"].HeaderText = "ΔE";
