@@ -243,7 +243,7 @@ namespace chess_pos_db_gui
             totalEntriesGridView.Columns["AdjustedPerf"].MinimumWidth = 48;
             totalEntriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["DrawPct"].MinimumWidth = 30;
-            totalEntriesGridView.Columns["DrawPct"].HeaderText = "D%";
+            totalEntriesGridView.Columns["DrawPct"].HeaderText = "Dr%";
             totalEntriesGridView.Columns["DrawPct"].ToolTipText = "The % of games that ended in a draw.";
             totalEntriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             totalEntriesGridView.Columns["HumanPct"].MinimumWidth = 42;
@@ -289,7 +289,7 @@ namespace chess_pos_db_gui
             entriesGridView.Columns["AdjustedPerf"].MinimumWidth = 48;
             entriesGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["DrawPct"].MinimumWidth = 30;
-            entriesGridView.Columns["DrawPct"].HeaderText = "D%";
+            entriesGridView.Columns["DrawPct"].HeaderText = "Dr%";
             entriesGridView.Columns["DrawPct"].ToolTipText = totalEntriesGridView.Columns["DrawPct"].ToolTipText;
             entriesGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             entriesGridView.Columns["HumanPct"].MinimumWidth = 42;
@@ -337,8 +337,9 @@ namespace chess_pos_db_gui
             entriesGridView.Sort(entriesGridView.Columns["Goodness"], ListSortDirection.Descending);
 
             retractionsGridView.Columns["Move"].Frozen = true;
-            retractionsGridView.Columns["Move"].MinimumWidth = 50;
+            retractionsGridView.Columns["Move"].MinimumWidth = 80;
             retractionsGridView.Columns["Move"].ToolTipText = "The move leading to the position for which stats are displayed.";
+            retractionsGridView.Columns["Move"].HeaderText = "Retro\u00A0Move";
             retractionsGridView.Columns["Count"].HeaderText = "N";
             retractionsGridView.Columns["Count"].MinimumWidth = 30;
             retractionsGridView.Columns["Count"].ToolTipText = totalEntriesGridView.Columns["Count"].ToolTipText;
@@ -361,7 +362,7 @@ namespace chess_pos_db_gui
             retractionsGridView.Columns["AdjustedPerf"].MinimumWidth = 48;
             retractionsGridView.Columns["DrawPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             retractionsGridView.Columns["DrawPct"].MinimumWidth = 30;
-            retractionsGridView.Columns["DrawPct"].HeaderText = "D%";
+            retractionsGridView.Columns["DrawPct"].HeaderText = "Dr%";
             retractionsGridView.Columns["DrawPct"].ToolTipText = totalEntriesGridView.Columns["DrawPct"].ToolTipText;
             retractionsGridView.Columns["HumanPct"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             retractionsGridView.Columns["HumanPct"].MinimumWidth = 42;
