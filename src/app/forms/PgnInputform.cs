@@ -39,6 +39,8 @@ namespace chess_pos_db_gui
         {
             WasCancelled = false;
             MoveText = StripPgnHeader(pgnTextBox.Text);
+            MoveText = MoveText.Replace(Environment.NewLine, " ");
+            MoveText = MoveText.Replace('\n', ' ');
             Close();
         }
 
