@@ -229,7 +229,7 @@ namespace chess_pos_db_gui
 
             if (file == indicatorFile)
             {
-                var text = string.Empty + "abcdefgh"[7-rank];
+                var text = string.Empty + "12345678"[7-rank];
                 g.DrawString(
                     text, 
                     font, 
@@ -241,7 +241,7 @@ namespace chess_pos_db_gui
 
             if (rank == indicatorRank)
             {
-                var text = string.Empty + "12345678"[file];
+                var text = string.Empty + "abcdefgh"[file];
                 g.DrawString(
                     text,
                     font,
