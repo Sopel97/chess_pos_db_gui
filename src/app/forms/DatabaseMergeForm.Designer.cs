@@ -45,6 +45,7 @@
             // 
             // entriesView
             // 
+            this.entriesView.AllowDrop = true;
             this.entriesView.FullRowSelect = true;
             this.entriesView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.entriesView.Location = new System.Drawing.Point(12, 12);
@@ -54,9 +55,11 @@
             this.entriesView.UseCompatibleStateImageBehavior = false;
             this.entriesView.View = System.Windows.Forms.View.Details;
             this.entriesView.VirtualMode = true;
+            this.entriesView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.entriesView_ItemDrag);
             this.entriesView.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.entriesView_RetrieveVirtualItem);
             this.entriesView.SelectedIndexChanged += new System.EventHandler(this.entriesView_SelectedIndexChanged);
             this.entriesView.VirtualItemsSelectionRangeChanged += new System.Windows.Forms.ListViewVirtualItemsSelectionRangeChangedEventHandler(this.entriesView_VirtualItemsSelectionRangeChanged);
+            this.entriesView.DragDrop += new System.Windows.Forms.DragEventHandler(this.entriesView_DragDrop);
             // 
             // makeGroupButton
             // 

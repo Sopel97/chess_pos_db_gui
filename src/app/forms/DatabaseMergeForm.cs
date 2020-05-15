@@ -1,4 +1,5 @@
-﻿using System;
+﻿using chess_pos_db_gui.src.util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -28,6 +29,8 @@ namespace chess_pos_db_gui.src.app.forms
             entriesView.Columns.Add("two");
 
             entriesView.VirtualListSize = 0;
+
+            WinFormsControlUtil.MakeDoubleBuffered(entriesView);
         }
 
         private void addButton_Click(object sender, EventArgs e)
@@ -38,29 +41,18 @@ namespace chess_pos_db_gui.src.app.forms
             entriesView.VirtualListSize = Entries.Count;
         }
 
-        private void entriesView_DragDrop(object sender, DragEventArgs e)
-        {
-            Console.WriteLine("dragdrop");
-        }
-
         private void entriesView_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
             var entry = Entries[e.ItemIndex];
             e.Item = new ListViewItem(new string[] { entry.GetFormattedName(), entry.GetFormattedSize() });
         }
 
-        private void makeGroupButton_Click(object sender, EventArgs e)
+        private void MakeGroup(List<int> indices)
         {
-            var selectedIndices = entriesView.SelectedIndices;
-            if (selectedIndices.Count < 1)
-            {
-                return;
-            }
-
             int insertIndex = Entries.Count;
             Entry groupHeader = Entry.MakeGroupHeader();
             List<Entry> groupedEntries = new List<Entry>();
-            foreach (int index in selectedIndices)
+            foreach (int index in indices)
             {
                 var entry = Entries[index];
                 if (entry.IsGroupHeader)
@@ -98,6 +90,23 @@ namespace chess_pos_db_gui.src.app.forms
             entriesView.Refresh();
         }
 
+        private void makeGroupButton_Click(object sender, EventArgs e)
+        {
+            var selectedIndices = entriesView.SelectedIndices;
+            if (selectedIndices.Count < 1)
+            {
+                return;
+            }
+
+            List<int> indices = new List<int>();
+            foreach(int i in selectedIndices)
+            {
+                indices.Add(i);
+            }
+
+            MakeGroup(indices);
+        }
+
         private void RemoveEmptyGroups(List<Entry> entries)
         {
             HashSet<Entry> usedGroups = new HashSet<Entry>();
@@ -132,6 +141,59 @@ namespace chess_pos_db_gui.src.app.forms
                 {
                     entriesView.SelectedIndices.Remove(index);
                     break;
+                }
+            }
+        }
+
+        private List<List<Entry>> GetGroupedEntries(List<Entry> entries)
+        {
+            var groups = new List<List<Entry>>();
+
+            foreach(Entry e in entries)
+            {
+                if (e.IsGroupHeader)
+                {
+                    groups.Add(new List<Entry>());
+                }
+                else if (e.Parent != null)
+                {
+                    groups.Last().Add(e);
+                }
+            }
+
+            return groups;
+        }
+
+        private void entriesView_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            if (Entries.Count > 1)
+            {
+                List<int> indices = new List<int>();
+                foreach (int index in entriesView.SelectedIndices)
+                {
+                    indices.Add(index);
+                }
+
+                this.DoDragDrop(indices, DragDropEffects.Move);
+            }
+        }
+
+        private void entriesView_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data is List<int>)
+            {
+                var indices = e.Data as List<int>;
+
+                var clientPoint = entriesView.PointToClient(new Point(e.X, e.Y));
+                var dropItem = entriesView.GetItemAt(0, clientPoint.Y);
+                if (dropItem != null)
+                {
+                    var index = dropItem.Index;
+                    var entry = Entries[index];
+                    if (entry.IsGroupHeader)
+                    {
+
+                    }
                 }
             }
         }
