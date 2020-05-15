@@ -81,10 +81,16 @@ namespace chess_pos_db_gui.src.app.forms
 
             UnassignedEntries.RemoveAll(entry => groupedEntries.Contains(entry));
 
-            Groups.Add(new EntryGroup(groupedEntries));
+            Groups.Add(groupedEntries);
 
-            unassignedEntriesView.VirtualListSize = UnassignedEntries.Count;
+            RefreshListViews();
+
             unassignedEntriesView.SelectedIndices.Clear();
+        }
+
+        private void RefreshListViews()
+        {
+            unassignedEntriesView.VirtualListSize = UnassignedEntries.Count;
             unassignedEntriesView.Refresh();
 
             entryGroupsView.VirtualListSize = Groups.ElementCount();
@@ -151,6 +157,33 @@ namespace chess_pos_db_gui.src.app.forms
         {
             DeselectGroups();
         }
+
+        private void removeButton_Click(object sender, EventArgs e)
+        {
+            var selectedIndices = entryGroupsView.SelectedIndices;
+            if (selectedIndices.Count < 1)
+            {
+                return;
+            }
+
+            List<Entry> entriesToRemove = new List<Entry>();
+            foreach (int index in selectedIndices)
+            {
+                var element = Groups.ElementAt(index);
+                if (element is Entry entry)
+                {
+                    entriesToRemove.Add(entry);
+                }
+            }
+
+            foreach(var entry in entriesToRemove)
+            {
+                entry.RemoveGroup();
+                UnassignedEntries.Add(entry);
+            }
+
+            RefreshListViews();
+        }
     }
 
     class Element
@@ -194,9 +227,9 @@ namespace chess_pos_db_gui.src.app.forms
             Groups = new List<EntryGroup>();
         }
 
-        public void Add(EntryGroup g)
+        public void Add(List<Entry> entries)
         {
-            Groups.Add(g);
+            Groups.Add(new EntryGroup(this, entries));
         }
 
         public Element ElementAt(int i)
@@ -209,12 +242,12 @@ namespace chess_pos_db_gui.src.app.forms
                 }
                 i -= 1;
 
-                if (i < e.Size)
+                if (i < e.Count)
                 {
                     return e[i];
                 }
 
-                i -= e.Size;
+                i -= e.Count;
             }
 
             return null;
@@ -222,27 +255,32 @@ namespace chess_pos_db_gui.src.app.forms
 
         public int ElementCount()
         {
-            return Groups.Sum(g => g.Size + 1);
+            return Groups.Sum(g => g.Count + 1);
+        }
+
+        public void RemoveGroup(EntryGroup group)
+        {
+            Groups.Remove(group);
         }
     }
 
     class EntryGroup : Element
     {
+        private EntryGroups Parent { get; set; }
+
         private List<Entry> Entries { get; set; }
 
-        public int Size { get => Entries.Count; }
+        public int Count { get => Entries.Count; }
 
         public Entry this[int i] { get => Entries[i]; }
 
-        public EntryGroup() :
-            base()
-        {
-            Entries = new List<Entry>();
-        }
+        public ulong Size { get => (ulong)Entries.Sum(e => (double)e.Size); }
 
-        public EntryGroup(List<Entry> entries) :
+
+        public EntryGroup(EntryGroups parent, List<Entry> entries) :
             base()
         {
+            Parent = parent;
             Entries = entries;
             foreach (var e in Entries)
             {
@@ -262,7 +300,16 @@ namespace chess_pos_db_gui.src.app.forms
 
         public override string GetFormattedSize()
         {
-            return "";
+            return FileSizeUtil.FormatSize(Size, 0);
+        }
+
+        public void RemoveEntry(Entry e)
+        {
+            Entries.Remove(e);
+            if (Entries.Count == 0 && Parent != null)
+            {
+                Parent.RemoveGroup(this);
+            }
         }
     }
 
@@ -297,13 +344,14 @@ namespace chess_pos_db_gui.src.app.forms
 
         public override string GetFormattedSize()
         {
+            string s = FileSizeUtil.FormatSize(Size, 0);
             if (Parent != null)
             {
-                return indent + Size.ToString();
+                return indent + s;
             }
             else
             {
-                return Size.ToString();
+                return s;
             }
         }
 
@@ -315,6 +363,15 @@ namespace chess_pos_db_gui.src.app.forms
         public void SetParent(EntryGroup e)
         {
             Parent = e;
+        }
+
+        public void RemoveGroup()
+        {
+            if (Parent != null)
+            {
+                Parent.RemoveEntry(this);
+                Parent = null;
+            }
         }
     }
 

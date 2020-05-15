@@ -32,6 +32,7 @@
             this.unassignedEntriesView = new System.Windows.Forms.ListView();
             this.makeGroupButton = new System.Windows.Forms.Button();
             this.entryGroupsView = new System.Windows.Forms.ListView();
+            this.removeButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // addButton
@@ -86,11 +87,22 @@
             this.entryGroupsView.SelectedIndexChanged += new System.EventHandler(this.entryGroupsView_SelectedIndexChanged);
             this.entryGroupsView.VirtualItemsSelectionRangeChanged += new System.Windows.Forms.ListViewVirtualItemsSelectionRangeChangedEventHandler(this.entryGroupsView_VirtualItemsSelectionRangeChanged);
             // 
+            // removeButton
+            // 
+            this.removeButton.Location = new System.Drawing.Point(338, 70);
+            this.removeButton.Name = "removeButton";
+            this.removeButton.Size = new System.Drawing.Size(75, 23);
+            this.removeButton.TabIndex = 5;
+            this.removeButton.Text = "remove from group";
+            this.removeButton.UseVisualStyleBackColor = true;
+            this.removeButton.Click += new System.EventHandler(this.removeButton_Click);
+            // 
             // DatabaseMergeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.removeButton);
             this.Controls.Add(this.entryGroupsView);
             this.Controls.Add(this.makeGroupButton);
             this.Controls.Add(this.unassignedEntriesView);
@@ -106,5 +118,6 @@
         private System.Windows.Forms.ListView unassignedEntriesView;
         private System.Windows.Forms.Button makeGroupButton;
         private System.Windows.Forms.ListView entryGroupsView;
+        private System.Windows.Forms.Button removeButton;
     }
 }
