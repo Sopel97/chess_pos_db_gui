@@ -67,7 +67,7 @@ namespace chess_pos_db_gui.src.app.forms
             e.Item = new ListViewItem(new string[] { entry.GetFormattedName(), entry.GetFormattedSize() });
         }
 
-        private void MakeGroup(List<int> indices)
+        private void CreateGroupFromUnassignedEntries(List<int> indices)
         {
             List<Entry> groupedEntries = new List<Entry>();
             foreach (int index in indices)
@@ -84,7 +84,28 @@ namespace chess_pos_db_gui.src.app.forms
             unassignedEntriesView.SelectedIndices.Clear();
         }
 
-        private void AddToGroup(EntryGroup group, List<int> indices)
+        private void RegroupGroupedEntries(List<int> indices)
+        {
+            List<Entry> groupedEntries = new List<Entry>();
+            foreach (int index in indices)
+            {
+                var entry = (Entry)Groups.ElementAt(index);
+                groupedEntries.Add(entry);
+            }
+
+            foreach(var entry in groupedEntries)
+            {
+                entry.RemoveGroup();
+            }
+
+            Groups.Add(groupedEntries);
+
+            RefreshListViews();
+
+            entryGroupsView.SelectedIndices.Clear();
+        }
+
+        private void AddUnassignedEntriesToGroup(EntryGroup group, List<int> indices)
         {
             List<Entry> groupedEntries = new List<Entry>();
             foreach (int index in indices)
@@ -93,6 +114,35 @@ namespace chess_pos_db_gui.src.app.forms
             }
 
             UnassignedEntries.RemoveAll(entry => groupedEntries.Contains(entry));
+
+            group.AddRange(groupedEntries);
+
+            RefreshListViews();
+
+            unassignedEntriesView.SelectedIndices.Clear();
+        }
+
+        private void TransferGroupedEntriesToGroup(EntryGroup group, List<int> indices)
+        {
+            List<Entry> groupedEntries = new List<Entry>();
+            foreach (int index in indices)
+            {
+                var entry = (Entry)Groups.ElementAt(index);
+                if (entry.Parent == group)
+                {
+                    // We have to guard against self assignment
+                    // because it can leave the group empty
+                    // and it will be deleted before we assign to it.
+                    continue;
+                }
+
+                groupedEntries.Add(entry);
+            }
+
+            foreach (var entry in groupedEntries)
+            {
+                entry.RemoveGroup();
+            }
 
             group.AddRange(groupedEntries);
 
@@ -115,7 +165,7 @@ namespace chess_pos_db_gui.src.app.forms
                 indices.Add(index);
             }
 
-            MakeGroup(indices);
+            CreateGroupFromUnassignedEntries(indices);
         }
 
         private void RefreshListViews()
@@ -184,25 +234,36 @@ namespace chess_pos_db_gui.src.app.forms
                 return;
             }
 
+            var clientPoint = entryGroupsView.PointToClient(new Point(e.X, e.Y));
+            var dropItem = entryGroupsView.GetItemAt(0, clientPoint.Y);
             if (ds.Parent == unassignedEntriesView)
             {
-                var clientPoint = entryGroupsView.PointToClient(new Point(e.X, e.Y));
-                var dropItem = entryGroupsView.GetItemAt(0, clientPoint.Y);
                 if (dropItem == null)
                 {
-                    MakeGroup(ds.Indices);
+                    CreateGroupFromUnassignedEntries(ds.Indices);
                 }
                 else
                 {
                     var idx = dropItem.Index;
                     var element = Groups.ElementAt(idx);
                     var group = element.GetGroup();
-                    AddToGroup(group, ds.Indices);
+                    AddUnassignedEntriesToGroup(group, ds.Indices);
                 }
                 e.Effect = DragDropEffects.Move;
             }
             else if (ds.Parent == entryGroupsView)
             {
+                if (dropItem == null)
+                {
+                    RegroupGroupedEntries(ds.Indices);
+                }
+                else
+                {
+                    var idx = dropItem.Index;
+                    var element = Groups.ElementAt(idx);
+                    var group = element.GetGroup();
+                    TransferGroupedEntriesToGroup(group, ds.Indices);
+                }
                 e.Effect = DragDropEffects.None;
             }
             else
