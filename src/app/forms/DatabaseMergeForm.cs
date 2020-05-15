@@ -33,6 +33,7 @@ namespace chess_pos_db_gui.src.app.forms
             entryGroupsView.VirtualListSize = 0;
             WinFormsControlUtil.MakeDoubleBuffered(entryGroupsView);
 
+            tempStorageUsageUnitComboBox.SelectedItem = "GB";
         }
 
         private void addButton_Click(object sender, EventArgs e)
