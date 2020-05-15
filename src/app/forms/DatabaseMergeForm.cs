@@ -7,8 +7,10 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace chess_pos_db_gui.src.app.forms
 {
@@ -65,16 +67,10 @@ namespace chess_pos_db_gui.src.app.forms
             e.Item = new ListViewItem(new string[] { entry.GetFormattedName(), entry.GetFormattedSize() });
         }
 
-        private void makeGroupButton_Click(object sender, EventArgs e)
+        private void MakeGroup(List<int> indices)
         {
-            var selectedIndices = unassignedEntriesView.SelectedIndices;
-            if (selectedIndices.Count < 1)
-            {
-                return;
-            }
-
             List<Entry> groupedEntries = new List<Entry>();
-            foreach (int index in selectedIndices)
+            foreach (int index in indices)
             {
                 groupedEntries.Add(UnassignedEntries[index]);
             }
@@ -88,6 +84,40 @@ namespace chess_pos_db_gui.src.app.forms
             unassignedEntriesView.SelectedIndices.Clear();
         }
 
+        private void AddToGroup(EntryGroup group, List<int> indices)
+        {
+            List<Entry> groupedEntries = new List<Entry>();
+            foreach (int index in indices)
+            {
+                groupedEntries.Add(UnassignedEntries[index]);
+            }
+
+            UnassignedEntries.RemoveAll(entry => groupedEntries.Contains(entry));
+
+            group.AddRange(groupedEntries);
+
+            RefreshListViews();
+
+            unassignedEntriesView.SelectedIndices.Clear();
+        }
+
+        private void makeGroupButton_Click(object sender, EventArgs e)
+        {
+            var selectedIndices = unassignedEntriesView.SelectedIndices;
+            if (selectedIndices.Count < 1)
+            {
+                return;
+            }
+
+            List<int> indices = new List<int>();
+            foreach (int index in selectedIndices)
+            {
+                indices.Add(index);
+            }
+
+            MakeGroup(indices);
+        }
+
         private void RefreshListViews()
         {
             unassignedEntriesView.VirtualListSize = UnassignedEntries.Count;
@@ -97,42 +127,88 @@ namespace chess_pos_db_gui.src.app.forms
             entryGroupsView.Refresh();
         }
 
-        private void entriesView_ItemDrag(object sender, ItemDragEventArgs e)
+        private void StartDragFrom(ListView view)
         {
-            /*
-            if (Entries.Count > 1)
+            if (view.VirtualListSize > 0)
             {
                 List<int> indices = new List<int>();
-                foreach (int index in entriesView.SelectedIndices)
+                foreach (int index in view.SelectedIndices)
                 {
                     indices.Add(index);
                 }
 
-                this.DoDragDrop(indices, DragDropEffects.Move);
+                DoDragDrop(new DraggedSelection
+                {
+                    Parent = view,
+                    Indices = indices
+                }, DragDropEffects.Move);
             }
-            */
         }
 
-        private void entriesView_DragDrop(object sender, DragEventArgs e)
+        private void entryGroupsView_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            /*
-            if (e.Data is List<int>)
+            StartDragFrom(entryGroupsView);
+        }
+
+        private void unassignedEntriesView_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            StartDragFrom(unassignedEntriesView);
+        }
+
+        private void unassignedEntriesView_DragDrop(object sender, DragEventArgs e)
+        {
+            var ds = (DraggedSelection)e.Data.GetData(typeof(DraggedSelection));
+            if (ds == null)
             {
-                var indices = e.Data as List<int>;
-
-                var clientPoint = entriesView.PointToClient(new Point(e.X, e.Y));
-                var dropItem = entriesView.GetItemAt(0, clientPoint.Y);
-                if (dropItem != null)
-                {
-                    var index = dropItem.Index;
-                    var entry = Entries[index];
-                    if (entry.IsGroupHeader)
-                    {
-
-                    }
-                }
+                e.Effect = DragDropEffects.None;
+                return;
             }
-            */
+
+            if (ds.Parent == entryGroupsView)
+            {
+                Ungroup(ds.Indices);
+                e.Effect = DragDropEffects.Move;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void entryGroupsView_DragDrop(object sender, DragEventArgs e)
+        {
+            var ds = (DraggedSelection)e.Data.GetData(typeof(DraggedSelection));
+            if (ds == null)
+            {
+                e.Effect = DragDropEffects.None;
+                return;
+            }
+
+            if (ds.Parent == unassignedEntriesView)
+            {
+                var clientPoint = entryGroupsView.PointToClient(new Point(e.X, e.Y));
+                var dropItem = entryGroupsView.GetItemAt(0, clientPoint.Y);
+                if (dropItem == null)
+                {
+                    MakeGroup(ds.Indices);
+                }
+                else
+                {
+                    var idx = dropItem.Index;
+                    var element = Groups.ElementAt(idx);
+                    var group = element.GetGroup();
+                    AddToGroup(group, ds.Indices);
+                }
+                e.Effect = DragDropEffects.Move;
+            }
+            else if (ds.Parent == entryGroupsView)
+            {
+                e.Effect = DragDropEffects.None;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
         }
 
         private void DeselectGroups()
@@ -158,16 +234,10 @@ namespace chess_pos_db_gui.src.app.forms
             DeselectGroups();
         }
 
-        private void removeButton_Click(object sender, EventArgs e)
+        private void Ungroup(List<int> indices)
         {
-            var selectedIndices = entryGroupsView.SelectedIndices;
-            if (selectedIndices.Count < 1)
-            {
-                return;
-            }
-
             List<Entry> entriesToRemove = new List<Entry>();
-            foreach (int index in selectedIndices)
+            foreach (int index in indices)
             {
                 var element = Groups.ElementAt(index);
                 if (element is Entry entry)
@@ -176,7 +246,7 @@ namespace chess_pos_db_gui.src.app.forms
                 }
             }
 
-            foreach(var entry in entriesToRemove)
+            foreach (var entry in entriesToRemove)
             {
                 entry.RemoveGroup();
                 UnassignedEntries.Add(entry);
@@ -184,7 +254,41 @@ namespace chess_pos_db_gui.src.app.forms
 
             RefreshListViews();
         }
+
+        private void removeButton_Click(object sender, EventArgs e)
+        {
+            var selectedIndices = entryGroupsView.SelectedIndices;
+            if (selectedIndices.Count < 1)
+            {
+                return;
+            }
+
+            List<int> indices = new List<int>();
+            foreach (int index in selectedIndices)
+            {
+                indices.Add(index);
+            }
+
+            Ungroup(indices);
+        }
+
+        private void unassignedEntriesView_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void entryGroupsView_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
     }
+
+    class DraggedSelection
+    { 
+        public ListView Parent { get; set; }
+        public List<int> Indices { get; set; }
+    }
+
 
     class Element
     {
@@ -206,6 +310,7 @@ namespace chess_pos_db_gui.src.app.forms
         public virtual string GetFormattedName() { return ""; }
         public virtual string GetFormattedSize() { return ""; }
         public virtual bool IsSelectable() { return false; }
+        public virtual EntryGroup GetGroup() { return null; }
 
         public override int GetHashCode()
         {
@@ -216,6 +321,8 @@ namespace chess_pos_db_gui.src.app.forms
     class EntryGroups
     {
         private List<EntryGroup> Groups { get; set; }
+
+        public int Count { get => Groups.Count; }
 
         public Element this[int i]
         {
@@ -291,6 +398,7 @@ namespace chess_pos_db_gui.src.app.forms
         public void Add(Entry e)
         {
             Entries.Add(e);
+            e.SetParent(this);
         }
 
         public override string GetFormattedName()
@@ -303,6 +411,11 @@ namespace chess_pos_db_gui.src.app.forms
             return FileSizeUtil.FormatSize(Size, 0);
         }
 
+        public override EntryGroup GetGroup()
+        {
+            return this;
+        }
+
         public void RemoveEntry(Entry e)
         {
             Entries.Remove(e);
@@ -310,6 +423,15 @@ namespace chess_pos_db_gui.src.app.forms
             {
                 Parent.RemoveGroup(this);
             }
+        }
+
+        internal void AddRange(List<Entry> groupedEntries)
+        {
+            foreach(var entry in groupedEntries)
+            {
+                entry.SetParent(this);
+            }
+            Entries.AddRange(groupedEntries);
         }
     }
 
@@ -358,6 +480,11 @@ namespace chess_pos_db_gui.src.app.forms
         public override bool IsSelectable()
         {
             return true;
+        }
+
+        public override EntryGroup GetGroup()
+        {
+            return Parent;
         }
 
         public void SetParent(EntryGroup e)

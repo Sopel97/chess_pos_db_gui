@@ -58,7 +58,10 @@
             this.unassignedEntriesView.UseCompatibleStateImageBehavior = false;
             this.unassignedEntriesView.View = System.Windows.Forms.View.Details;
             this.unassignedEntriesView.VirtualMode = true;
+            this.unassignedEntriesView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.unassignedEntriesView_ItemDrag);
             this.unassignedEntriesView.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.unassignedEntriesView_RetrieveVirtualItem);
+            this.unassignedEntriesView.DragDrop += new System.Windows.Forms.DragEventHandler(this.unassignedEntriesView_DragDrop);
+            this.unassignedEntriesView.DragEnter += new System.Windows.Forms.DragEventHandler(this.unassignedEntriesView_DragEnter);
             // 
             // makeGroupButton
             // 
@@ -83,9 +86,12 @@
             this.entryGroupsView.UseCompatibleStateImageBehavior = false;
             this.entryGroupsView.View = System.Windows.Forms.View.Details;
             this.entryGroupsView.VirtualMode = true;
+            this.entryGroupsView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.entryGroupsView_ItemDrag);
             this.entryGroupsView.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.entryGroupsView_RetrieveVirtualItem);
             this.entryGroupsView.SelectedIndexChanged += new System.EventHandler(this.entryGroupsView_SelectedIndexChanged);
             this.entryGroupsView.VirtualItemsSelectionRangeChanged += new System.Windows.Forms.ListViewVirtualItemsSelectionRangeChangedEventHandler(this.entryGroupsView_VirtualItemsSelectionRangeChanged);
+            this.entryGroupsView.DragDrop += new System.Windows.Forms.DragEventHandler(this.entryGroupsView_DragDrop);
+            this.entryGroupsView.DragEnter += new System.Windows.Forms.DragEventHandler(this.entryGroupsView_DragEnter);
             // 
             // removeButton
             // 
