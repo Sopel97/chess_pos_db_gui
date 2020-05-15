@@ -72,6 +72,12 @@
     <Compile Include="src\app\board\PieceTheme.cs" />
     <Compile Include="src\app\board\ThemeDatabase.cs" />
     <Compile Include="src\app\chessdbcn\ChessDBCNScoreProvider.cs" />
+    <Compile Include="src\app\forms\DatabaseMergeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\app\forms\DatabaseMergeForm.Designer.cs">
+      <DependentUpon>DatabaseMergeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\app\GoodnessCalculator.cs" />
     <Compile Include="src\app\QueryCacheEntry.cs" />
     <Compile Include="src\chess\engine\analysis\controls\EmbeddedEngineAnalysisControl.cs">

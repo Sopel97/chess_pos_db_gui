@@ -2,6 +2,7 @@
 using chess_pos_db_gui.src.app.board;
 using chess_pos_db_gui.src.app.board.forms;
 using chess_pos_db_gui.src.app.chessdbcn;
+using chess_pos_db_gui.src.app.forms;
 using chess_pos_db_gui.src.chess;
 using chess_pos_db_gui.src.chess.engine.analysis;
 using chess_pos_db_gui.src.util;
@@ -428,6 +429,9 @@ namespace chess_pos_db_gui
             fenRichTextBoxCopy.Click += (sender, e) => Clipboard.SetText(fenRichTextBox.Text.Substring(5));
             fenRichTextBoxContextMenu.Items.Add(fenRichTextBoxCopy);
             fenRichTextBox.ContextMenuStrip = fenRichTextBoxContextMenu;
+
+            // TODO: disable after the non-functional gui is done
+            mergeToolStripMenuItem.Enabled = true;
 
             Themes = new ThemeDatabase("assets/graphics");
         }
@@ -1238,6 +1242,8 @@ namespace chess_pos_db_gui
             UpdateDatabaseInfo();
 
             OnPositionChanged(this, new EventArgs());
+
+            mergeToolStripMenuItem.Enabled = true;
         }
 
         private void UpdateDatabaseInfo()
@@ -1282,6 +1288,7 @@ namespace chess_pos_db_gui
 
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            mergeToolStripMenuItem.Enabled = false;
             Database.Close();
             QueryExecutor.ResetQueueAndCache();
             UpdateDatabaseInfo();
@@ -1741,6 +1748,14 @@ namespace chess_pos_db_gui
             var prevFen = prevGame.GetFen();
             prevGame.MakeMove(reverseMove.Move, true);
             chessBoard.SetGame(prevFen, prevGame);
+        }
+
+        private void MergeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new DatabaseMergeForm())
+            {
+                form.ShowDialog();
+            }
         }
     }
 }
