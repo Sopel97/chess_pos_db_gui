@@ -37,9 +37,9 @@
             // 
             // addButton
             // 
-            this.addButton.Location = new System.Drawing.Point(338, 12);
+            this.addButton.Location = new System.Drawing.Point(318, 12);
             this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(75, 23);
+            this.addButton.Size = new System.Drawing.Size(24, 91);
             this.addButton.TabIndex = 1;
             this.addButton.Text = "Add";
             this.addButton.UseVisualStyleBackColor = true;
@@ -48,12 +48,14 @@
             // unassignedEntriesView
             // 
             this.unassignedEntriesView.AllowDrop = true;
+            this.unassignedEntriesView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.unassignedEntriesView.FullRowSelect = true;
             this.unassignedEntriesView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.unassignedEntriesView.HideSelection = false;
             this.unassignedEntriesView.Location = new System.Drawing.Point(12, 12);
             this.unassignedEntriesView.Name = "unassignedEntriesView";
-            this.unassignedEntriesView.Size = new System.Drawing.Size(295, 426);
+            this.unassignedEntriesView.Size = new System.Drawing.Size(300, 438);
             this.unassignedEntriesView.TabIndex = 2;
             this.unassignedEntriesView.UseCompatibleStateImageBehavior = false;
             this.unassignedEntriesView.View = System.Windows.Forms.View.Details;
@@ -65,23 +67,25 @@
             // 
             // makeGroupButton
             // 
-            this.makeGroupButton.Location = new System.Drawing.Point(338, 41);
+            this.makeGroupButton.Location = new System.Drawing.Point(318, 147);
             this.makeGroupButton.Name = "makeGroupButton";
-            this.makeGroupButton.Size = new System.Drawing.Size(75, 23);
+            this.makeGroupButton.Size = new System.Drawing.Size(24, 43);
             this.makeGroupButton.TabIndex = 3;
-            this.makeGroupButton.Text = "makeGroup";
+            this.makeGroupButton.Text = ">";
             this.makeGroupButton.UseVisualStyleBackColor = true;
             this.makeGroupButton.Click += new System.EventHandler(this.makeGroupButton_Click);
             // 
             // entryGroupsView
             // 
             this.entryGroupsView.AllowDrop = true;
+            this.entryGroupsView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.entryGroupsView.FullRowSelect = true;
             this.entryGroupsView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.entryGroupsView.HideSelection = false;
-            this.entryGroupsView.Location = new System.Drawing.Point(443, 12);
+            this.entryGroupsView.Location = new System.Drawing.Point(348, 12);
             this.entryGroupsView.Name = "entryGroupsView";
-            this.entryGroupsView.Size = new System.Drawing.Size(295, 426);
+            this.entryGroupsView.Size = new System.Drawing.Size(300, 438);
             this.entryGroupsView.TabIndex = 4;
             this.entryGroupsView.UseCompatibleStateImageBehavior = false;
             this.entryGroupsView.View = System.Windows.Forms.View.Details;
@@ -95,11 +99,11 @@
             // 
             // removeButton
             // 
-            this.removeButton.Location = new System.Drawing.Point(338, 70);
+            this.removeButton.Location = new System.Drawing.Point(318, 196);
             this.removeButton.Name = "removeButton";
-            this.removeButton.Size = new System.Drawing.Size(75, 23);
+            this.removeButton.Size = new System.Drawing.Size(24, 43);
             this.removeButton.TabIndex = 5;
-            this.removeButton.Text = "remove from group";
+            this.removeButton.Text = "<";
             this.removeButton.UseVisualStyleBackColor = true;
             this.removeButton.Click += new System.EventHandler(this.removeButton_Click);
             // 
@@ -107,12 +111,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(660, 462);
             this.Controls.Add(this.removeButton);
             this.Controls.Add(this.entryGroupsView);
             this.Controls.Add(this.makeGroupButton);
             this.Controls.Add(this.unassignedEntriesView);
             this.Controls.Add(this.addButton);
+            this.MaximumSize = new System.Drawing.Size(676, 9999);
+            this.MinimumSize = new System.Drawing.Size(676, 400);
             this.Name = "DatabaseMergeForm";
             this.Text = "DatabaseMergeForm";
             this.ResumeLayout(false);

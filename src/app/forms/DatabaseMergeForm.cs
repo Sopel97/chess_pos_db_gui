@@ -23,13 +23,13 @@ namespace chess_pos_db_gui.src.app.forms
             Groups = new EntryGroups();
             UnassignedEntries = new List<Entry>();
 
-            unassignedEntriesView.Columns.Add("Name");
-            unassignedEntriesView.Columns.Add("Size");
+            unassignedEntriesView.Columns.Add("Name", 175);
+            unassignedEntriesView.Columns.Add("Size", 75);
             unassignedEntriesView.VirtualListSize = 0;
             WinFormsControlUtil.MakeDoubleBuffered(unassignedEntriesView);
 
-            entryGroupsView.Columns.Add("Name");
-            entryGroupsView.Columns.Add("Size");
+            entryGroupsView.Columns.Add("Name", 175);
+            entryGroupsView.Columns.Add("Size", 75);
             entryGroupsView.VirtualListSize = 0;
             WinFormsControlUtil.MakeDoubleBuffered(entryGroupsView);
 
@@ -68,8 +68,6 @@ namespace chess_pos_db_gui.src.app.forms
             Groups.Add(groupedEntries);
 
             RefreshListViews();
-
-            unassignedEntriesView.SelectedIndices.Clear();
         }
 
         private void RegroupGroupedEntries(List<int> indices)
@@ -89,8 +87,6 @@ namespace chess_pos_db_gui.src.app.forms
             Groups.Add(groupedEntries);
 
             RefreshListViews();
-
-            entryGroupsView.SelectedIndices.Clear();
         }
 
         private void AddUnassignedEntriesToGroup(EntryGroup group, List<int> indices)
@@ -106,8 +102,6 @@ namespace chess_pos_db_gui.src.app.forms
             group.AddRange(groupedEntries);
 
             RefreshListViews();
-
-            unassignedEntriesView.SelectedIndices.Clear();
         }
 
         private void TransferGroupedEntriesToGroup(EntryGroup group, List<int> indices)
@@ -135,8 +129,6 @@ namespace chess_pos_db_gui.src.app.forms
             group.AddRange(groupedEntries);
 
             RefreshListViews();
-
-            unassignedEntriesView.SelectedIndices.Clear();
         }
 
         private void makeGroupButton_Click(object sender, EventArgs e)
@@ -167,6 +159,9 @@ namespace chess_pos_db_gui.src.app.forms
             Groups.Sort();
             entryGroupsView.VirtualListSize = Groups.ElementCount();
             entryGroupsView.Refresh();
+
+            unassignedEntriesView.SelectedIndices.Clear();
+            entryGroupsView.SelectedIndices.Clear();
         }
 
         private void StartDragFrom(ListView view)
@@ -464,7 +459,7 @@ namespace chess_pos_db_gui.src.app.forms
 
         public override string GetFormattedName()
         {
-            return "GROUP";
+            return "Merge group:";
         }
 
         public override string GetFormattedSize()
@@ -504,7 +499,7 @@ namespace chess_pos_db_gui.src.app.forms
 
     class Entry : Element
     {
-        private static readonly string indent = "    ";
+        private static readonly string indent = "└─ ";
 
         public EntryGroup Parent { get; private set; } 
 
