@@ -170,9 +170,13 @@ namespace chess_pos_db_gui.src.app.forms
 
         private void RefreshListViews()
         {
+            var cmp = new NaturalSortComparer(true);
+            UnassignedEntries.Sort((a, b) => cmp.Compare(a.Name, b.Name));
+
             unassignedEntriesView.VirtualListSize = UnassignedEntries.Count;
             unassignedEntriesView.Refresh();
 
+            Groups.Sort();
             entryGroupsView.VirtualListSize = Groups.ElementCount();
             entryGroupsView.Refresh();
         }
@@ -430,6 +434,14 @@ namespace chess_pos_db_gui.src.app.forms
         {
             Groups.Remove(group);
         }
+
+        public void Sort()
+        {
+            foreach(var group in Groups)
+            {
+                group.Sort();
+            }
+        }
     }
 
     class EntryGroup : Element
@@ -493,6 +505,12 @@ namespace chess_pos_db_gui.src.app.forms
                 entry.SetParent(this);
             }
             Entries.AddRange(groupedEntries);
+        }
+
+        internal void Sort()
+        {
+            var cmp = new NaturalSortComparer(true);
+            Entries.Sort((a, b) => cmp.Compare(a.Name, b.Name));
         }
     }
 
