@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,155 +18,82 @@ namespace chess_pos_db_gui.src.app.forms
     public partial class DatabaseMergeForm : Form
     {
         int i = 0;
-        private List<Entry> Entries { get; set; }
+        private EntryGroups Groups { get; set; }
+        private List<Entry> UnassignedEntries { get; set; }
 
         public DatabaseMergeForm()
         {
             InitializeComponent();
 
-            Entries = new List<Entry>();
+            Groups = new EntryGroups();
+            UnassignedEntries = new List<Entry>();
 
-            entriesView.Columns.Add("one");
-            entriesView.Columns.Add("two");
+            unassignedEntriesView.Columns.Add("Name");
+            unassignedEntriesView.Columns.Add("Size");
+            unassignedEntriesView.VirtualListSize = 0;
+            WinFormsControlUtil.MakeDoubleBuffered(unassignedEntriesView);
 
-            entriesView.VirtualListSize = 0;
+            entryGroupsView.Columns.Add("Name");
+            entryGroupsView.Columns.Add("Size");
+            entryGroupsView.VirtualListSize = 0;
+            WinFormsControlUtil.MakeDoubleBuffered(entryGroupsView);
 
-            WinFormsControlUtil.MakeDoubleBuffered(entriesView);
+        }
+
+        private List<Element> GetElementsByIndices(List<int> indices)
+        {
+            return null;
         }
 
         private void addButton_Click(object sender, EventArgs e)
         {
-            Entries.Add(Entry.MakeEntry(i.ToString(), (ulong)i));
+            UnassignedEntries.Add(new Entry(i.ToString(), (ulong)i));
             i += 1;
 
-            entriesView.VirtualListSize = Entries.Count;
+            unassignedEntriesView.VirtualListSize = UnassignedEntries.Count;
         }
 
-        private void entriesView_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
+        private void unassignedEntriesView_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-            var entry = Entries[e.ItemIndex];
+            var entry = UnassignedEntries[e.ItemIndex];
             e.Item = new ListViewItem(new string[] { entry.GetFormattedName(), entry.GetFormattedSize() });
         }
 
-        private void MakeGroup(List<int> indices)
+        private void entryGroupsView_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-            int insertIndex = Entries.Count;
-            Entry groupHeader = Entry.MakeGroupHeader();
-            List<Entry> groupedEntries = new List<Entry>();
-            foreach (int index in indices)
-            {
-                var entry = Entries[index];
-                if (entry.IsGroupHeader)
-                {
-                    continue;
-                }
-
-                // We look for the minimal index
-                insertIndex = Math.Min(index, insertIndex);
-
-                entry.SetParent(groupHeader);
-                groupedEntries.Add(entry);
-            }
-
-            Entries.RemoveAll(entry => entry.Parent == groupHeader);
-
-            // We may have stolen something from a different group. 
-            // We have to find the end of it to insert the new group.
-            if (insertIndex < Entries.Count && Entries[insertIndex].Parent != null)
-            {
-                var baseParent = Entries[insertIndex].Parent;
-                while (insertIndex < Entries.Count && Entries[insertIndex].Parent == baseParent)
-                    ++insertIndex;
-            }
-
-            Entries.InsertRange(insertIndex, groupedEntries);
-            Entries.Insert(insertIndex, groupHeader);
-
-            RemoveEmptyGroups(Entries);
-
-            entriesView.VirtualListSize = Entries.Count;
-
-            entriesView.SelectedIndices.Clear();
-
-            entriesView.Refresh();
+            var entry = Groups.ElementAt(e.ItemIndex);
+            e.Item = new ListViewItem(new string[] { entry.GetFormattedName(), entry.GetFormattedSize() });
         }
 
         private void makeGroupButton_Click(object sender, EventArgs e)
         {
-            var selectedIndices = entriesView.SelectedIndices;
+            var selectedIndices = unassignedEntriesView.SelectedIndices;
             if (selectedIndices.Count < 1)
             {
                 return;
             }
 
-            List<int> indices = new List<int>();
-            foreach(int i in selectedIndices)
+            List<Entry> groupedEntries = new List<Entry>();
+            foreach (int index in selectedIndices)
             {
-                indices.Add(i);
+                groupedEntries.Add(UnassignedEntries[index]);
             }
 
-            MakeGroup(indices);
-        }
+            UnassignedEntries.RemoveAll(entry => groupedEntries.Contains(entry));
 
-        private void RemoveEmptyGroups(List<Entry> entries)
-        {
-            HashSet<Entry> usedGroups = new HashSet<Entry>();
-            foreach (var entry in entries)
-            {
-                if (entry.IsGroupHeader || entry.Parent == null)
-                {
-                    continue;
-                }
+            Groups.Add(new EntryGroup(groupedEntries));
 
-                usedGroups.Add(entry.Parent);
-            }
+            unassignedEntriesView.VirtualListSize = UnassignedEntries.Count;
+            unassignedEntriesView.SelectedIndices.Clear();
+            unassignedEntriesView.Refresh();
 
-            entries.RemoveAll(e => e.IsGroupHeader && !usedGroups.Contains(e));
-        }
-
-        private void entriesView_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            RemoveSelectionOnGroups();
-        }
-
-        private void entriesView_VirtualItemsSelectionRangeChanged(object sender, ListViewVirtualItemsSelectionRangeChangedEventArgs e)
-        {
-            RemoveSelectionOnGroups();
-        }
-
-        private void RemoveSelectionOnGroups()
-        {
-            foreach(int index in entriesView.SelectedIndices)
-            {
-                if (Entries[index].IsGroupHeader)
-                {
-                    entriesView.SelectedIndices.Remove(index);
-                    break;
-                }
-            }
-        }
-
-        private List<List<Entry>> GetGroupedEntries(List<Entry> entries)
-        {
-            var groups = new List<List<Entry>>();
-
-            foreach(Entry e in entries)
-            {
-                if (e.IsGroupHeader)
-                {
-                    groups.Add(new List<Entry>());
-                }
-                else if (e.Parent != null)
-                {
-                    groups.Last().Add(e);
-                }
-            }
-
-            return groups;
+            entryGroupsView.VirtualListSize = Groups.ElementCount();
+            entryGroupsView.Refresh();
         }
 
         private void entriesView_ItemDrag(object sender, ItemDragEventArgs e)
         {
+            /*
             if (Entries.Count > 1)
             {
                 List<int> indices = new List<int>();
@@ -176,10 +104,12 @@ namespace chess_pos_db_gui.src.app.forms
 
                 this.DoDragDrop(indices, DragDropEffects.Move);
             }
+            */
         }
 
         private void entriesView_DragDrop(object sender, DragEventArgs e)
         {
+            /*
             if (e.Data is List<int>)
             {
                 var indices = e.Data as List<int>;
@@ -196,52 +126,164 @@ namespace chess_pos_db_gui.src.app.forms
                     }
                 }
             }
+            */
+        }
+
+        private void DeselectGroups()
+        {
+            foreach (int index in entryGroupsView.SelectedIndices)
+            {
+                var element = Groups.ElementAt(index);
+                if (!element.IsSelectable())
+                {
+                    entryGroupsView.SelectedIndices.Remove(index);
+                    return;
+                }
+            }
+        }
+
+        private void entryGroupsView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DeselectGroups();
+        }
+
+        private void entryGroupsView_VirtualItemsSelectionRangeChanged(object sender, ListViewVirtualItemsSelectionRangeChangedEventArgs e)
+        {
+            DeselectGroups();
         }
     }
 
-    class Entry
+    class Element
     {
-        private static readonly string indent = "    ";
         private static ulong nextUniqueId = 0;
 
-        private ulong UniqueId { get; set; }
+        private readonly ulong id;
 
-        public bool IsGroupHeader { get; private set; }
-        public Entry Parent { get; private set; } 
+        protected Element()
+        {
+            id = nextUniqueId++;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Element element &&
+                   id == element.id;
+        }
+
+        public virtual string GetFormattedName() { return ""; }
+        public virtual string GetFormattedSize() { return ""; }
+        public virtual bool IsSelectable() { return false; }
+
+        public override int GetHashCode()
+        {
+            return 1877310944 + id.GetHashCode();
+        }
+    }
+
+    class EntryGroups
+    {
+        private List<EntryGroup> Groups { get; set; }
+
+        public Element this[int i]
+        {
+            get => Groups[i];
+        }
+
+        public EntryGroups()
+        {
+            Groups = new List<EntryGroup>();
+        }
+
+        public void Add(EntryGroup g)
+        {
+            Groups.Add(g);
+        }
+
+        public Element ElementAt(int i)
+        {
+            foreach (EntryGroup e in Groups)
+            {
+                if (i == 0)
+                {
+                    return e;
+                }
+                i -= 1;
+
+                if (i < e.Size)
+                {
+                    return e[i];
+                }
+
+                i -= e.Size;
+            }
+
+            return null;
+        }
+
+        public int ElementCount()
+        {
+            return Groups.Sum(g => g.Size + 1);
+        }
+    }
+
+    class EntryGroup : Element
+    {
+        private List<Entry> Entries { get; set; }
+
+        public int Size { get => Entries.Count; }
+
+        public Entry this[int i] { get => Entries[i]; }
+
+        public EntryGroup() :
+            base()
+        {
+            Entries = new List<Entry>();
+        }
+
+        public EntryGroup(List<Entry> entries) :
+            base()
+        {
+            Entries = entries;
+            foreach (var e in Entries)
+            {
+                e.SetParent(this);
+            }
+        }
+
+        public void Add(Entry e)
+        {
+            Entries.Add(e);
+        }
+
+        public override string GetFormattedName()
+        {
+            return "GROUP";
+        }
+
+        public override string GetFormattedSize()
+        {
+            return "";
+        }
+    }
+
+    class Entry : Element
+    {
+        private static readonly string indent = "    ";
+
+        public EntryGroup Parent { get; private set; } 
 
         public string Name { get; private set; }
         public ulong Size { get; private set; }
 
-        public static Entry MakeGroupHeader()
+        public Entry(string name, ulong size) :
+            base()
         {
-            return new Entry
-            {
-                UniqueId = nextUniqueId++,
-                IsGroupHeader = true,
-                Parent = null,
-                Name = "GROUP",
-                Size = 0
-            };
+            Parent = null;
+            Name = name;
+            Size = size;
         }
 
-        public static Entry MakeEntry(string name, ulong size)
-        {
-            return new Entry
-            {
-                UniqueId = nextUniqueId++,
-                IsGroupHeader = false,
-                Parent = null,
-                Name = name,
-                Size = size
-            };
-        }
-
-        private Entry()
-        {
-
-        }
-
-        public string GetFormattedName()
+        public override string GetFormattedName()
         {
             if (Parent != null)
             {
@@ -253,7 +295,7 @@ namespace chess_pos_db_gui.src.app.forms
             }
         }
 
-        public string GetFormattedSize()
+        public override string GetFormattedSize()
         {
             if (Parent != null)
             {
@@ -265,20 +307,14 @@ namespace chess_pos_db_gui.src.app.forms
             }
         }
 
-        public void SetParent(Entry e)
+        public override bool IsSelectable()
+        {
+            return true;
+        }
+
+        public void SetParent(EntryGroup e)
         {
             Parent = e;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is Entry entry &&
-                   UniqueId == entry.UniqueId;
-        }
-
-        public override int GetHashCode()
-        {
-            return -401120461 + UniqueId.GetHashCode();
         }
     }
 

@@ -29,8 +29,9 @@
         private void InitializeComponent()
         {
             this.addButton = new System.Windows.Forms.Button();
-            this.entriesView = new System.Windows.Forms.ListView();
+            this.unassignedEntriesView = new System.Windows.Forms.ListView();
             this.makeGroupButton = new System.Windows.Forms.Button();
+            this.entryGroupsView = new System.Windows.Forms.ListView();
             this.SuspendLayout();
             // 
             // addButton
@@ -43,23 +44,20 @@
             this.addButton.UseVisualStyleBackColor = true;
             this.addButton.Click += new System.EventHandler(this.addButton_Click);
             // 
-            // entriesView
+            // unassignedEntriesView
             // 
-            this.entriesView.AllowDrop = true;
-            this.entriesView.FullRowSelect = true;
-            this.entriesView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.entriesView.Location = new System.Drawing.Point(12, 12);
-            this.entriesView.Name = "entriesView";
-            this.entriesView.Size = new System.Drawing.Size(295, 426);
-            this.entriesView.TabIndex = 2;
-            this.entriesView.UseCompatibleStateImageBehavior = false;
-            this.entriesView.View = System.Windows.Forms.View.Details;
-            this.entriesView.VirtualMode = true;
-            this.entriesView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.entriesView_ItemDrag);
-            this.entriesView.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.entriesView_RetrieveVirtualItem);
-            this.entriesView.SelectedIndexChanged += new System.EventHandler(this.entriesView_SelectedIndexChanged);
-            this.entriesView.VirtualItemsSelectionRangeChanged += new System.Windows.Forms.ListViewVirtualItemsSelectionRangeChangedEventHandler(this.entriesView_VirtualItemsSelectionRangeChanged);
-            this.entriesView.DragDrop += new System.Windows.Forms.DragEventHandler(this.entriesView_DragDrop);
+            this.unassignedEntriesView.AllowDrop = true;
+            this.unassignedEntriesView.FullRowSelect = true;
+            this.unassignedEntriesView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.unassignedEntriesView.HideSelection = false;
+            this.unassignedEntriesView.Location = new System.Drawing.Point(12, 12);
+            this.unassignedEntriesView.Name = "unassignedEntriesView";
+            this.unassignedEntriesView.Size = new System.Drawing.Size(295, 426);
+            this.unassignedEntriesView.TabIndex = 2;
+            this.unassignedEntriesView.UseCompatibleStateImageBehavior = false;
+            this.unassignedEntriesView.View = System.Windows.Forms.View.Details;
+            this.unassignedEntriesView.VirtualMode = true;
+            this.unassignedEntriesView.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.unassignedEntriesView_RetrieveVirtualItem);
             // 
             // makeGroupButton
             // 
@@ -71,13 +69,31 @@
             this.makeGroupButton.UseVisualStyleBackColor = true;
             this.makeGroupButton.Click += new System.EventHandler(this.makeGroupButton_Click);
             // 
+            // entryGroupsView
+            // 
+            this.entryGroupsView.AllowDrop = true;
+            this.entryGroupsView.FullRowSelect = true;
+            this.entryGroupsView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.entryGroupsView.HideSelection = false;
+            this.entryGroupsView.Location = new System.Drawing.Point(443, 12);
+            this.entryGroupsView.Name = "entryGroupsView";
+            this.entryGroupsView.Size = new System.Drawing.Size(295, 426);
+            this.entryGroupsView.TabIndex = 4;
+            this.entryGroupsView.UseCompatibleStateImageBehavior = false;
+            this.entryGroupsView.View = System.Windows.Forms.View.Details;
+            this.entryGroupsView.VirtualMode = true;
+            this.entryGroupsView.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.entryGroupsView_RetrieveVirtualItem);
+            this.entryGroupsView.SelectedIndexChanged += new System.EventHandler(this.entryGroupsView_SelectedIndexChanged);
+            this.entryGroupsView.VirtualItemsSelectionRangeChanged += new System.Windows.Forms.ListViewVirtualItemsSelectionRangeChangedEventHandler(this.entryGroupsView_VirtualItemsSelectionRangeChanged);
+            // 
             // DatabaseMergeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.entryGroupsView);
             this.Controls.Add(this.makeGroupButton);
-            this.Controls.Add(this.entriesView);
+            this.Controls.Add(this.unassignedEntriesView);
             this.Controls.Add(this.addButton);
             this.Name = "DatabaseMergeForm";
             this.Text = "DatabaseMergeForm";
@@ -87,7 +103,8 @@
 
         #endregion
         private System.Windows.Forms.Button addButton;
-        private System.Windows.Forms.ListView entriesView;
+        private System.Windows.Forms.ListView unassignedEntriesView;
         private System.Windows.Forms.Button makeGroupButton;
+        private System.Windows.Forms.ListView entryGroupsView;
     }
 }
