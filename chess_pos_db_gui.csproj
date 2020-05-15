@@ -211,6 +211,9 @@
     <EmbeddedResource Include="src\app\board\controls\ChessBoard.resx">
       <DependentUpon>ChessBoard.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="src\app\forms\DatabaseMergeForm.resx">
+      <DependentUpon>DatabaseMergeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\chess\engine\analysis\controls\EmbeddedEngineAnalysisControl.resx">
       <DependentUpon>EmbeddedEngineAnalysisControl.cs</DependentUpon>
     </EmbeddedResource>
