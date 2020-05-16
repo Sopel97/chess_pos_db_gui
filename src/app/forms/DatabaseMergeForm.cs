@@ -108,6 +108,11 @@ namespace chess_pos_db_gui.src.app.forms
             RefreshListViews();
         }
 
+        private List<List<string>> GetMergeGroups()
+        {
+            return Groups.GetMergeGroups();
+        }
+
         private void RegroupGroupedEntries(List<int> indices)
         {
             List<Entry> groupedEntries = new List<Entry>();
@@ -574,6 +579,18 @@ namespace chess_pos_db_gui.src.app.forms
         {
             return Groups.Sum(g => g.GetEstimatedNumberOfMergedFiles(maxStorageUsage));
         }
+
+        public List<List<string>> GetMergeGroups()
+        {
+            List<List<string>> groups = new List<List<string>>();
+
+            foreach(var g in Groups)
+            {
+                groups.Add(g.GetAllNames());
+            }
+
+            return groups;
+        }
     }
 
     class EntryGroup : Element
@@ -670,6 +687,11 @@ namespace chess_pos_db_gui.src.app.forms
             }
 
             return estimatedFiles;
+        }
+
+        public List<string> GetAllNames()
+        {
+            return new List<string>(Entries.Select(e => e.Name));
         }
     }
 
