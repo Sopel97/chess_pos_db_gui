@@ -34,6 +34,8 @@
             this.entryGroupsView = new System.Windows.Forms.ListView();
             this.removeButton = new System.Windows.Forms.Button();
             this.filesGroupBox = new System.Windows.Forms.GroupBox();
+            this.estimatedNumberOfFilesAfterMergingLabel = new System.Windows.Forms.Label();
+            this.initialNumberOfFilesLabel = new System.Windows.Forms.Label();
             this.partitionComboBox = new System.Windows.Forms.ComboBox();
             this.partitionNameLabel = new System.Windows.Forms.Label();
             this.tempDirsGroupBox = new System.Windows.Forms.GroupBox();
@@ -49,18 +51,16 @@
             this.setTempFolderButton = new System.Windows.Forms.Button();
             this.primaryTempFolderTextBox = new System.Windows.Forms.TextBox();
             this.progressGroupBox = new System.Windows.Forms.GroupBox();
-            this.startButton = new System.Windows.Forms.Button();
-            this.splitContainer = new System.Windows.Forms.SplitContainer();
+            this.currentOperationInfoLabel = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.totalMergeProgressLabelInfo = new System.Windows.Forms.Label();
+            this.subtotalMargeProgressLabelInfo = new System.Windows.Forms.Label();
+            this.totalMergeProgressLabel = new System.Windows.Forms.Label();
+            this.totalMergeProgressBar = new System.Windows.Forms.ProgressBar();
             this.subtotalMergeProgressLabel = new System.Windows.Forms.Label();
             this.subtotalMergeProgressBar = new System.Windows.Forms.ProgressBar();
-            this.totalMergeProgressBar = new System.Windows.Forms.ProgressBar();
-            this.totalMergeProgressLabel = new System.Windows.Forms.Label();
-            this.subtotalMargeProgressLabelInfo = new System.Windows.Forms.Label();
-            this.totalMergeProgressLabelInfo = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.currentOperationInfoLabel = new System.Windows.Forms.Label();
-            this.initialNumberOfFilesLabel = new System.Windows.Forms.Label();
-            this.estimatedNumberOfFilesAfterMergingLabel = new System.Windows.Forms.Label();
+            this.startButton = new System.Windows.Forms.Button();
+            this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.filesGroupBox.SuspendLayout();
             this.tempDirsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tempStorageUsageSizeNumericUpDown)).BeginInit();
@@ -162,6 +162,24 @@
             this.filesGroupBox.TabStop = false;
             this.filesGroupBox.Text = "Files";
             // 
+            // estimatedNumberOfFilesAfterMergingLabel
+            // 
+            this.estimatedNumberOfFilesAfterMergingLabel.AutoSize = true;
+            this.estimatedNumberOfFilesAfterMergingLabel.Location = new System.Drawing.Point(340, 334);
+            this.estimatedNumberOfFilesAfterMergingLabel.Name = "estimatedNumberOfFilesAfterMergingLabel";
+            this.estimatedNumberOfFilesAfterMergingLabel.Size = new System.Drawing.Size(194, 13);
+            this.estimatedNumberOfFilesAfterMergingLabel.TabIndex = 7;
+            this.estimatedNumberOfFilesAfterMergingLabel.Text = "Estimated number of files after merging: ";
+            // 
+            // initialNumberOfFilesLabel
+            // 
+            this.initialNumberOfFilesLabel.AutoSize = true;
+            this.initialNumberOfFilesLabel.Location = new System.Drawing.Point(6, 334);
+            this.initialNumberOfFilesLabel.Name = "initialNumberOfFilesLabel";
+            this.initialNumberOfFilesLabel.Size = new System.Drawing.Size(108, 13);
+            this.initialNumberOfFilesLabel.TabIndex = 6;
+            this.initialNumberOfFilesLabel.Text = "Initial number of files: ";
+            // 
             // partitionComboBox
             // 
             this.partitionComboBox.FormattingEnabled = true;
@@ -224,6 +242,7 @@
             this.tempStorageUsageUnitComboBox.Name = "tempStorageUsageUnitComboBox";
             this.tempStorageUsageUnitComboBox.Size = new System.Drawing.Size(57, 21);
             this.tempStorageUsageUnitComboBox.TabIndex = 18;
+            this.tempStorageUsageUnitComboBox.SelectedIndexChanged += new System.EventHandler(this.tempStorageUsageUnitComboBox_SelectedIndexChanged);
             // 
             // tempStorageUsageSizeNumericUpDown
             // 
@@ -248,6 +267,7 @@
             0,
             0,
             0});
+            this.tempStorageUsageSizeNumericUpDown.ValueChanged += new System.EventHandler(this.tempStorageUsageSizeNumericUpDown_ValueChanged);
             // 
             // button1
             // 
@@ -352,6 +372,80 @@
             this.progressGroupBox.TabStop = false;
             this.progressGroupBox.Text = "Progress";
             // 
+            // currentOperationInfoLabel
+            // 
+            this.currentOperationInfoLabel.AutoSize = true;
+            this.currentOperationInfoLabel.Location = new System.Drawing.Point(170, 16);
+            this.currentOperationInfoLabel.Name = "currentOperationInfoLabel";
+            this.currentOperationInfoLabel.Size = new System.Drawing.Size(244, 13);
+            this.currentOperationInfoLabel.TabIndex = 12;
+            this.currentOperationInfoLabel.Text = "Merge A out of B: Merging N files with total size M.";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(73, 16);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(94, 13);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Current operation: ";
+            // 
+            // totalMergeProgressLabelInfo
+            // 
+            this.totalMergeProgressLabelInfo.AutoSize = true;
+            this.totalMergeProgressLabelInfo.Location = new System.Drawing.Point(42, 65);
+            this.totalMergeProgressLabelInfo.Name = "totalMergeProgressLabelInfo";
+            this.totalMergeProgressLabelInfo.Size = new System.Drawing.Size(125, 13);
+            this.totalMergeProgressLabelInfo.TabIndex = 10;
+            this.totalMergeProgressLabelInfo.Text = "Estimated total progress: ";
+            // 
+            // subtotalMargeProgressLabelInfo
+            // 
+            this.subtotalMargeProgressLabelInfo.AutoSize = true;
+            this.subtotalMargeProgressLabelInfo.Location = new System.Drawing.Point(30, 33);
+            this.subtotalMargeProgressLabelInfo.Name = "subtotalMargeProgressLabelInfo";
+            this.subtotalMargeProgressLabelInfo.Size = new System.Drawing.Size(137, 13);
+            this.subtotalMargeProgressLabelInfo.TabIndex = 9;
+            this.subtotalMargeProgressLabelInfo.Text = "Current operation progress: ";
+            // 
+            // totalMergeProgressLabel
+            // 
+            this.totalMergeProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.totalMergeProgressLabel.AutoSize = true;
+            this.totalMergeProgressLabel.Location = new System.Drawing.Point(520, 65);
+            this.totalMergeProgressLabel.Name = "totalMergeProgressLabel";
+            this.totalMergeProgressLabel.Size = new System.Drawing.Size(21, 13);
+            this.totalMergeProgressLabel.TabIndex = 8;
+            this.totalMergeProgressLabel.Text = "0%";
+            // 
+            // totalMergeProgressBar
+            // 
+            this.totalMergeProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.totalMergeProgressBar.Location = new System.Drawing.Point(173, 65);
+            this.totalMergeProgressBar.Name = "totalMergeProgressBar";
+            this.totalMergeProgressBar.Size = new System.Drawing.Size(341, 16);
+            this.totalMergeProgressBar.TabIndex = 7;
+            // 
+            // subtotalMergeProgressLabel
+            // 
+            this.subtotalMergeProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.subtotalMergeProgressLabel.AutoSize = true;
+            this.subtotalMergeProgressLabel.Location = new System.Drawing.Point(520, 33);
+            this.subtotalMergeProgressLabel.Name = "subtotalMergeProgressLabel";
+            this.subtotalMergeProgressLabel.Size = new System.Drawing.Size(21, 13);
+            this.subtotalMergeProgressLabel.TabIndex = 6;
+            this.subtotalMergeProgressLabel.Text = "0%";
+            // 
+            // subtotalMergeProgressBar
+            // 
+            this.subtotalMergeProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.subtotalMergeProgressBar.Location = new System.Drawing.Point(173, 32);
+            this.subtotalMergeProgressBar.Name = "subtotalMergeProgressBar";
+            this.subtotalMergeProgressBar.Size = new System.Drawing.Size(341, 17);
+            this.subtotalMergeProgressBar.TabIndex = 5;
+            // 
             // startButton
             // 
             this.startButton.Location = new System.Drawing.Point(567, 108);
@@ -385,98 +479,6 @@
             this.splitContainer.Size = new System.Drawing.Size(658, 596);
             this.splitContainer.SplitterDistance = 386;
             this.splitContainer.TabIndex = 12;
-            // 
-            // subtotalMergeProgressLabel
-            // 
-            this.subtotalMergeProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.subtotalMergeProgressLabel.AutoSize = true;
-            this.subtotalMergeProgressLabel.Location = new System.Drawing.Point(520, 33);
-            this.subtotalMergeProgressLabel.Name = "subtotalMergeProgressLabel";
-            this.subtotalMergeProgressLabel.Size = new System.Drawing.Size(21, 13);
-            this.subtotalMergeProgressLabel.TabIndex = 6;
-            this.subtotalMergeProgressLabel.Text = "0%";
-            // 
-            // subtotalMergeProgressBar
-            // 
-            this.subtotalMergeProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.subtotalMergeProgressBar.Location = new System.Drawing.Point(173, 32);
-            this.subtotalMergeProgressBar.Name = "subtotalMergeProgressBar";
-            this.subtotalMergeProgressBar.Size = new System.Drawing.Size(341, 17);
-            this.subtotalMergeProgressBar.TabIndex = 5;
-            // 
-            // totalMergeProgressBar
-            // 
-            this.totalMergeProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.totalMergeProgressBar.Location = new System.Drawing.Point(173, 65);
-            this.totalMergeProgressBar.Name = "totalMergeProgressBar";
-            this.totalMergeProgressBar.Size = new System.Drawing.Size(341, 16);
-            this.totalMergeProgressBar.TabIndex = 7;
-            // 
-            // totalMergeProgressLabel
-            // 
-            this.totalMergeProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.totalMergeProgressLabel.AutoSize = true;
-            this.totalMergeProgressLabel.Location = new System.Drawing.Point(520, 65);
-            this.totalMergeProgressLabel.Name = "totalMergeProgressLabel";
-            this.totalMergeProgressLabel.Size = new System.Drawing.Size(21, 13);
-            this.totalMergeProgressLabel.TabIndex = 8;
-            this.totalMergeProgressLabel.Text = "0%";
-            // 
-            // subtotalMargeProgressLabelInfo
-            // 
-            this.subtotalMargeProgressLabelInfo.AutoSize = true;
-            this.subtotalMargeProgressLabelInfo.Location = new System.Drawing.Point(30, 33);
-            this.subtotalMargeProgressLabelInfo.Name = "subtotalMargeProgressLabelInfo";
-            this.subtotalMargeProgressLabelInfo.Size = new System.Drawing.Size(137, 13);
-            this.subtotalMargeProgressLabelInfo.TabIndex = 9;
-            this.subtotalMargeProgressLabelInfo.Text = "Current operation progress: ";
-            // 
-            // totalMergeProgressLabelInfo
-            // 
-            this.totalMergeProgressLabelInfo.AutoSize = true;
-            this.totalMergeProgressLabelInfo.Location = new System.Drawing.Point(42, 65);
-            this.totalMergeProgressLabelInfo.Name = "totalMergeProgressLabelInfo";
-            this.totalMergeProgressLabelInfo.Size = new System.Drawing.Size(125, 13);
-            this.totalMergeProgressLabelInfo.TabIndex = 10;
-            this.totalMergeProgressLabelInfo.Text = "Estimated total progress: ";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(73, 16);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(94, 13);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "Current operation: ";
-            // 
-            // currentOperationInfoLabel
-            // 
-            this.currentOperationInfoLabel.AutoSize = true;
-            this.currentOperationInfoLabel.Location = new System.Drawing.Point(170, 16);
-            this.currentOperationInfoLabel.Name = "currentOperationInfoLabel";
-            this.currentOperationInfoLabel.Size = new System.Drawing.Size(244, 13);
-            this.currentOperationInfoLabel.TabIndex = 12;
-            this.currentOperationInfoLabel.Text = "Merge A out of B: Merging N files with total size M.";
-            // 
-            // initialNumberOfFilesLabel
-            // 
-            this.initialNumberOfFilesLabel.AutoSize = true;
-            this.initialNumberOfFilesLabel.Location = new System.Drawing.Point(6, 334);
-            this.initialNumberOfFilesLabel.Name = "initialNumberOfFilesLabel";
-            this.initialNumberOfFilesLabel.Size = new System.Drawing.Size(108, 13);
-            this.initialNumberOfFilesLabel.TabIndex = 6;
-            this.initialNumberOfFilesLabel.Text = "Initial number of files: ";
-            // 
-            // estimatedNumberOfFilesAfterMergingLabel
-            // 
-            this.estimatedNumberOfFilesAfterMergingLabel.AutoSize = true;
-            this.estimatedNumberOfFilesAfterMergingLabel.Location = new System.Drawing.Point(340, 334);
-            this.estimatedNumberOfFilesAfterMergingLabel.Name = "estimatedNumberOfFilesAfterMergingLabel";
-            this.estimatedNumberOfFilesAfterMergingLabel.Size = new System.Drawing.Size(194, 13);
-            this.estimatedNumberOfFilesAfterMergingLabel.TabIndex = 7;
-            this.estimatedNumberOfFilesAfterMergingLabel.Text = "Estimated number of files after merging: ";
             // 
             // DatabaseMergeForm
             // 

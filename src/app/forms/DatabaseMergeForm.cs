@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace chess_pos_db_gui.src.app.forms
@@ -70,7 +72,7 @@ namespace chess_pos_db_gui.src.app.forms
 
         private void addButton_Click(object sender, EventArgs e)
         {
-            UnassignedEntries.Add(new Entry(i.ToString(), (ulong)i));
+            UnassignedEntries.Add(new Entry(i.ToString(), (ulong)i*1000000));
             i += 1;
 
             unassignedEntriesView.VirtualListSize = UnassignedEntries.Count;
@@ -181,6 +183,17 @@ namespace chess_pos_db_gui.src.app.forms
             CreateGroupFromUnassignedEntries(indices);
         }
 
+        private int GetNumberOfInitialFiles()
+        {
+            var partition = (string)partitionComboBox.SelectedItem;
+            if (partition == null)
+            {
+                return 0;
+            }
+
+            return MergableFiles[partition].Count;
+        }
+
         private void RefreshListViews()
         {
             var cmp = new NaturalSortComparer(true);
@@ -195,6 +208,41 @@ namespace chess_pos_db_gui.src.app.forms
 
             unassignedEntriesView.SelectedIndices.Clear();
             entryGroupsView.SelectedIndices.Clear();
+
+            UpdateFileCounts();
+        }
+
+        private void UpdateFileCounts()
+        {
+            initialNumberOfFilesLabel.Text = "Initial number of files: " + GetNumberOfInitialFiles().ToString();
+            var maxStorageUsage = GetMaxStorageUsage();
+            var estimatedMerged = Groups.GetEstimatedNumberOfMergedFiles(maxStorageUsage);
+            var leftUnmerged = UnassignedEntries.Count;
+            var total = estimatedMerged + leftUnmerged;
+            estimatedNumberOfFilesAfterMergingLabel.Text = "Estimated number of files after merging: " + total.ToString();
+        }
+
+        private ulong GetMaxStorageUsage()
+        {
+            decimal amount = tempStorageUsageSizeNumericUpDown.Value;
+            decimal unit = GetUnitFromAbbreviation((string)tempStorageUsageUnitComboBox.SelectedItem);
+            decimal bytes = amount * unit;
+            return (ulong)bytes;
+        }
+
+        private decimal GetUnitFromAbbreviation(string abbr)
+        {
+            switch (abbr)
+            {
+                case "MB":
+                    return 1000m * 1000m;
+                case "GB":
+                    return 1000m * 1000m * 1000m;
+                case "TB":
+                    return 1000m * 1000m * 1000m * 1000m;
+            }
+
+            throw new ArgumentException("Invalid size abbreviation.");
         }
 
         private void StartDragFrom(ListView view)
@@ -387,6 +435,16 @@ namespace chess_pos_db_gui.src.app.forms
                 ResetMergableFilesForCurrentPartition();
             }
         }
+
+        private void tempStorageUsageSizeNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateFileCounts();
+        }
+
+        private void tempStorageUsageUnitComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateFileCounts();
+        }
     }
 
     class DraggedSelection
@@ -483,6 +541,11 @@ namespace chess_pos_db_gui.src.app.forms
                 group.Sort();
             }
         }
+
+        public int GetEstimatedNumberOfMergedFiles(ulong? maxStorageUsage)
+        {
+            return Groups.Sum(g => g.GetEstimatedNumberOfMergedFiles(maxStorageUsage));
+        }
     }
 
     class EntryGroup : Element
@@ -539,7 +602,7 @@ namespace chess_pos_db_gui.src.app.forms
             }
         }
 
-        internal void AddRange(List<Entry> groupedEntries)
+        public void AddRange(List<Entry> groupedEntries)
         {
             foreach(var entry in groupedEntries)
             {
@@ -548,10 +611,37 @@ namespace chess_pos_db_gui.src.app.forms
             Entries.AddRange(groupedEntries);
         }
 
-        internal void Sort()
+        public void Sort()
         {
             var cmp = new NaturalSortComparer(true);
             Entries.Sort((a, b) => cmp.Compare(a.Name, b.Name));
+        }
+
+        public int GetEstimatedNumberOfMergedFiles(ulong? maxStorageUsageOpt)
+        {
+            if (!maxStorageUsageOpt.HasValue)
+            {
+                return 1;
+            }
+
+            var maxStorageUsage = maxStorageUsageOpt.Value;
+
+            int estimatedFiles = 0;
+
+            // set it as if the last group is full so we create a new one.
+            ulong lastGroupSizeBytes = maxStorageUsage + 1;
+            foreach (var e in Entries)
+            {
+                if (lastGroupSizeBytes + e.Size > maxStorageUsage)
+                {
+                    estimatedFiles += 1;
+                    lastGroupSizeBytes = 0;
+                }
+
+                lastGroupSizeBytes += e.Size;
+            }
+
+            return estimatedFiles;
         }
     }
 
