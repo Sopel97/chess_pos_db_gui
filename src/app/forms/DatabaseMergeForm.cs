@@ -292,7 +292,7 @@ namespace chess_pos_db_gui.src.app.forms
             }
         }
 
-        private void DeselectGroups()
+        private void GroupSelectionClosure()
         {
             foreach (int index in entryGroupsView.SelectedIndices)
             {
@@ -300,19 +300,34 @@ namespace chess_pos_db_gui.src.app.forms
                 if (!element.IsSelectable())
                 {
                     entryGroupsView.SelectedIndices.Remove(index);
-                    return;
+                }
+
+                if (element.GetGroup() == element)
+                {
+                    for(int i = 0; i < entryGroupsView.VirtualListSize; ++i)
+                    {
+                        var e = Groups.ElementAt(i);
+                        if (e.IsSelectable() && e.GetGroup() == element)
+                        {
+                            entryGroupsView.SelectedIndices.Add(i);
+                        }
+                    }
                 }
             }
         }
 
         private void entryGroupsView_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DeselectGroups();
+            entryGroupsView.SelectedIndexChanged -= entryGroupsView_SelectedIndexChanged;
+            GroupSelectionClosure();
+            entryGroupsView.SelectedIndexChanged += entryGroupsView_SelectedIndexChanged;
         }
 
         private void entryGroupsView_VirtualItemsSelectionRangeChanged(object sender, ListViewVirtualItemsSelectionRangeChangedEventArgs e)
         {
-            DeselectGroups();
+            entryGroupsView.VirtualItemsSelectionRangeChanged -= entryGroupsView_VirtualItemsSelectionRangeChanged;
+            GroupSelectionClosure();
+            entryGroupsView.VirtualItemsSelectionRangeChanged += entryGroupsView_VirtualItemsSelectionRangeChanged;
         }
 
         private void Ungroup(List<int> indices)
