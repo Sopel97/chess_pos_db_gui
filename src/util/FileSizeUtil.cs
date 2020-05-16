@@ -24,7 +24,7 @@ namespace chess_pos_db_gui.src.util
 
             // 1L << (mag * 10) == 2 ^ (10 * mag) 
             // [i.e. the number of bytes in the unit corresponding to mag]
-            decimal adjustedSize = (decimal)value / (1L << (mag * 10));
+            decimal adjustedSize = (decimal)value / (decimal)Math.Pow(1000, mag);
 
             // make adjustment when the value is large enough that
             // it would round up to 1000 or more
