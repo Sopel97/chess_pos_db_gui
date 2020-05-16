@@ -52,6 +52,9 @@ namespace chess_pos_db_gui.src.app.forms
 
             // This should be called by the event from above
             // ResetMergableFilesForCurrentPartition();
+
+            maxTempStorageUsageCheckBox.Checked = false;
+            UpdateEnabledStateOfMaxStorageInput();
         }
 
         private void ResetMergableFilesForCurrentPartition()
@@ -222,12 +225,19 @@ namespace chess_pos_db_gui.src.app.forms
             estimatedNumberOfFilesAfterMergingLabel.Text = "Estimated number of files after merging: " + total.ToString();
         }
 
-        private ulong GetMaxStorageUsage()
+        private ulong? GetMaxStorageUsage()
         {
-            decimal amount = tempStorageUsageSizeNumericUpDown.Value;
-            decimal unit = GetUnitFromAbbreviation((string)tempStorageUsageUnitComboBox.SelectedItem);
-            decimal bytes = amount * unit;
-            return (ulong)bytes;
+            if (maxTempStorageUsageCheckBox.Checked)
+            {
+                decimal amount = tempStorageUsageSizeNumericUpDown.Value;
+                decimal unit = GetUnitFromAbbreviation((string)tempStorageUsageUnitComboBox.SelectedItem);
+                decimal bytes = amount * unit;
+                return (ulong)bytes;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private decimal GetUnitFromAbbreviation(string abbr)
@@ -438,12 +448,30 @@ namespace chess_pos_db_gui.src.app.forms
 
         private void tempStorageUsageSizeNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            UpdateFileCounts();
+            if (maxTempStorageUsageCheckBox.Enabled)
+            {
+                UpdateFileCounts();
+            }
         }
 
         private void tempStorageUsageUnitComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (maxTempStorageUsageCheckBox.Enabled)
+            {
+                UpdateFileCounts();
+            }
+        }
+
+        private void maxTempStorageUsageCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateEnabledStateOfMaxStorageInput();
             UpdateFileCounts();
+        }
+
+        private void UpdateEnabledStateOfMaxStorageInput()
+        {
+            tempStorageUsageSizeNumericUpDown.Enabled = maxTempStorageUsageCheckBox.Checked;
+            tempStorageUsageUnitComboBox.Enabled = maxTempStorageUsageCheckBox.Checked;
         }
     }
 

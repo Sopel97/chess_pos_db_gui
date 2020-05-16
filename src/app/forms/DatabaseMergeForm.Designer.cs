@@ -39,7 +39,6 @@
             this.partitionComboBox = new System.Windows.Forms.ComboBox();
             this.partitionNameLabel = new System.Windows.Forms.Label();
             this.tempDirsGroupBox = new System.Windows.Forms.GroupBox();
-            this.maxTempStorageUsageLabel = new System.Windows.Forms.Label();
             this.tempStorageUsageUnitComboBox = new System.Windows.Forms.ComboBox();
             this.tempStorageUsageSizeNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.button1 = new System.Windows.Forms.Button();
@@ -61,6 +60,7 @@
             this.subtotalMergeProgressBar = new System.Windows.Forms.ProgressBar();
             this.startButton = new System.Windows.Forms.Button();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
+            this.maxTempStorageUsageCheckBox = new System.Windows.Forms.CheckBox();
             this.filesGroupBox.SuspendLayout();
             this.tempDirsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tempStorageUsageSizeNumericUpDown)).BeginInit();
@@ -202,7 +202,7 @@
             // 
             this.tempDirsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tempDirsGroupBox.Controls.Add(this.maxTempStorageUsageLabel);
+            this.tempDirsGroupBox.Controls.Add(this.maxTempStorageUsageCheckBox);
             this.tempDirsGroupBox.Controls.Add(this.tempStorageUsageUnitComboBox);
             this.tempDirsGroupBox.Controls.Add(this.tempStorageUsageSizeNumericUpDown);
             this.tempDirsGroupBox.Controls.Add(this.button1);
@@ -221,15 +221,6 @@
             this.tempDirsGroupBox.TabIndex = 9;
             this.tempDirsGroupBox.TabStop = false;
             this.tempDirsGroupBox.Text = "Temporary Directories";
-            // 
-            // maxTempStorageUsageLabel
-            // 
-            this.maxTempStorageUsageLabel.AutoSize = true;
-            this.maxTempStorageUsageLabel.Location = new System.Drawing.Point(15, 73);
-            this.maxTempStorageUsageLabel.Name = "maxTempStorageUsageLabel";
-            this.maxTempStorageUsageLabel.Size = new System.Drawing.Size(155, 13);
-            this.maxTempStorageUsageLabel.TabIndex = 19;
-            this.maxTempStorageUsageLabel.Text = "Max. temporary storage usage: ";
             // 
             // tempStorageUsageUnitComboBox
             // 
@@ -480,6 +471,17 @@
             this.splitContainer.SplitterDistance = 386;
             this.splitContainer.TabIndex = 12;
             // 
+            // maxTempStorageUsageCheckBox
+            // 
+            this.maxTempStorageUsageCheckBox.AutoSize = true;
+            this.maxTempStorageUsageCheckBox.Location = new System.Drawing.Point(20, 72);
+            this.maxTempStorageUsageCheckBox.Name = "maxTempStorageUsageCheckBox";
+            this.maxTempStorageUsageCheckBox.Size = new System.Drawing.Size(154, 17);
+            this.maxTempStorageUsageCheckBox.TabIndex = 20;
+            this.maxTempStorageUsageCheckBox.Text = "Max. temp. storage usage: ";
+            this.maxTempStorageUsageCheckBox.UseVisualStyleBackColor = true;
+            this.maxTempStorageUsageCheckBox.CheckedChanged += new System.EventHandler(this.maxTempStorageUsageCheckBox_CheckedChanged);
+            // 
             // DatabaseMergeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -520,7 +522,6 @@
         private System.Windows.Forms.Label tempFolderLabel;
         private System.Windows.Forms.Button setTempFolderButton;
         private System.Windows.Forms.TextBox primaryTempFolderTextBox;
-        private System.Windows.Forms.Label maxTempStorageUsageLabel;
         private System.Windows.Forms.ComboBox tempStorageUsageUnitComboBox;
         private System.Windows.Forms.NumericUpDown tempStorageUsageSizeNumericUpDown;
         private System.Windows.Forms.Button button1;
@@ -540,5 +541,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label totalMergeProgressLabelInfo;
         private System.Windows.Forms.Label subtotalMargeProgressLabelInfo;
+        private System.Windows.Forms.CheckBox maxTempStorageUsageCheckBox;
     }
 }
