@@ -537,12 +537,14 @@ namespace chess_pos_db_gui.src.app.forms
 
         private void DisableInput()
         {
-            Enabled = false;
+            filesGroupBox.Enabled = false;
+            tempDirsGroupBox.Enabled = false;
         }
 
         private void EnableInput()
         {
-            Enabled = true;
+            filesGroupBox.Enabled = true;
+            tempDirsGroupBox.Enabled = true;
         }
 
         private void PerformMerges()
