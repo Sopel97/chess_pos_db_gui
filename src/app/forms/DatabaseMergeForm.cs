@@ -29,13 +29,13 @@ namespace chess_pos_db_gui.src.app.forms
             Groups = new EntryGroups();
             UnassignedEntries = new List<Entry>();
 
-            unassignedEntriesView.Columns.Add("Name", 175);
-            unassignedEntriesView.Columns.Add("Size", 75);
+            unassignedEntriesView.Columns.Add("Name", 165);
+            unassignedEntriesView.Columns.Add("Size", 85);
             unassignedEntriesView.VirtualListSize = 0;
             WinFormsControlUtil.MakeDoubleBuffered(unassignedEntriesView);
 
-            entryGroupsView.Columns.Add("Name", 175);
-            entryGroupsView.Columns.Add("Size", 75);
+            entryGroupsView.Columns.Add("Name", 165);
+            entryGroupsView.Columns.Add("Size", 85);
             entryGroupsView.VirtualListSize = 0;
             WinFormsControlUtil.MakeDoubleBuffered(entryGroupsView);
 

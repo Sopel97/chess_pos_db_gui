@@ -1,6 +1,11 @@
-﻿using System;
+﻿using chess_pos_db_gui.src.app.forms;
+using chess_pos_db_gui.src.util;
+using ChessDotNet;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Json;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +26,9 @@ namespace chess_pos_db_gui
         public ulong NumPositions { get; private set; }
         public ulong NumSkippedGames { get; private set; }
 
+        private ulong TotalFileSizeBeingImported { get; set; }
+        private ulong TotalFileSizeAlreadyImported { get; set; }
+
         public bool KeepFormAlive { get; private set; }
 
         private readonly DatabaseProxy database;
@@ -32,10 +40,19 @@ namespace chess_pos_db_gui
             InitializeComponent();
 
             database = db;
-            mergeProgressBar.Maximum = 100;
+
+            mergeAllAfterImportRadioButton.Checked = true;
+
+            tempStorageUsageUnitComboBox.SelectedItem = "GB";
+
+            WinFormsControlUtil.MakeDoubleBuffered(humanPgnsDataGridView);
+            WinFormsControlUtil.MakeDoubleBuffered(enginePgnsDataGridView);
+            WinFormsControlUtil.MakeDoubleBuffered(serverPgnsDataGridView);
+            WinFormsControlUtil.MakeDoubleBuffered(importProgressBar);
+            WinFormsControlUtil.MakeDoubleBuffered(mergeProgressBar);
         }
 
-        private void SetTempFolderButton_Click(object sender, EventArgs e)
+        private void SetFolder(TextBox textBox)
         {
             using (FolderBrowserDialog browser = new FolderBrowserDialog())
             {
@@ -43,27 +60,34 @@ namespace chess_pos_db_gui
 
                 if (browser.ShowDialog() == DialogResult.OK)
                 {
-                    tempFolderTextBox.Text = browser.SelectedPath;
+                    textBox.Text = browser.SelectedPath;
                 }
             }
+        }
+
+        private void setPrimaryTempFolderButton_Click(object sender, EventArgs e)
+        {
+            SetFolder(primaryTempFolderTextBox);
+        }
+
+        private void setSecondaryTempFolderButton_Click(object sender, EventArgs e)
+        {
+            SetFolder(secondaryTempFolderTextBox);
         }
 
         private void SetDestinationFolderButton_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog browser = new FolderBrowserDialog())
-            {
-                browser.ShowNewFolderButton = true;
-
-                if (browser.ShowDialog() == DialogResult.OK)
-                {
-                    destinationFolderTextBox.Text = browser.SelectedPath;
-                }
-            }
+            SetFolder(destinationFolderTextBox);
         }
 
-        private void ClearTempFolderButton_Click(object sender, EventArgs e)
+        private void clearPrimaryTempFolderButton_Click(object sender, EventArgs e)
         {
-            tempFolderTextBox.Clear();
+            primaryTempFolderTextBox.Clear();
+        }
+
+        private void clearSecondaryTempFolderButton_Click(object sender, EventArgs e)
+        {
+            secondaryTempFolderTextBox.Clear();
         }
 
         private void DatabaseCreationForm_Load(object sender, EventArgs e)
@@ -74,7 +98,7 @@ namespace chess_pos_db_gui
                 databaseFormatComboBox.Items.Add(type);
             }
 
-            databaseFormatComboBox.SelectedItem = supported[supported.Count - 1];
+            databaseFormatComboBox.SelectedItem = "";
         }
 
         private void AddPath(DataGridView dgv, string path)
@@ -94,6 +118,12 @@ namespace chess_pos_db_gui
 
         private void AddFiles(DataGridView dgv)
         {
+            if (databaseFormatComboBox.SelectedItem == null || (string)databaseFormatComboBox.SelectedItem == "")
+            {
+                MessageBox.Show("Please select the database format first.");
+                return;
+            }
+
             using (OpenFileDialog browser = new OpenFileDialog())
             {
                 browser.Filter = GetCurrentFilesFilter();
@@ -183,19 +213,47 @@ namespace chess_pos_db_gui
             return null;
         }
 
-        private void SetFileProgress(string path, float progress)
+        private void SetFileImported(string path)
         {
             var row = FindRowWithPgnFile(path);
             if (row != null)
             {
                 if (InvokeRequired)
                 {
-                    Invoke(new Action<string, float>(SetFileProgress), path, progress);
+                    Invoke(new Action<string>(SetFileImported), path);
                 }
                 else
                 {
-                    row.Cells[1].Value = ((int)(progress * 100)).ToString() + "%";
+                    row.Cells[1].Value = "100%";
+
+                    if (row.DataGridView == humanPgnsDataGridView)
+                    {
+                        pgnPathsTabControl.SelectedTab = humanTabPage;
+                    }
+                    else if (row.DataGridView == enginePgnsDataGridView)
+                    {
+                        pgnPathsTabControl.SelectedTab = engineTabPage;
+                    }
+                    else if (row.DataGridView == serverPgnsDataGridView)
+                    {
+                        pgnPathsTabControl.SelectedTab = serverTabPage;
+                    }
+
+                    row.DataGridView.FirstDisplayedCell = row.Cells[0];
                 }
+            }
+        }
+
+        private void SetImportProgress(int progress)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<int>(SetImportProgress), progress);
+            }
+            else
+            {
+                importProgressBar.Value = progress;
+                importProgressLabel.Text = progress.ToString() + "%";
             }
         }
 
@@ -212,13 +270,27 @@ namespace chess_pos_db_gui
             }
         }
 
+        private void RefreshProgress()
+        {
+            humanPgnsDataGridView.Refresh();
+            enginePgnsDataGridView.Refresh();
+            serverPgnsDataGridView.Refresh();
+
+            progressGroupBox.Refresh();
+        }
+
         private void ProgressCallback(JsonValue progressReport)
         {
             if (progressReport["operation"] == "import")
             {
                 if (progressReport.ContainsKey("imported_file_path"))
                 {
-                    SetFileProgress(progressReport["imported_file_path"], 1.0f);
+                    string path = progressReport["imported_file_path"];
+                    SetFileImported(path);
+
+                    ulong filesize = (ulong)new System.IO.FileInfo(path).Length;
+                    TotalFileSizeAlreadyImported += filesize;
+                    SetImportProgress((int)(TotalFileSizeAlreadyImported * 100 / TotalFileSizeBeingImported));
                 }
 
                 if (progressReport["finished"] == true)
@@ -239,12 +311,30 @@ namespace chess_pos_db_gui
 
             if (InvokeRequired)
             {
-                Invoke(new Action(Refresh));
+                Invoke(new Action(RefreshProgress));
             }
             else
             {
-                Refresh();
+                RefreshProgress();
             }
+        }
+
+        private void FinalizeBuild()
+        {
+            if (IsManualMergeAfterImport())
+            {
+                database.Open(DatabasePath);
+                using (var form = new DatabaseMergeForm(database))
+                {
+                    form.ShowDialog();
+                }
+            }
+
+            EnableInput();
+
+            KeepFormAlive = false;
+
+            Close();
         }
 
         private void BuildDatabase(JsonObject request)
@@ -263,22 +353,11 @@ namespace chess_pos_db_gui
 
                 if (InvokeRequired)
                 {
-                    Invoke(new Action(EnableInput));
+                    Invoke(new Action(FinalizeBuild));
                 }
                 else
                 {
-                    EnableInput();
-                }
-
-                KeepFormAlive = false;
-
-                if (InvokeRequired)
-                {
-                    Invoke(new Action(Close));
-                }
-                else
-                {
-                    Close();
+                    FinalizeBuild();
                 }
             }
             catch (Exception ex)
@@ -300,13 +379,8 @@ namespace chess_pos_db_gui
         }
         private void EnableInput()
         {
-            setDestinationFolderButton.Enabled = true;
-            setTempFolderButton.Enabled = true;
-            clearTempFolderButton.Enabled = true;
+            importSettingsGroupBox.Enabled = true;
             buildButton.Enabled = true;
-            mergeCheckBox.Enabled = true;
-            openCheckBox.Enabled = true;
-            databaseFormatComboBox.Enabled = true;
             humanPgnsDataGridView.AllowUserToDeleteRows = true;
             humanPgnsDataGridView.ReadOnly = false;
             enginePgnsDataGridView.AllowUserToDeleteRows = true;
@@ -317,18 +391,17 @@ namespace chess_pos_db_gui
             addEnginePgnsButton.Enabled = true;
             addServerPgnsButton.Enabled = true;
 
+            tempDirsGroupBox.Enabled = true;
+
+            mergeProgressBar.Enabled = true;
+
             KeepFormAlive = false;
         }
 
         private void DisableInput()
         {
-            setDestinationFolderButton.Enabled = false;
-            setTempFolderButton.Enabled = false;
-            clearTempFolderButton.Enabled = false;
+            importSettingsGroupBox.Enabled = false;
             buildButton.Enabled = false;
-            mergeCheckBox.Enabled = false;
-            openCheckBox.Enabled = false;
-            databaseFormatComboBox.Enabled = false;
             humanPgnsDataGridView.AllowUserToDeleteRows = false;
             humanPgnsDataGridView.ReadOnly = true;
             enginePgnsDataGridView.AllowUserToDeleteRows = false;
@@ -339,12 +412,94 @@ namespace chess_pos_db_gui
             addEnginePgnsButton.Enabled = false;
             addServerPgnsButton.Enabled = false;
 
+            tempDirsGroupBox.Enabled = false;
+
+            if (!IsAutomaticMerge())
+            {
+                mergeProgressBar.Enabled = false;
+            }
+
             KeepFormAlive = true;
+        }
+
+        private bool IsAutomaticMerge()
+        {
+            return mergeAllAfterImportRadioButton.Checked;
+        }
+
+        private bool IsManualMergeAfterImport()
+        {
+            return mergeManuallyAfterImportRadioButton.Checked;
+        }
+
+        private void UpdateRadioButtonsState()
+        {
+            bool enable = IsAutomaticMerge();
+            setPrimaryTempFolderButton.Enabled = enable;
+            setSecondaryTempFolderButton.Enabled = enable;
+            clearPrimaryTempFolderButton.Enabled = enable;
+            clearSecondaryTempFolderButton.Enabled = enable;
+            maxTempStorageUsageCheckBox.Enabled = enable;
+            tempStorageUsageSizeNumericUpDown.Enabled = enable;
+            tempStorageUsageUnitComboBox.Enabled = enable;
+        }
+
+        private List<string> GetTemporaryDirectories()
+        {
+            List<string> dirs = new List<string>();
+
+            if (primaryTempFolderTextBox.Text != null && primaryTempFolderTextBox.Text != "")
+            {
+                dirs.Add(primaryTempFolderTextBox.Text);
+            }
+
+            if (secondaryTempFolderTextBox.Text != null && secondaryTempFolderTextBox.Text != "")
+            {
+                dirs.Add(secondaryTempFolderTextBox.Text);
+            }
+
+            return dirs;
+        }
+
+        private decimal GetUnitFromAbbreviation(string abbr)
+        {
+            switch (abbr)
+            {
+                case "MB":
+                    return 1000m * 1000m;
+                case "GB":
+                    return 1000m * 1000m * 1000m;
+                case "TB":
+                    return 1000m * 1000m * 1000m * 1000m;
+            }
+
+            throw new ArgumentException("Invalid size abbreviation.");
+        }
+
+        private ulong? GetMaxStorageUsage()
+        {
+            if (maxTempStorageUsageCheckBox.Checked)
+            {
+                decimal amount = tempStorageUsageSizeNumericUpDown.Value;
+                decimal unit = GetUnitFromAbbreviation((string)tempStorageUsageUnitComboBox.SelectedItem);
+                decimal bytes = amount * unit;
+                return (ulong)bytes;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private async void BuildButton_Click(object sender, EventArgs e)
         {
             var dir = destinationFolderTextBox.Text;
+
+            if (databaseFormatComboBox.SelectedItem == null || (string)databaseFormatComboBox.SelectedItem == "")
+            {
+                MessageBox.Show("You need to specify the database format.");
+                return;
+            }
 
             if (dir == "")
             {
@@ -382,23 +537,56 @@ namespace chess_pos_db_gui
 
             DisableInput();
 
+            var humanPgns = GetHumanPgns();
+            var enginePgns = GetEnginePgns();
+            var serverPgns = GetServerPgns();
+
+            TotalFileSizeBeingImported = 
+                GetTotalImportableFileSize(humanPgns)
+                + GetTotalImportableFileSize(enginePgns)
+                + GetTotalImportableFileSize(serverPgns);
+            TotalFileSizeAlreadyImported = 0;
+
+            var maxSpace = GetMaxStorageUsage();
+            var temps = GetTemporaryDirectories();
+            bool doMerge = IsAutomaticMerge();
+
             JsonObject request = new JsonObject
             {
                 { "command", "create" },
                 { "destination_path", dir },
-                { "merge", mergeCheckBox.Checked },
+                { "merge", doMerge },
                 { "report_progress", true },
                 { "database_format", databaseFormatComboBox.Text },
-                { "human_pgns", new JsonArray(GetHumanPgns()) },
-                { "engine_pgns", new JsonArray(GetEnginePgns()) },
-                { "server_pgns", new JsonArray(GetServerPgns()) }
+                { "human_pgns", new JsonArray(humanPgns) },
+                { "engine_pgns", new JsonArray(enginePgns) },
+                { "server_pgns", new JsonArray(serverPgns) }
             };
-            if (tempFolderTextBox.Text != "")
+            if (doMerge)
             {
-                request.Add("temporary_path", tempFolderTextBox.Text);
+                request.Add("temporary_paths", new JsonArray(temps.Select(
+                    t =>
+                    {
+                        JsonValue s = t;
+                        return s;
+                    })));
+                if (maxSpace.HasValue)
+                {
+                    request.Add("temporary_space", maxSpace.Value);
+                }
             }
 
             await Task.Run(() => BuildDatabase(request));
+        }
+
+        private ulong GetTotalImportableFileSize(List<JsonValue> serverPgns)
+        {
+            ulong total = 0;
+            foreach (string path in serverPgns)
+            {
+                total += (ulong)new System.IO.FileInfo(path).Length;
+            }
+            return total;
         }
 
         private void DatabaseCreationForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -494,6 +682,21 @@ namespace chess_pos_db_gui
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information
                 );
+        }
+
+        private void dontMergeRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateRadioButtonsState();
+        }
+
+        private void mergeAllAfterImportRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateRadioButtonsState();
+        }
+
+        private void mergeManuallyAfterImportRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateRadioButtonsState();
         }
     }
 }

@@ -527,7 +527,11 @@ namespace chess_pos_db_gui
                     { "report_progress", true },
                     { "partition", partition },
                     { "files", new JsonArray(names.Select(t => (JsonValue)t)) },
-                    { "temporary_paths", new JsonArray(temps.Select(t => (JsonValue)t)) }
+                    { "temporary_paths", new JsonArray(temps.Select(t =>
+                        {
+                            JsonValue s = t;
+                            return s;
+                        })) }
                 };
                 if (maxSpace.HasValue)
                 {
