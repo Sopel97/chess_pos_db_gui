@@ -27,6 +27,8 @@ namespace chess_pos_db_gui
         private Point? MouseFrom { get; set; }
         private Point? MouseTo { get; set; }
 
+        private Point LastMousePosition { get; set; } = new Point(0, 0);
+
         private bool IsBoardFlipped { get; set; }
         private int Plies { get; set; }
         private int FirstPly { get; set; }
@@ -197,9 +199,22 @@ namespace chess_pos_db_gui
 
         private void DrawSquare(Graphics g, Piece piece, int file, int rank)
         {
-            var rect = GetSquareHitbox(file, rank);
+            var squareRect = GetSquareHitbox(file, rank);
+            var pieceRect = GetSquareHitbox(file, rank);
 
-            var biggerRect = EnlargeRect(rect, 2);
+            if (MouseFrom.HasValue)
+            {
+                Position fromSquare = ConvertPointToSquare(MouseFrom.Value);
+                if ((int)fromSquare.File == file && fromSquare.Rank == 8 - rank)
+                {
+                    int dx = LastMousePosition.X - MouseFrom.Value.X;
+                    int dy = LastMousePosition.Y - MouseFrom.Value.Y;
+                    pieceRect.X += dx;
+                    pieceRect.Y += dy;
+                }
+            }
+
+            var biggerRect = EnlargeRect(squareRect, 2);
 
             bool isLightSquare = (file + rank) % 2 == 0;
 
@@ -215,7 +230,7 @@ namespace chess_pos_db_gui
                 ? BoardImages.Config.Indicators.LightSquareBrush
                 : BoardImages.Config.Indicators.DarkSquareBrush;
 
-            g.DrawImage(squareImg, rect);
+            g.DrawImage(squareImg, squareRect);
 
             var indicatorFile =
                 IsBoardFlipped
@@ -254,7 +269,7 @@ namespace chess_pos_db_gui
             if (piece != null)
             {
                 var pieceImg = PieceImages.GetImageForPiece(piece);
-                g.DrawImage(pieceImg, rect);
+                g.DrawImage(pieceImg, pieceRect);
             }
         }
 
@@ -263,13 +278,36 @@ namespace chess_pos_db_gui
             var game = BoardHistory.Current();
             var board = game.GetBoard();
 
+            // We draw the square from which a piece is dragged last
+            // so that it's not occluded by others.
+
+            Position fromSquare =
+                MouseFrom.HasValue
+                ? ConvertPointToSquare(MouseFrom.Value)
+                : null;
+
             for (int x = 0; x < 8; ++x)
             {
                 for (int y = 0; y < 8; ++y)
                 {
+                    if (fromSquare != null && (int)fromSquare.File == x && fromSquare.Rank == 8 - y)
+                    {
+                        // this draw is deferred
+                        continue;
+                    }
+                    
                     Piece piece = board[y][x];
                     DrawSquare(g, piece, x, y);
                 }
+            }
+
+            if (fromSquare != null)
+            {
+                int x = (int)fromSquare.File;
+                int y = 8 - fromSquare.Rank;
+
+                Piece piece = board[y][x];
+                DrawSquare(g, piece, x, y);
             }
         }
 
@@ -481,6 +519,8 @@ namespace chess_pos_db_gui
         private void ChessBoardPanel_MouseDown(object sender, MouseEventArgs e)
         {
             MouseFrom = new Point(e.X, e.Y);
+
+            chessBoardPanel.Refresh();
         }
 
         private void ChessBoardPanel_MouseUp(object sender, MouseEventArgs e)
@@ -492,6 +532,11 @@ namespace chess_pos_db_gui
             }
 
             TryDragPiece(MouseFrom.Value, MouseTo.Value);
+
+            MouseFrom = null;
+            MouseTo = null;
+
+            chessBoardPanel.Refresh();
         }
 
         private void MoveHistoryGridView_SelectionChanged(object sender, EventArgs e)
@@ -667,6 +712,15 @@ namespace chess_pos_db_gui
                     SetSelection(BoardHistory.Plies + 1);
                     e.Handled = true;
                     break;
+            }
+        }
+
+        private void chessBoardPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            LastMousePosition = new Point(e.Location.X, e.Location.Y);
+            if (MouseFrom.HasValue)
+            {
+                chessBoardPanel.Refresh();
             }
         }
     }

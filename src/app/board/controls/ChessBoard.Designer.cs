@@ -63,6 +63,7 @@
             this.chessBoardPanel.TabIndex = 0;
             this.chessBoardPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.ChessBoardPanel_Paint);
             this.chessBoardPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChessBoardPanel_MouseDown);
+            this.chessBoardPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chessBoardPanel_MouseMove);
             this.chessBoardPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ChessBoardPanel_MouseUp);
             // 
             // moveHistoryGridView
