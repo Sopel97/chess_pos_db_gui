@@ -95,6 +95,7 @@ namespace chess_pos_db_gui
         private static readonly string engineProfilesPath = "data/engine_profiles.json";
         private static readonly string settingsPath = "data/application/settings.json";
         private static readonly double insignificantGoodnessTheshold = 0.01;
+        private static readonly int minFilesToDisableAutoQueryOnDatabaseLoad = 3;
 
         private UciEngineProfileStorage EngineProfiles { get; set; }
 
@@ -1239,6 +1240,22 @@ namespace chess_pos_db_gui
             Database.Open(path);
             QueryExecutor.ResetQueueAndCache();
             UpdateDatabaseInfo();
+
+            var files = Database.GetMergableFiles();
+            var total = files.Values.Sum(l => l.Count);
+            if (total >= minFilesToDisableAutoQueryOnDatabaseLoad)
+            {
+                autoQueryCheckbox.Checked = false;
+                MessageBox.Show(string.Format(
+                    "The database contains {0} files. " +
+                    "You may experience very long query times and increased disk usage. " +
+                    "Consider merging some database files before using this database for queries. " +
+                    "To do that navigate to 'Database' -> 'Merge' with this database open. " +
+                    "\n\n" +
+                    "For this reason automatic queries were disabled. " +
+                    "You can reenable them on your own risk if you want. "
+                    , total));
+            }
 
             OnPositionChanged(this, new EventArgs());
 
