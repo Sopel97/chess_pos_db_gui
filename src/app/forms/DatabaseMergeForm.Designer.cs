@@ -39,15 +39,16 @@
             this.partitionComboBox = new System.Windows.Forms.ComboBox();
             this.partitionNameLabel = new System.Windows.Forms.Label();
             this.tempDirsGroupBox = new System.Windows.Forms.GroupBox();
+            this.maxTempStorageUsageCheckBox = new System.Windows.Forms.CheckBox();
             this.tempStorageUsageUnitComboBox = new System.Windows.Forms.ComboBox();
             this.tempStorageUsageSizeNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
+            this.clearSecondaryTempFolderButton = new System.Windows.Forms.Button();
+            this.secondaryTempFolderLabel = new System.Windows.Forms.Label();
+            this.setSecondaryTempFolderButton = new System.Windows.Forms.Button();
             this.secondaryTempFolderTextBox = new System.Windows.Forms.TextBox();
-            this.clearTempFolderButton = new System.Windows.Forms.Button();
-            this.tempFolderLabel = new System.Windows.Forms.Label();
-            this.setTempFolderButton = new System.Windows.Forms.Button();
+            this.clearPrimaryTempFolderButton = new System.Windows.Forms.Button();
+            this.primaryTempFolderLabel = new System.Windows.Forms.Label();
+            this.setPrimaryTempFolderButton = new System.Windows.Forms.Button();
             this.primaryTempFolderTextBox = new System.Windows.Forms.TextBox();
             this.progressGroupBox = new System.Windows.Forms.GroupBox();
             this.currentOperationInfoLabel = new System.Windows.Forms.Label();
@@ -60,7 +61,6 @@
             this.subtotalMergeProgressBar = new System.Windows.Forms.ProgressBar();
             this.startButton = new System.Windows.Forms.Button();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
-            this.maxTempStorageUsageCheckBox = new System.Windows.Forms.CheckBox();
             this.filesGroupBox.SuspendLayout();
             this.tempDirsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tempStorageUsageSizeNumericUpDown)).BeginInit();
@@ -205,13 +205,13 @@
             this.tempDirsGroupBox.Controls.Add(this.maxTempStorageUsageCheckBox);
             this.tempDirsGroupBox.Controls.Add(this.tempStorageUsageUnitComboBox);
             this.tempDirsGroupBox.Controls.Add(this.tempStorageUsageSizeNumericUpDown);
-            this.tempDirsGroupBox.Controls.Add(this.button1);
-            this.tempDirsGroupBox.Controls.Add(this.label1);
-            this.tempDirsGroupBox.Controls.Add(this.button2);
+            this.tempDirsGroupBox.Controls.Add(this.clearSecondaryTempFolderButton);
+            this.tempDirsGroupBox.Controls.Add(this.secondaryTempFolderLabel);
+            this.tempDirsGroupBox.Controls.Add(this.setSecondaryTempFolderButton);
             this.tempDirsGroupBox.Controls.Add(this.secondaryTempFolderTextBox);
-            this.tempDirsGroupBox.Controls.Add(this.clearTempFolderButton);
-            this.tempDirsGroupBox.Controls.Add(this.tempFolderLabel);
-            this.tempDirsGroupBox.Controls.Add(this.setTempFolderButton);
+            this.tempDirsGroupBox.Controls.Add(this.clearPrimaryTempFolderButton);
+            this.tempDirsGroupBox.Controls.Add(this.primaryTempFolderLabel);
+            this.tempDirsGroupBox.Controls.Add(this.setPrimaryTempFolderButton);
             this.tempDirsGroupBox.Controls.Add(this.primaryTempFolderTextBox);
             this.tempDirsGroupBox.Location = new System.Drawing.Point(3, 3);
             this.tempDirsGroupBox.MaximumSize = new System.Drawing.Size(649, 99);
@@ -221,6 +221,17 @@
             this.tempDirsGroupBox.TabIndex = 9;
             this.tempDirsGroupBox.TabStop = false;
             this.tempDirsGroupBox.Text = "Temporary Directories";
+            // 
+            // maxTempStorageUsageCheckBox
+            // 
+            this.maxTempStorageUsageCheckBox.AutoSize = true;
+            this.maxTempStorageUsageCheckBox.Location = new System.Drawing.Point(20, 72);
+            this.maxTempStorageUsageCheckBox.Name = "maxTempStorageUsageCheckBox";
+            this.maxTempStorageUsageCheckBox.Size = new System.Drawing.Size(154, 17);
+            this.maxTempStorageUsageCheckBox.TabIndex = 20;
+            this.maxTempStorageUsageCheckBox.Text = "Max. temp. storage usage: ";
+            this.maxTempStorageUsageCheckBox.UseVisualStyleBackColor = true;
+            this.maxTempStorageUsageCheckBox.CheckedChanged += new System.EventHandler(this.maxTempStorageUsageCheckBox_CheckedChanged);
             // 
             // tempStorageUsageUnitComboBox
             // 
@@ -260,36 +271,38 @@
             0});
             this.tempStorageUsageSizeNumericUpDown.ValueChanged += new System.EventHandler(this.tempStorageUsageSizeNumericUpDown_ValueChanged);
             // 
-            // button1
+            // clearSecondaryTempFolderButton
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button1.Location = new System.Drawing.Point(617, 45);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(26, 19);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "X";
-            this.button1.UseVisualStyleBackColor = true;
+            this.clearSecondaryTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.clearSecondaryTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.clearSecondaryTempFolderButton.Location = new System.Drawing.Point(617, 45);
+            this.clearSecondaryTempFolderButton.Name = "clearSecondaryTempFolderButton";
+            this.clearSecondaryTempFolderButton.Size = new System.Drawing.Size(26, 19);
+            this.clearSecondaryTempFolderButton.TabIndex = 16;
+            this.clearSecondaryTempFolderButton.Text = "X";
+            this.clearSecondaryTempFolderButton.UseVisualStyleBackColor = true;
+            this.clearSecondaryTempFolderButton.Click += new System.EventHandler(this.clearSecondaryTempFolderButton_Click);
             // 
-            // label1
+            // secondaryTempFolderLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 48);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(156, 13);
-            this.label1.TabIndex = 15;
-            this.label1.Text = "Secondary temporary directory: ";
+            this.secondaryTempFolderLabel.AutoSize = true;
+            this.secondaryTempFolderLabel.Location = new System.Drawing.Point(15, 48);
+            this.secondaryTempFolderLabel.Name = "secondaryTempFolderLabel";
+            this.secondaryTempFolderLabel.Size = new System.Drawing.Size(156, 13);
+            this.secondaryTempFolderLabel.TabIndex = 15;
+            this.secondaryTempFolderLabel.Text = "Secondary temporary directory: ";
             // 
-            // button2
+            // setSecondaryTempFolderButton
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button2.Location = new System.Drawing.Point(564, 45);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(47, 19);
-            this.button2.TabIndex = 14;
-            this.button2.Text = "...";
-            this.button2.UseVisualStyleBackColor = true;
+            this.setSecondaryTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.setSecondaryTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.setSecondaryTempFolderButton.Location = new System.Drawing.Point(564, 45);
+            this.setSecondaryTempFolderButton.Name = "setSecondaryTempFolderButton";
+            this.setSecondaryTempFolderButton.Size = new System.Drawing.Size(47, 19);
+            this.setSecondaryTempFolderButton.TabIndex = 14;
+            this.setSecondaryTempFolderButton.Text = "...";
+            this.setSecondaryTempFolderButton.UseVisualStyleBackColor = true;
+            this.setSecondaryTempFolderButton.Click += new System.EventHandler(this.setSecondaryTempFolderButton_Click);
             // 
             // secondaryTempFolderTextBox
             // 
@@ -301,36 +314,38 @@
             this.secondaryTempFolderTextBox.Size = new System.Drawing.Size(382, 20);
             this.secondaryTempFolderTextBox.TabIndex = 13;
             // 
-            // clearTempFolderButton
+            // clearPrimaryTempFolderButton
             // 
-            this.clearTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.clearTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.clearTempFolderButton.Location = new System.Drawing.Point(617, 19);
-            this.clearTempFolderButton.Name = "clearTempFolderButton";
-            this.clearTempFolderButton.Size = new System.Drawing.Size(26, 19);
-            this.clearTempFolderButton.TabIndex = 12;
-            this.clearTempFolderButton.Text = "X";
-            this.clearTempFolderButton.UseVisualStyleBackColor = true;
+            this.clearPrimaryTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.clearPrimaryTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.clearPrimaryTempFolderButton.Location = new System.Drawing.Point(617, 19);
+            this.clearPrimaryTempFolderButton.Name = "clearPrimaryTempFolderButton";
+            this.clearPrimaryTempFolderButton.Size = new System.Drawing.Size(26, 19);
+            this.clearPrimaryTempFolderButton.TabIndex = 12;
+            this.clearPrimaryTempFolderButton.Text = "X";
+            this.clearPrimaryTempFolderButton.UseVisualStyleBackColor = true;
+            this.clearPrimaryTempFolderButton.Click += new System.EventHandler(this.clearPrimaryTempFolderButton_Click);
             // 
-            // tempFolderLabel
+            // primaryTempFolderLabel
             // 
-            this.tempFolderLabel.AutoSize = true;
-            this.tempFolderLabel.Location = new System.Drawing.Point(31, 22);
-            this.tempFolderLabel.Name = "tempFolderLabel";
-            this.tempFolderLabel.Size = new System.Drawing.Size(139, 13);
-            this.tempFolderLabel.TabIndex = 11;
-            this.tempFolderLabel.Text = "Primary temporary directory: ";
+            this.primaryTempFolderLabel.AutoSize = true;
+            this.primaryTempFolderLabel.Location = new System.Drawing.Point(31, 22);
+            this.primaryTempFolderLabel.Name = "primaryTempFolderLabel";
+            this.primaryTempFolderLabel.Size = new System.Drawing.Size(139, 13);
+            this.primaryTempFolderLabel.TabIndex = 11;
+            this.primaryTempFolderLabel.Text = "Primary temporary directory: ";
             // 
-            // setTempFolderButton
+            // setPrimaryTempFolderButton
             // 
-            this.setTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.setTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.setTempFolderButton.Location = new System.Drawing.Point(564, 19);
-            this.setTempFolderButton.Name = "setTempFolderButton";
-            this.setTempFolderButton.Size = new System.Drawing.Size(47, 19);
-            this.setTempFolderButton.TabIndex = 10;
-            this.setTempFolderButton.Text = "...";
-            this.setTempFolderButton.UseVisualStyleBackColor = true;
+            this.setPrimaryTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.setPrimaryTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.setPrimaryTempFolderButton.Location = new System.Drawing.Point(564, 19);
+            this.setPrimaryTempFolderButton.Name = "setPrimaryTempFolderButton";
+            this.setPrimaryTempFolderButton.Size = new System.Drawing.Size(47, 19);
+            this.setPrimaryTempFolderButton.TabIndex = 10;
+            this.setPrimaryTempFolderButton.Text = "...";
+            this.setPrimaryTempFolderButton.UseVisualStyleBackColor = true;
+            this.setPrimaryTempFolderButton.Click += new System.EventHandler(this.setPrimaryTempFolderButton_Click);
             // 
             // primaryTempFolderTextBox
             // 
@@ -471,17 +486,6 @@
             this.splitContainer.SplitterDistance = 386;
             this.splitContainer.TabIndex = 12;
             // 
-            // maxTempStorageUsageCheckBox
-            // 
-            this.maxTempStorageUsageCheckBox.AutoSize = true;
-            this.maxTempStorageUsageCheckBox.Location = new System.Drawing.Point(20, 72);
-            this.maxTempStorageUsageCheckBox.Name = "maxTempStorageUsageCheckBox";
-            this.maxTempStorageUsageCheckBox.Size = new System.Drawing.Size(154, 17);
-            this.maxTempStorageUsageCheckBox.TabIndex = 20;
-            this.maxTempStorageUsageCheckBox.Text = "Max. temp. storage usage: ";
-            this.maxTempStorageUsageCheckBox.UseVisualStyleBackColor = true;
-            this.maxTempStorageUsageCheckBox.CheckedChanged += new System.EventHandler(this.maxTempStorageUsageCheckBox_CheckedChanged);
-            // 
             // DatabaseMergeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -518,15 +522,15 @@
         private System.Windows.Forms.ComboBox partitionComboBox;
         private System.Windows.Forms.Label partitionNameLabel;
         private System.Windows.Forms.GroupBox tempDirsGroupBox;
-        private System.Windows.Forms.Button clearTempFolderButton;
-        private System.Windows.Forms.Label tempFolderLabel;
-        private System.Windows.Forms.Button setTempFolderButton;
+        private System.Windows.Forms.Button clearPrimaryTempFolderButton;
+        private System.Windows.Forms.Label primaryTempFolderLabel;
+        private System.Windows.Forms.Button setPrimaryTempFolderButton;
         private System.Windows.Forms.TextBox primaryTempFolderTextBox;
         private System.Windows.Forms.ComboBox tempStorageUsageUnitComboBox;
         private System.Windows.Forms.NumericUpDown tempStorageUsageSizeNumericUpDown;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button clearSecondaryTempFolderButton;
+        private System.Windows.Forms.Label secondaryTempFolderLabel;
+        private System.Windows.Forms.Button setSecondaryTempFolderButton;
         private System.Windows.Forms.TextBox secondaryTempFolderTextBox;
         private System.Windows.Forms.GroupBox progressGroupBox;
         private System.Windows.Forms.Button startButton;

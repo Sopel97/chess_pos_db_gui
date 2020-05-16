@@ -478,6 +478,39 @@ namespace chess_pos_db_gui.src.app.forms
             tempStorageUsageSizeNumericUpDown.Enabled = maxTempStorageUsageCheckBox.Checked;
             tempStorageUsageUnitComboBox.Enabled = maxTempStorageUsageCheckBox.Checked;
         }
+
+        private void setPrimaryTempFolderButton_Click(object sender, EventArgs e)
+        {
+            UserSelectTemporaryDirectory(primaryTempFolderTextBox);
+        }
+
+        private void setSecondaryTempFolderButton_Click(object sender, EventArgs e)
+        {
+            UserSelectTemporaryDirectory(secondaryTempFolderTextBox);
+        }
+
+        private void UserSelectTemporaryDirectory(TextBox primaryTempFolderTextBox)
+        {
+            using (FolderBrowserDialog browser = new FolderBrowserDialog())
+            {
+                browser.ShowNewFolderButton = true;
+
+                if (browser.ShowDialog() == DialogResult.OK)
+                {
+                    primaryTempFolderTextBox.Text = browser.SelectedPath;
+                }
+            }
+        }
+
+        private void clearPrimaryTempFolderButton_Click(object sender, EventArgs e)
+        {
+            primaryTempFolderTextBox.Clear();
+        }
+
+        private void clearSecondaryTempFolderButton_Click(object sender, EventArgs e)
+        {
+            secondaryTempFolderTextBox.Clear();
+        }
     }
 
     class DraggedSelection
