@@ -156,6 +156,7 @@
             this.partitionComboBox.Name = "partitionComboBox";
             this.partitionComboBox.Size = new System.Drawing.Size(223, 21);
             this.partitionComboBox.TabIndex = 7;
+            this.partitionComboBox.SelectedIndexChanged += new System.EventHandler(this.partitionComboBox_SelectedIndexChanged);
             // 
             // partitionNameLabel
             // 

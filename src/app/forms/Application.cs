@@ -430,8 +430,7 @@ namespace chess_pos_db_gui
             fenRichTextBoxContextMenu.Items.Add(fenRichTextBoxCopy);
             fenRichTextBox.ContextMenuStrip = fenRichTextBoxContextMenu;
 
-            // TODO: disable after the non-functional gui is done
-            mergeToolStripMenuItem.Enabled = true;
+            mergeToolStripMenuItem.Enabled = false;
 
             Themes = new ThemeDatabase("assets/graphics");
         }
@@ -1752,7 +1751,7 @@ namespace chess_pos_db_gui
 
         private void MergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new DatabaseMergeForm())
+            using (var form = new DatabaseMergeForm(Database))
             {
                 form.ShowDialog();
             }

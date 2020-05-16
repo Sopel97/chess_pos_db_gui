@@ -13,10 +13,13 @@ namespace chess_pos_db_gui.src.app.forms
     public partial class DatabaseMergeForm : Form
     {
         int i = 0;
+        private DatabaseProxy Database { get; set; }
+        private Dictionary<string, List<DatabaseMergableFile>> MergableFiles { get; set; }
         private EntryGroups Groups { get; set; }
         private List<Entry> UnassignedEntries { get; set; }
+        private string SelectedPartition { get; set; }
 
-        public DatabaseMergeForm()
+        public DatabaseMergeForm(DatabaseProxy database)
         {
             InitializeComponent();
 
@@ -34,6 +37,35 @@ namespace chess_pos_db_gui.src.app.forms
             WinFormsControlUtil.MakeDoubleBuffered(entryGroupsView);
 
             tempStorageUsageUnitComboBox.SelectedItem = "GB";
+
+            SelectedPartition = null;
+
+            Database = database;
+            MergableFiles = Database.GetMergableFiles();
+            foreach (string partition in MergableFiles.Keys)
+            {
+                partitionComboBox.Items.Add(partition);
+            }
+            partitionComboBox.SelectedItem = partitionComboBox.Items[0];
+
+            // This should be called by the event from above
+            // ResetMergableFilesForCurrentPartition();
+        }
+
+        private void ResetMergableFilesForCurrentPartition()
+        {
+            unassignedEntriesView.VirtualListSize = 0;
+            entryGroupsView.VirtualListSize = 0;
+
+            Groups = new EntryGroups();
+            UnassignedEntries = new List<Entry>();
+            var partition = (string)partitionComboBox.SelectedItem;
+            foreach (var file in MergableFiles[partition])
+            {
+                UnassignedEntries.Add(new Entry(file.Name, file.Size));
+            }
+
+            RefreshListViews();
         }
 
         private void addButton_Click(object sender, EventArgs e)
@@ -329,6 +361,16 @@ namespace chess_pos_db_gui.src.app.forms
         private void entryGroupsView_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Move;
+        }
+
+        private void partitionComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var newPartititon = (string)partitionComboBox.SelectedItem;
+            if (SelectedPartition == null || SelectedPartition != newPartititon)
+            {
+                SelectedPartition = newPartititon;
+                ResetMergableFilesForCurrentPartition();
+            }
         }
     }
 

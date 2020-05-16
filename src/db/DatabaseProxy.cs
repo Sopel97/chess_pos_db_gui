@@ -1,9 +1,11 @@
-﻿using System;
+﻿using chess_pos_db_gui.src.app.forms;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Json;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 
@@ -19,6 +21,7 @@ namespace chess_pos_db_gui
         public string Path { get; private set; }
 
         private Dictionary<string, DatabaseSupportManifest> SupportManifests { get; set; } = null;
+        private DatabaseManifest Manifest { get; set; } = null;
 
         private readonly object Lock = new object();
 
@@ -103,6 +106,29 @@ namespace chess_pos_db_gui
             }
         }
 
+        public void FetchManifest()
+        {
+            lock (Lock)
+            {
+                if (!IsOpen)
+                {
+                    return;
+                }
+
+                var stream = Client.GetStream();
+                SendMessage(stream, "{\"command\":\"manifest\"}");
+
+                var response = ReceiveMessage(stream);
+                var json = JsonValue.Parse(response);
+                if (json.ContainsKey("error"))
+                {
+                    throw new InvalidDataException("Cannot fetch database manifest.");
+                }
+
+                Manifest = new DatabaseManifest(json["manifest"]);
+            }
+        }
+
         public IList<string> GetSupportedDatabaseTypes()
         {
             if (SupportManifests == null)
@@ -111,6 +137,61 @@ namespace chess_pos_db_gui
             }
 
             return new List<string>(SupportManifests.Keys);
+        }
+
+        public MergeMode GetMergeMode()
+        {
+            if (!IsOpen)
+            {
+                throw new InvalidOperationException("Database is not open");
+            }
+
+            if (SupportManifests == null)
+            {
+                FetchSupportManifest();
+            }
+
+            if (Manifest == null)
+            {
+                FetchManifest();
+            }
+
+            return SupportManifests[Manifest.Name].MergeMode;
+        }
+
+        public Dictionary<string, List<DatabaseMergableFile>> GetMergableFiles()
+        {
+            lock (Lock)
+            {
+                if (!IsOpen)
+                {
+                    throw new InvalidOperationException("Database is not open");
+                }
+
+                var stream = Client.GetStream();
+                SendMessage(stream, "{\"command\":\"mergable_files\"}");
+
+                var response = ReceiveMessage(stream);
+                var json = JsonValue.Parse(response);
+                if (json.ContainsKey("error"))
+                {
+                    throw new InvalidDataException("Cannot fetch mergable files.");
+                }
+
+                var mergableFiles = new Dictionary<string, List<DatabaseMergableFile>>();
+                JsonObject mergableFilesJson = json["mergable_files"] as JsonObject;
+                foreach (string partition in mergableFilesJson.Keys)
+                {
+                    var list = new List<DatabaseMergableFile>();
+                    foreach (JsonValue val in mergableFilesJson[partition])
+                    {
+                        list.Add(new DatabaseMergableFile(val));
+                    }
+                    mergableFiles.Add(partition, list);
+                }
+
+                return mergableFiles;
+            }
         }
 
         public DatabaseInfo GetInfo()
@@ -213,6 +294,8 @@ namespace chess_pos_db_gui
                 {
                     return;
                 }
+
+                Manifest = null;
 
                 Path = "";
                 IsOpen = false;
@@ -434,9 +517,41 @@ namespace chess_pos_db_gui
         }
     }
 
+    public enum MergeMode
+    {
+        None,
+        Consecutive,
+        Any
+    }
+
+    public class DatabaseMergableFile
+    {
+        public string Name { get; private set; }
+        public ulong Size { get; private set; }
+
+        public DatabaseMergableFile(JsonValue json)
+        {
+            Name = json["name"];
+            Size = json["size"];
+        }
+    }
+
+    public class DatabaseManifest
+    {
+        public string Name { get; private set; }
+        public bool RequiresMatchinEndianness { get; private set; }
+
+        public DatabaseManifest(JsonValue json)
+        {
+            Name = json["name"];
+            RequiresMatchinEndianness = json["requires_matching_endianness"];
+        }
+    }
+
     public class DatabaseSupportManifest
     {
         public IList<string> SupportedExtensions { get; private set; }
+        public MergeMode MergeMode { get; private set; }
 
         public DatabaseSupportManifest(JsonValue json)
         {
@@ -445,6 +560,21 @@ namespace chess_pos_db_gui
             foreach(JsonValue ext in json["supported_file_types"])
             {
                 SupportedExtensions.Add(ext);
+            }
+
+            switch ((string)json["merge_mode"])
+            {
+                case "none":
+                    MergeMode = MergeMode.None;
+                    break;
+
+                case "consecutive":
+                    MergeMode = MergeMode.Consecutive;
+                    break;
+
+                case "any":
+                    MergeMode = MergeMode.Any;
+                    break;
             }
         }
     }
