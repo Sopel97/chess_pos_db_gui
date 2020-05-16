@@ -41,6 +41,9 @@ namespace chess_pos_db_gui.src.app.forms
 
             tempStorageUsageUnitComboBox.SelectedItem = "GB";
 
+            WinFormsControlUtil.MakeDoubleBuffered(totalMergeProgressBar);
+            WinFormsControlUtil.MakeDoubleBuffered(subtotalMergeProgressBar);
+
             SelectedPartition = null;
 
             Database = database;
@@ -617,6 +620,15 @@ namespace chess_pos_db_gui.src.app.forms
             Database.Merge(SelectedPartition, names, temps, maxSpace, callback);
         }
 
+        private void RefreshProgress()
+        {
+            subtotalMergeProgressBar.Refresh();
+            totalMergeProgressBar.Refresh();
+            subtotalMergeProgressLabel.Refresh();
+            totalMergeProgressLabel.Refresh();
+            currentOperationInfoLabel.Refresh();
+        }
+
         private void SetTotalProgress(ulong processed, ulong total)
         {
             var pct = (int)(processed * 100 / total);
@@ -625,11 +637,11 @@ namespace chess_pos_db_gui.src.app.forms
 
             if (InvokeRequired)
             {
-                Invoke(new Action(Refresh));
+                Invoke(new Action(RefreshProgress));
             }
             else
             {
-                Refresh();
+                RefreshProgress();
             }
         }
 
@@ -647,11 +659,11 @@ namespace chess_pos_db_gui.src.app.forms
 
             if (InvokeRequired)
             {
-                Invoke(new Action(Refresh));
+                Invoke(new Action(RefreshProgress));
             }
             else
             {
-                Refresh();
+                RefreshProgress();
             }
         }
     }
