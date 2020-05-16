@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Json;
+using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -507,6 +508,51 @@ namespace chess_pos_db_gui
                         else if (responseJson["operation"] == "create")
                         {
                             if (responseJson["finished"] == true)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void Merge(string partition, List<string> names, List<string> temps, ulong? maxSpace, Action<JsonValue> callback)
+        {
+            lock (Lock)
+            {
+                JsonObject request = new JsonObject
+                {
+                    { "command", "merge" },
+                    { "report_progress", true },
+                    { "partition", partition },
+                    { "files", new JsonArray(names.Select(t => (JsonValue)t)) },
+                    { "temporary_paths", new JsonArray(temps.Select(t => (JsonValue)t)) }
+                };
+                if (maxSpace.HasValue)
+                {
+                    request.Add("temporary_space", maxSpace.Value);
+                }
+
+                var stream = Client.GetStream();
+
+                SendMessage(stream, request.ToString());
+
+                while (true)
+                {
+                    var response = ReceiveMessage(stream);
+                    var responseJson = JsonValue.Parse(response);
+                    if (responseJson.ContainsKey("error"))
+                    {
+                        throw new InvalidDataException(responseJson["error"].ToString());
+                    }
+                    else if (responseJson.ContainsKey("operation"))
+                    {
+                        if (responseJson["operation"] == "merge")
+                        {
+                            callback.Invoke(responseJson);
+
+                            if (responseJson.ContainsKey("finished") && responseJson["finished"] == true)
                             {
                                 break;
                             }

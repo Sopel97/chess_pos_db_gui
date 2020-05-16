@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Json;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -55,6 +56,18 @@ namespace chess_pos_db_gui.src.app.forms
 
             maxTempStorageUsageCheckBox.Checked = false;
             UpdateEnabledStateOfMaxStorageInput();
+        }
+
+        private void RefreshData()
+        {
+            MergableFiles = Database.GetMergableFiles();
+            foreach (string partition in MergableFiles.Keys)
+            {
+                partitionComboBox.Items.Add(partition);
+            }
+            partitionComboBox.SelectedItem = partitionComboBox.Items[0];
+
+            ResetMergableFilesForCurrentPartition();
         }
 
         private void ResetMergableFilesForCurrentPartition()
@@ -111,6 +124,11 @@ namespace chess_pos_db_gui.src.app.forms
         private List<List<string>> GetMergeGroups()
         {
             return Groups.GetMergeGroups();
+        }
+
+        private List<ulong> GetMergeGroupsSizes()
+        {
+            return Groups.GetMergeGroupsSizes();
         }
 
         private void RegroupGroupedEntries(List<int> indices)
@@ -511,6 +529,129 @@ namespace chess_pos_db_gui.src.app.forms
         {
             secondaryTempFolderTextBox.Clear();
         }
+
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            PerformMerges();
+        }
+
+        private void DisableInput()
+        {
+            Enabled = false;
+        }
+
+        private void EnableInput()
+        {
+            Enabled = true;
+        }
+
+        private void PerformMerges()
+        {
+            DisableInput();
+
+            var temps = GetTemporaryDirectories();
+            var maxSpace = GetMaxStorageUsage();
+
+            var mergeGroups = GetMergeGroups();
+            var sizes = GetMergeGroupsSizes();
+            var totalSize = (ulong)sizes.Sum(s => (long)s);
+            ulong processedSize = 0;
+
+            for(int i = 0; i < mergeGroups.Count; ++i)
+            {
+                var size = sizes[i];
+                var group = mergeGroups[i];
+
+                PerformMerge(temps, maxSpace, group, size, i, mergeGroups.Count);
+
+                processedSize += size;
+                SetTotalProgress(processedSize, totalSize);
+            }
+
+            MessageBox.Show("Merging process finished.");
+
+            RefreshData();
+
+            EnableInput();
+        }
+
+        private List<string> GetTemporaryDirectories()
+        {
+            List<string> dirs = new List<string>();
+
+            if (primaryTempFolderTextBox.Text != null && primaryTempFolderTextBox.Text != "")
+            {
+                dirs.Add(primaryTempFolderTextBox.Text);
+            }
+
+            if (secondaryTempFolderTextBox.Text != null && secondaryTempFolderTextBox.Text != "")
+            {
+                dirs.Add(secondaryTempFolderTextBox.Text);
+            }
+
+            return dirs;
+        }
+
+        private void PerformMerge(List<string> temps, ulong? maxSpace, List<string> names, ulong size, int mergeIndex, int totalMerges)
+        {
+            void callback(JsonValue progressReport)
+            {
+                if (progressReport["operation"] == "merge")
+                {
+                    SetSubProgress(
+                        (int)(progressReport["overall_progress"] * 100.0),
+                        names.Count,
+                        size,
+                        mergeIndex,
+                        totalMerges
+                        );
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            Database.Merge(SelectedPartition, names, temps, maxSpace, callback);
+        }
+
+        private void SetTotalProgress(ulong processed, ulong total)
+        {
+            var pct = (int)(processed * 100 / total);
+            totalMergeProgressBar.Value = pct;
+            totalMergeProgressLabel.Text = pct.ToString() + "%";
+
+            if (InvokeRequired)
+            {
+                Invoke(new Action(Refresh));
+            }
+            else
+            {
+                Refresh();
+            }
+        }
+
+        private void SetSubProgress(int pct, int numFiles, ulong totalSize, int mergeIndex, int totalMerges)
+        {
+            subtotalMergeProgressBar.Value = pct;
+            subtotalMergeProgressLabel.Text = pct.ToString() + "%";
+            currentOperationInfoLabel.Text = string.Format(
+                "Merge {0} out of {1}: Merging {2} files with total size {3}.",
+                mergeIndex + 1,
+                totalMerges,
+                numFiles,
+                FileSizeUtil.FormatSize(totalSize)
+                );
+
+            if (InvokeRequired)
+            {
+                Invoke(new Action(Refresh));
+            }
+            else
+            {
+                Refresh();
+            }
+        }
     }
 
     class DraggedSelection
@@ -623,6 +764,18 @@ namespace chess_pos_db_gui.src.app.forms
             }
 
             return groups;
+        }
+
+        public List<ulong> GetMergeGroupsSizes()
+        {
+            List<ulong> sizes = new List<ulong>();
+
+            foreach (var g in Groups)
+            {
+                sizes.Add(g.Size);
+            }
+
+            return sizes;
         }
     }
 
