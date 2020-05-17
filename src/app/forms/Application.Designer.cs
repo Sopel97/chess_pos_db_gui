@@ -83,9 +83,9 @@
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.drawScoreNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.drawScoreLabel = new System.Windows.Forms.Label();
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.dataHelpButton = new System.Windows.Forms.Button();
             this.retractionsHelpButton = new System.Windows.Forms.Button();
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -528,6 +528,7 @@
             this.retractionsGridView.TabIndex = 8;
             this.retractionsGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.retractionsGridView_CellContentDoubleClick);
             this.retractionsGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RetractionsGridView_CellFormatting);
+            this.retractionsGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.retractionsGridView_RowPrePaint);
             // 
             // totalDataHelpButton
             // 
@@ -791,18 +792,6 @@
             this.drawScoreLabel.TabIndex = 14;
             this.drawScoreLabel.Text = "Draw score";
             // 
-            // chessBoard
-            // 
-            this.chessBoard.BoardImages = null;
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.PieceImages = null;
-            this.chessBoard.Size = new System.Drawing.Size(424, 256);
-            this.chessBoard.TabIndex = 0;
-            // 
             // dataHelpButton
             // 
             this.dataHelpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -828,6 +817,18 @@
             this.tooltip.SetToolTip(this.retractionsHelpButton, "Click me!");
             this.retractionsHelpButton.UseVisualStyleBackColor = true;
             this.retractionsHelpButton.Click += new System.EventHandler(this.retractionsHelpButton_Click);
+            // 
+            // chessBoard
+            // 
+            this.chessBoard.BoardImages = null;
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.PieceImages = null;
+            this.chessBoard.Size = new System.Drawing.Size(424, 256);
+            this.chessBoard.TabIndex = 0;
             // 
             // Application
             // 

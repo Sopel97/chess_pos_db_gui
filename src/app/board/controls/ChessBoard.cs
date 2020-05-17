@@ -682,6 +682,21 @@ namespace chess_pos_db_gui
             return e.Move.SAN;
         }
 
+        public string GetPrevMoveEran()
+        {
+            var e = BoardHistory.Prev();
+            if (e == null)
+            {
+                return null;
+            }
+
+            return Eran.MakeFromBoardsAndMove(
+                new ChessGame(e.GCD), 
+                new ChessGame(BoardHistory.Current().GCD), 
+                e.Move
+                );
+        }
+
         private void Button1_Click(object sender, EventArgs e)
         {
             if (Clipboard.ContainsText())

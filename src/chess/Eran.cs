@@ -136,5 +136,13 @@ namespace chess_pos_db_gui.src.chess
 
             return rmove;
         }
+
+        public static string MakeFromBoardsAndMove(
+            ChessGame before, 
+            ChessGame after, 
+            DetailedMove move)
+        {
+            return "e2-e4 KQkq -";
+        }
     }
 }

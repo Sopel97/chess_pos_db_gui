@@ -1489,6 +1489,24 @@ namespace chess_pos_db_gui
             }
         }
 
+        private void retractionsGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            var row = retractionsGridView.Rows[e.RowIndex];
+            var prevEran = chessBoard.GetPrevMoveEran();
+
+            if (prevEran != null && ((ReverseMoveWithEran)row.Cells["Move"].Value).Eran == prevEran)
+            {
+                row.DefaultCellStyle.Font = new Font(retractionsGridView.Font, FontStyle.Bold);
+            }
+            else
+            {
+                if (row.DefaultCellStyle.Font != null && !row.DefaultCellStyle.Font.Equals(retractionsGridView.Font))
+                {
+                    row.DefaultCellStyle.Font = retractionsGridView.Font;
+                }
+            }
+        }
+
         private void TotalEntriesGridView_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
             totalEntriesGridView.Columns[e.Column.Index].Width = e.Column.Width;

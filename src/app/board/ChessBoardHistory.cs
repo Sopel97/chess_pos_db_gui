@@ -134,6 +134,11 @@ namespace chess_pos_db_gui
 
         public ChessBoardHistoryEntry Prev()
         {
+            if (Plies == 0)
+            {
+                return null;
+            }
+
             return Entries[Plies - 1];
         }
 
