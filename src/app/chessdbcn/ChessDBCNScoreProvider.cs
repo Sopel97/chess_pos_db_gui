@@ -41,13 +41,17 @@ namespace chess_pos_db_gui.src.app.chessdbcn
                 foreach (var part in parts)
                 {
                     string[] kv = part.Split(':');
+                    if (kv.Length < 2)
+                    {
+                        continue;
+                    }
                     values.Add(kv[0], kv[1]);
                 }
 
                 values.TryGetValue("move", out string moveStr);
                 values.TryGetValue("score", out string scoreStr);
 
-                if (moveStr != null)
+                if (moveStr != null && scoreStr != null)
                 {
                     try
                     {
