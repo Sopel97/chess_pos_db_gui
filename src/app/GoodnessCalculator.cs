@@ -22,6 +22,7 @@ namespace chess_pos_db_gui.src.app
             public double EngineWeight { get; set; }
             public double EvalWeight { get; set; }
             public double CombinedGamesWeight { get; set; }
+            public double DrawScore { get; internal set; }
         }
 
         /*
@@ -140,7 +141,7 @@ namespace chess_pos_db_gui.src.app
                     ulong totalWins = e.WinCount;
                     ulong totalDraws = e.DrawCount;
                     ulong totalLosses = e.Count - totalWins - totalDraws;
-                    double totalPerf = (totalWins + totalDraws * 0.5) / e.Count;
+                    double totalPerf = (totalWins + totalDraws * options.DrawScore) / e.Count;
                     double totalEloError = EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses);
                     double expectedTotalPerf = EloCalculator.GetExpectedPerformance((e.TotalEloDiff) / (double)e.Count);
                     if (sideToMove == Player.Black)

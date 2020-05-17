@@ -514,6 +514,8 @@ namespace chess_pos_db_gui
                 CombineGames = combineHECheckbox.Checked,
                 UseCount = goodnessUseCountCheckbox.Checked,
 
+                DrawScore = (double)drawScoreNumericUpDown.Value,
+
                 HumanWeight = (double)humanWeightNumericUpDown.Value,
                 EngineWeight = (double)engineWeightNumericUpDown.Value,
                 EvalWeight = (double)evalWeightNumericUpDown.Value,
