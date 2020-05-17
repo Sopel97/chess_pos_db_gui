@@ -76,7 +76,7 @@ namespace chess_pos_db_gui.src.app
             const double minPerf = 0.01;
 
             // if there's less than this amount of games then the goodness contribution will be penalized.
-            ulong penaltyFromCountThreshold = 1;
+            ulong penaltyFromCountThreshold = 10;
 
             bool useAnyGames = aggregatedEntries.Any(e => e.Value.Count != 0);
             bool useEval = options.UseEval;
