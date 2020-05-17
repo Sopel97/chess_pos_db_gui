@@ -137,12 +137,71 @@ namespace chess_pos_db_gui.src.chess
             return rmove;
         }
 
-        public static string MakeFromBoardsAndMove(
+        public static string MakeFromBoardAndMove(
             ChessGame before, 
-            ChessGame after, 
             DetailedMove move)
         {
-            return "e2-e4 KQkq -";
+            string eran = "";
+
+            var pieceChar = Char.ToUpper(move.Piece.GetFenCharacter());
+            if (pieceChar != 'P')
+            {
+                eran += pieceChar;
+            }
+
+            eran += move.OriginalPosition.ToString().ToLower();
+
+            if (move.IsCapture)
+            {
+                eran += 'x';
+                var capturedPiece = before.GetPieceAt(move.NewPosition);
+                var capturedPieceChar = Char.ToUpper(capturedPiece.GetFenCharacter());
+                if (capturedPieceChar != 'P')
+                {
+                    eran += capturedPieceChar;
+                }
+            }
+            else
+            {
+                eran += '-';
+            }
+
+            eran += move.NewPosition.ToString().ToLower();
+
+            eran += ' ';
+
+            bool anyCastle = false;
+
+            if (before.CanWhiteCastleKingSide)
+                { eran += 'K'; anyCastle = true; }
+
+            if (before.CanWhiteCastleQueenSide)
+                { eran += 'Q'; anyCastle = true; }
+
+            if (before.CanBlackCastleKingSide)
+                { eran += 'k'; anyCastle = true; }
+
+            if (before.CanBlackCastleQueenSide)
+                { eran += 'q';anyCastle = true; }
+                
+            if (!anyCastle)
+            {
+                eran += '-';
+            }
+
+            eran += ' ';
+
+            var ep = before.GetGameCreationData().EnPassant;
+            if (ep != null)
+            {
+                eran += ep.ToString().ToLower();
+            }
+            else
+            {
+                eran += '-';
+            }
+
+            return eran;
         }
     }
 }

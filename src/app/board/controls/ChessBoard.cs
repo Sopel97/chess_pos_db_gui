@@ -690,10 +690,9 @@ namespace chess_pos_db_gui
                 return null;
             }
 
-            return Eran.MakeFromBoardsAndMove(
-                new ChessGame(e.GCD), 
-                new ChessGame(BoardHistory.Current().GCD), 
-                e.Move
+            return Eran.MakeFromBoardAndMove(
+                new ChessGame(e.GCD),
+                BoardHistory.Current().Move
                 );
         }
 
