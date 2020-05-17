@@ -432,6 +432,7 @@ namespace chess_pos_db_gui
             fenRichTextBox.ContextMenuStrip = fenRichTextBoxContextMenu;
 
             mergeToolStripMenuItem.Enabled = false;
+            appendToolStripMenuItem.Enabled = false;
 
             Themes = new ThemeDatabase("assets/graphics");
         }
@@ -1260,6 +1261,8 @@ namespace chess_pos_db_gui
             OnPositionChanged(this, new EventArgs());
 
             mergeToolStripMenuItem.Enabled = true;
+            createToolStripMenuItem.Enabled = false;
+            appendToolStripMenuItem.Enabled = true;
         }
 
         private void UpdateDatabaseInfo()
@@ -1305,6 +1308,9 @@ namespace chess_pos_db_gui
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             mergeToolStripMenuItem.Enabled = false;
+            createToolStripMenuItem.Enabled = true;
+            appendToolStripMenuItem.Enabled = false;
+
             Database.Close();
             QueryExecutor.ResetQueueAndCache();
             UpdateDatabaseInfo();
@@ -1769,6 +1775,14 @@ namespace chess_pos_db_gui
         private void MergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var form = new DatabaseMergeForm(Database))
+            {
+                form.ShowDialog();
+            }
+        }
+
+        private void appendToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new DatabaseCreationForm(Database))
             {
                 form.ShowDialog();
             }
