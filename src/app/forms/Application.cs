@@ -964,6 +964,9 @@ namespace chess_pos_db_gui
             entriesGridView.ClearSelection();
             ReloadViewScroll();
 
+            totalEntriesGridView.ClearSelection();
+            retractionsGridView.ClearSelection();
+
             WinFormsControlUtil.ResumeDrawing(entriesGridView);
             WinFormsControlUtil.ResumeDrawing(totalEntriesGridView);
             WinFormsControlUtil.ResumeDrawing(retractionsGridView);
