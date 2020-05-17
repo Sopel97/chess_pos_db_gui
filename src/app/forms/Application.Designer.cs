@@ -84,6 +84,8 @@
             this.drawScoreNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.drawScoreLabel = new System.Windows.Forms.Label();
             this.chessBoard = new chess_pos_db_gui.ChessBoard();
+            this.dataHelpButton = new System.Windows.Forms.Button();
+            this.retractionsHelpButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -488,10 +490,12 @@
             // 
             // entriesRetractionsSplitPanel.Panel1
             // 
+            this.entriesRetractionsSplitPanel.Panel1.Controls.Add(this.dataHelpButton);
             this.entriesRetractionsSplitPanel.Panel1.Controls.Add(this.entriesGridView);
             // 
             // entriesRetractionsSplitPanel.Panel2
             // 
+            this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsHelpButton);
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsGridView);
             this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(607, 356);
             this.entriesRetractionsSplitPanel.SplitterDistance = 245;
@@ -799,6 +803,32 @@
             this.chessBoard.Size = new System.Drawing.Size(424, 256);
             this.chessBoard.TabIndex = 0;
             // 
+            // dataHelpButton
+            // 
+            this.dataHelpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.dataHelpButton.Location = new System.Drawing.Point(0, 0);
+            this.dataHelpButton.Margin = new System.Windows.Forms.Padding(0);
+            this.dataHelpButton.Name = "dataHelpButton";
+            this.dataHelpButton.Size = new System.Drawing.Size(50, 21);
+            this.dataHelpButton.TabIndex = 10;
+            this.dataHelpButton.Text = "?";
+            this.tooltip.SetToolTip(this.dataHelpButton, "Click me!");
+            this.dataHelpButton.UseVisualStyleBackColor = true;
+            this.dataHelpButton.Click += new System.EventHandler(this.dataHelpButton_Click);
+            // 
+            // retractionsHelpButton
+            // 
+            this.retractionsHelpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.retractionsHelpButton.Location = new System.Drawing.Point(0, 0);
+            this.retractionsHelpButton.Margin = new System.Windows.Forms.Padding(0);
+            this.retractionsHelpButton.Name = "retractionsHelpButton";
+            this.retractionsHelpButton.Size = new System.Drawing.Size(50, 21);
+            this.retractionsHelpButton.TabIndex = 11;
+            this.retractionsHelpButton.Text = "?";
+            this.tooltip.SetToolTip(this.retractionsHelpButton, "Click me!");
+            this.retractionsHelpButton.UseVisualStyleBackColor = true;
+            this.retractionsHelpButton.Click += new System.EventHandler(this.retractionsHelpButton_Click);
+            // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -903,6 +933,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Label drawScoreLabel;
         private System.Windows.Forms.NumericUpDown drawScoreNumericUpDown;
+        private System.Windows.Forms.Button dataHelpButton;
+        private System.Windows.Forms.Button retractionsHelpButton;
     }
 }
 

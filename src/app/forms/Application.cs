@@ -411,6 +411,12 @@ namespace chess_pos_db_gui
             totalDataHelpButton.Width = totalEntriesGridView.RowHeadersWidth;
             totalDataHelpButton.Height = totalEntriesGridView.ColumnHeadersHeight;
 
+            dataHelpButton.Width = entriesGridView.RowHeadersWidth;
+            dataHelpButton.Height = entriesGridView.ColumnHeadersHeight;
+
+            retractionsHelpButton.Width = retractionsGridView.RowHeadersWidth;
+            retractionsHelpButton.Height = retractionsGridView.ColumnHeadersHeight;
+
             WinFormsControlUtil.SetThousandSeparator(entriesGridView);
             WinFormsControlUtil.SetThousandSeparator(totalEntriesGridView);
             WinFormsControlUtil.SetThousandSeparator(retractionsGridView);
@@ -1672,23 +1678,58 @@ namespace chess_pos_db_gui
         {
             MessageBox.Show(
                 "When a database is loaded and queried this table shows 2 rows:\n\n" +
-                "Total: The sum of values for each move possible on the board.\n\n" +
-                "Root: The values for the position currently on the board. " +
-                "Note, this row is often diffrent than Total because of " +
-                "transpositions and/or games ending. \n" +
-                "For example if the a game ends in this position it will not provide " +
-                "values for moves, which makes for less Total games than Root games. " +
-                "Alternatively, if some moves transpose and transpositions are not filtered out " +
-                "then there will be more games after Root than Root games.\n" +
-                "It is important to understand that filtering of transpositions/continuations " +
-                "works for the Root positions just as it works for moves. " +
-                "For example if only continuations are enabled the move that lead " +
-                "to the position on the board does matter when querying the database " +
-                "and in result the transpositions to the current position will not be included. " +
-                "Similarily you can check how many times the current position was obtained solely by transpositions " +
-                "by filtering out continuations. For example, by entering moves Nf3 Nf6 Ng1 Ng8 and filtering " +
-                "out transpositions you can see how many times the start position was obtained by playing Ng8 and " +
-                "what moves were played then.",
+                "Root:\n\n" +
+                "(if Continuations and Transpositions boxes are checked)\n" +
+                "= number of games that played any move that resulted in achieving the current board position\n\n" +
+                "(if only Continuations box is checked)\n" +
+                "= number of games that played the actual move that achieved the current board position\n\n" +
+                "(if only Transposition box is checked)\n" +
+                "= number of games that achieved the current board position as a result of moves " +
+                "other than the one that was actually made\n\n\n" +
+                "Total:\n\n" +
+                "(if only Continuations box is checked)\n" +
+                "= number of game continuations one move ahead from the current board position\n\n" +
+                "(if only Transposition box is checked)\n" +
+                "= number of game transpositions one move ahead joining the game from other board positions\n\n" +
+                "(if Continuations and Transpositions boxes are checked)\n" +
+                "= sum of the above two values\n\n\n" +
+                "Notes:\n\n" +
+                "Root answers \"how did this position get here?\" while Total " +
+                "answers \"where could this position potentially go from here?\" " +
+                "Root is backward-looking; Total is forward-looking.\n\n" +
+                "Typically Total is greater than or equal to Root in almost all cases, " +
+                "but in some instances it may be slightly smaller. " +
+                "This is a result of database games reaching their " +
+                "last move with no continuation one move ahead.",
+                "Help",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+                );
+        }
+
+        private void dataHelpButton_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                "When a database is loaded and queried this table shows one row for each " +
+                "move that is legal from the current position. The values shown are aggregated " +
+                "over the selected 'select's and 'level's. Each row includes the WDL for each move, " +
+                "calculated performance and move quality; and depending on the database format used " +
+                "it may also include average elo difference between white and black, and information " +
+                "about the first game to [reach the position (transpositions)]/[play the move (continuations)].",
+                "Help",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+                );
+        }
+
+        private void retractionsHelpButton_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                "When a database that supports this feature is loaded and queried " +
+                "this table shows one row for each retro move from the current position. " +
+                "This shows the results of a 'backward' query, compared to the results of the 'forward' query " +
+                "that are shown in the two tables above. It currently doesn't respect " +
+                "transposition settings.",
                 "Help",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information
