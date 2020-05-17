@@ -30,12 +30,14 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.importSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.openCheckBox = new System.Windows.Forms.CheckBox();
             this.whatsDatabaseFormatButton = new System.Windows.Forms.Button();
+            this.destinationFolderTextBox = new System.Windows.Forms.TextBox();
             this.databaseFormatLabel = new System.Windows.Forms.Label();
+            this.setDestinationFolderButton = new System.Windows.Forms.Button();
             this.databaseFormatComboBox = new System.Windows.Forms.ComboBox();
             this.destinationFolderLabel = new System.Windows.Forms.Label();
-            this.setDestinationFolderButton = new System.Windows.Forms.Button();
-            this.destinationFolderTextBox = new System.Windows.Forms.TextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.pgnPathsTabControl = new System.Windows.Forms.TabControl();
             this.humanTabPage = new System.Windows.Forms.TabPage();
@@ -53,10 +55,19 @@
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.addServerPgnsButton = new System.Windows.Forms.Button();
-            this.openCheckBox = new System.Windows.Forms.CheckBox();
+            this.progressGroupBox = new System.Windows.Forms.GroupBox();
+            this.mergeProgressLabelInfo = new System.Windows.Forms.Label();
+            this.importProgressLabelInfo = new System.Windows.Forms.Label();
+            this.mergeProgressLabel = new System.Windows.Forms.Label();
+            this.mergeProgressBar = new System.Windows.Forms.ProgressBar();
+            this.importProgressLabel = new System.Windows.Forms.Label();
+            this.importProgressBar = new System.Windows.Forms.ProgressBar();
             this.buildButton = new System.Windows.Forms.Button();
-            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.tempDirsGroupBox = new System.Windows.Forms.GroupBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.mergeAllAfterImportRadioButton = new System.Windows.Forms.RadioButton();
+            this.mergeManuallyAfterImportRadioButton = new System.Windows.Forms.RadioButton();
+            this.dontMergeRadioButton = new System.Windows.Forms.RadioButton();
             this.maxTempStorageUsageCheckBox = new System.Windows.Forms.CheckBox();
             this.tempStorageUsageUnitComboBox = new System.Windows.Forms.ComboBox();
             this.tempStorageUsageSizeNumericUpDown = new System.Windows.Forms.NumericUpDown();
@@ -68,22 +79,13 @@
             this.primaryTempFolderLabel = new System.Windows.Forms.Label();
             this.setPrimaryTempFolderButton = new System.Windows.Forms.Button();
             this.primaryTempFolderTextBox = new System.Windows.Forms.TextBox();
-            this.progressGroupBox = new System.Windows.Forms.GroupBox();
-            this.mergeProgressLabelInfo = new System.Windows.Forms.Label();
-            this.importProgressLabelInfo = new System.Windows.Forms.Label();
-            this.mergeProgressLabel = new System.Windows.Forms.Label();
-            this.mergeProgressBar = new System.Windows.Forms.ProgressBar();
-            this.importProgressLabel = new System.Windows.Forms.Label();
-            this.importProgressBar = new System.Windows.Forms.ProgressBar();
-            this.mergeAllAfterImportRadioButton = new System.Windows.Forms.RadioButton();
-            this.dontMergeRadioButton = new System.Windows.Forms.RadioButton();
-            this.mergeManuallyAfterImportRadioButton = new System.Windows.Forms.RadioButton();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.importSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.mergeNewAfterImportRadioButton = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.importSettingsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -95,11 +97,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.enginePgnsDataGridView)).BeginInit();
             this.serverTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.serverPgnsDataGridView)).BeginInit();
-            this.tempDirsGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tempStorageUsageSizeNumericUpDown)).BeginInit();
             this.progressGroupBox.SuspendLayout();
+            this.tempDirsGroupBox.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.importSettingsGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tempStorageUsageSizeNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -123,6 +124,38 @@
             this.splitContainer1.SplitterDistance = 90;
             this.splitContainer1.TabIndex = 0;
             // 
+            // importSettingsGroupBox
+            // 
+            this.importSettingsGroupBox.Controls.Add(this.openCheckBox);
+            this.importSettingsGroupBox.Controls.Add(this.whatsDatabaseFormatButton);
+            this.importSettingsGroupBox.Controls.Add(this.destinationFolderTextBox);
+            this.importSettingsGroupBox.Controls.Add(this.databaseFormatLabel);
+            this.importSettingsGroupBox.Controls.Add(this.setDestinationFolderButton);
+            this.importSettingsGroupBox.Controls.Add(this.databaseFormatComboBox);
+            this.importSettingsGroupBox.Controls.Add(this.destinationFolderLabel);
+            this.importSettingsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.importSettingsGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.importSettingsGroupBox.Name = "importSettingsGroupBox";
+            this.importSettingsGroupBox.Size = new System.Drawing.Size(658, 90);
+            this.importSettingsGroupBox.TabIndex = 12;
+            this.importSettingsGroupBox.TabStop = false;
+            this.importSettingsGroupBox.Text = "Import Settings";
+            // 
+            // openCheckBox
+            // 
+            this.openCheckBox.AutoSize = true;
+            this.openCheckBox.Checked = true;
+            this.openCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.openCheckBox.Location = new System.Drawing.Point(179, 65);
+            this.openCheckBox.Name = "openCheckBox";
+            this.openCheckBox.Size = new System.Drawing.Size(120, 17);
+            this.openCheckBox.TabIndex = 2;
+            this.openCheckBox.Text = "Open when finished";
+            this.tooltip.SetToolTip(this.openCheckBox, "When enabled the database will automatically open after the process is finished. " +
+        "This will allow queries to be made instantly after closing this window.");
+            this.openCheckBox.UseVisualStyleBackColor = true;
+            this.openCheckBox.CheckedChanged += new System.EventHandler(this.OpenCheckBox_CheckedChanged);
+            // 
             // whatsDatabaseFormatButton
             // 
             this.whatsDatabaseFormatButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -135,6 +168,16 @@
             this.whatsDatabaseFormatButton.UseVisualStyleBackColor = true;
             this.whatsDatabaseFormatButton.Click += new System.EventHandler(this.WhatsDatabaseFormatButton_Click);
             // 
+            // destinationFolderTextBox
+            // 
+            this.destinationFolderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.destinationFolderTextBox.Location = new System.Drawing.Point(179, 12);
+            this.destinationFolderTextBox.Name = "destinationFolderTextBox";
+            this.destinationFolderTextBox.ReadOnly = true;
+            this.destinationFolderTextBox.Size = new System.Drawing.Size(380, 20);
+            this.destinationFolderTextBox.TabIndex = 0;
+            // 
             // databaseFormatLabel
             // 
             this.databaseFormatLabel.AutoSize = true;
@@ -145,6 +188,18 @@
             this.databaseFormatLabel.Text = "Database format: ";
             this.tooltip.SetToolTip(this.databaseFormatLabel, "The database format to use. Descriptions can be found on project\'s github page in" +
         " the documentation. Default is best for uninformed users.");
+            // 
+            // setDestinationFolderButton
+            // 
+            this.setDestinationFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.setDestinationFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.setDestinationFolderButton.Location = new System.Drawing.Point(567, 12);
+            this.setDestinationFolderButton.Name = "setDestinationFolderButton";
+            this.setDestinationFolderButton.Size = new System.Drawing.Size(47, 19);
+            this.setDestinationFolderButton.TabIndex = 5;
+            this.setDestinationFolderButton.Text = "...";
+            this.setDestinationFolderButton.UseVisualStyleBackColor = true;
+            this.setDestinationFolderButton.Click += new System.EventHandler(this.SetDestinationFolderButton_Click);
             // 
             // databaseFormatComboBox
             // 
@@ -166,28 +221,6 @@
             this.destinationFolderLabel.TabIndex = 6;
             this.destinationFolderLabel.Text = "Destination folder: ";
             this.tooltip.SetToolTip(this.destinationFolderLabel, "The folder in which the database will be created. The folder must exist.");
-            // 
-            // setDestinationFolderButton
-            // 
-            this.setDestinationFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.setDestinationFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.setDestinationFolderButton.Location = new System.Drawing.Point(567, 12);
-            this.setDestinationFolderButton.Name = "setDestinationFolderButton";
-            this.setDestinationFolderButton.Size = new System.Drawing.Size(47, 19);
-            this.setDestinationFolderButton.TabIndex = 5;
-            this.setDestinationFolderButton.Text = "...";
-            this.setDestinationFolderButton.UseVisualStyleBackColor = true;
-            this.setDestinationFolderButton.Click += new System.EventHandler(this.SetDestinationFolderButton_Click);
-            // 
-            // destinationFolderTextBox
-            // 
-            this.destinationFolderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.destinationFolderTextBox.Location = new System.Drawing.Point(179, 12);
-            this.destinationFolderTextBox.Name = "destinationFolderTextBox";
-            this.destinationFolderTextBox.ReadOnly = true;
-            this.destinationFolderTextBox.Size = new System.Drawing.Size(380, 20);
-            this.destinationFolderTextBox.TabIndex = 0;
             // 
             // splitContainer2
             // 
@@ -397,20 +430,80 @@
             this.addServerPgnsButton.UseVisualStyleBackColor = true;
             this.addServerPgnsButton.Click += new System.EventHandler(this.AddServerPgnsButton_Click);
             // 
-            // openCheckBox
+            // progressGroupBox
             // 
-            this.openCheckBox.AutoSize = true;
-            this.openCheckBox.Checked = true;
-            this.openCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.openCheckBox.Location = new System.Drawing.Point(179, 65);
-            this.openCheckBox.Name = "openCheckBox";
-            this.openCheckBox.Size = new System.Drawing.Size(120, 17);
-            this.openCheckBox.TabIndex = 2;
-            this.openCheckBox.Text = "Open when finished";
-            this.tooltip.SetToolTip(this.openCheckBox, "When enabled the database will automatically open after the process is finished. " +
-        "This will allow queries to be made instantly after closing this window.");
-            this.openCheckBox.UseVisualStyleBackColor = true;
-            this.openCheckBox.CheckedChanged += new System.EventHandler(this.OpenCheckBox_CheckedChanged);
+            this.progressGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.progressGroupBox.Controls.Add(this.mergeProgressLabelInfo);
+            this.progressGroupBox.Controls.Add(this.importProgressLabelInfo);
+            this.progressGroupBox.Controls.Add(this.mergeProgressLabel);
+            this.progressGroupBox.Controls.Add(this.mergeProgressBar);
+            this.progressGroupBox.Controls.Add(this.importProgressLabel);
+            this.progressGroupBox.Controls.Add(this.importProgressBar);
+            this.progressGroupBox.Location = new System.Drawing.Point(4, 135);
+            this.progressGroupBox.MaximumSize = new System.Drawing.Size(555, 74);
+            this.progressGroupBox.MinimumSize = new System.Drawing.Size(555, 74);
+            this.progressGroupBox.Name = "progressGroupBox";
+            this.progressGroupBox.Size = new System.Drawing.Size(555, 74);
+            this.progressGroupBox.TabIndex = 12;
+            this.progressGroupBox.TabStop = false;
+            this.progressGroupBox.Text = "Progress";
+            // 
+            // mergeProgressLabelInfo
+            // 
+            this.mergeProgressLabelInfo.AutoSize = true;
+            this.mergeProgressLabelInfo.Location = new System.Drawing.Point(85, 42);
+            this.mergeProgressLabelInfo.Name = "mergeProgressLabelInfo";
+            this.mergeProgressLabelInfo.Size = new System.Drawing.Size(86, 13);
+            this.mergeProgressLabelInfo.TabIndex = 10;
+            this.mergeProgressLabelInfo.Text = "Merge progress: ";
+            // 
+            // importProgressLabelInfo
+            // 
+            this.importProgressLabelInfo.AutoSize = true;
+            this.importProgressLabelInfo.Location = new System.Drawing.Point(86, 20);
+            this.importProgressLabelInfo.Name = "importProgressLabelInfo";
+            this.importProgressLabelInfo.Size = new System.Drawing.Size(85, 13);
+            this.importProgressLabelInfo.TabIndex = 9;
+            this.importProgressLabelInfo.Text = "Import progress: ";
+            // 
+            // mergeProgressLabel
+            // 
+            this.mergeProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.mergeProgressLabel.AutoSize = true;
+            this.mergeProgressLabel.Location = new System.Drawing.Point(522, 42);
+            this.mergeProgressLabel.Name = "mergeProgressLabel";
+            this.mergeProgressLabel.Size = new System.Drawing.Size(21, 13);
+            this.mergeProgressLabel.TabIndex = 8;
+            this.mergeProgressLabel.Text = "0%";
+            // 
+            // mergeProgressBar
+            // 
+            this.mergeProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mergeProgressBar.Location = new System.Drawing.Point(175, 42);
+            this.mergeProgressBar.Name = "mergeProgressBar";
+            this.mergeProgressBar.Size = new System.Drawing.Size(341, 16);
+            this.mergeProgressBar.TabIndex = 7;
+            // 
+            // importProgressLabel
+            // 
+            this.importProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.importProgressLabel.AutoSize = true;
+            this.importProgressLabel.Location = new System.Drawing.Point(522, 20);
+            this.importProgressLabel.Name = "importProgressLabel";
+            this.importProgressLabel.Size = new System.Drawing.Size(21, 13);
+            this.importProgressLabel.TabIndex = 6;
+            this.importProgressLabel.Text = "0%";
+            // 
+            // importProgressBar
+            // 
+            this.importProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.importProgressBar.Location = new System.Drawing.Point(175, 19);
+            this.importProgressBar.Name = "importProgressBar";
+            this.importProgressBar.Size = new System.Drawing.Size(341, 17);
+            this.importProgressBar.TabIndex = 5;
             // 
             // buildButton
             // 
@@ -424,13 +517,6 @@
             this.tooltip.SetToolTip(this.buildButton, "Create the database.");
             this.buildButton.UseVisualStyleBackColor = true;
             this.buildButton.Click += new System.EventHandler(this.BuildButton_Click);
-            // 
-            // tooltip
-            // 
-            this.tooltip.AutomaticDelay = 200;
-            this.tooltip.AutoPopDelay = 10000;
-            this.tooltip.InitialDelay = 200;
-            this.tooltip.ReshowDelay = 40;
             // 
             // tempDirsGroupBox
             // 
@@ -454,6 +540,55 @@
             this.tempDirsGroupBox.TabIndex = 10;
             this.tempDirsGroupBox.TabStop = false;
             this.tempDirsGroupBox.Text = "Merge Settings";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.mergeNewAfterImportRadioButton);
+            this.panel1.Controls.Add(this.mergeAllAfterImportRadioButton);
+            this.panel1.Controls.Add(this.mergeManuallyAfterImportRadioButton);
+            this.panel1.Controls.Add(this.dontMergeRadioButton);
+            this.panel1.Location = new System.Drawing.Point(6, 19);
+            this.panel1.MaximumSize = new System.Drawing.Size(637, 23);
+            this.panel1.MinimumSize = new System.Drawing.Size(637, 23);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(637, 23);
+            this.panel1.TabIndex = 24;
+            // 
+            // mergeAllAfterImportRadioButton
+            // 
+            this.mergeAllAfterImportRadioButton.AutoSize = true;
+            this.mergeAllAfterImportRadioButton.Location = new System.Drawing.Point(91, 3);
+            this.mergeAllAfterImportRadioButton.Name = "mergeAllAfterImportRadioButton";
+            this.mergeAllAfterImportRadioButton.Size = new System.Drawing.Size(123, 17);
+            this.mergeAllAfterImportRadioButton.TabIndex = 21;
+            this.mergeAllAfterImportRadioButton.TabStop = true;
+            this.mergeAllAfterImportRadioButton.Text = "Merge all after import";
+            this.mergeAllAfterImportRadioButton.UseVisualStyleBackColor = true;
+            this.mergeAllAfterImportRadioButton.CheckedChanged += new System.EventHandler(this.mergeAllAfterImportRadioButton_CheckedChanged);
+            // 
+            // mergeManuallyAfterImportRadioButton
+            // 
+            this.mergeManuallyAfterImportRadioButton.AutoSize = true;
+            this.mergeManuallyAfterImportRadioButton.Location = new System.Drawing.Point(220, 3);
+            this.mergeManuallyAfterImportRadioButton.Name = "mergeManuallyAfterImportRadioButton";
+            this.mergeManuallyAfterImportRadioButton.Size = new System.Drawing.Size(154, 17);
+            this.mergeManuallyAfterImportRadioButton.TabIndex = 23;
+            this.mergeManuallyAfterImportRadioButton.TabStop = true;
+            this.mergeManuallyAfterImportRadioButton.Text = "Merge manually after import";
+            this.mergeManuallyAfterImportRadioButton.UseVisualStyleBackColor = true;
+            this.mergeManuallyAfterImportRadioButton.CheckedChanged += new System.EventHandler(this.mergeManuallyAfterImportRadioButton_CheckedChanged);
+            // 
+            // dontMergeRadioButton
+            // 
+            this.dontMergeRadioButton.AutoSize = true;
+            this.dontMergeRadioButton.Location = new System.Drawing.Point(3, 3);
+            this.dontMergeRadioButton.Name = "dontMergeRadioButton";
+            this.dontMergeRadioButton.Size = new System.Drawing.Size(82, 17);
+            this.dontMergeRadioButton.TabIndex = 22;
+            this.dontMergeRadioButton.TabStop = true;
+            this.dontMergeRadioButton.Text = "Don\'t merge";
+            this.dontMergeRadioButton.UseVisualStyleBackColor = true;
+            this.dontMergeRadioButton.CheckedChanged += new System.EventHandler(this.dontMergeRadioButton_CheckedChanged);
             // 
             // maxTempStorageUsageCheckBox
             // 
@@ -587,145 +722,23 @@
             this.primaryTempFolderTextBox.Size = new System.Drawing.Size(382, 20);
             this.primaryTempFolderTextBox.TabIndex = 9;
             // 
-            // progressGroupBox
+            // tooltip
             // 
-            this.progressGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.progressGroupBox.Controls.Add(this.mergeProgressLabelInfo);
-            this.progressGroupBox.Controls.Add(this.importProgressLabelInfo);
-            this.progressGroupBox.Controls.Add(this.mergeProgressLabel);
-            this.progressGroupBox.Controls.Add(this.mergeProgressBar);
-            this.progressGroupBox.Controls.Add(this.importProgressLabel);
-            this.progressGroupBox.Controls.Add(this.importProgressBar);
-            this.progressGroupBox.Location = new System.Drawing.Point(4, 135);
-            this.progressGroupBox.MaximumSize = new System.Drawing.Size(555, 74);
-            this.progressGroupBox.MinimumSize = new System.Drawing.Size(555, 74);
-            this.progressGroupBox.Name = "progressGroupBox";
-            this.progressGroupBox.Size = new System.Drawing.Size(555, 74);
-            this.progressGroupBox.TabIndex = 12;
-            this.progressGroupBox.TabStop = false;
-            this.progressGroupBox.Text = "Progress";
+            this.tooltip.AutomaticDelay = 200;
+            this.tooltip.AutoPopDelay = 10000;
+            this.tooltip.InitialDelay = 200;
+            this.tooltip.ReshowDelay = 40;
             // 
-            // mergeProgressLabelInfo
+            // mergeNewAfterImportRadioButton
             // 
-            this.mergeProgressLabelInfo.AutoSize = true;
-            this.mergeProgressLabelInfo.Location = new System.Drawing.Point(85, 42);
-            this.mergeProgressLabelInfo.Name = "mergeProgressLabelInfo";
-            this.mergeProgressLabelInfo.Size = new System.Drawing.Size(86, 13);
-            this.mergeProgressLabelInfo.TabIndex = 10;
-            this.mergeProgressLabelInfo.Text = "Merge progress: ";
-            // 
-            // importProgressLabelInfo
-            // 
-            this.importProgressLabelInfo.AutoSize = true;
-            this.importProgressLabelInfo.Location = new System.Drawing.Point(86, 20);
-            this.importProgressLabelInfo.Name = "importProgressLabelInfo";
-            this.importProgressLabelInfo.Size = new System.Drawing.Size(85, 13);
-            this.importProgressLabelInfo.TabIndex = 9;
-            this.importProgressLabelInfo.Text = "Import progress: ";
-            // 
-            // mergeProgressLabel
-            // 
-            this.mergeProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.mergeProgressLabel.AutoSize = true;
-            this.mergeProgressLabel.Location = new System.Drawing.Point(522, 42);
-            this.mergeProgressLabel.Name = "mergeProgressLabel";
-            this.mergeProgressLabel.Size = new System.Drawing.Size(21, 13);
-            this.mergeProgressLabel.TabIndex = 8;
-            this.mergeProgressLabel.Text = "0%";
-            // 
-            // mergeProgressBar
-            // 
-            this.mergeProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mergeProgressBar.Location = new System.Drawing.Point(175, 42);
-            this.mergeProgressBar.Name = "mergeProgressBar";
-            this.mergeProgressBar.Size = new System.Drawing.Size(341, 16);
-            this.mergeProgressBar.TabIndex = 7;
-            // 
-            // importProgressLabel
-            // 
-            this.importProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.importProgressLabel.AutoSize = true;
-            this.importProgressLabel.Location = new System.Drawing.Point(522, 20);
-            this.importProgressLabel.Name = "importProgressLabel";
-            this.importProgressLabel.Size = new System.Drawing.Size(21, 13);
-            this.importProgressLabel.TabIndex = 6;
-            this.importProgressLabel.Text = "0%";
-            // 
-            // importProgressBar
-            // 
-            this.importProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.importProgressBar.Location = new System.Drawing.Point(175, 19);
-            this.importProgressBar.Name = "importProgressBar";
-            this.importProgressBar.Size = new System.Drawing.Size(341, 17);
-            this.importProgressBar.TabIndex = 5;
-            // 
-            // mergeAllAfterImportRadioButton
-            // 
-            this.mergeAllAfterImportRadioButton.AutoSize = true;
-            this.mergeAllAfterImportRadioButton.Location = new System.Drawing.Point(91, 3);
-            this.mergeAllAfterImportRadioButton.Name = "mergeAllAfterImportRadioButton";
-            this.mergeAllAfterImportRadioButton.Size = new System.Drawing.Size(123, 17);
-            this.mergeAllAfterImportRadioButton.TabIndex = 21;
-            this.mergeAllAfterImportRadioButton.TabStop = true;
-            this.mergeAllAfterImportRadioButton.Text = "Merge all after import";
-            this.mergeAllAfterImportRadioButton.UseVisualStyleBackColor = true;
-            this.mergeAllAfterImportRadioButton.CheckedChanged += new System.EventHandler(this.mergeAllAfterImportRadioButton_CheckedChanged);
-            // 
-            // dontMergeRadioButton
-            // 
-            this.dontMergeRadioButton.AutoSize = true;
-            this.dontMergeRadioButton.Location = new System.Drawing.Point(3, 3);
-            this.dontMergeRadioButton.Name = "dontMergeRadioButton";
-            this.dontMergeRadioButton.Size = new System.Drawing.Size(82, 17);
-            this.dontMergeRadioButton.TabIndex = 22;
-            this.dontMergeRadioButton.TabStop = true;
-            this.dontMergeRadioButton.Text = "Don\'t merge";
-            this.dontMergeRadioButton.UseVisualStyleBackColor = true;
-            this.dontMergeRadioButton.CheckedChanged += new System.EventHandler(this.dontMergeRadioButton_CheckedChanged);
-            // 
-            // mergeManuallyAfterImportRadioButton
-            // 
-            this.mergeManuallyAfterImportRadioButton.AutoSize = true;
-            this.mergeManuallyAfterImportRadioButton.Location = new System.Drawing.Point(220, 3);
-            this.mergeManuallyAfterImportRadioButton.Name = "mergeManuallyAfterImportRadioButton";
-            this.mergeManuallyAfterImportRadioButton.Size = new System.Drawing.Size(154, 17);
-            this.mergeManuallyAfterImportRadioButton.TabIndex = 23;
-            this.mergeManuallyAfterImportRadioButton.TabStop = true;
-            this.mergeManuallyAfterImportRadioButton.Text = "Merge manually after import";
-            this.mergeManuallyAfterImportRadioButton.UseVisualStyleBackColor = true;
-            this.mergeManuallyAfterImportRadioButton.CheckedChanged += new System.EventHandler(this.mergeManuallyAfterImportRadioButton_CheckedChanged);
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.mergeAllAfterImportRadioButton);
-            this.panel1.Controls.Add(this.mergeManuallyAfterImportRadioButton);
-            this.panel1.Controls.Add(this.dontMergeRadioButton);
-            this.panel1.Location = new System.Drawing.Point(6, 19);
-            this.panel1.MaximumSize = new System.Drawing.Size(637, 23);
-            this.panel1.MinimumSize = new System.Drawing.Size(637, 23);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(637, 23);
-            this.panel1.TabIndex = 24;
-            // 
-            // importSettingsGroupBox
-            // 
-            this.importSettingsGroupBox.Controls.Add(this.openCheckBox);
-            this.importSettingsGroupBox.Controls.Add(this.whatsDatabaseFormatButton);
-            this.importSettingsGroupBox.Controls.Add(this.destinationFolderTextBox);
-            this.importSettingsGroupBox.Controls.Add(this.databaseFormatLabel);
-            this.importSettingsGroupBox.Controls.Add(this.setDestinationFolderButton);
-            this.importSettingsGroupBox.Controls.Add(this.databaseFormatComboBox);
-            this.importSettingsGroupBox.Controls.Add(this.destinationFolderLabel);
-            this.importSettingsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.importSettingsGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.importSettingsGroupBox.Name = "importSettingsGroupBox";
-            this.importSettingsGroupBox.Size = new System.Drawing.Size(658, 90);
-            this.importSettingsGroupBox.TabIndex = 12;
-            this.importSettingsGroupBox.TabStop = false;
-            this.importSettingsGroupBox.Text = "Import Settings";
+            this.mergeNewAfterImportRadioButton.AutoSize = true;
+            this.mergeNewAfterImportRadioButton.Location = new System.Drawing.Point(380, 3);
+            this.mergeNewAfterImportRadioButton.Name = "mergeNewAfterImportRadioButton";
+            this.mergeNewAfterImportRadioButton.Size = new System.Drawing.Size(155, 17);
+            this.mergeNewAfterImportRadioButton.TabIndex = 24;
+            this.mergeNewAfterImportRadioButton.TabStop = true;
+            this.mergeNewAfterImportRadioButton.Text = "Merge only new after import";
+            this.mergeNewAfterImportRadioButton.UseVisualStyleBackColor = true;
             // 
             // DatabaseCreationForm
             // 
@@ -743,6 +756,8 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.importSettingsGroupBox.ResumeLayout(false);
+            this.importSettingsGroupBox.PerformLayout();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
@@ -754,15 +769,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.enginePgnsDataGridView)).EndInit();
             this.serverTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.serverPgnsDataGridView)).EndInit();
-            this.tempDirsGroupBox.ResumeLayout(false);
-            this.tempDirsGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tempStorageUsageSizeNumericUpDown)).EndInit();
             this.progressGroupBox.ResumeLayout(false);
             this.progressGroupBox.PerformLayout();
+            this.tempDirsGroupBox.ResumeLayout(false);
+            this.tempDirsGroupBox.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.importSettingsGroupBox.ResumeLayout(false);
-            this.importSettingsGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tempStorageUsageSizeNumericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -820,5 +833,6 @@
         private System.Windows.Forms.RadioButton mergeAllAfterImportRadioButton;
         private System.Windows.Forms.RadioButton mergeManuallyAfterImportRadioButton;
         private System.Windows.Forms.RadioButton dontMergeRadioButton;
+        private System.Windows.Forms.RadioButton mergeNewAfterImportRadioButton;
     }
 }

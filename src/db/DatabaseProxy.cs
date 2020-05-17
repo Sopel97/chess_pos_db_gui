@@ -152,12 +152,17 @@ namespace chess_pos_db_gui
                 FetchSupportManifest();
             }
 
+            return SupportManifests[GetDatabaseFormat()].MergeMode;
+        }
+
+        public string GetDatabaseFormat()
+        {
             if (Manifest == null)
             {
                 FetchManifest();
             }
 
-            return SupportManifests[Manifest.Name].MergeMode;
+            return Manifest.Name;
         }
 
         public Dictionary<string, List<DatabaseMergableFile>> GetMergableFiles()
@@ -506,6 +511,41 @@ namespace chess_pos_db_gui
                             callback.Invoke(responseJson);
                         }
                         else if (responseJson["operation"] == "create")
+                        {
+                            if (responseJson["finished"] == true)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void Append(JsonValue json, Action<JsonValue> callback)
+        {
+            lock (Lock)
+            {
+                var stream = Client.GetStream();
+
+                SendMessage(stream, json.ToString());
+
+                while (true)
+                {
+                    var response = ReceiveMessage(stream);
+                    var responseJson = JsonValue.Parse(response);
+                    if (responseJson.ContainsKey("error"))
+                    {
+                        throw new InvalidDataException(responseJson["error"].ToString());
+                    }
+                    else if (responseJson.ContainsKey("operation"))
+                    {
+                        if (responseJson["operation"] == "import"
+                            || responseJson["operation"] == "merge")
+                        {
+                            callback.Invoke(responseJson);
+                        }
+                        else if (responseJson["operation"] == "append")
                         {
                             if (responseJson["finished"] == true)
                             {

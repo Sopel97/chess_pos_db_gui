@@ -20,6 +20,8 @@ namespace chess_pos_db_gui
 
         public bool OpenAfterFinished { get { return openAfterFinished && !finishedWithErrors; } }
 
+        private bool IsAppend { get; set; } = false;
+
         public string DatabasePath { get { return destinationFolderTextBox.Text; } }
 
         public ulong NumGames { get; private set; }
@@ -50,6 +52,25 @@ namespace chess_pos_db_gui
             WinFormsControlUtil.MakeDoubleBuffered(serverPgnsDataGridView);
             WinFormsControlUtil.MakeDoubleBuffered(importProgressBar);
             WinFormsControlUtil.MakeDoubleBuffered(mergeProgressBar);
+
+            if (database.IsOpen)
+            {
+                IsAppend = true;
+                destinationFolderTextBox.Text = database.Path;
+                destinationFolderTextBox.Enabled = false;
+                databaseFormatComboBox.Enabled = false;
+                mergeNewAfterImportRadioButton.Visible = true;
+                Text = "Append to database.";
+                buildButton.Text = "Append";
+                openCheckBox.Visible = false;
+            }
+            else
+            {
+                IsAppend = false;
+                mergeNewAfterImportRadioButton.Visible = false;
+                Text = "Create database.";
+                buildButton.Text = "Create";
+            }
         }
 
         private void SetFolder(TextBox textBox)
@@ -92,13 +113,22 @@ namespace chess_pos_db_gui
 
         private void DatabaseCreationForm_Load(object sender, EventArgs e)
         {
-            var supported = database.GetSupportedDatabaseTypes();
-            foreach (var type in supported)
+            if (IsAppend)
             {
-                databaseFormatComboBox.Items.Add(type);
+                string format = database.GetDatabaseFormat();
+                databaseFormatComboBox.Items.Add(format);
+                databaseFormatComboBox.SelectedItem = format;
             }
+            else
+            {
+                var supported = database.GetSupportedDatabaseTypes();
+                foreach (var type in supported)
+                {
+                    databaseFormatComboBox.Items.Add(type);
+                }
 
-            databaseFormatComboBox.SelectedItem = "";
+                databaseFormatComboBox.SelectedItem = "";
+            }
         }
 
         private void AddPath(DataGridView dgv, string path)
@@ -337,6 +367,24 @@ namespace chess_pos_db_gui
             Close();
         }
 
+        private void FinalizeAppend()
+        {
+            if (IsManualMergeAfterImport())
+            {
+                // database already opened
+                using (var form = new DatabaseMergeForm(database))
+                {
+                    form.ShowDialog();
+                }
+            }
+
+            EnableInput();
+
+            KeepFormAlive = false;
+
+            Close();
+        }
+
         private void BuildDatabase(JsonObject request)
         {
             try
@@ -377,6 +425,48 @@ namespace chess_pos_db_gui
 
             KeepFormAlive = false;
         }
+
+        private void AppendToDatabase(JsonObject request)
+        {
+            try
+            {
+                database.Append(request, ProgressCallback);
+                finishedWithErrors = false;
+                MessageBox.Show(
+                    string.Format("Finished.\nGames imported: {0}\nGames skipped: {1}\nPositions imported: {2}",
+                        NumGames,
+                        NumSkippedGames,
+                        NumPositions
+                    )
+                );
+
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(FinalizeAppend));
+                }
+                else
+                {
+                    FinalizeAppend();
+                }
+            }
+            catch (Exception ex)
+            {
+                finishedWithErrors = true;
+                MessageBox.Show("Finished with errors. " + ex.Message);
+
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(EnableInput));
+                }
+                else
+                {
+                    EnableInput();
+                }
+            }
+
+            KeepFormAlive = false;
+        }
+
         private void EnableInput()
         {
             importSettingsGroupBox.Enabled = true;
@@ -414,7 +504,7 @@ namespace chess_pos_db_gui
 
             tempDirsGroupBox.Enabled = false;
 
-            if (!IsAutomaticMerge())
+            if (!IsAutomaticMergeAll())
             {
                 mergeProgressBar.Enabled = false;
             }
@@ -422,7 +512,7 @@ namespace chess_pos_db_gui
             KeepFormAlive = true;
         }
 
-        private bool IsAutomaticMerge()
+        private bool IsAutomaticMergeAll()
         {
             return mergeAllAfterImportRadioButton.Checked;
         }
@@ -432,9 +522,14 @@ namespace chess_pos_db_gui
             return mergeManuallyAfterImportRadioButton.Checked;
         }
 
+        private bool IsAutomaticMergeNew()
+        {
+            return mergeNewAfterImportRadioButton.Checked;
+        }
+
         private void UpdateRadioButtonsState()
         {
-            bool enable = IsAutomaticMerge();
+            bool enable = IsAutomaticMergeAll() || IsAutomaticMergeNew();
             setPrimaryTempFolderButton.Enabled = enable;
             setSecondaryTempFolderButton.Enabled = enable;
             clearPrimaryTempFolderButton.Enabled = enable;
@@ -491,7 +586,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private async void BuildButton_Click(object sender, EventArgs e)
+        private async void HandleCreateDatabaseRequest()
         {
             var dir = destinationFolderTextBox.Text;
 
@@ -524,9 +619,9 @@ namespace chess_pos_db_gui
                     "Are you sure you want to create a database of type {0}?\n" +
                     "This may take a long time. Make sure you selected everything correctly",
                     (string)(databaseFormatComboBox.SelectedItem)
-                    ), 
-                "Confirmation", 
-                MessageBoxButtons.YesNo, 
+                    ),
+                "Confirmation",
+                MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question
                 );
 
@@ -541,7 +636,7 @@ namespace chess_pos_db_gui
             var enginePgns = GetEnginePgns();
             var serverPgns = GetServerPgns();
 
-            TotalFileSizeBeingImported = 
+            TotalFileSizeBeingImported =
                 GetTotalImportableFileSize(humanPgns)
                 + GetTotalImportableFileSize(enginePgns)
                 + GetTotalImportableFileSize(serverPgns);
@@ -549,7 +644,7 @@ namespace chess_pos_db_gui
 
             var maxSpace = GetMaxStorageUsage();
             var temps = GetTemporaryDirectories();
-            bool doMerge = IsAutomaticMerge();
+            bool doMerge = IsAutomaticMergeAll();
 
             JsonObject request = new JsonObject
             {
@@ -577,6 +672,84 @@ namespace chess_pos_db_gui
             }
 
             await Task.Run(() => BuildDatabase(request));
+        }
+        private async void HandleAppendRequest()
+        {
+            var result = MessageBox.Show(
+                string.Format(
+                    "Are you sure you want to append to the database?\n" +
+                    "This may take a long time. Make sure you selected everything correctly"
+                    ),
+                "Confirmation",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+                );
+
+            if (result != DialogResult.Yes)
+            {
+                return;
+            }
+
+            DisableInput();
+
+            var humanPgns = GetHumanPgns();
+            var enginePgns = GetEnginePgns();
+            var serverPgns = GetServerPgns();
+
+            TotalFileSizeBeingImported =
+                GetTotalImportableFileSize(humanPgns)
+                + GetTotalImportableFileSize(enginePgns)
+                + GetTotalImportableFileSize(serverPgns);
+            TotalFileSizeAlreadyImported = 0;
+
+            var maxSpace = GetMaxStorageUsage();
+            var temps = GetTemporaryDirectories();
+            string mergeType = "none";
+            if (IsAutomaticMergeAll())
+            {
+                mergeType = "all";
+            }
+            else if (IsAutomaticMergeNew())
+            {
+                mergeType = "new";
+            }
+
+            JsonObject request = new JsonObject
+            {
+                { "command", "append" },
+                { "merge", mergeType },
+                { "report_progress", true },
+                { "human_pgns", new JsonArray(humanPgns) },
+                { "engine_pgns", new JsonArray(enginePgns) },
+                { "server_pgns", new JsonArray(serverPgns) }
+            };
+            if (mergeType != "none")
+            {
+                request.Add("temporary_paths", new JsonArray(temps.Select(
+                    t =>
+                    {
+                        JsonValue s = t;
+                        return s;
+                    })));
+                if (maxSpace.HasValue)
+                {
+                    request.Add("temporary_space", maxSpace.Value);
+                }
+            }
+
+            await Task.Run(() => AppendToDatabase(request));
+        }
+
+        private void BuildButton_Click(object sender, EventArgs e)
+        {
+            if (IsAppend)
+            {
+                HandleAppendRequest();
+            }
+            else
+            {
+                HandleCreateDatabaseRequest();
+            }
         }
 
         private ulong GetTotalImportableFileSize(List<JsonValue> serverPgns)
