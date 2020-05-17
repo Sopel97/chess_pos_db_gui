@@ -36,6 +36,18 @@ namespace chess_pos_db_gui
             }
         }
 
+        public AggregatedEntry(SegregatedEntries entries, GameLevel level) :
+            this()
+        {
+            foreach (KeyValuePair<Origin, Entry> entry in entries)
+            {
+                if (entry.Key.Level == level)
+                {
+                    Combine(entry.Value, entry.Key.Result);
+                }
+            }
+        }
+
         public static AggregatedEntry operator-(AggregatedEntry lhs, AggregatedEntry rhs)
         {
             return new AggregatedEntry
@@ -78,6 +90,11 @@ namespace chess_pos_db_gui
 
         public void Combine(AggregatedEntry entry)
         {
+            if (entry == null)
+            {
+                return;
+            }
+
             Count += entry.Count;
             WinCount += entry.WinCount;
             DrawCount += entry.DrawCount;

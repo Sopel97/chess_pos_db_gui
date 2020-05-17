@@ -179,6 +179,7 @@
     <Compile Include="src\db\query\GameHeader.cs" />
     <Compile Include="src\db\query\GameLevel.cs" />
     <Compile Include="src\db\query\GameResult.cs" />
+    <Compile Include="src\util\EnumArray.cs" />
     <Compile Include="src\util\FileSizeUtil.cs" />
     <Compile Include="src\util\JsonSerializable.cs" />
     <Compile Include="src\util\LRUCache.cs" />

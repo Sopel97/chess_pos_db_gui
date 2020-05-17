@@ -69,15 +69,10 @@
             this.goodnessGroupBox = new System.Windows.Forms.GroupBox();
             this.gamesWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.gamesWeightCheckbox = new System.Windows.Forms.CheckBox();
-            this.humanWeightCheckbox = new System.Windows.Forms.CheckBox();
-            this.engineWeightCheckbox = new System.Windows.Forms.CheckBox();
             this.evaluationWeightCheckbox = new System.Windows.Forms.CheckBox();
-            this.combineHECheckbox = new System.Windows.Forms.CheckBox();
             this.goodnessNormalizeCheckbox = new System.Windows.Forms.CheckBox();
             this.goodnessUseCountCheckbox = new System.Windows.Forms.CheckBox();
             this.evalWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.engineWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.humanWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.displayGroupBox = new System.Windows.Forms.GroupBox();
             this.hideNeverPlayedCheckBox = new System.Windows.Forms.CheckBox();
             this.totalEntriesGridView = new System.Windows.Forms.DataGridView();
@@ -113,8 +108,6 @@
             this.goodnessGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gamesWeightNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.evalWeightNumericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.engineWeightNumericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.humanWeightNumericUpDown)).BeginInit();
             this.displayGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).BeginInit();
             this.queryGroupBox.SuspendLayout();
@@ -551,15 +544,10 @@
             this.goodnessGroupBox.Controls.Add(this.drawScoreNumericUpDown);
             this.goodnessGroupBox.Controls.Add(this.gamesWeightNumericUpDown);
             this.goodnessGroupBox.Controls.Add(this.gamesWeightCheckbox);
-            this.goodnessGroupBox.Controls.Add(this.humanWeightCheckbox);
-            this.goodnessGroupBox.Controls.Add(this.engineWeightCheckbox);
             this.goodnessGroupBox.Controls.Add(this.evaluationWeightCheckbox);
-            this.goodnessGroupBox.Controls.Add(this.combineHECheckbox);
             this.goodnessGroupBox.Controls.Add(this.goodnessNormalizeCheckbox);
             this.goodnessGroupBox.Controls.Add(this.goodnessUseCountCheckbox);
             this.goodnessGroupBox.Controls.Add(this.evalWeightNumericUpDown);
-            this.goodnessGroupBox.Controls.Add(this.engineWeightNumericUpDown);
-            this.goodnessGroupBox.Controls.Add(this.humanWeightNumericUpDown);
             this.goodnessGroupBox.Location = new System.Drawing.Point(322, 3);
             this.goodnessGroupBox.Name = "goodnessGroupBox";
             this.goodnessGroupBox.Size = new System.Drawing.Size(293, 118);
@@ -586,7 +574,7 @@
             this.gamesWeightCheckbox.AutoSize = true;
             this.gamesWeightCheckbox.Checked = true;
             this.gamesWeightCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.gamesWeightCheckbox.Location = new System.Drawing.Point(6, 20);
+            this.gamesWeightCheckbox.Location = new System.Drawing.Point(6, 21);
             this.gamesWeightCheckbox.Name = "gamesWeightCheckbox";
             this.gamesWeightCheckbox.Size = new System.Drawing.Size(93, 17);
             this.gamesWeightCheckbox.TabIndex = 11;
@@ -595,40 +583,12 @@
             this.gamesWeightCheckbox.UseVisualStyleBackColor = true;
             this.gamesWeightCheckbox.CheckedChanged += new System.EventHandler(this.GamesWeightCheckbox_CheckedChanged);
             // 
-            // humanWeightCheckbox
-            // 
-            this.humanWeightCheckbox.AutoSize = true;
-            this.humanWeightCheckbox.Checked = true;
-            this.humanWeightCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.humanWeightCheckbox.Location = new System.Drawing.Point(6, 19);
-            this.humanWeightCheckbox.Name = "humanWeightCheckbox";
-            this.humanWeightCheckbox.Size = new System.Drawing.Size(94, 17);
-            this.humanWeightCheckbox.TabIndex = 10;
-            this.humanWeightCheckbox.Text = "Human weight";
-            this.tooltip.SetToolTip(this.humanWeightCheckbox, "When enabled the quality index calculation will include human games");
-            this.humanWeightCheckbox.UseVisualStyleBackColor = true;
-            this.humanWeightCheckbox.CheckedChanged += new System.EventHandler(this.HumanWeightCheckbox_CheckedChanged);
-            // 
-            // engineWeightCheckbox
-            // 
-            this.engineWeightCheckbox.AutoSize = true;
-            this.engineWeightCheckbox.Checked = true;
-            this.engineWeightCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.engineWeightCheckbox.Location = new System.Drawing.Point(6, 43);
-            this.engineWeightCheckbox.Name = "engineWeightCheckbox";
-            this.engineWeightCheckbox.Size = new System.Drawing.Size(93, 17);
-            this.engineWeightCheckbox.TabIndex = 9;
-            this.engineWeightCheckbox.Text = "Engine weight";
-            this.tooltip.SetToolTip(this.engineWeightCheckbox, "When enabled the quality index calculation will include engine games");
-            this.engineWeightCheckbox.UseVisualStyleBackColor = true;
-            this.engineWeightCheckbox.CheckedChanged += new System.EventHandler(this.EngineWeightCheckbox_CheckedChanged);
-            // 
             // evaluationWeightCheckbox
             // 
             this.evaluationWeightCheckbox.AutoSize = true;
             this.evaluationWeightCheckbox.Checked = true;
             this.evaluationWeightCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.evaluationWeightCheckbox.Location = new System.Drawing.Point(6, 67);
+            this.evaluationWeightCheckbox.Location = new System.Drawing.Point(6, 45);
             this.evaluationWeightCheckbox.Name = "evaluationWeightCheckbox";
             this.evaluationWeightCheckbox.Size = new System.Drawing.Size(110, 17);
             this.evaluationWeightCheckbox.TabIndex = 8;
@@ -637,25 +597,12 @@
             this.evaluationWeightCheckbox.UseVisualStyleBackColor = true;
             this.evaluationWeightCheckbox.CheckedChanged += new System.EventHandler(this.EvaluationWeightCheckbox_CheckedChanged);
             // 
-            // combineHECheckbox
-            // 
-            this.combineHECheckbox.AutoSize = true;
-            this.combineHECheckbox.Location = new System.Drawing.Point(187, 21);
-            this.combineHECheckbox.Name = "combineHECheckbox";
-            this.combineHECheckbox.Size = new System.Drawing.Size(101, 17);
-            this.combineHECheckbox.TabIndex = 7;
-            this.combineHECheckbox.Text = "Combine games";
-            this.tooltip.SetToolTip(this.combineHECheckbox, "When enabled all games will be included as one factor for the quality index calcu" +
-        "lation");
-            this.combineHECheckbox.UseVisualStyleBackColor = true;
-            this.combineHECheckbox.CheckedChanged += new System.EventHandler(this.CombineHECheckbox_CheckedChanged);
-            // 
             // goodnessNormalizeCheckbox
             // 
             this.goodnessNormalizeCheckbox.AutoSize = true;
             this.goodnessNormalizeCheckbox.Checked = true;
             this.goodnessNormalizeCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.goodnessNormalizeCheckbox.Location = new System.Drawing.Point(187, 68);
+            this.goodnessNormalizeCheckbox.Location = new System.Drawing.Point(187, 45);
             this.goodnessNormalizeCheckbox.Name = "goodnessNormalizeCheckbox";
             this.goodnessNormalizeCheckbox.Size = new System.Drawing.Size(72, 17);
             this.goodnessNormalizeCheckbox.TabIndex = 6;
@@ -669,7 +616,7 @@
             this.goodnessUseCountCheckbox.AutoSize = true;
             this.goodnessUseCountCheckbox.Checked = true;
             this.goodnessUseCountCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.goodnessUseCountCheckbox.Location = new System.Drawing.Point(187, 45);
+            this.goodnessUseCountCheckbox.Location = new System.Drawing.Point(187, 21);
             this.goodnessUseCountCheckbox.Name = "goodnessUseCountCheckbox";
             this.goodnessUseCountCheckbox.Size = new System.Drawing.Size(75, 17);
             this.goodnessUseCountCheckbox.TabIndex = 2;
@@ -683,7 +630,7 @@
             // evalWeightNumericUpDown
             // 
             this.evalWeightNumericUpDown.DecimalPlaces = 1;
-            this.evalWeightNumericUpDown.Location = new System.Drawing.Point(117, 66);
+            this.evalWeightNumericUpDown.Location = new System.Drawing.Point(117, 44);
             this.evalWeightNumericUpDown.Name = "evalWeightNumericUpDown";
             this.evalWeightNumericUpDown.Size = new System.Drawing.Size(50, 20);
             this.evalWeightNumericUpDown.TabIndex = 4;
@@ -693,34 +640,6 @@
             0,
             0});
             this.evalWeightNumericUpDown.ValueChanged += new System.EventHandler(this.EvalWeightNumericUpDown_ValueChanged);
-            // 
-            // engineWeightNumericUpDown
-            // 
-            this.engineWeightNumericUpDown.DecimalPlaces = 1;
-            this.engineWeightNumericUpDown.Location = new System.Drawing.Point(117, 42);
-            this.engineWeightNumericUpDown.Name = "engineWeightNumericUpDown";
-            this.engineWeightNumericUpDown.Size = new System.Drawing.Size(50, 20);
-            this.engineWeightNumericUpDown.TabIndex = 2;
-            this.engineWeightNumericUpDown.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
-            this.engineWeightNumericUpDown.ValueChanged += new System.EventHandler(this.EngineWeightNumericUpDown_ValueChanged);
-            // 
-            // humanWeightNumericUpDown
-            // 
-            this.humanWeightNumericUpDown.DecimalPlaces = 1;
-            this.humanWeightNumericUpDown.Location = new System.Drawing.Point(117, 18);
-            this.humanWeightNumericUpDown.Name = "humanWeightNumericUpDown";
-            this.humanWeightNumericUpDown.Size = new System.Drawing.Size(50, 20);
-            this.humanWeightNumericUpDown.TabIndex = 0;
-            this.humanWeightNumericUpDown.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.humanWeightNumericUpDown.ValueChanged += new System.EventHandler(this.HumanWeightNumericUpDown_ValueChanged);
             // 
             // displayGroupBox
             // 
@@ -843,7 +762,7 @@
             0,
             0,
             131072});
-            this.drawScoreNumericUpDown.Location = new System.Drawing.Point(117, 92);
+            this.drawScoreNumericUpDown.Location = new System.Drawing.Point(117, 70);
             this.drawScoreNumericUpDown.Maximum = new decimal(new int[] {
             1,
             0,
@@ -862,7 +781,7 @@
             // drawScoreLabel
             // 
             this.drawScoreLabel.AutoSize = true;
-            this.drawScoreLabel.Location = new System.Drawing.Point(50, 94);
+            this.drawScoreLabel.Location = new System.Drawing.Point(50, 72);
             this.drawScoreLabel.Name = "drawScoreLabel";
             this.drawScoreLabel.Size = new System.Drawing.Size(61, 13);
             this.drawScoreLabel.TabIndex = 14;
@@ -920,8 +839,6 @@
             this.goodnessGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gamesWeightNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.evalWeightNumericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.engineWeightNumericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.humanWeightNumericUpDown)).EndInit();
             this.displayGroupBox.ResumeLayout(false);
             this.displayGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).EndInit();
@@ -964,15 +881,10 @@
         private System.Windows.Forms.GroupBox firstGameInfoGroupBox;
         private System.Windows.Forms.RichTextBox firstGameInfoRichTextBox;
         private System.Windows.Forms.GroupBox goodnessGroupBox;
-        private System.Windows.Forms.NumericUpDown humanWeightNumericUpDown;
         private System.Windows.Forms.NumericUpDown evalWeightNumericUpDown;
-        private System.Windows.Forms.NumericUpDown engineWeightNumericUpDown;
         private System.Windows.Forms.CheckBox goodnessNormalizeCheckbox;
         private System.Windows.Forms.CheckBox goodnessUseCountCheckbox;
-        private System.Windows.Forms.CheckBox humanWeightCheckbox;
-        private System.Windows.Forms.CheckBox engineWeightCheckbox;
         private System.Windows.Forms.CheckBox evaluationWeightCheckbox;
-        private System.Windows.Forms.CheckBox combineHECheckbox;
         private System.Windows.Forms.NumericUpDown gamesWeightNumericUpDown;
         private System.Windows.Forms.CheckBox gamesWeightCheckbox;
         private System.Windows.Forms.ToolStripMenuItem analysisToolStripMenuItem;

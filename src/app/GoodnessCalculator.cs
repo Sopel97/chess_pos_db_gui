@@ -1,4 +1,5 @@
-﻿using ChessDotNet;
+﻿using chess_pos_db_gui.src.util;
+using ChessDotNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +12,11 @@ namespace chess_pos_db_gui.src.app
     {
         public class Options
         {
-            public bool UseHumanGames { get; set; }
-            public bool UseEngineGames { get; set; }
             public bool UseEval { get; set; }
-            public bool UseCombinedGames { get; set; }
-            public bool CombineGames { get; set; }
             public bool UseCount { get; set; }
 
-            public double HumanWeight { get; set; }
-            public double EngineWeight { get; set; }
             public double EvalWeight { get; set; }
-            public double CombinedGamesWeight { get; set; }
+            public double GamesWeight { get; set; }
             public double DrawScore { get; internal set; }
         }
 
@@ -72,8 +67,7 @@ namespace chess_pos_db_gui.src.app
          */
         public static double CalculateGoodness(
             Player sideToMove,
-            AggregatedEntry entry, 
-            AggregatedEntry nonEngineEntry, 
+            EnumArray<GameLevel, AggregatedEntry> aggregatedEntries,
             ChessDBCNScore score,
             Options options
             )
@@ -84,55 +78,28 @@ namespace chess_pos_db_gui.src.app
             // if there's less than this amount of games then the goodness contribution will be penalized.
             ulong penaltyFromCountThreshold = 1;
 
-            bool useHumanWeight = options.UseHumanGames && !options.CombineGames;
-            bool useEngineWeight = options.UseEngineGames && !options.CombineGames;
-            bool useTotalWeight = options.UseCombinedGames && options.CombineGames;
-            bool useAnyGames = useHumanWeight || useEngineWeight || useTotalWeight;
-            bool useEvalWeight = options.UseEval;
+            bool useAnyGames = aggregatedEntries.Any(e => e.Value.Count != 0);
+            bool useEval = options.UseEval;
             bool useCount = options.UseCount;
 
-            AggregatedEntry engineEntry = entry - nonEngineEntry;
-
-            // return 0 if no games being considered
-            ulong usedGameCount = 0;
-            ulong usedWins = 0;
-            ulong usedDraws = 0;
-            ulong usedLosses = 0;
-            void addEntry(AggregatedEntry e)
+            AggregatedEntry totalEntry = new AggregatedEntry();
+            foreach(KeyValuePair<GameLevel, AggregatedEntry> e in aggregatedEntries)
             {
-                usedGameCount += e.Count;
-                usedWins += e.WinCount;
-                usedDraws += e.DrawCount;
-                usedLosses += e.LossCount;
+                totalEntry.Combine(e.Value);
             }
 
-            if (useTotalWeight)
-            {
-                addEntry(entry);
-            }
-            if (useHumanWeight)
-            {
-                addEntry(nonEngineEntry);
-            }
-            if (useEngineWeight)
-            {
-                addEntry(engineEntry);
-            }
-
-            if (useAnyGames && usedGameCount == 0)
+            if (useAnyGames && totalEntry.Count == 0)
             {
                 return 0.0;
             }
 
-            if (useEvalWeight && score == null && Math.Abs(entry.TotalEloDiff / (long)entry.Count) > maxAllowedEloDiff)
+            if (useEval && score == null && Math.Abs(totalEntry.TotalEloDiff / (long)totalEntry.Count) > maxAllowedEloDiff)
             {
                 return 0.0;
             }
 
-            double humanWeight = useHumanWeight ? (double)options.HumanWeight : 0.0;
-            double engineWeight = useEngineWeight ? (double)options.EngineWeight : 0.0;
-            double totalWeight = useTotalWeight ? (double)options.CombinedGamesWeight : 0.0;
-            double evalWeight = useEvalWeight ? (double)options.EvalWeight : 0.0;
+            double gamesWeight = useAnyGames ? options.GamesWeight : 0.0;
+            double evalWeight = useEval ? options.EvalWeight : 0.0;
 
             double calculateAdjustedPerf(AggregatedEntry e)
             {
@@ -161,14 +128,7 @@ namespace chess_pos_db_gui.src.app
                 }
             }
 
-            ulong totalCount = entry.Count;
-            double adjustedTotalPerf = calculateAdjustedPerf(entry);
-
-            ulong engineCount = engineEntry.Count;
-            double adjustedEnginePerf = calculateAdjustedPerf(engineEntry);
-
-            ulong humanCount = nonEngineEntry.Count;
-            double adjustedHumanPerf = calculateAdjustedPerf(nonEngineEntry);
+            double adjustedGamesPerf = calculateAdjustedPerf(totalEntry);
 
             double penalizePerf(double perf, double numGames)
             {
@@ -189,14 +149,10 @@ namespace chess_pos_db_gui.src.app
 
             if (useCount)
             {
-                adjustedEnginePerf = penalizePerf(adjustedEnginePerf, engineCount);
-                adjustedHumanPerf = penalizePerf(adjustedHumanPerf, humanCount);
-                adjustedTotalPerf = penalizePerf(adjustedTotalPerf, totalCount);
+                adjustedGamesPerf = penalizePerf(adjustedGamesPerf, totalEntry.Count);
             }
 
-            double engineGoodness = Math.Pow(adjustedEnginePerf, engineWeight);
-            double humanGoodness = Math.Pow(adjustedHumanPerf, humanWeight);
-            double totalGoodness = Math.Pow(adjustedTotalPerf, totalWeight);
+            double gamesGoodness = Math.Pow(adjustedGamesPerf, gamesWeight);
 
             // If eval is not present then assume 0.5 but reduce it for moves with low game count.
             // The idea is that we don't want missing eval to penalize common moves.
@@ -204,12 +160,18 @@ namespace chess_pos_db_gui.src.app
                 Math.Pow(
                     score != null
                     ? score.Perf
-                    : EloCalculator.GetExpectedPerformance(-EloCalculator.EloError99pct(usedWins, usedDraws, usedLosses))
+                    : EloCalculator.GetExpectedPerformance(
+                        -EloCalculator.EloError99pct(
+                            totalEntry.WinCount, 
+                            totalEntry.DrawCount, 
+                            totalEntry.LossCount
+                            )
+                        )
                     , evalWeight);
 
-            double weightSum = engineWeight + humanWeight + totalWeight + evalWeight;
+            double weightSum = gamesWeight + evalWeight;
 
-            double goodness = Math.Pow(engineGoodness * humanGoodness * totalGoodness * evalGoodness, 1.0 / weightSum);
+            double goodness = Math.Pow(gamesGoodness * evalGoodness, 1.0 / weightSum);
 
             return goodness;
         }

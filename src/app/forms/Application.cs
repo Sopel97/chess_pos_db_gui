@@ -503,29 +503,25 @@ namespace chess_pos_db_gui
             }
         }
 
-        private double CalculateGoodness(AggregatedEntry entry, AggregatedEntry nonEngineEntry, ChessDBCNScore score)
+        private double CalculateGoodness(
+            EnumArray<GameLevel, AggregatedEntry> aggregatedEntries,
+            ChessDBCNScore score
+            )
         {
             var options = new GoodnessCalculator.Options
             {
-                UseHumanGames = humanWeightCheckbox.Checked,
-                UseEngineGames = engineWeightCheckbox.Checked,
                 UseEval = evaluationWeightCheckbox.Checked,
-                UseCombinedGames = gamesWeightCheckbox.Checked,
-                CombineGames = combineHECheckbox.Checked,
                 UseCount = goodnessUseCountCheckbox.Checked,
 
                 DrawScore = (double)drawScoreNumericUpDown.Value,
 
-                HumanWeight = (double)humanWeightNumericUpDown.Value,
-                EngineWeight = (double)engineWeightNumericUpDown.Value,
                 EvalWeight = (double)evalWeightNumericUpDown.Value,
-                CombinedGamesWeight = (double)gamesWeightNumericUpDown.Value
+                GamesWeight = (double)gamesWeightNumericUpDown.Value
             };
 
             return GoodnessCalculator.CalculateGoodness(
                 chessBoard.SideToMove(),
-                entry,
-                nonEngineEntry,
+                aggregatedEntries,
                 score,
                 options
                 );
@@ -571,12 +567,14 @@ namespace chess_pos_db_gui
 
         private void PopulateCommon(
             DataRow row,
-            AggregatedEntry total,
-            AggregatedEntry totalNonEngine,
+            EnumArray<GameLevel, AggregatedEntry> aggregatedEntries,
             ChessDBCNScore totalScore
             )
         {
             long maxDisplayedEloDiff = 400;
+
+            var total = SumEntries(aggregatedEntries);
+            var totalNonEngine = SumNonEngineEntries(aggregatedEntries);
 
             row["Count"] = total.Count;
             row["WinCount"] = total.WinCount;
@@ -614,8 +612,7 @@ namespace chess_pos_db_gui
 
         private void Populate(
             string san, 
-            AggregatedEntry entry, 
-            AggregatedEntry nonEngineEntry, 
+            EnumArray<GameLevel, AggregatedEntry> aggregatedEntries,
             bool isOnlyTransposition, 
             ChessDBCNScore score
             )
@@ -624,12 +621,14 @@ namespace chess_pos_db_gui
 
             var row = TabulatedData.NewRow();
 
-            PopulateCommon(row, entry, nonEngineEntry, score);
+            PopulateCommon(row, aggregatedEntries, score);
 
             row["Move"] = new MoveWithSan(San.ParseSan(fen, san), san);
-            row["Goodness"] = CalculateGoodness(entry, nonEngineEntry, score);
+            row["Goodness"] = CalculateGoodness(aggregatedEntries, score);
 
-            foreach (GameHeader header in entry.FirstGame)
+            var totalEntry = SumEntries(aggregatedEntries);
+
+            foreach (GameHeader header in totalEntry.FirstGame)
             {
                 row["Date"] = header.Date.ToStringOmitUnknown();
                 row["Event"] = header.Event;
@@ -645,16 +644,30 @@ namespace chess_pos_db_gui
             TabulatedData.Rows.Add(row);
         }
 
+        private AggregatedEntry SumEntries(EnumArray<GameLevel, AggregatedEntry> aggregatedEntries)
+        {
+            return aggregatedEntries.Aggregate(
+                new AggregatedEntry(),
+                (a, e) => { a.Combine(e.Value); return a; }
+                );
+        }
+        private AggregatedEntry SumNonEngineEntries(EnumArray<GameLevel, AggregatedEntry> aggregatedEntries)
+        {
+            var res = new AggregatedEntry();
+            res.Combine(aggregatedEntries[GameLevel.Human]);
+            res.Combine(aggregatedEntries[GameLevel.Server]);
+            return res;
+        }
+
         private void PopulateTotal(
             string name,
-            AggregatedEntry total, 
-            AggregatedEntry totalNonEngine, 
+            EnumArray<GameLevel, AggregatedEntry> aggregatedEntries,
             ChessDBCNScore totalScore
             )
         {
             var row = TotalTabulatedData.NewRow();
 
-            PopulateCommon(row, total, totalNonEngine, totalScore);
+            PopulateCommon(row, aggregatedEntries, totalScore);
 
             row["Move"] = name;
 
@@ -662,9 +675,8 @@ namespace chess_pos_db_gui
         }
 
         private void UpdateGoodness(
-            string move, 
-            AggregatedEntry entry, 
-            AggregatedEntry nonEngineEntry, 
+            string move,
+            EnumArray<GameLevel, AggregatedEntry> aggregatedEntries,
             ChessDBCNScore score
             )
         {
@@ -682,12 +694,17 @@ namespace chess_pos_db_gui
                 return;
             }
 
-            row["Goodness"] = CalculateGoodness(entry, nonEngineEntry, score);
+            row["Goodness"] = CalculateGoodness(aggregatedEntries, score);
         }
 
         private bool IsEmpty(AggregatedEntry entry)
         {
             return entry.Count == 0;
+        }
+
+        private bool IsEmpty(EnumArray<GameLevel, AggregatedEntry> entry)
+        {
+            return entry.All(e => e.Value.Count == 0);
         }
 
         private ChessDBCNScore GetBestScore(Dictionary<Move, ChessDBCNScore> scores)
@@ -704,9 +721,8 @@ namespace chess_pos_db_gui
         }
 
         private void Populate(
-            Dictionary<string, AggregatedEntry> entries,
+            Dictionary<string, EnumArray<GameLevel, AggregatedEntry>> aggregatedEntries,
             IEnumerable<string> continuationMoves,
-            Dictionary<string, AggregatedEntry> nonEngineEntries,
             Dictionary<Move, ChessDBCNScore> scores
             )
         {
@@ -714,38 +730,46 @@ namespace chess_pos_db_gui
 
             bool hideEmpty = hideNeverPlayedCheckBox.Checked;
 
-            AggregatedEntry total = new AggregatedEntry();
-            AggregatedEntry totalNonEngine = new AggregatedEntry();
+            var totalEntries = new InitializedEnumArray<GameLevel, AggregatedEntry>();
+            var rootEntries = new InitializedEnumArray<GameLevel, AggregatedEntry>();
+
             ChessDBCNScore bestScore = GetBestScore(scores);
-            foreach (KeyValuePair<string, AggregatedEntry> entry in entries)
+
+            foreach (KeyValuePair<string, EnumArray<GameLevel, AggregatedEntry>> entriesByLevel in aggregatedEntries)
             {
-                if (hideEmpty && IsEmpty(entry.Value))
+                var san = entriesByLevel.Key;
+                if (san == San.NullMove)
+                {
+                    foreach (KeyValuePair<GameLevel, AggregatedEntry> entry in entriesByLevel.Value)
+                    {
+                        GameLevel level = entry.Key;
+                        rootEntries[level].Combine(entry.Value);
+                    }
+                }
+                else
+                {
+                    foreach (KeyValuePair<GameLevel, AggregatedEntry> entry in entriesByLevel.Value)
+                    {
+                        GameLevel level = entry.Key;
+                        totalEntries[level].Combine(entry.Value);
+                    }
+                }
+
+                if (hideEmpty && IsEmpty(entriesByLevel.Value))
                 {
                     continue;
                 }
 
-                if (!nonEngineEntries.ContainsKey(entry.Key))
-                {
-                    nonEngineEntries.Add(entry.Key, new AggregatedEntry());
-                }
-
-                if (entry.Key == San.NullMove)
-                {
-                    PopulateTotal("Root", entry.Value, nonEngineEntries[entry.Key], bestScore);
-                    PopulateFirstGameInfo(entry.Value);
-                }
-                else
+                if (san != San.NullMove)
                 {
                     var fen = chessBoard.GetFen();
-                    scores.TryGetValue(San.ParseSan(fen, entry.Key), out ChessDBCNScore score);
-                    Populate(entry.Key, entry.Value, nonEngineEntries[entry.Key], !continuationMoves.Contains(entry.Key), score);
-
-                    total.Combine(entry.Value);
-                    totalNonEngine.Combine(nonEngineEntries[entry.Key]);
+                    scores.TryGetValue(San.ParseSan(fen, san), out ChessDBCNScore score);
+                    Populate(san, entriesByLevel.Value, !continuationMoves.Contains(san), score);
                 }
             }
 
-            PopulateTotal("Total", total, totalNonEngine, bestScore);
+            PopulateTotal("Root", rootEntries, bestScore);
+            PopulateTotal("Total", totalEntries, bestScore);
 
             if (goodnessNormalizeCheckbox.Checked)
             {
@@ -756,8 +780,7 @@ namespace chess_pos_db_gui
         }
 
         private void UpdateGoodness(
-            Dictionary<string, AggregatedEntry> entries,
-            Dictionary<string, AggregatedEntry> nonEngineEntries,
+            Dictionary<string, EnumArray<GameLevel, AggregatedEntry>> aggregatedEntries,
             Dictionary<Move, ChessDBCNScore> scores
             )
         {
@@ -765,23 +788,20 @@ namespace chess_pos_db_gui
 
             bool hideEmpty = hideNeverPlayedCheckBox.Checked;
 
-            foreach (KeyValuePair<string, AggregatedEntry> entry in entries)
+            foreach (KeyValuePair<string, EnumArray<GameLevel, AggregatedEntry>> entryByLevel in aggregatedEntries)
             {
-                if (hideEmpty && IsEmpty(entry.Value))
+                var san = entryByLevel.Key;
+
+                if (hideEmpty && IsEmpty(entryByLevel.Value))
                 {
                     continue;
                 }
 
-                if (!nonEngineEntries.ContainsKey(entry.Key))
-                {
-                    nonEngineEntries.Add(entry.Key, new AggregatedEntry());
-                }
-
-                if (entry.Key != San.NullMove)
+                if (san != San.NullMove)
                 {
                     var fen = chessBoard.GetFen();
-                    scores.TryGetValue(San.ParseSan(fen, entry.Key), out ChessDBCNScore score);
-                    UpdateGoodness(entry.Key, entry.Value, nonEngineEntries[entry.Key], score);
+                    scores.TryGetValue(San.ParseSan(fen, san), out ChessDBCNScore score);
+                    UpdateGoodness(san, entryByLevel.Value, score);
                 }
             }
 
@@ -817,100 +837,78 @@ namespace chess_pos_db_gui
             return goodness;
         }
 
-        private void Gather(QueryCacheEntry res, Select select, List<GameLevel> levels, ref Dictionary<string, AggregatedEntry> aggregatedEntries)
+        private Dictionary<string, EnumArray<GameLevel, AggregatedEntry>> GatherEntriesByMove(
+            QueryCacheEntry res, 
+            List<Select> selects, 
+            List<GameLevel> levels
+            )
         {
-            var rootEntries = res.Stats.Results[0].ResultsBySelect[select].Root;
-            var childrenEntries = res.Stats.Results[0].ResultsBySelect[select].Children;
+            Dictionary<string, EnumArray<GameLevel, AggregatedEntry>> aggregatedEntries =
+                new Dictionary<string, EnumArray<GameLevel, AggregatedEntry>>();
 
-            if (aggregatedEntries.ContainsKey("--"))
+            foreach (Select select in selects)
             {
-                aggregatedEntries["--"].Combine(new AggregatedEntry(rootEntries, levels));
-            }
-            else
-            {
-                aggregatedEntries.Add("--", new AggregatedEntry(rootEntries, levels));
-            }
-            foreach (KeyValuePair<string, SegregatedEntries> entry in childrenEntries)
-            {
-                if (aggregatedEntries.ContainsKey(entry.Key))
+                var rootEntries = res.Stats.Results[0].ResultsBySelect[select].Root;
+                var childrenEntries = res.Stats.Results[0].ResultsBySelect[select].Children;
+
+                if (!aggregatedEntries.ContainsKey(San.NullMove))
                 {
-                    aggregatedEntries[entry.Key].Combine(new AggregatedEntry(entry.Value, levels));
+                    aggregatedEntries.Add(San.NullMove, new InitializedEnumArray<GameLevel, AggregatedEntry>());
                 }
-                else
+
+                foreach(GameLevel level in levels)
                 {
-                    aggregatedEntries.Add(entry.Key, new AggregatedEntry(entry.Value, levels));
+                    aggregatedEntries[San.NullMove][level].Combine(new AggregatedEntry(rootEntries, level));
+                }
+
+                foreach (KeyValuePair<string, SegregatedEntries> entry in childrenEntries)
+                {
+                    if (!aggregatedEntries.ContainsKey(entry.Key))
+                    {
+                        aggregatedEntries.Add(entry.Key, new InitializedEnumArray<GameLevel, AggregatedEntry>());
+                    }
+
+                    foreach (GameLevel level in levels)
+                    {
+                        aggregatedEntries[entry.Key][level].Combine(new AggregatedEntry(entry.Value, level));
+                    }
                 }
             }
+
+            return aggregatedEntries;
         }
 
         private void Populate(QueryCacheEntry res, List<Select> selects, List<GameLevel> levels)
         {
-            Dictionary<string, AggregatedEntry> aggregatedContinuationEntries = new Dictionary<string, AggregatedEntry>();
+            var aggregatedContinuationEntries = GatherEntriesByMove(
+                res,
+                new List<chess_pos_db_gui.Select> { chess_pos_db_gui.Select.Continuations },
+                levels
+                );
 
-            Gather(res, chess_pos_db_gui.Select.Continuations, levels, ref aggregatedContinuationEntries);
+            var aggregatedEntriesByLevel =
+                GatherEntriesByMove(
+                    res,
+                    selects,
+                    levels
+                    );
 
-            Dictionary<string, AggregatedEntry> aggregatedEntries = new Dictionary<string, AggregatedEntry>();
-            foreach (Select select in selects)
-            {
-                Gather(res, select, levels, ref aggregatedEntries);
-            }
-
-            Dictionary<string, AggregatedEntry> aggregatedNonEngineEntries = new Dictionary<string, AggregatedEntry>();
-            if (levels.Contains(GameLevel.Human) || levels.Contains(GameLevel.Server))
-            {
-                var nonEngineLevels = new List<GameLevel> { };
-                if (levels.Contains(GameLevel.Human))
-                {
-                    nonEngineLevels.Add(GameLevel.Human);
-                }
-
-                if (levels.Contains(GameLevel.Server))
-                {
-                    nonEngineLevels.Add(GameLevel.Server);
-                }
-
-                foreach (Select select in selects)
-                {
-                    Gather(res, select, nonEngineLevels, ref aggregatedNonEngineEntries);
-                }
-            }
-
-            Populate(aggregatedEntries, aggregatedContinuationEntries.Where(p => p.Value.Count != 0).Select(p => p.Key), aggregatedNonEngineEntries, CacheEntry.Scores);
+            Populate(
+                aggregatedEntriesByLevel,
+                aggregatedContinuationEntries.Where(p => !IsEmpty(p.Value)).Select(p => p.Key),
+                CacheEntry.Scores
+                );
         }
 
         private void UpdateGoodness(QueryCacheEntry res, List<Select> selects, List<GameLevel> levels)
         {
-            Dictionary<string, AggregatedEntry> aggregatedContinuationEntries = new Dictionary<string, AggregatedEntry>();
+            var aggregatedEntries = GatherEntriesByMove(
+                res,
+                selects,
+                levels
+                );
 
-            Gather(res, chess_pos_db_gui.Select.Continuations, levels, ref aggregatedContinuationEntries);
-
-            Dictionary<string, AggregatedEntry> aggregatedEntries = new Dictionary<string, AggregatedEntry>();
-            foreach (Select select in selects)
-            {
-                Gather(res, select, levels, ref aggregatedEntries);
-            }
-
-            Dictionary<string, AggregatedEntry> aggregatedNonEngineEntries = new Dictionary<string, AggregatedEntry>();
-            if (levels.Contains(GameLevel.Human) || levels.Contains(GameLevel.Server))
-            {
-                var nonEngineLevels = new List<GameLevel> { };
-                if (levels.Contains(GameLevel.Human))
-                {
-                    nonEngineLevels.Add(GameLevel.Human);
-                }
-
-                if (levels.Contains(GameLevel.Server))
-                {
-                    nonEngineLevels.Add(GameLevel.Server);
-                }
-
-                foreach (Select select in selects)
-                {
-                    Gather(res, select, nonEngineLevels, ref aggregatedNonEngineEntries);
-                }
-            }
-
-            UpdateGoodness(aggregatedEntries, aggregatedNonEngineEntries, CacheEntry.Scores);
+            UpdateGoodness(aggregatedEntries, CacheEntry.Scores);
         }
 
         private void Clear()
@@ -974,36 +972,35 @@ namespace chess_pos_db_gui
 
             foreach (var kv in retractions)
             {
-                AggregatedEntry total = new AggregatedEntry(kv.Value, levels);
-                AggregatedEntry nonEngine = new AggregatedEntry();
-
-                var nonEngineLevels = new List<GameLevel> { };
-                if (levels.Contains(GameLevel.Human) || levels.Contains(GameLevel.Server))
+                foreach (KeyValuePair<string, SegregatedEntries> entry in retractions)
                 {
-                    if (levels.Contains(GameLevel.Human))
+                    EnumArray<GameLevel, AggregatedEntry> aggregatedEntries =
+                    new InitializedEnumArray<GameLevel, AggregatedEntry>();
+
+                    foreach (GameLevel level in levels)
                     {
-                        nonEngineLevels.Add(GameLevel.Human);
+                        aggregatedEntries[level].Combine(new AggregatedEntry(entry.Value, level));
                     }
 
-                    if (levels.Contains(GameLevel.Server))
-                    {
-                        nonEngineLevels.Add(GameLevel.Server);
-                    }
-
-                    nonEngine = new AggregatedEntry(kv.Value, nonEngineLevels);
+                    PopulateRetraction(kv.Key, aggregatedEntries, bestScore);
                 }
-
-                PopulateRetraction(kv.Key, total, nonEngine, bestScore);
             }
         }
 
-        private void PopulateRetraction(string eran, AggregatedEntry total, AggregatedEntry totalNonEngine, ChessDBCNScore totalScore)
+        private void PopulateRetraction(
+            string eran, 
+            EnumArray<GameLevel, AggregatedEntry> aggregatedEntries, 
+            ChessDBCNScore totalScore
+            )
         {
             var fen = chessBoard.GetFen();
 
             var row = RetractionsData.NewRow();
 
             long maxDisplayedEloDiff = 400;
+
+            var total = SumEntries(aggregatedEntries);
+            var totalNonEngine = SumNonEngineEntries(aggregatedEntries);
 
             row["Count"] = total.Count;
             row["WinCount"] = total.WinCount;
@@ -1039,7 +1036,7 @@ namespace chess_pos_db_gui
             }
 
             row["Move"] = new ReverseMoveWithEran(Eran.ParseEran(fen, eran), eran);
-            row["Goodness"] = CalculateGoodness(total, totalNonEngine, totalScore);
+            row["Goodness"] = CalculateGoodness(aggregatedEntries, totalScore);
 
             foreach (GameHeader header in total.FirstGame)
             {
@@ -1532,16 +1529,11 @@ namespace chess_pos_db_gui
             hideNeverPlayedCheckBox.Checked = settings.HideNeverPlayedCheckBoxChecked;
             typeContinuationsCheckBox.Checked = settings.TypeContinuationsCheckBoxChecked;
             typeTranspositionsCheckBox.Checked = settings.TypeTranspositionsCheckBoxChecked;
-            humanWeightCheckbox.Checked = settings.HumanWeightCheckBoxChecked;
             gamesWeightCheckbox.Checked = settings.GamesWeightCheckBoxChecked;
-            engineWeightCheckbox.Checked = settings.EngineWeightCheckBoxChecked;
             evaluationWeightCheckbox.Checked = settings.EvaluationWeightCheckBoxChecked;
-            combineHECheckbox.Checked = settings.CombineHECheckBoxChecked;
             goodnessUseCountCheckbox.Checked = settings.GoodnessUseCountCheckBoxChecked;
             goodnessNormalizeCheckbox.Checked = settings.GoodnessNormalizeCheckBoxChecked;
             gamesWeightNumericUpDown.Value = settings.GamesWeightNumericUpDownValue;
-            humanWeightNumericUpDown.Value = settings.HumanWeightNumericUpDownValue;
-            engineWeightNumericUpDown.Value = settings.EngineWeightNumericUpDownValue;
             evalWeightNumericUpDown.Value = settings.EvalWeightNumericUpDownValue;
             splitChessAndData.SplitterDistance = settings.SplitChessAndDataSplitterDistance;
             entriesRetractionsSplitPanel.SplitterDistance = settings.EntriesRetractionsSplitPanelSplitterDistance;
@@ -1583,16 +1575,11 @@ namespace chess_pos_db_gui
                 HideNeverPlayedCheckBoxChecked = hideNeverPlayedCheckBox.Checked,
                 TypeContinuationsCheckBoxChecked = typeContinuationsCheckBox.Checked,
                 TypeTranspositionsCheckBoxChecked = typeTranspositionsCheckBox.Checked,
-                HumanWeightCheckBoxChecked = humanWeightCheckbox.Checked,
                 GamesWeightCheckBoxChecked = gamesWeightCheckbox.Checked,
-                EngineWeightCheckBoxChecked = engineWeightCheckbox.Checked,
                 EvaluationWeightCheckBoxChecked = evaluationWeightCheckbox.Checked,
-                CombineHECheckBoxChecked = combineHECheckbox.Checked,
                 GoodnessUseCountCheckBoxChecked = goodnessUseCountCheckbox.Checked,
                 GoodnessNormalizeCheckBoxChecked = goodnessNormalizeCheckbox.Checked,
                 GamesWeightNumericUpDownValue = gamesWeightNumericUpDown.Value,
-                HumanWeightNumericUpDownValue = humanWeightNumericUpDown.Value,
-                EngineWeightNumericUpDownValue = engineWeightNumericUpDown.Value,
                 EvalWeightNumericUpDownValue = evalWeightNumericUpDown.Value,
                 SplitChessAndDataSplitterDistance = splitChessAndData.SplitterDistance,
                 EntriesRetractionsSplitPanelSplitterDistance = entriesRetractionsSplitPanel.SplitterDistance,
@@ -1606,22 +1593,6 @@ namespace chess_pos_db_gui
         private void HideNeverPlayedCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Repopulate();
-        }
-
-        private void HumanWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
-        {
-            if (humanWeightCheckbox.Checked)
-            {
-                UpdateGoodness();
-            }
-        }
-
-        private void EngineWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
-        {
-            if (engineWeightCheckbox.Checked)
-            {
-                UpdateGoodness();
-            }
         }
 
         private void EvalWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -1642,32 +1613,12 @@ namespace chess_pos_db_gui
             UpdateGoodness();
         }
 
-        private void CombineHECheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateGoodness();
-
-            gamesWeightCheckbox.Visible = combineHECheckbox.Checked;
-            gamesWeightNumericUpDown.Visible = combineHECheckbox.Checked;
-            engineWeightCheckbox.Visible = !combineHECheckbox.Checked;
-            engineWeightNumericUpDown.Visible = !combineHECheckbox.Checked;
-        }
-
         private void GamesWeightCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             UpdateGoodness();
         }
 
-        private void EngineWeightCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateGoodness();
-        }
-
         private void EvaluationWeightCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateGoodness();
-        }
-
-        private void HumanWeightCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             UpdateGoodness();
         }
