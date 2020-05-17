@@ -507,6 +507,7 @@ namespace chess_pos_db_gui
         {
             var options = new GoodnessCalculator.Options
             {
+                UseGames = levelHumanCheckBox.Checked || levelServerCheckBox.Checked || levelEngineCheckBox.Checked,
                 UseEval = evaluationWeightCheckbox.Checked,
                 UseCount = goodnessUseCountCheckbox.Checked,
 

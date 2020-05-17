@@ -12,6 +12,7 @@ namespace chess_pos_db_gui.src.app
     {
         public class Options
         {
+            public bool UseGames { get; set; }
             public bool UseEval { get; set; }
             public bool UseCount { get; set; }
 
@@ -78,7 +79,6 @@ namespace chess_pos_db_gui.src.app
             // if there's less than this amount of games then the goodness contribution will be penalized.
             ulong penaltyFromCountThreshold = 10;
 
-            bool useAnyGames = aggregatedEntries.Any(e => e.Value.Count != 0);
             bool useEval = options.UseEval;
             bool useCount = options.UseCount;
 
@@ -88,7 +88,7 @@ namespace chess_pos_db_gui.src.app
                 totalEntry.Combine(e.Value);
             }
 
-            if (useAnyGames && totalEntry.Count == 0)
+            if (options.UseGames && totalEntry.Count == 0)
             {
                 return 0.0;
             }
@@ -98,7 +98,7 @@ namespace chess_pos_db_gui.src.app
                 return 0.0;
             }
 
-            double gamesWeight = useAnyGames ? options.GamesWeight : 0.0;
+            double gamesWeight = options.UseGames ? options.GamesWeight : 0.0;
             double evalWeight = useEval ? options.EvalWeight : 0.0;
 
             double calculateAdjustedPerf(AggregatedEntry e)
