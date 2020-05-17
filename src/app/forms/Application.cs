@@ -1787,5 +1787,10 @@ namespace chess_pos_db_gui
                 form.ShowDialog();
             }
         }
+
+        private void drawScoreNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateGoodness();
+        }
     }
 }

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
@@ -47,7 +47,10 @@
             this.databaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.appendToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,10 +86,9 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.appendToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawScoreNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.drawScoreLabel = new System.Windows.Forms.Label();
             this.chessBoard = new chess_pos_db_gui.ChessBoard();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -116,6 +118,7 @@
             this.displayGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).BeginInit();
             this.queryGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.drawScoreNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -124,14 +127,14 @@
             this.entriesGridView.AllowUserToDeleteRows = false;
             this.entriesGridView.AllowUserToResizeColumns = false;
             this.entriesGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -141,7 +144,7 @@
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(608, 270);
+            this.entriesGridView.Size = new System.Drawing.Size(607, 245);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -327,28 +330,45 @@
             // createToolStripMenuItem
             // 
             this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-            this.createToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.createToolStripMenuItem.Text = "Create";
             this.createToolStripMenuItem.Click += new System.EventHandler(this.CreateToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(113, 6);
+            // 
+            // appendToolStripMenuItem
+            // 
+            this.appendToolStripMenuItem.Name = "appendToolStripMenuItem";
+            this.appendToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.appendToolStripMenuItem.Text = "Append";
+            this.appendToolStripMenuItem.Click += new System.EventHandler(this.appendToolStripMenuItem_Click);
             // 
             // mergeToolStripMenuItem
             // 
             this.mergeToolStripMenuItem.Name = "mergeToolStripMenuItem";
-            this.mergeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mergeToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.mergeToolStripMenuItem.Text = "Merge";
             this.mergeToolStripMenuItem.Click += new System.EventHandler(this.MergeToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(113, 6);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
             // 
@@ -469,7 +489,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.entriesRetractionsSplitPanel.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.entriesRetractionsSplitPanel.Location = new System.Drawing.Point(3, 174);
+            this.entriesRetractionsSplitPanel.Location = new System.Drawing.Point(3, 199);
             this.entriesRetractionsSplitPanel.Name = "entriesRetractionsSplitPanel";
             this.entriesRetractionsSplitPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -480,8 +500,8 @@
             // entriesRetractionsSplitPanel.Panel2
             // 
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsGridView);
-            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(608, 381);
-            this.entriesRetractionsSplitPanel.SplitterDistance = 270;
+            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(607, 356);
+            this.entriesRetractionsSplitPanel.SplitterDistance = 245;
             this.entriesRetractionsSplitPanel.TabIndex = 9;
             // 
             // retractionsGridView
@@ -490,14 +510,14 @@
             this.retractionsGridView.AllowUserToDeleteRows = false;
             this.retractionsGridView.AllowUserToResizeColumns = false;
             this.retractionsGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.retractionsGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.retractionsGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.retractionsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.retractionsGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.retractionsGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -507,7 +527,7 @@
             this.retractionsGridView.RowHeadersWidth = 20;
             this.retractionsGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.retractionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.retractionsGridView.Size = new System.Drawing.Size(608, 107);
+            this.retractionsGridView.Size = new System.Drawing.Size(607, 107);
             this.retractionsGridView.TabIndex = 8;
             this.retractionsGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.retractionsGridView_CellContentDoubleClick);
             this.retractionsGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RetractionsGridView_CellFormatting);
@@ -515,7 +535,7 @@
             // totalDataHelpButton
             // 
             this.totalDataHelpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.totalDataHelpButton.Location = new System.Drawing.Point(3, 102);
+            this.totalDataHelpButton.Location = new System.Drawing.Point(3, 127);
             this.totalDataHelpButton.Margin = new System.Windows.Forms.Padding(0);
             this.totalDataHelpButton.Name = "totalDataHelpButton";
             this.totalDataHelpButton.Size = new System.Drawing.Size(50, 21);
@@ -527,6 +547,8 @@
             // 
             // goodnessGroupBox
             // 
+            this.goodnessGroupBox.Controls.Add(this.drawScoreLabel);
+            this.goodnessGroupBox.Controls.Add(this.drawScoreNumericUpDown);
             this.goodnessGroupBox.Controls.Add(this.gamesWeightNumericUpDown);
             this.goodnessGroupBox.Controls.Add(this.gamesWeightCheckbox);
             this.goodnessGroupBox.Controls.Add(this.humanWeightCheckbox);
@@ -540,7 +562,7 @@
             this.goodnessGroupBox.Controls.Add(this.humanWeightNumericUpDown);
             this.goodnessGroupBox.Location = new System.Drawing.Point(322, 3);
             this.goodnessGroupBox.Name = "goodnessGroupBox";
-            this.goodnessGroupBox.Size = new System.Drawing.Size(293, 93);
+            this.goodnessGroupBox.Size = new System.Drawing.Size(293, 118);
             this.goodnessGroupBox.TabIndex = 6;
             this.goodnessGroupBox.TabStop = false;
             this.goodnessGroupBox.Text = "Quality Index";
@@ -732,17 +754,17 @@
             this.totalEntriesGridView.AllowUserToResizeRows = false;
             this.totalEntriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.totalEntriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.totalEntriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.totalEntriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.totalEntriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.totalEntriesGridView.Location = new System.Drawing.Point(3, 102);
+            this.totalEntriesGridView.Location = new System.Drawing.Point(3, 127);
             this.totalEntriesGridView.Name = "totalEntriesGridView";
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
@@ -813,12 +835,38 @@
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
             // 
-            // appendToolStripMenuItem
+            // drawScoreNumericUpDown
             // 
-            this.appendToolStripMenuItem.Name = "appendToolStripMenuItem";
-            this.appendToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.appendToolStripMenuItem.Text = "Append";
-            this.appendToolStripMenuItem.Click += new System.EventHandler(this.appendToolStripMenuItem_Click);
+            this.drawScoreNumericUpDown.DecimalPlaces = 2;
+            this.drawScoreNumericUpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.drawScoreNumericUpDown.Location = new System.Drawing.Point(117, 92);
+            this.drawScoreNumericUpDown.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.drawScoreNumericUpDown.Name = "drawScoreNumericUpDown";
+            this.drawScoreNumericUpDown.Size = new System.Drawing.Size(50, 20);
+            this.drawScoreNumericUpDown.TabIndex = 13;
+            this.drawScoreNumericUpDown.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.drawScoreNumericUpDown.ValueChanged += new System.EventHandler(this.drawScoreNumericUpDown_ValueChanged);
+            // 
+            // drawScoreLabel
+            // 
+            this.drawScoreLabel.AutoSize = true;
+            this.drawScoreLabel.Location = new System.Drawing.Point(50, 94);
+            this.drawScoreLabel.Name = "drawScoreLabel";
+            this.drawScoreLabel.Size = new System.Drawing.Size(61, 13);
+            this.drawScoreLabel.TabIndex = 14;
+            this.drawScoreLabel.Text = "Draw score";
             // 
             // chessBoard
             // 
@@ -831,16 +879,6 @@
             this.chessBoard.PieceImages = null;
             this.chessBoard.Size = new System.Drawing.Size(424, 256);
             this.chessBoard.TabIndex = 0;
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // Application
             // 
@@ -889,6 +927,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).EndInit();
             this.queryGroupBox.ResumeLayout(false);
             this.queryGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.drawScoreNumericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -950,6 +989,8 @@
         private System.Windows.Forms.ToolStripMenuItem appendToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.Label drawScoreLabel;
+        private System.Windows.Forms.NumericUpDown drawScoreNumericUpDown;
     }
 }
 
