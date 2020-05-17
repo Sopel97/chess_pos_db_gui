@@ -150,9 +150,6 @@ namespace chess_pos_db_gui
 
             DoubleBuffered = true;
 
-            gamesWeightCheckbox.Visible = false;
-            gamesWeightNumericUpDown.Visible = false;
-
             TabulatedData.Columns.Add(new DataColumn("Move", typeof(MoveWithSan)));
             TabulatedData.Columns.Add(new DataColumn("Count", typeof(ulong)));
             TabulatedData.Columns.Add(new DataColumn("WinCount", typeof(ulong)));
