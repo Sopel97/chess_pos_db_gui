@@ -139,7 +139,7 @@
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(607, 245);
+            this.entriesGridView.Size = new System.Drawing.Size(607, 270);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -484,7 +484,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.entriesRetractionsSplitPanel.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.entriesRetractionsSplitPanel.Location = new System.Drawing.Point(3, 199);
+            this.entriesRetractionsSplitPanel.Location = new System.Drawing.Point(3, 174);
             this.entriesRetractionsSplitPanel.Name = "entriesRetractionsSplitPanel";
             this.entriesRetractionsSplitPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -497,8 +497,8 @@
             // 
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsHelpButton);
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsGridView);
-            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(607, 356);
-            this.entriesRetractionsSplitPanel.SplitterDistance = 245;
+            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(607, 381);
+            this.entriesRetractionsSplitPanel.SplitterDistance = 270;
             this.entriesRetractionsSplitPanel.TabIndex = 9;
             // 
             // retractionsGridView
@@ -533,7 +533,7 @@
             // totalDataHelpButton
             // 
             this.totalDataHelpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.totalDataHelpButton.Location = new System.Drawing.Point(3, 127);
+            this.totalDataHelpButton.Location = new System.Drawing.Point(3, 102);
             this.totalDataHelpButton.Margin = new System.Windows.Forms.Padding(0);
             this.totalDataHelpButton.Name = "totalDataHelpButton";
             this.totalDataHelpButton.Size = new System.Drawing.Size(50, 21);
@@ -555,7 +555,7 @@
             this.goodnessGroupBox.Controls.Add(this.evalWeightNumericUpDown);
             this.goodnessGroupBox.Location = new System.Drawing.Point(322, 3);
             this.goodnessGroupBox.Name = "goodnessGroupBox";
-            this.goodnessGroupBox.Size = new System.Drawing.Size(293, 118);
+            this.goodnessGroupBox.Size = new System.Drawing.Size(293, 93);
             this.goodnessGroupBox.TabIndex = 6;
             this.goodnessGroupBox.TabStop = false;
             this.goodnessGroupBox.Text = "Quality Index";
@@ -579,7 +579,7 @@
             this.gamesWeightCheckbox.AutoSize = true;
             this.gamesWeightCheckbox.Checked = true;
             this.gamesWeightCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.gamesWeightCheckbox.Location = new System.Drawing.Point(6, 21);
+            this.gamesWeightCheckbox.Location = new System.Drawing.Point(6, 19);
             this.gamesWeightCheckbox.Name = "gamesWeightCheckbox";
             this.gamesWeightCheckbox.Size = new System.Drawing.Size(93, 17);
             this.gamesWeightCheckbox.TabIndex = 11;
@@ -593,7 +593,7 @@
             this.evaluationWeightCheckbox.AutoSize = true;
             this.evaluationWeightCheckbox.Checked = true;
             this.evaluationWeightCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.evaluationWeightCheckbox.Location = new System.Drawing.Point(6, 45);
+            this.evaluationWeightCheckbox.Location = new System.Drawing.Point(6, 43);
             this.evaluationWeightCheckbox.Name = "evaluationWeightCheckbox";
             this.evaluationWeightCheckbox.Size = new System.Drawing.Size(110, 17);
             this.evaluationWeightCheckbox.TabIndex = 8;
@@ -635,7 +635,7 @@
             // evalWeightNumericUpDown
             // 
             this.evalWeightNumericUpDown.DecimalPlaces = 1;
-            this.evalWeightNumericUpDown.Location = new System.Drawing.Point(117, 44);
+            this.evalWeightNumericUpDown.Location = new System.Drawing.Point(117, 42);
             this.evalWeightNumericUpDown.Name = "evalWeightNumericUpDown";
             this.evalWeightNumericUpDown.Size = new System.Drawing.Size(50, 20);
             this.evalWeightNumericUpDown.TabIndex = 4;
@@ -688,7 +688,7 @@
             this.totalEntriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.totalEntriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.totalEntriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.totalEntriesGridView.Location = new System.Drawing.Point(3, 127);
+            this.totalEntriesGridView.Location = new System.Drawing.Point(3, 102);
             this.totalEntriesGridView.Name = "totalEntriesGridView";
             this.totalEntriesGridView.ReadOnly = true;
             this.totalEntriesGridView.RowHeadersWidth = 20;
@@ -767,7 +767,7 @@
             0,
             0,
             131072});
-            this.drawScoreNumericUpDown.Location = new System.Drawing.Point(117, 70);
+            this.drawScoreNumericUpDown.Location = new System.Drawing.Point(117, 66);
             this.drawScoreNumericUpDown.Maximum = new decimal(new int[] {
             1,
             0,
@@ -786,7 +786,7 @@
             // drawScoreLabel
             // 
             this.drawScoreLabel.AutoSize = true;
-            this.drawScoreLabel.Location = new System.Drawing.Point(50, 72);
+            this.drawScoreLabel.Location = new System.Drawing.Point(50, 68);
             this.drawScoreLabel.Name = "drawScoreLabel";
             this.drawScoreLabel.Size = new System.Drawing.Size(61, 13);
             this.drawScoreLabel.TabIndex = 14;
