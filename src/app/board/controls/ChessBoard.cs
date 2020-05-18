@@ -146,6 +146,44 @@ namespace chess_pos_db_gui
             chessBoardPanel.Refresh();
         }
 
+        private Rectangle GetChessBoardSquaresSpace()
+        {
+            int x = 0;
+            int y = 0;
+            int w = chessBoardPanel.Width;
+            int h = chessBoardPanel.Height;
+
+            float totalRimThickness = 0.0f;
+            var rimConfig = BoardImages.Config.Rim;
+            if (rimConfig != null)
+            {
+                totalRimThickness += rimConfig.Thickness;
+                if (rimConfig.InnerTransition != null)
+                {
+                    totalRimThickness += rimConfig.InnerTransition.Thickness;
+                }
+                if (rimConfig.OuterTransition != null)
+                {
+                    totalRimThickness += rimConfig.OuterTransition.Thickness;
+                }
+            }
+
+            int newW = (int)(w / (1.0f + totalRimThickness));
+            int newH = (int)(h / (1.0f + totalRimThickness));
+
+            // floor to a multiple of 8, because there's 8x8 squares
+            newW = newW / 8 * 8;
+            newH = newH / 8 * 8;
+
+            x = (w - newW) / 2;
+            y = (h - newH) / 2;
+
+            w = newW;
+            h = newH;
+
+            return new Rectangle(x, y, w, h);
+        }
+
         private Rectangle GetSquareHitbox(int file, int rank)
         {
             if (IsBoardFlipped)
@@ -154,14 +192,13 @@ namespace chess_pos_db_gui
                 rank = 7 - rank;
             }
 
-            int w = chessBoardPanel.Width;
-            int h = chessBoardPanel.Height;
+            var squaresRect = GetChessBoardSquaresSpace();
 
-            int sw = w / 8;
-            int sh = h / 8;
+            int sw = squaresRect.Width / 8;
+            int sh = squaresRect.Height / 8;
 
-            int x = sw * file;
-            int y = sh * rank;
+            int x = squaresRect.X + sw * file;
+            int y = squaresRect.Y + sh * rank;
 
             return new Rectangle(x, y, sw, sh);
         }

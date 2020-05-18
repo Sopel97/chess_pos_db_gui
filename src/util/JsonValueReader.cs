@@ -18,7 +18,7 @@ namespace chess_pos_db_gui.src.util
                 throw new ArgumentException("");
             }
 
-            s.Remove(s.Length - 1);
+            s = s.Remove(s.Length - 1);
 
             return float.Parse(s) * 0.01f;
         }
