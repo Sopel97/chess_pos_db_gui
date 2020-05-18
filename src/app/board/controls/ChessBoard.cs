@@ -367,13 +367,13 @@ namespace chess_pos_db_gui
         {
             var rimConfig = BoardImages.Config.Rim;
 
-            if (rimConfig == null)
+            if (rimConfig != null && rimConfig.DrawIndicatorsOnRim)
             {
-                DrawIndicatorsOnSquares(g, space);
+                DrawIndicatorsOnRim(g, space);
             }
             else
             {
-                DrawIndicatorsOnRim(g, space);
+                DrawIndicatorsOnSquares(g, space);
             }
         }
 

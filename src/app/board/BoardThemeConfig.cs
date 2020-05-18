@@ -151,6 +151,7 @@ namespace chess_pos_db_gui.src.app.board
         }
 
         public float Thickness { get; private set; }
+        public bool DrawIndicatorsOnRim { get; private set; }
         public bool IndicatorsOnBothSides { get; private set; }
 
         public Transition InnerTransition { get; private set; }
@@ -161,7 +162,18 @@ namespace chess_pos_db_gui.src.app.board
             var config = new BoardThemeRimConfig();
 
             config.Thickness = JsonValueReader.ReadPercentToFloat01(json["thickness"]);
-            config.IndicatorsOnBothSides = json["indicators_on_both_sides"];
+
+            if (json.ContainsKey("indicators"))
+            {
+                config.DrawIndicatorsOnRim = true;
+
+                var indicatorsJson = json["indicators"];
+                config.IndicatorsOnBothSides = indicatorsJson["indicators_on_both_sides"];
+            }
+            else
+            {
+                config.DrawIndicatorsOnRim = false;
+            }
 
             if (json.ContainsKey("inner_transition"))
             {
