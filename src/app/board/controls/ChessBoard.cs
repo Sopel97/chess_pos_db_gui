@@ -365,6 +365,182 @@ namespace chess_pos_db_gui
 
         private void DrawIndicators(Graphics g, DrawingSpaceUsage space)
         {
+            var rimConfig = BoardImages.Config.Rim;
+
+            if (rimConfig == null)
+            {
+                DrawIndicatorsOnSquares(g, space);
+            }
+            else
+            {
+                DrawIndicatorsOnRim(g, space);
+            }
+        }
+
+        private void DrawIndicatorsOnRim(Graphics g, DrawingSpaceUsage space)
+        {
+            var rimConfig = BoardImages.Config.Rim;
+            if (rimConfig == null)
+            {
+                return;
+            }
+
+            var rankIndicatorSides = new List<BoardTheme.RimSide>();
+            if (rimConfig.IndicatorsOnBothSides)
+            {
+                rankIndicatorSides.Add(BoardTheme.RimSide.Left);
+                rankIndicatorSides.Add(BoardTheme.RimSide.Right);
+            }
+            else
+            {
+                rankIndicatorSides.Add(
+                    BoardImages.Config.Indicators.RelativeFile == 0
+                    ? BoardTheme.RimSide.Left
+                    : BoardTheme.RimSide.Right
+                    );
+            }
+
+            var fileIndicatorSides = new List<BoardTheme.RimSide>();
+            if (rimConfig.IndicatorsOnBothSides)
+            {
+                fileIndicatorSides.Add(BoardTheme.RimSide.Bottom);
+                fileIndicatorSides.Add(BoardTheme.RimSide.Top);
+            }
+            else
+            {
+                fileIndicatorSides.Add(
+                    BoardImages.Config.Indicators.RelativeRank == 0
+                    ? BoardTheme.RimSide.Top
+                    : BoardTheme.RimSide.Bottom
+                    );
+            }
+
+            var font = BoardImages.Config.Indicators.Font;
+
+            for (int relativeFile = 0; relativeFile < 8; ++relativeFile)
+            {
+                foreach (var side in fileIndicatorSides)
+                {
+                    int relativeRank = side == BoardTheme.RimSide.Top ? 0 : 7;
+
+                    int file =
+                        IsBoardFlipped
+                        ? 7 - relativeFile
+                        : relativeFile;
+
+                    int rank =
+                        IsBoardFlipped
+                        ? 7 - relativeRank
+                        : relativeRank;
+
+                    bool isLightSquare = (file + rank) % 2 == 1;
+
+                    var rect = GetRimSideHitbox(file, rank, side, space);
+
+                    var brush =
+                        isLightSquare
+                        ? BoardImages.Config.Indicators.LightSquareBrush
+                        : BoardImages.Config.Indicators.DarkSquareBrush;
+
+                    var text = string.Empty + "abcdefgh"[relativeFile];
+                    g.DrawString(
+                        text,
+                        font,
+                        brush,
+                        rect,
+                        BoardImages.Config.Indicators.FileIndicatorFormat
+                        );
+                }
+            }
+
+            for (int relativeRank = 0; relativeRank < 8; ++relativeRank)
+            {
+                foreach (var side in rankIndicatorSides)
+                {
+                    int relativeFile = side == BoardTheme.RimSide.Left ? 0 : 7;
+
+                    int file =
+                        IsBoardFlipped
+                        ? 7 - relativeFile
+                        : relativeFile;
+
+                    int rank =
+                        IsBoardFlipped
+                        ? 7 - relativeRank
+                        : relativeRank;
+
+                    bool isLightSquare = (file + rank) % 2 == 1;
+
+                    var rect = GetRimSideHitbox(file, rank, side, space);
+
+                    var brush =
+                        isLightSquare
+                        ? BoardImages.Config.Indicators.LightSquareBrush
+                        : BoardImages.Config.Indicators.DarkSquareBrush;
+
+                    var text = string.Empty + "12345678"[7 - relativeRank];
+                    g.DrawString(
+                        text,
+                        font,
+                        brush,
+                        rect,
+                        BoardImages.Config.Indicators.FileIndicatorFormat
+                        );
+                }
+            }
+        }
+
+        private Rectangle GetRimSideHitbox(int file, int rank, BoardTheme.RimSide side, DrawingSpaceUsage space)
+        {
+            bool isHorizontal = side == BoardTheme.RimSide.Bottom || side == BoardTheme.RimSide.Top;
+
+            int squareW = space.SquaresSpace.Width / 8;
+            int squareH = space.SquaresSpace.Height / 8;
+            int rimThickness = space.RimThickness;
+            int innerRimTransitionThickness = space.InnerRimTransitionThickness;
+
+            int x = 0;
+            int y = 0;
+            int w = 0;
+            int h = 0;
+
+            if (side == BoardTheme.RimSide.Left)
+            {
+                y = space.SquaresSpace.Y;
+                x = space.SquaresSpace.X - rimThickness - space.InnerRimTransitionThickness;
+                w = rimThickness;
+                h = squareH;
+            }
+            else if (side == BoardTheme.RimSide.Right)
+            {
+                y = space.SquaresSpace.Y;
+                x = space.SquaresSpace.X + space.SquaresSpace.Width + space.InnerRimTransitionThickness;
+                w = rimThickness;
+                h = squareH;
+            }
+            else if (side == BoardTheme.RimSide.Top)
+            {
+                y = space.SquaresSpace.Y - rimThickness - space.InnerRimTransitionThickness;
+                x = space.SquaresSpace.X;
+                w = squareW;
+                h = rimThickness;
+            }
+            else if (side == BoardTheme.RimSide.Bottom)
+            {
+                y = space.SquaresSpace.Y + space.SquaresSpace.Height + space.InnerRimTransitionThickness;
+                x = space.SquaresSpace.X;
+                w = squareW;
+                h = rimThickness;
+            }
+
+            int xIncr = isHorizontal ? squareW : 0;
+            int yIncr = !isHorizontal ? squareH : 0;
+            
+            return new Rectangle(x + file * xIncr, y + rank * yIncr, w, h);
+        }
+
+        private void DrawIndicatorsOnSquares(Graphics g, DrawingSpaceUsage space)
+        {
             var indicatorFile =
                 IsBoardFlipped
                 ? 7 - BoardImages.Config.Indicators.RelativeFile
