@@ -397,6 +397,57 @@ namespace chess_pos_db_gui
             var space = GetDrawingSpaceUsage();
 
             DrawSquares(g, space.SquaresSpace);
+            DrawRim(g, space);
+        }
+
+        private Rectangle[] GetRimTransitionRectangles(Rectangle squaresRectangle, int distance, int thickness)
+        {
+            Rectangle[] rects = new Rectangle[4];
+
+            int offset = distance + thickness;
+            int minX = squaresRectangle.X - offset;
+            int minY = squaresRectangle.Y - offset;
+            int maxX = squaresRectangle.X + squaresRectangle.Width + distance;
+            int maxY = squaresRectangle.Y + squaresRectangle.Height + distance;
+            int w = maxX - minX + thickness;
+            int h = maxY - minY + thickness;
+
+            rects[0] = new Rectangle(minX, minY, w, thickness);
+            rects[1] = new Rectangle(minX, minY, thickness, h);
+
+            rects[2] = new Rectangle(minX, maxY, w, thickness);
+            rects[3] = new Rectangle(maxX, minY, thickness, h);
+
+            return rects;
+        }
+
+        private Rectangle[] GetInnerRimTransitionRectangles(DrawingSpaceUsage space)
+        {
+            return GetRimTransitionRectangles(space.SquaresSpace, 0, space.InnerRimTransitionThickness);
+        }
+
+        private Rectangle[] GetOuterRimTransitionRectangles(DrawingSpaceUsage space)
+        {
+            return GetRimTransitionRectangles(
+                space.SquaresSpace, 
+                space.InnerRimTransitionThickness + space.RimThickness, 
+                space.OuterRimTransitionThickness
+                );
+        }
+
+        private void DrawRim(Graphics g, DrawingSpaceUsage space)
+        {
+            var rimConfig = BoardImages.Config.Rim;
+            if (rimConfig == null)
+            {
+                return;
+            }
+
+            var innerTransitionRects = GetInnerRimTransitionRectangles(space);
+            g.FillRectangles(new SolidBrush(rimConfig.InnerTransition.Color), innerTransitionRects);
+
+            var outerTransitionRects = GetOuterRimTransitionRectangles(space);
+            g.FillRectangles(new SolidBrush(rimConfig.OuterTransition.Color), outerTransitionRects);
         }
 
         private void ChessBoard_Load(object sender, EventArgs e)
