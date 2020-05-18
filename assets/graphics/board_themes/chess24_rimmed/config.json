@@ -11,19 +11,19 @@
         "rank_indicator_horizontal_align" : "left",
         "rank_indicator_vertical_align" : "top",
         "file_indicator_horizontal_align" : "right",
-        "file_indicator_vertical_align" : "bottom",
+        "file_indicator_vertical_align" : "bottom"
+    },
 
-        "rim" : {
-            "thickness" : "25%",
-            "indicators_on_both_sides" : false,
-            "inner_transition" : {
-                "thickness" : "5%",
-                "color" : "red"
-            },
-            "outer_transition" : {
-                "thickness" : "10%",
-                "color" : "red"
-            }
+    "rim" : {
+        "thickness" : "25%",
+        "indicators_on_both_sides" : false,
+        "inner_transition" : {
+            "thickness" : "5%",
+            "color" : "red"
+        },
+        "outer_transition" : {
+            "thickness" : "10%",
+            "color" : "red"
         }
     }
 }
