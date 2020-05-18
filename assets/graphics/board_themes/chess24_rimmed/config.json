@@ -1,0 +1,29 @@
+{
+    "indicators" : {
+        "font" : "Segoe UI",
+        "font_size" : 11,
+        "color_on_light_squares" : "#000000",
+        "color_on_dark_squares" : "#000000",
+        "bold" : true,
+        "italic" : false,
+        "file_indicator_side" : "bottom",
+        "rank_indicator_side" : "left",
+        "rank_indicator_horizontal_align" : "left",
+        "rank_indicator_vertical_align" : "top",
+        "file_indicator_horizontal_align" : "right",
+        "file_indicator_vertical_align" : "bottom",
+
+        "rim" : {
+            "thickness" : "25%",
+            "indicators_on_both_sides" : false,
+            "inner_transition" : {
+                "thickness" : "5%",
+                "color" : "red"
+            },
+            "outer_transition" : {
+                "thickness" : "10%",
+                "color" : "red"
+            }
+        }
+    }
+}
