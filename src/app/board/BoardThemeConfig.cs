@@ -1,4 +1,5 @@
-﻿using System;
+﻿using chess_pos_db_gui.src.util;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -12,6 +13,7 @@ namespace chess_pos_db_gui.src.app.board
     public class BoardThemeConfig
     {
         public BoardThemeIndicatorsConfig Indicators { get; private set; }
+        public BoardThemeRimConfig Rim { get; private set; }
 
         public static BoardThemeConfig FromJsonFile(string file)
         {
@@ -23,6 +25,11 @@ namespace chess_pos_db_gui.src.app.board
             var config = new BoardThemeConfig();
 
             config.Indicators = BoardThemeIndicatorsConfig.FromJson(json["indicators"]);
+
+            if (json.ContainsKey("rim"))
+            {
+                config.Rim = BoardThemeRimConfig.FromJson(json["rim"]);
+            }
 
             return config;
         }
@@ -107,9 +114,54 @@ namespace chess_pos_db_gui.src.app.board
 
             return StringAlignment.Center;
         }
+    }
 
-        private BoardThemeIndicatorsConfig()
+    public class BoardThemeRimConfig
+    {
+        public class Transition
         {
+            public float Thickness { get; private set; }
+            public Color Color { get; private set; }
+
+            public Transition(float thickness, Color color)
+            {
+                Thickness = thickness;
+                Color = color;
+            }
+        }
+
+        public float Thickness { get; private set; }
+        public bool IndicatorsOnBothSides { get; private set; }
+
+        public Transition InnerTransition { get; private set; }
+        public Transition OuterTransition { get; private set; }
+
+        public static BoardThemeRimConfig FromJson(JsonValue json)
+        {
+            var config = new BoardThemeRimConfig();
+
+            config.Thickness = JsonValueReader.ReadPercentToFloat01(json["thickness"]);
+            config.IndicatorsOnBothSides = json["indicators_on_both_sides"];
+
+            if (json.ContainsKey("inner_transition"))
+            {
+                var transitionJson = json["inner_transition"];
+                config.InnerTransition = new Transition(
+                    JsonValueReader.ReadPercentToFloat01(transitionJson["thickness"]),
+                    ColorTranslator.FromHtml(transitionJson["color"])
+                    );
+            }
+
+            if (json.ContainsKey("outer_transition"))
+            {
+                var transitionJson = json["outer_transition"];
+                config.OuterTransition = new Transition(
+                    JsonValueReader.ReadPercentToFloat01(transitionJson["thickness"]),
+                    ColorTranslator.FromHtml(transitionJson["color"])
+                    );
+            }
+
+            return config;
         }
     }
 }

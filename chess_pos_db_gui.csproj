@@ -182,6 +182,7 @@
     <Compile Include="src\util\EnumArray.cs" />
     <Compile Include="src\util\FileSizeUtil.cs" />
     <Compile Include="src\util\JsonSerializable.cs" />
+    <Compile Include="src\util\JsonValueReader.cs" />
     <Compile Include="src\util\LRUCache.cs" />
     <Compile Include="src\util\NaturalSortComparer.cs" />
     <Compile Include="src\util\Optional.cs" />
