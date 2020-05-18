@@ -415,7 +415,8 @@ namespace chess_pos_db_gui
                     );
             }
 
-            var font = BoardImages.Config.Indicators.Font;
+            int squareSize = space.SquaresSpace.Height / 8;
+            var font = BoardImages.Config.Indicators.GetScaledFont(squareSize);
 
             for (int relativeFile = 0; relativeFile < 8; ++relativeFile)
             {
@@ -551,7 +552,8 @@ namespace chess_pos_db_gui
                 ? 7 - BoardImages.Config.Indicators.RelativeRank
                 : BoardImages.Config.Indicators.RelativeRank;
 
-            var font = BoardImages.Config.Indicators.Font;
+            int squareSize = space.SquaresSpace.Height / 8;
+            var font = BoardImages.Config.Indicators.GetScaledFont(squareSize);
 
             for (int file = 0; file < 8; ++file)
             {

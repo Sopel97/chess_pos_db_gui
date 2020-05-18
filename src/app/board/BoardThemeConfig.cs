@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Json;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,6 +43,9 @@ namespace chess_pos_db_gui.src.app.board
     public class BoardThemeIndicatorsConfig
     {
         public Font Font { get; private set; }
+        private float FontScale { get; set; }
+        private Font ScaledFontCache { get; set; }
+
         public Brush LightSquareBrush { get; private set; }
         public Brush DarkSquareBrush { get; private set; }
         public int RelativeFile { get; private set; }
@@ -60,7 +64,9 @@ namespace chess_pos_db_gui.src.app.board
                 fontStyle |= FontStyle.Bold;
             if (json["italic"])
                 fontStyle |= FontStyle.Italic;
-            config.Font = new Font(json["font"], json["font_size"], fontStyle);
+
+            config.FontScale = JsonValueReader.ReadPercentToFloat01(json["font_scale"]);
+            config.Font = new Font(json["font"], 10, fontStyle);
 
             config.LightSquareBrush = new SolidBrush(ColorTranslator.FromHtml(json["color_on_light_squares"]));
             config.DarkSquareBrush = new SolidBrush(ColorTranslator.FromHtml(json["color_on_dark_squares"]));
@@ -122,6 +128,18 @@ namespace chess_pos_db_gui.src.app.board
             }
 
             return config;
+        }
+
+        public Font GetScaledFont(int squareSize)
+        {
+            int fontSize = (int)(squareSize * FontScale);
+
+            if (ScaledFontCache == null || (int)ScaledFontCache.Size != fontSize)
+            {
+                ScaledFontCache = new Font(Font.FontFamily, fontSize, Font.Style);
+            }
+
+            return ScaledFontCache;
         }
 
         private static StringAlignment ParseAlignment(string value)
