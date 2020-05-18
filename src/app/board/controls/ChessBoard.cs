@@ -17,6 +17,14 @@ namespace chess_pos_db_gui
 {
     public partial class ChessBoard : UserControl
     {
+        private struct DrawingSpaceUsage
+        {
+            public Rectangle SquaresSpace { get; set; }
+            public int RimThickness { get; set; }
+            public int OuterRimTransitionThickness { get; set; }
+            public int InnerRimTransitionThickness { get; set; }
+        }
+
         private ChessBoardHistory BoardHistory { get; set; }
 
         private MoveHistoryTable MoveHistory { get; set; }
@@ -146,45 +154,62 @@ namespace chess_pos_db_gui
             chessBoardPanel.Refresh();
         }
 
-        private Rectangle GetChessBoardSquaresSpace()
+        private DrawingSpaceUsage GetDrawingSpaceUsage()
         {
-            int x = 0;
-            int y = 0;
-            int w = chessBoardPanel.Width;
-            int h = chessBoardPanel.Height;
-
+            float rimThickness = 0.0f;
+            float rimInnerTransitionThickness = 0.0f;
+            float rimOuterTransitionThickness = 0.0f;
             float totalRimThickness = 0.0f;
             var rimConfig = BoardImages.Config.Rim;
             if (rimConfig != null)
             {
-                totalRimThickness += rimConfig.Thickness;
+                totalRimThickness += rimThickness = rimConfig.Thickness;
                 if (rimConfig.InnerTransition != null)
                 {
-                    totalRimThickness += rimConfig.InnerTransition.Thickness;
+                    totalRimThickness += rimInnerTransitionThickness = rimConfig.InnerTransition.Thickness;
                 }
                 if (rimConfig.OuterTransition != null)
                 {
-                    totalRimThickness += rimConfig.OuterTransition.Thickness;
+                    totalRimThickness += rimOuterTransitionThickness = rimConfig.OuterTransition.Thickness;
                 }
             }
 
-            int newW = (int)(w / (1.0f + totalRimThickness));
-            int newH = (int)(h / (1.0f + totalRimThickness));
+            // times 2 because on both sides, div by 8 because 8 squares.
+            int squareSpaceWidth = (int)(chessBoardPanel.Width / (1.0f + totalRimThickness * 2.0f / 8.0f));
+            int squareSpaceHeight = (int)(chessBoardPanel.Height / (1.0f + totalRimThickness * 2.0f / 8.0f));
 
-            // floor to a multiple of 8, because there's 8x8 squares
-            newW = newW / 8 * 8;
-            newH = newH / 8 * 8;
+            int squareW = squareSpaceWidth / 8;
+            int squareH = squareSpaceHeight / 8;
 
-            x = (w - newW) / 2;
-            y = (h - newH) / 2;
+            squareSpaceWidth = squareW * 8;
+            squareSpaceHeight = squareH * 8;
 
-            w = newW;
-            h = newH;
+            int actualRimThickness = (int)(squareW * rimThickness);
+            int actualRimInnerTransitionThickness = (int)(squareW * rimInnerTransitionThickness);
+            int actualRimOuterTransitionThickness = (int)(squareW * rimOuterTransitionThickness);
+            int actualTotalRimThickness =
+                actualRimThickness
+                + actualRimInnerTransitionThickness
+                + actualRimOuterTransitionThickness;
 
-            return new Rectangle(x, y, w, h);
+            int squaresSpaceX = actualTotalRimThickness;
+            int squaresSpaceY = actualTotalRimThickness;
+
+            return new DrawingSpaceUsage
+            {
+                SquaresSpace = new Rectangle(squaresSpaceX, squaresSpaceY, squareSpaceWidth, squareSpaceHeight),
+                RimThickness = actualRimThickness,
+                InnerRimTransitionThickness = actualRimInnerTransitionThickness,
+                OuterRimTransitionThickness = actualRimOuterTransitionThickness
+            };
         }
 
-        private Rectangle GetSquareHitbox(int file, int rank)
+        private Rectangle GetChessBoardSquaresSpace()
+        {
+            return GetDrawingSpaceUsage().SquaresSpace;
+        }
+
+        private Rectangle GetSquareHitbox(int file, int rank, Rectangle squaresSpace)
         {
             if (IsBoardFlipped)
             {
@@ -205,14 +230,21 @@ namespace chess_pos_db_gui
 
         private Position ConvertPointToSquare(Point point)
         {
-            int w = chessBoardPanel.Width;
-            int h = chessBoardPanel.Height;
+            var squaresRect = GetChessBoardSquaresSpace();
+
+            if (!squaresRect.Contains(point))
+            {
+                return null;
+            }
+
+            int w = squaresRect.Width;
+            int h = squaresRect.Height;
 
             int sw = w / 8;
             int sh = h / 8;
 
-            int x = point.X / sw;
-            int y = point.Y / sh;
+            int x = (point.X - squaresRect.X) / sw;
+            int y = (point.Y - squaresRect.Y) / sh;
 
             x = Math.Min(x, 7);
             x = Math.Max(x, 0);
@@ -234,15 +266,15 @@ namespace chess_pos_db_gui
             return new Rectangle(rect.X - d, rect.Y - d, rect.Width + 2 * d, rect.Height + 2 * d);
         }
 
-        private void DrawSquare(Graphics g, Piece piece, int file, int rank)
+        private void DrawSquare(Graphics g, Piece piece, int file, int rank, Rectangle squaresSpace)
         {
-            var squareRect = GetSquareHitbox(file, rank);
-            var pieceRect = GetSquareHitbox(file, rank);
+            var squareRect = GetSquareHitbox(file, rank, squaresSpace);
+            var pieceRect = GetSquareHitbox(file, rank, squaresSpace);
 
             if (MouseFrom.HasValue)
             {
                 Position fromSquare = ConvertPointToSquare(MouseFrom.Value);
-                if ((int)fromSquare.File == file && fromSquare.Rank == 8 - rank)
+                if (fromSquare != null && (int)fromSquare.File == file && fromSquare.Rank == 8 - rank)
                 {
                     int dx = LastMousePosition.X - MouseFrom.Value.X;
                     int dy = LastMousePosition.Y - MouseFrom.Value.Y;
@@ -310,7 +342,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void DrawSquares(Graphics g)
+        private void DrawSquares(Graphics g, Rectangle squaresSpace)
         {
             var game = BoardHistory.Current();
             var board = game.GetBoard();
@@ -334,7 +366,7 @@ namespace chess_pos_db_gui
                     }
                     
                     Piece piece = board[y][x];
-                    DrawSquare(g, piece, x, y);
+                    DrawSquare(g, piece, x, y, squaresSpace);
                 }
             }
 
@@ -344,7 +376,7 @@ namespace chess_pos_db_gui
                 int y = 8 - fromSquare.Rank;
 
                 Piece piece = board[y][x];
-                DrawSquare(g, piece, x, y);
+                DrawSquare(g, piece, x, y, squaresSpace);
             }
         }
 
@@ -362,7 +394,9 @@ namespace chess_pos_db_gui
 
             Graphics g = e.Graphics;
 
-            DrawSquares(g);
+            var space = GetDrawingSpaceUsage();
+
+            DrawSquares(g, space.SquaresSpace);
         }
 
         private void ChessBoard_Load(object sender, EventArgs e)
@@ -475,6 +509,10 @@ namespace chess_pos_db_gui
         {
             Position fromSquare = ConvertPointToSquare(from);
             Position toSquare = ConvertPointToSquare(to);
+            if (fromSquare == null || toSquare == null)
+            {
+                return false;
+            }
 
             Player player = BoardHistory.Current().GCD.WhoseTurn;
             Move move = new Move(fromSquare, toSquare, player);
