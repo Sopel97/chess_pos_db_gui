@@ -15,7 +15,6 @@ namespace chess_pos_db_gui.src.app.forms
     //       It's harder to implement and actually define.
     public partial class DatabaseMergeForm : Form
     {
-        int i = 0;
         private DatabaseProxy Database { get; set; }
         private Dictionary<string, List<DatabaseMergableFile>> MergableFiles { get; set; }
         private EntryGroups Groups { get; set; }
@@ -87,14 +86,6 @@ namespace chess_pos_db_gui.src.app.forms
             }
 
             RefreshListViews();
-        }
-
-        private void addButton_Click(object sender, EventArgs e)
-        {
-            UnassignedEntries.Add(new Entry(i.ToString(), (ulong)i*1000000));
-            i += 1;
-
-            unassignedEntriesView.VirtualListSize = UnassignedEntries.Count;
         }
 
         private void unassignedEntriesView_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)

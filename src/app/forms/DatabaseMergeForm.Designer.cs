@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.addButton = new System.Windows.Forms.Button();
             this.unassignedEntriesView = new System.Windows.Forms.ListView();
             this.makeGroupButton = new System.Windows.Forms.Button();
             this.entryGroupsView = new System.Windows.Forms.ListView();
@@ -70,16 +69,6 @@
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // addButton
-            // 
-            this.addButton.Location = new System.Drawing.Point(312, 19);
-            this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(25, 71);
-            this.addButton.TabIndex = 1;
-            this.addButton.Text = "Add";
-            this.addButton.UseVisualStyleBackColor = true;
-            this.addButton.Click += new System.EventHandler(this.addButton_Click);
             // 
             // unassignedEntriesView
             // 
@@ -153,7 +142,6 @@
             this.filesGroupBox.Controls.Add(this.unassignedEntriesView);
             this.filesGroupBox.Controls.Add(this.entryGroupsView);
             this.filesGroupBox.Controls.Add(this.removeButton);
-            this.filesGroupBox.Controls.Add(this.addButton);
             this.filesGroupBox.Controls.Add(this.makeGroupButton);
             this.filesGroupBox.Location = new System.Drawing.Point(4, 33);
             this.filesGroupBox.Name = "filesGroupBox";
@@ -514,7 +502,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button addButton;
         private System.Windows.Forms.ListView unassignedEntriesView;
         private System.Windows.Forms.Button makeGroupButton;
         private System.Windows.Forms.ListView entryGroupsView;

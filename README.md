@@ -1,25 +1,24 @@
 # chess_pos_db_gui
 
 # Preview:
-![](https://raw.githubusercontent.com/Sopel97/chess_pos_db_gui/master/docs/img/example.png)
+![](https://raw.githubusercontent.com/Sopel97/chess_pos_db_gui/master/docs/img/main.png)
+![](https://raw.githubusercontent.com/Sopel97/chess_pos_db_gui/master/docs/img/creation.png)
+![](https://raw.githubusercontent.com/Sopel97/chess_pos_db_gui/master/docs/img/merging.png)
 
 GUI created for the project [chess_pos_db](https://github.com/Sopel97/chess_pos_db).
 It requires chess_pos_db.exe to be present in the same directory.
 A chess_pos_db.exe process is spawned by the gui (previously ensuring that it's not already present by killing all of its instances) and a TCP connection in made through which the requests are made.
 
-The gui is in a rough, but usable state. Codebase is at a prototype-like stage. Don't expect clean code.
-
-Currently the biggest issue is no good chess abstraction in C#. Going by Chess DOT Net's limitations is taking a tall on the codebase. It is a priority to either move to a better library or create one.
-
 # Features
 - Chess board display
 
-    - allows move input by moving pieces on the board
+    - draggable pieces
     - move history
     - easy way to set a position from FEN
     - easy way to set whole move history from PGN
     - board flipping, resetting
     - copy FEN
+    - board and piece themes
 
 - Excel-like data display
 
@@ -33,14 +32,17 @@ Currently the biggest issue is no good chess abstraction in C#. Going by Chess D
 
     - Evaluation data (cp and perf%) provided by (https://chessdb.cn/queryc_en/), building up on a massive effort by Bojun Guo (noobpwnftw)
     - Display for the data about the first game with the given position.
-    - Statistically sound move goodness calculation
+    - Statistically sound move quality calculation
 
         - based on empirical performance, confidence (based on frequency), expected performance based on elo differences, and engine evaluation from chessdb.cn.
         - configurable weights
         - optional normalization
 
 - A tool for dumping all FENs for all positions with at least a given number of instances into an EPD file.
-- A user friendly GUI for creation of position databases (using chess_pos_db) from a list of PGN files optionally partitioned by game level (human/engine/server).
+
+- Configurable local engine analysis.
+
+- User friendly GUIs for creation and management of position databases (with chess_pos_db backend).
 
 # Dependencies
 - Chess DOT Net
