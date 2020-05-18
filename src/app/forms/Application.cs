@@ -675,6 +675,11 @@ namespace chess_pos_db_gui
 
             row["Move"] = name;
 
+            if (name == "Root")
+            {
+                PopulateFirstGameInfo(SumEntries(aggregatedEntries));
+            }
+
             TotalTabulatedData.Rows.InsertAt(row, 0);
         }
 
@@ -699,11 +704,6 @@ namespace chess_pos_db_gui
             }
 
             row["Goodness"] = CalculateGoodness(aggregatedEntries, score);
-        }
-
-        private bool IsEmpty(AggregatedEntry entry)
-        {
-            return entry.Count == 0;
         }
 
         private bool IsEmpty(EnumArray<GameLevel, AggregatedEntry> entry)
