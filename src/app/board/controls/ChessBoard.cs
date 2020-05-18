@@ -476,6 +476,51 @@ namespace chess_pos_db_gui
             DrawRimSquaresSide(g, space, RimSide.Right);
             DrawRimSquaresSide(g, space, RimSide.Top);
             DrawRimSquaresSide(g, space, RimSide.Bottom);
+
+            DrawRimSquaresCorner(g, space, RimCorner.TopLeft);
+            DrawRimSquaresCorner(g, space, RimCorner.TopRight);
+            DrawRimSquaresCorner(g, space, RimCorner.BottomLeft);
+            DrawRimSquaresCorner(g, space, RimCorner.BottomRight);
+        }
+
+        private void DrawRimSquaresCorner(Graphics g, DrawingSpaceUsage space, RimCorner corner)
+        {
+            bool isSquareLight = corner == RimCorner.BottomRight || corner == RimCorner.TopLeft;
+
+            int rimThickness = space.RimThickness + space.InnerRimTransitionThickness;
+
+            int x = 0;
+            int y = 0;
+
+            if (corner == RimCorner.TopLeft)
+            {
+                y = space.SquaresSpace.Y - rimThickness;
+                x = space.SquaresSpace.X - rimThickness;
+            }
+            else if (corner == RimCorner.TopRight)
+            {
+                y = space.SquaresSpace.Y - rimThickness;
+                x = space.SquaresSpace.X + space.SquaresSpace.Width;
+            }
+            else if (corner == RimCorner.BottomLeft)
+            {
+                y = space.SquaresSpace.Y + space.SquaresSpace.Height;
+                x = space.SquaresSpace.X - rimThickness;
+            }
+            else if (corner == RimCorner.BottomRight)
+            {
+                y = space.SquaresSpace.Y + space.SquaresSpace.Height;
+                x = space.SquaresSpace.X + space.SquaresSpace.Width;
+            }
+
+            var image =
+                isSquareLight
+                ? BoardImages.LightRimCorner
+                : BoardImages.DarkRimCorner;
+
+            var rect = new Rectangle(x, y, rimThickness, rimThickness);
+
+            g.DrawImage(image, rect);
         }
 
         private void DrawRimSquaresSide(Graphics g, DrawingSpaceUsage space, RimSide side)
