@@ -323,15 +323,6 @@ namespace chess_pos_db_gui
                     DrawSquare(g, piece, x, y, squaresSpace);
                 }
             }
-
-            if (fromSquare != null)
-            {
-                int x = (int)fromSquare.File;
-                int y = 8 - fromSquare.Rank;
-
-                Piece piece = board[y][x];
-                DrawSquare(g, piece, x, y, squaresSpace);
-            }
         }
 
         private void ChessBoardPanel_Paint(object sender, PaintEventArgs e)
@@ -354,6 +345,31 @@ namespace chess_pos_db_gui
             DrawRim(g, space);
 
             DrawIndicators(g, space);
+
+            DrawDraggedPiece(g, space.SquaresSpace);
+        }
+
+        private void DrawDraggedPiece(Graphics g, Rectangle squaresSpace)
+        {
+            var game = BoardHistory.Current();
+            var board = game.GetBoard();
+
+            // We draw the square from which a piece is dragged last
+            // so that it's not occluded by others.
+
+            Position fromSquare =
+                MouseFrom.HasValue
+                ? ConvertPointToSquare(MouseFrom.Value)
+                : null;
+
+            if (fromSquare != null)
+            {
+                int x = (int)fromSquare.File;
+                int y = 8 - fromSquare.Rank;
+
+                Piece piece = board[y][x];
+                DrawSquare(g, piece, x, y, squaresSpace);
+            }
         }
 
         private void DrawIndicators(Graphics g, DrawingSpaceUsage space)
