@@ -977,20 +977,17 @@ namespace chess_pos_db_gui
             var retractions = cache.Stats.Results[0].Retractions;
             var bestScore = GetBestScore(cache.Scores);
 
-            foreach (var kv in retractions)
+            foreach (KeyValuePair<string, SegregatedEntries> entry in retractions)
             {
-                foreach (KeyValuePair<string, SegregatedEntries> entry in retractions)
+                EnumArray<GameLevel, AggregatedEntry> aggregatedEntries =
+                new InitializedEnumArray<GameLevel, AggregatedEntry>();
+
+                foreach (GameLevel level in levels)
                 {
-                    EnumArray<GameLevel, AggregatedEntry> aggregatedEntries =
-                    new InitializedEnumArray<GameLevel, AggregatedEntry>();
-
-                    foreach (GameLevel level in levels)
-                    {
-                        aggregatedEntries[level].Combine(new AggregatedEntry(entry.Value, level));
-                    }
-
-                    PopulateRetraction(kv.Key, aggregatedEntries, bestScore);
+                    aggregatedEntries[level].Combine(new AggregatedEntry(entry.Value, level));
                 }
+
+                PopulateRetraction(entry.Key, aggregatedEntries, bestScore);
             }
         }
 
