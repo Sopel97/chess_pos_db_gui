@@ -621,8 +621,8 @@ namespace chess_pos_db_gui
             int minY = squaresRectangle.Y - offset;
             int maxX = squaresRectangle.X + squaresRectangle.Width + distance;
             int maxY = squaresRectangle.Y + squaresRectangle.Height + distance;
-            int w = maxX - minX + thickness;
-            int h = maxY - minY + thickness;
+            int w = Math.Max(1, maxX - minX + thickness);
+            int h = Math.Max(1, maxY - minY + thickness);
 
             rects[0] = new Rectangle(minX, minY, w, thickness);
             rects[1] = new Rectangle(minX, minY, thickness, h);
@@ -657,11 +657,17 @@ namespace chess_pos_db_gui
 
             DrawRimSquares(g, space);
 
-            var innerTransitionRects = GetInnerRimTransitionRectangles(space);
-            g.FillRectangles(rimConfig.InnerTransition.Brush, innerTransitionRects);
+            if (rimConfig.InnerTransition != null)
+            {
+                var innerTransitionRects = GetInnerRimTransitionRectangles(space);
+                g.FillRectangles(rimConfig.InnerTransition.Brush, innerTransitionRects);
+            }
 
-            var outerTransitionRects = GetOuterRimTransitionRectangles(space);
-            g.FillRectangles(rimConfig.OuterTransition.Brush, outerTransitionRects);
+            if (rimConfig.OuterTransition != null)
+            {
+                var outerTransitionRects = GetOuterRimTransitionRectangles(space);
+                g.FillRectangles(rimConfig.OuterTransition.Brush, outerTransitionRects);
+            }
         }
 
         private void DrawRimSquares(Graphics g, DrawingSpaceUsage space)
