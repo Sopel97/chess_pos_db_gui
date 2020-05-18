@@ -27,22 +27,6 @@ namespace chess_pos_db_gui
             public int InnerRimTransitionThickness { get; set; }
         }
 
-        private enum RimSide
-        {
-            Left,
-            Right,
-            Top,
-            Bottom
-        }
-
-        private enum RimCorner
-        {
-            TopLeft,
-            TopRight,
-            BottomLeft,
-            BottomRight
-        }
-
         private ChessBoardHistory BoardHistory { get; set; }
 
         private MoveHistoryTable MoveHistory { get; set; }
@@ -472,42 +456,42 @@ namespace chess_pos_db_gui
 
         private void DrawRimSquares(Graphics g, DrawingSpaceUsage space)
         {
-            DrawRimSquaresSide(g, space, RimSide.Left);
-            DrawRimSquaresSide(g, space, RimSide.Right);
-            DrawRimSquaresSide(g, space, RimSide.Top);
-            DrawRimSquaresSide(g, space, RimSide.Bottom);
+            DrawRimSquaresSide(g, space, BoardTheme.RimSide.Left);
+            DrawRimSquaresSide(g, space, BoardTheme.RimSide.Right);
+            DrawRimSquaresSide(g, space, BoardTheme.RimSide.Top);
+            DrawRimSquaresSide(g, space, BoardTheme.RimSide.Bottom);
 
-            DrawRimSquaresCorner(g, space, RimCorner.TopLeft);
-            DrawRimSquaresCorner(g, space, RimCorner.TopRight);
-            DrawRimSquaresCorner(g, space, RimCorner.BottomLeft);
-            DrawRimSquaresCorner(g, space, RimCorner.BottomRight);
+            DrawRimSquaresCorner(g, space, BoardTheme.RimCorner.TopLeft);
+            DrawRimSquaresCorner(g, space, BoardTheme.RimCorner.TopRight);
+            DrawRimSquaresCorner(g, space, BoardTheme.RimCorner.BottomLeft);
+            DrawRimSquaresCorner(g, space, BoardTheme.RimCorner.BottomRight);
         }
 
-        private void DrawRimSquaresCorner(Graphics g, DrawingSpaceUsage space, RimCorner corner)
+        private void DrawRimSquaresCorner(Graphics g, DrawingSpaceUsage space, BoardTheme.RimCorner corner)
         {
-            bool isSquareLight = corner == RimCorner.BottomRight || corner == RimCorner.TopLeft;
+            bool isSquareLight = corner == BoardTheme.RimCorner.BottomRight || corner == BoardTheme.RimCorner.TopLeft;
 
             int rimThickness = space.RimThickness + space.InnerRimTransitionThickness;
 
             int x = 0;
             int y = 0;
 
-            if (corner == RimCorner.TopLeft)
+            if (corner == BoardTheme.RimCorner.TopLeft)
             {
                 y = space.SquaresSpace.Y - rimThickness;
                 x = space.SquaresSpace.X - rimThickness;
             }
-            else if (corner == RimCorner.TopRight)
+            else if (corner == BoardTheme.RimCorner.TopRight)
             {
                 y = space.SquaresSpace.Y - rimThickness;
                 x = space.SquaresSpace.X + space.SquaresSpace.Width;
             }
-            else if (corner == RimCorner.BottomLeft)
+            else if (corner == BoardTheme.RimCorner.BottomLeft)
             {
                 y = space.SquaresSpace.Y + space.SquaresSpace.Height;
                 x = space.SquaresSpace.X - rimThickness;
             }
-            else if (corner == RimCorner.BottomRight)
+            else if (corner == BoardTheme.RimCorner.BottomRight)
             {
                 y = space.SquaresSpace.Y + space.SquaresSpace.Height;
                 x = space.SquaresSpace.X + space.SquaresSpace.Width;
@@ -515,18 +499,18 @@ namespace chess_pos_db_gui
 
             var image =
                 isSquareLight
-                ? BoardImages.LightRimCorner
-                : BoardImages.DarkRimCorner;
+                ? BoardImages.LightRimCorner[corner]
+                : BoardImages.DarkRimCorner[corner];
 
             var rect = new Rectangle(x, y, rimThickness, rimThickness);
 
             g.DrawImage(image, rect);
         }
 
-        private void DrawRimSquaresSide(Graphics g, DrawingSpaceUsage space, RimSide side)
+        private void DrawRimSquaresSide(Graphics g, DrawingSpaceUsage space, BoardTheme.RimSide side)
         {
-            bool isHorizontal = side == RimSide.Bottom || side == RimSide.Top;
-            bool isSquareLight = side == RimSide.Bottom || side == RimSide.Right;
+            bool isHorizontal = side == BoardTheme.RimSide.Bottom || side == BoardTheme.RimSide.Top;
+            bool isSquareLight = side == BoardTheme.RimSide.Bottom || side == BoardTheme.RimSide.Right;
 
             int squareW = space.SquaresSpace.Width / 8;
             int squareH = space.SquaresSpace.Height / 8;
@@ -537,28 +521,28 @@ namespace chess_pos_db_gui
             int w = 0;
             int h = 0;
 
-            if (side == RimSide.Left)
+            if (side == BoardTheme.RimSide.Left)
             {
                 y = space.SquaresSpace.Y;
                 x = space.SquaresSpace.X - rimThickness;
                 w = rimThickness;
                 h = squareH;
             }
-            else if (side == RimSide.Right)
+            else if (side == BoardTheme.RimSide.Right)
             {
                 y = space.SquaresSpace.Y;
                 x = space.SquaresSpace.X + space.SquaresSpace.Width;
                 w = rimThickness;
                 h = squareH;
             }
-            else if (side == RimSide.Top)
+            else if (side == BoardTheme.RimSide.Top)
             {
                 y = space.SquaresSpace.Y - rimThickness;
                 x = space.SquaresSpace.X;
                 w = squareW;
                 h = rimThickness;
             }
-            else if (side == RimSide.Bottom)
+            else if (side == BoardTheme.RimSide.Bottom)
             {
                 y = space.SquaresSpace.Y + space.SquaresSpace.Height;
                 x = space.SquaresSpace.X;
@@ -573,8 +557,8 @@ namespace chess_pos_db_gui
             {
                 var image =
                     isSquareLight
-                    ? BoardImages.LightRimSide
-                    : BoardImages.DarkRimSide;
+                    ? BoardImages.LightRimSide[side]
+                    : BoardImages.DarkRimSide[side];
 
                 var rect = new Rectangle(x, y, w, h);
 
