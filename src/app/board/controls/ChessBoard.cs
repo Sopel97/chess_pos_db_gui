@@ -9,9 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace chess_pos_db_gui
 {
@@ -23,6 +25,22 @@ namespace chess_pos_db_gui
             public int RimThickness { get; set; }
             public int OuterRimTransitionThickness { get; set; }
             public int InnerRimTransitionThickness { get; set; }
+        }
+
+        private enum RimSide
+        {
+            Left,
+            Right,
+            Top,
+            Bottom
+        }
+
+        private enum RimCorner
+        {
+            TopLeft,
+            TopRight,
+            BottomLeft,
+            BottomRight
         }
 
         private ChessBoardHistory BoardHistory { get; set; }
@@ -443,11 +461,84 @@ namespace chess_pos_db_gui
                 return;
             }
 
+            DrawRimSquares(g, space);
+
             var innerTransitionRects = GetInnerRimTransitionRectangles(space);
             g.FillRectangles(new SolidBrush(rimConfig.InnerTransition.Color), innerTransitionRects);
 
             var outerTransitionRects = GetOuterRimTransitionRectangles(space);
             g.FillRectangles(new SolidBrush(rimConfig.OuterTransition.Color), outerTransitionRects);
+        }
+
+        private void DrawRimSquares(Graphics g, DrawingSpaceUsage space)
+        {
+            DrawRimSquaresSide(g, space, RimSide.Left);
+            DrawRimSquaresSide(g, space, RimSide.Right);
+            DrawRimSquaresSide(g, space, RimSide.Top);
+            DrawRimSquaresSide(g, space, RimSide.Bottom);
+        }
+
+        private void DrawRimSquaresSide(Graphics g, DrawingSpaceUsage space, RimSide side)
+        {
+            bool isHorizontal = side == RimSide.Bottom || side == RimSide.Top;
+            bool isSquareLight = side == RimSide.Bottom || side == RimSide.Right;
+
+            int squareW = space.SquaresSpace.Width / 8;
+            int squareH = space.SquaresSpace.Height / 8;
+            int rimThickness = space.RimThickness + space.InnerRimTransitionThickness;
+
+            int x = 0;
+            int y = 0;
+            int w = 0;
+            int h = 0;
+
+            if (side == RimSide.Left)
+            {
+                y = space.SquaresSpace.Y;
+                x = space.SquaresSpace.X - rimThickness;
+                w = rimThickness;
+                h = squareH;
+            }
+            else if (side == RimSide.Right)
+            {
+                y = space.SquaresSpace.Y;
+                x = space.SquaresSpace.X + space.SquaresSpace.Width;
+                w = rimThickness;
+                h = squareH;
+            }
+            else if (side == RimSide.Top)
+            {
+                y = space.SquaresSpace.Y - rimThickness;
+                x = space.SquaresSpace.X;
+                w = squareW;
+                h = rimThickness;
+            }
+            else if (side == RimSide.Bottom)
+            {
+                y = space.SquaresSpace.Y + space.SquaresSpace.Height;
+                x = space.SquaresSpace.X;
+                w = squareW;
+                h = rimThickness;
+            }
+
+            int xIncr = isHorizontal ? squareW : 0;
+            int yIncr = !isHorizontal ? squareH : 0;
+                
+            for (int i = 0; i < 8; ++i)
+            {
+                var image =
+                    isSquareLight
+                    ? BoardImages.LightRimSide
+                    : BoardImages.DarkRimSide;
+
+                var rect = new Rectangle(x, y, w, h);
+
+                g.DrawImage(image, rect);
+
+                isSquareLight = !isSquareLight;
+                x += xIncr;
+                y += yIncr;
+            }
         }
 
         private void ChessBoard_Load(object sender, EventArgs e)
