@@ -15,6 +15,11 @@ namespace chess_pos_db_gui.src.app.board
         public Image LightSquare { get; private set; }
         public Image DarkSquare { get; private set; }
 
+        public Image LightRimSide { get; private set; }
+        public Image LightRimCorner { get; private set; }
+        public Image DarkRimSide { get; private set; }
+        public Image DarkRimCorner { get; private set; }
+
         public BoardThemeConfig Config { get; private set; }
 
         public BoardTheme(string path)
@@ -40,6 +45,19 @@ namespace chess_pos_db_gui.src.app.board
             {
                 SetDefaultImages();
             }
+
+            try
+            {
+                LightRimSide = Image.FromFile(path + "/light_rim_side.png");
+                LightRimCorner = Image.FromFile(path + "/light_rim_corner.png");
+
+                DarkRimSide = Image.FromFile(path + "/dark_rim_side.png");
+                DarkRimCorner = Image.FromFile(path + "/dark_rim_corner.png");
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                SetDefaultRimImages();
+            }
         }
 
         private void SetDefaultImages()
@@ -54,6 +72,22 @@ namespace chess_pos_db_gui.src.app.board
 
             LightSquare = w;
             DarkSquare = b;
+        }
+
+        private void SetDefaultRimImages()
+        {
+            const int size = 80;
+
+            var w = new Bitmap(size, size);
+            Graphics.FromImage(w).Clear(Color.FromArgb(0xf0d9b5));
+
+            var b = new Bitmap(size, size);
+            Graphics.FromImage(w).Clear(Color.FromArgb(0xb58863));
+
+            LightRimSide = w;
+            LightRimCorner = w;
+            DarkRimSide = b;
+            DarkRimCorner = b;
         }
     }
 }
