@@ -141,12 +141,12 @@ namespace chess_pos_db_gui.src.app.board
         public class Transition
         {
             public float Thickness { get; private set; }
-            public Color Color { get; private set; }
+            public Brush Brush { get; private set; }
 
             public Transition(float thickness, Color color)
             {
                 Thickness = thickness;
-                Color = color;
+                Brush = new SolidBrush(color);
             }
         }
 
