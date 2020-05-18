@@ -2,12 +2,10 @@
     "indicators" : {
         "font" : "Segoe UI",
         "font_scale" : "15%",
-        "color_on_light_squares" : "#633526",
-        "color_on_dark_squares" : "#9E7863",
+        "color_on_light_squares" : "#727FA2",
+        "color_on_dark_squares" : "#C3C6BE",
         "bold" : true,
         "italic" : false,
-        "file_indicators" : "ABCDEFGH",
-        "rank_indicators" : "12345678",
         "file_indicator_side" : "bottom",
         "rank_indicator_side" : "left",
         "rank_indicator_horizontal_align" : "middle",
@@ -22,12 +20,12 @@
             "indicators_on_both_sides" : true,
         },
         "inner_transition" : {
-            "thickness" : "4%",
-            "color" : "#805644"
+            "thickness" : "6%",
+            "color" : "#9AA2AF"
         },
         "outer_transition" : {
             "thickness" : "10%",
-            "color" : "#805644"
+            "color" : "#9AA2AF"
         }
     }
 }

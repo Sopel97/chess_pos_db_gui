@@ -1,7 +1,7 @@
 {
     "indicators" : {
         "font" : "Segoe UI",
-        "font_size" : 11,
+        "font_scale" : "15%",
         "color_on_light_squares" : "#000000",
         "color_on_dark_squares" : "#000000",
         "bold" : true,

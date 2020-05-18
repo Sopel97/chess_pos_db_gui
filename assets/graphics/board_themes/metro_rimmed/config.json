@@ -2,8 +2,8 @@
     "indicators" : {
         "font" : "Segoe UI",
         "font_scale" : "15%",
-        "color_on_light_squares" : "#633526",
-        "color_on_dark_squares" : "#9E7863",
+        "color_on_light_squares" : "#AAAAAA",
+        "color_on_dark_squares" : "#AAAAAA",
         "bold" : true,
         "italic" : false,
         "file_indicators" : "ABCDEFGH",
@@ -17,17 +17,17 @@
     },
 
     "rim" : {
-        "thickness" : "25%",
+        "thickness" : "30%",
         "indicators" : {
             "indicators_on_both_sides" : true,
         },
         "inner_transition" : {
-            "thickness" : "4%",
-            "color" : "#805644"
+            "thickness" : "8%",
+            "color" : "#BBBBBB"
         },
         "outer_transition" : {
-            "thickness" : "10%",
-            "color" : "#805644"
+            "thickness" : "8%",
+            "color" : "#BBBBBB"
         }
     }
 }
