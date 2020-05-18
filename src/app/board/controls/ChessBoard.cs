@@ -294,48 +294,7 @@ namespace chess_pos_db_gui
                 ? BoardImages.LightSquare
                 : BoardImages.DarkSquare;
 
-            var font = BoardImages.Config.Indicators.Font;
-
-            var brush =
-                isLightSquare
-                ? BoardImages.Config.Indicators.LightSquareBrush
-                : BoardImages.Config.Indicators.DarkSquareBrush;
-
             g.DrawImage(squareImg, squareRect);
-
-            var indicatorFile =
-                IsBoardFlipped
-                ? 7 - BoardImages.Config.Indicators.RelativeFile
-                : BoardImages.Config.Indicators.RelativeFile;
-
-            var indicatorRank =
-                IsBoardFlipped
-                ? 7 - BoardImages.Config.Indicators.RelativeRank
-                : BoardImages.Config.Indicators.RelativeRank;
-
-            if (file == indicatorFile)
-            {
-                var text = string.Empty + "12345678"[7-rank];
-                g.DrawString(
-                    text, 
-                    font, 
-                    brush, 
-                    biggerRect, 
-                    BoardImages.Config.Indicators.RankIndicatorFormat
-                    );
-            }
-
-            if (rank == indicatorRank)
-            {
-                var text = string.Empty + "abcdefgh"[file];
-                g.DrawString(
-                    text,
-                    font,
-                    brush,
-                    biggerRect,
-                    BoardImages.Config.Indicators.FileIndicatorFormat
-                    );
-            }
 
             if (piece != null)
             {
@@ -400,6 +359,72 @@ namespace chess_pos_db_gui
 
             DrawSquares(g, space.SquaresSpace);
             DrawRim(g, space);
+
+            DrawIndicators(g, space);
+        }
+
+        private void DrawIndicators(Graphics g, DrawingSpaceUsage space)
+        {
+            var indicatorFile =
+                IsBoardFlipped
+                ? 7 - BoardImages.Config.Indicators.RelativeFile
+                : BoardImages.Config.Indicators.RelativeFile;
+
+            var indicatorRank =
+                IsBoardFlipped
+                ? 7 - BoardImages.Config.Indicators.RelativeRank
+                : BoardImages.Config.Indicators.RelativeRank;
+
+            var font = BoardImages.Config.Indicators.Font;
+
+            for (int file = 0; file < 8; ++file)
+            {
+                var rank = indicatorRank;
+                var squareRect = GetSquareHitbox(file, rank, space.SquaresSpace);
+                var biggerRect = EnlargeRect(squareRect, 2);
+
+                bool isLightSquare = (file + rank) % 2 == 0;
+
+                var brush =
+                    isLightSquare
+                    ? BoardImages.Config.Indicators.LightSquareBrush
+                    : BoardImages.Config.Indicators.DarkSquareBrush;
+
+                var text = string.Empty + "abcdefgh"[file];
+                g.DrawString(
+                    text,
+                    font,
+                    brush,
+                    biggerRect,
+                    BoardImages.Config.Indicators.FileIndicatorFormat
+                    );
+            }
+
+            for (int rank = 0; rank < 8; ++rank)
+            {
+                var file = indicatorFile;
+                var squareRect = GetSquareHitbox(file, rank, space.SquaresSpace);
+                var biggerRect = EnlargeRect(squareRect, 2);
+
+                bool isLightSquare = (file + rank) % 2 == 0;
+
+                var brush =
+                    isLightSquare
+                    ? BoardImages.Config.Indicators.LightSquareBrush
+                    : BoardImages.Config.Indicators.DarkSquareBrush;
+
+                if (file == indicatorFile)
+                {
+                    var text = string.Empty + "12345678"[7 - rank];
+                    g.DrawString(
+                        text,
+                        font,
+                        brush,
+                        biggerRect,
+                        BoardImages.Config.Indicators.RankIndicatorFormat
+                        );
+                }
+            }
         }
 
         private Rectangle[] GetRimTransitionRectangles(Rectangle squaresRectangle, int distance, int thickness)
