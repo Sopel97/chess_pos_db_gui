@@ -263,11 +263,6 @@ namespace chess_pos_db_gui
             return new Position((File)x, 8 - y); //y is in range 1-8
         }
 
-        private Rectangle EnlargeRect(Rectangle rect, int d)
-        {
-            return new Rectangle(rect.X - d, rect.Y - d, rect.Width + 2 * d, rect.Height + 2 * d);
-        }
-
         private void DrawSquare(Graphics g, Piece piece, int file, int rank, Rectangle squaresSpace)
         {
             var squareRect = GetSquareHitbox(file, rank, squaresSpace);
@@ -284,8 +279,6 @@ namespace chess_pos_db_gui
                     pieceRect.Y += dy;
                 }
             }
-
-            var biggerRect = EnlargeRect(squareRect, 2);
 
             bool isLightSquare = (file + rank) % 2 == 0;
 
@@ -559,7 +552,6 @@ namespace chess_pos_db_gui
             {
                 var rank = indicatorRank;
                 var squareRect = GetSquareHitbox(file, rank, space.SquaresSpace);
-                var biggerRect = EnlargeRect(squareRect, 2);
 
                 bool isLightSquare = (file + rank) % 2 == 0;
 
@@ -573,7 +565,7 @@ namespace chess_pos_db_gui
                     text,
                     font,
                     brush,
-                    biggerRect,
+                    squareRect,
                     BoardImages.Config.Indicators.FileIndicatorFormat
                     );
             }
@@ -582,7 +574,6 @@ namespace chess_pos_db_gui
             {
                 var file = indicatorFile;
                 var squareRect = GetSquareHitbox(file, rank, space.SquaresSpace);
-                var biggerRect = EnlargeRect(squareRect, 2);
 
                 bool isLightSquare = (file + rank) % 2 == 0;
 
@@ -598,7 +589,7 @@ namespace chess_pos_db_gui
                         text,
                         font,
                         brush,
-                        biggerRect,
+                        squareRect,
                         BoardImages.Config.Indicators.RankIndicatorFormat
                         );
                 }
