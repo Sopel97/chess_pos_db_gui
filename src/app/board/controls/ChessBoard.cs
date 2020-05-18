@@ -442,7 +442,7 @@ namespace chess_pos_db_gui
                         ? BoardImages.Config.Indicators.LightSquareBrush
                         : BoardImages.Config.Indicators.DarkSquareBrush;
 
-                    var text = string.Empty + "abcdefgh"[relativeFile];
+                    var text = string.Empty + BoardImages.Config.Indicators.FileIndicators[relativeFile];
                     g.DrawString(
                         text,
                         font,
@@ -478,7 +478,7 @@ namespace chess_pos_db_gui
                         ? BoardImages.Config.Indicators.LightSquareBrush
                         : BoardImages.Config.Indicators.DarkSquareBrush;
 
-                    var text = string.Empty + "12345678"[7 - relativeRank];
+                    var text = string.Empty + BoardImages.Config.Indicators.RankIndicators[7 - relativeRank];
                     g.DrawString(
                         text,
                         font,
@@ -566,7 +566,7 @@ namespace chess_pos_db_gui
                     ? BoardImages.Config.Indicators.LightSquareBrush
                     : BoardImages.Config.Indicators.DarkSquareBrush;
 
-                var text = string.Empty + "abcdefgh"[file];
+                var text = string.Empty + BoardImages.Config.Indicators.FileIndicators[file];
                 g.DrawString(
                     text,
                     font,
@@ -591,7 +591,7 @@ namespace chess_pos_db_gui
 
                 if (file == indicatorFile)
                 {
-                    var text = string.Empty + "12345678"[7 - rank];
+                    var text = string.Empty + BoardImages.Config.Indicators.RankIndicators[7 - rank];
                     g.DrawString(
                         text,
                         font,

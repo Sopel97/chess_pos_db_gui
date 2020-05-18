@@ -46,6 +46,8 @@ namespace chess_pos_db_gui.src.app.board
         public Brush DarkSquareBrush { get; private set; }
         public int RelativeFile { get; private set; }
         public int RelativeRank { get; private set; }
+        public string RankIndicators { get; private set; }
+        public string FileIndicators { get; private set; }
         public StringFormat RankIndicatorFormat { get; private set; }
         public StringFormat FileIndicatorFormat { get; private set; }
 
@@ -62,6 +64,24 @@ namespace chess_pos_db_gui.src.app.board
 
             config.LightSquareBrush = new SolidBrush(ColorTranslator.FromHtml(json["color_on_light_squares"]));
             config.DarkSquareBrush = new SolidBrush(ColorTranslator.FromHtml(json["color_on_dark_squares"]));
+
+            if (json.ContainsKey("file_indicators"))
+            {
+                config.FileIndicators = json["file_indicators"];
+            }
+            else
+            {
+                config.FileIndicators = "abcdefgh";
+            }
+
+            if (json.ContainsKey("rank_indicators"))
+            {
+                config.RankIndicators = json["rank_indicators"];
+            }
+            else
+            {
+                config.RankIndicators = "12345678";
+            }
 
             {
                 string fileIndicatorSide = json["file_indicator_side"];
