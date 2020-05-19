@@ -1796,6 +1796,8 @@ namespace chess_pos_db_gui
             {
                 form.ShowDialog();
             }
+
+            UpdateDatabaseInfo();
         }
 
         private void drawScoreNumericUpDown_ValueChanged(object sender, EventArgs e)
