@@ -1146,6 +1146,11 @@ namespace chess_pos_db_gui
 
         public string GetPrevMoveEran()
         {
+            if (Plies <= FirstPly)
+            {
+                return null;
+            }
+
             var e = BoardHistory.Prev();
             if (e == null)
             {
