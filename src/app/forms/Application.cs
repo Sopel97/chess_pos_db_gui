@@ -1317,6 +1317,8 @@ namespace chess_pos_db_gui
             Database.Close();
             QueryExecutor.ResetQueueAndCache();
             UpdateDatabaseInfo();
+
+            Clear();
         }
 
         private void EntriesGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
