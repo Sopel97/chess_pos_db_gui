@@ -63,6 +63,7 @@ namespace chess_pos_db_gui
                 Text = "Append to database.";
                 buildButton.Text = "Append";
                 openCheckBox.Visible = false;
+                setDestinationFolderButton.Enabled = false;
             }
             else
             {
