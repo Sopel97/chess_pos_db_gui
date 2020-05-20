@@ -537,6 +537,7 @@ namespace chess_pos_db_gui.src.app.forms
         {
             filesGroupBox.Enabled = false;
             tempDirsGroupBox.Enabled = false;
+            startButton.Enabled = false;
 
             KeepAlive = true;
         }
@@ -545,6 +546,7 @@ namespace chess_pos_db_gui.src.app.forms
         {
             filesGroupBox.Enabled = true;
             tempDirsGroupBox.Enabled = true;
+            startButton.Enabled = true;
 
             KeepAlive = false;
         }
