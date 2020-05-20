@@ -21,6 +21,7 @@ namespace chess_pos_db_gui.src.app.forms
         private EntryGroups Groups { get; set; }
         private List<Entry> UnassignedEntries { get; set; }
         private string SelectedPartition { get; set; }
+        private bool KeepAlive { get; set; }
 
         public DatabaseMergeForm(DatabaseProxy database)
         {
@@ -59,6 +60,8 @@ namespace chess_pos_db_gui.src.app.forms
 
             maxTempStorageUsageCheckBox.Checked = false;
             UpdateEnabledStateOfMaxStorageInput();
+
+            KeepAlive = false;
         }
 
         private void RefreshData()
@@ -534,12 +537,16 @@ namespace chess_pos_db_gui.src.app.forms
         {
             filesGroupBox.Enabled = false;
             tempDirsGroupBox.Enabled = false;
+
+            KeepAlive = true;
         }
 
         private void EnableInput()
         {
             filesGroupBox.Enabled = true;
             tempDirsGroupBox.Enabled = true;
+
+            KeepAlive = false;
         }
 
         private void PerformMergesAsync()
@@ -666,6 +673,14 @@ namespace chess_pos_db_gui.src.app.forms
                 );
             
             RefreshProgress();
+        }
+
+        private void DatabaseMergeForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing && KeepAlive)
+            {
+                e.Cancel = true;
+            }
         }
     }
 

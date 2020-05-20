@@ -485,6 +485,7 @@
             this.MinimumSize = new System.Drawing.Size(674, 600);
             this.Name = "DatabaseMergeForm";
             this.Text = "Manual Database File Merging";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DatabaseMergeForm_FormClosing);
             this.filesGroupBox.ResumeLayout(false);
             this.filesGroupBox.PerformLayout();
             this.tempDirsGroupBox.ResumeLayout(false);
