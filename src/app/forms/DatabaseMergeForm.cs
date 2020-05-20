@@ -6,6 +6,7 @@ using System.Json;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace chess_pos_db_gui.src.app.forms
@@ -541,10 +542,8 @@ namespace chess_pos_db_gui.src.app.forms
             tempDirsGroupBox.Enabled = true;
         }
 
-        private void PerformMerges()
+        private void PerformMergesAsync()
         {
-            DisableInput();
-
             var temps = GetTemporaryDirectories();
             var maxSpace = GetMaxStorageUsage();
 
@@ -553,7 +552,7 @@ namespace chess_pos_db_gui.src.app.forms
             var totalSize = (ulong)sizes.Sum(s => (long)s);
             ulong processedSize = 0;
 
-            for(int i = 0; i < mergeGroups.Count; ++i)
+            for (int i = 0; i < mergeGroups.Count; ++i)
             {
                 var size = sizes[i];
                 var group = mergeGroups[i];
@@ -565,6 +564,13 @@ namespace chess_pos_db_gui.src.app.forms
             }
 
             MessageBox.Show("Merging process finished.");
+        }
+
+        private async void PerformMerges()
+        {
+            DisableInput();
+
+            await Task.Run(() => PerformMergesAsync());
 
             RefreshData();
 
@@ -622,22 +628,33 @@ namespace chess_pos_db_gui.src.app.forms
 
         private void SetTotalProgress(ulong processed, ulong total)
         {
+            if (InvokeRequired)
+            {
+                Invoke(
+                    new Action<ulong, ulong>(SetTotalProgress),
+                    new object[] { processed, total }
+                    );
+                return;
+            }
+
             var pct = (int)(processed * 100 / total);
             totalMergeProgressBar.Value = pct;
             totalMergeProgressLabel.Text = pct.ToString() + "%";
 
-            if (InvokeRequired)
-            {
-                Invoke(new Action(RefreshProgress));
-            }
-            else
-            {
-                RefreshProgress();
-            }
+            RefreshProgress();
         }
 
         private void SetSubProgress(int pct, int numFiles, ulong totalSize, int mergeIndex, int totalMerges)
         {
+            if (InvokeRequired)
+            {
+                Invoke(
+                    new Action<int, int, ulong, int, int>(SetSubProgress), 
+                    new object[] { pct, numFiles, totalSize, mergeIndex, totalMerges }
+                    );
+                return;
+            }
+
             subtotalMergeProgressBar.Value = pct;
             subtotalMergeProgressLabel.Text = pct.ToString() + "%";
             currentOperationInfoLabel.Text = string.Format(
@@ -647,15 +664,8 @@ namespace chess_pos_db_gui.src.app.forms
                 numFiles,
                 FileSizeUtil.FormatSize(totalSize)
                 );
-
-            if (InvokeRequired)
-            {
-                Invoke(new Action(RefreshProgress));
-            }
-            else
-            {
-                RefreshProgress();
-            }
+            
+            RefreshProgress();
         }
     }
 
