@@ -423,10 +423,9 @@ namespace chess_pos_db_gui
         private void UpdateAnalysisData(DataTable newAnalysisData, Dictionary<string, UciInfoResponse> responseByMove)
         {
             // update only one info per move
-            foreach (KeyValuePair<string, UciInfoResponse> response in responseByMove)
+            foreach ((string lan, UciInfoResponse info) in responseByMove)
             {
-                var info = response.Value;
-                var move = Lan.LanToMoveWithSan(info.Fen, response.Key);
+                var move = Lan.LanToMoveWithSan(info.Fen, lan);
                 var multipv = info.MultiPV.Or(0);
                 System.Data.DataRow row = FindOrCreateRowByMoveOrMultiPV(newAnalysisData, move, multipv);
 
@@ -437,10 +436,9 @@ namespace chess_pos_db_gui
         private void UpdateEmbeddedAnalysisData(DataTable newAnalysisData, Dictionary<string, UciInfoResponse> responseByMove)
         {
             // update only one info per move
-            foreach (KeyValuePair<string, UciInfoResponse> response in responseByMove)
+            foreach ((string lan, UciInfoResponse info) in responseByMove)
             {
-                var info = response.Value;
-                var move = Lan.LanToMoveWithSan(info.Fen, response.Key);
+                var move = Lan.LanToMoveWithSan(info.Fen, lan);
                 var multipv = info.MultiPV.Or(0);
                 System.Data.DataRow row = FindOrCreateRowByMoveOrMultiPV(newAnalysisData, move, multipv);
 

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace chess_pos_db_gui
 {
-    public class SegregatedEntries
+    public class SegregatedEntries : IEnumerable<KeyValuePair<Origin, Entry>>
     {
         private Dictionary<Origin, Entry> Entries { get; set; }
 
@@ -47,9 +47,14 @@ namespace chess_pos_db_gui
             return null;
         }
 
-        public IEnumerator GetEnumerator()
+        IEnumerator<KeyValuePair<Origin, Entry>> IEnumerable<KeyValuePair<Origin, Entry>>.GetEnumerator()
         {
-            return Entries.GetEnumerator();
+            return ((IEnumerable<KeyValuePair<Origin, Entry>>)Entries).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<KeyValuePair<Origin, Entry>>)Entries).GetEnumerator();
         }
     }
 

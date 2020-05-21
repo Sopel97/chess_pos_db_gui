@@ -714,11 +714,11 @@ namespace chess_pos_db_gui
         private ChessDBCNScore GetBestScore(Dictionary<Move, ChessDBCNScore> scores)
         {
             ChessDBCNScore best = null;
-            foreach (KeyValuePair<Move, ChessDBCNScore> entry in scores)
+            foreach (var (move, score) in scores)
             {
-                if (best == null || (entry.Value.Value > best.Value))
+                if (best == null || (score.Value > best.Value))
                 {
-                    best = entry.Value;
+                    best = score;
                 }
             }
             return best;
@@ -739,27 +739,24 @@ namespace chess_pos_db_gui
 
             ChessDBCNScore bestScore = GetBestScore(scores);
 
-            foreach (KeyValuePair<string, EnumArray<GameLevel, AggregatedEntry>> entriesByLevel in aggregatedEntries)
+            foreach ((string san, EnumArray<GameLevel, AggregatedEntry> entries) in aggregatedEntries)
             {
-                var san = entriesByLevel.Key;
                 if (san == San.NullMove)
                 {
-                    foreach (KeyValuePair<GameLevel, AggregatedEntry> entry in entriesByLevel.Value)
+                    foreach ((GameLevel level, AggregatedEntry entry) in entries)
                     {
-                        GameLevel level = entry.Key;
-                        rootEntries[level].Combine(entry.Value);
+                        rootEntries[level].Combine(entry);
                     }
                 }
                 else
                 {
-                    foreach (KeyValuePair<GameLevel, AggregatedEntry> entry in entriesByLevel.Value)
+                    foreach ((GameLevel level, AggregatedEntry entry) in entries)
                     {
-                        GameLevel level = entry.Key;
-                        totalEntries[level].Combine(entry.Value);
+                        totalEntries[level].Combine(entry);
                     }
                 }
 
-                if (hideEmpty && IsEmpty(entriesByLevel.Value))
+                if (hideEmpty && IsEmpty(entries))
                 {
                     continue;
                 }
@@ -768,7 +765,7 @@ namespace chess_pos_db_gui
                 {
                     var fen = chessBoard.GetFen();
                     scores.TryGetValue(San.ParseSan(fen, san), out ChessDBCNScore score);
-                    Populate(san, entriesByLevel.Value, !continuationMoves.Contains(san), score);
+                    Populate(san, entries, !continuationMoves.Contains(san), score);
                 }
             }
 
@@ -792,11 +789,9 @@ namespace chess_pos_db_gui
 
             bool hideEmpty = hideNeverPlayedCheckBox.Checked;
 
-            foreach (KeyValuePair<string, EnumArray<GameLevel, AggregatedEntry>> entryByLevel in aggregatedEntries)
+            foreach ((string san, EnumArray<GameLevel, AggregatedEntry> entries) in aggregatedEntries)
             {
-                var san = entryByLevel.Key;
-
-                if (hideEmpty && IsEmpty(entryByLevel.Value))
+                if (hideEmpty && IsEmpty(entries))
                 {
                     continue;
                 }
@@ -805,7 +800,7 @@ namespace chess_pos_db_gui
                 {
                     var fen = chessBoard.GetFen();
                     scores.TryGetValue(San.ParseSan(fen, san), out ChessDBCNScore score);
-                    UpdateGoodness(san, entryByLevel.Value, score);
+                    UpdateGoodness(san, entries, score);
                 }
             }
 
@@ -865,16 +860,16 @@ namespace chess_pos_db_gui
                     aggregatedEntries[San.NullMove][level].Combine(new AggregatedEntry(rootEntries, level));
                 }
 
-                foreach (KeyValuePair<string, SegregatedEntries> entry in childrenEntries)
+                foreach ((string san, SegregatedEntries entry) in childrenEntries)
                 {
-                    if (!aggregatedEntries.ContainsKey(entry.Key))
+                    if (!aggregatedEntries.ContainsKey(san))
                     {
-                        aggregatedEntries.Add(entry.Key, new InitializedEnumArray<GameLevel, AggregatedEntry>());
+                        aggregatedEntries.Add(san, new InitializedEnumArray<GameLevel, AggregatedEntry>());
                     }
 
                     foreach (GameLevel level in levels)
                     {
-                        aggregatedEntries[entry.Key][level].Combine(new AggregatedEntry(entry.Value, level));
+                        aggregatedEntries[san][level].Combine(new AggregatedEntry(entry, level));
                     }
                 }
             }
@@ -977,17 +972,17 @@ namespace chess_pos_db_gui
             var retractions = cache.Stats.Results[0].Retractions;
             var bestScore = GetBestScore(cache.Scores);
 
-            foreach (KeyValuePair<string, SegregatedEntries> entry in retractions)
+            foreach ((string san, SegregatedEntries entry) in retractions)
             {
                 EnumArray<GameLevel, AggregatedEntry> aggregatedEntries =
                 new InitializedEnumArray<GameLevel, AggregatedEntry>();
 
                 foreach (GameLevel level in levels)
                 {
-                    aggregatedEntries[level].Combine(new AggregatedEntry(entry.Value, level));
+                    aggregatedEntries[level].Combine(new AggregatedEntry(entry, level));
                 }
 
-                PopulateRetraction(entry.Key, aggregatedEntries, bestScore);
+                PopulateRetraction(san, aggregatedEntries, bestScore);
             }
         }
 

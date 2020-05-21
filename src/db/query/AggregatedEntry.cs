@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using chess_pos_db_gui.src.util;
 
 namespace chess_pos_db_gui
 {
@@ -27,11 +28,11 @@ namespace chess_pos_db_gui
         public AggregatedEntry(SegregatedEntries entries, List<GameLevel> levels) :
             this()
         {
-            foreach (KeyValuePair<Origin, Entry> entry in entries)
+            foreach ((Origin origin, Entry entry) in entries)
             {
-                if (levels.Contains(entry.Key.Level))
+                if (levels.Contains(origin.Level))
                 {
-                    Combine(entry.Value, entry.Key.Result);
+                    Combine(entry, origin.Result);
                 }
             }
         }
@@ -39,11 +40,11 @@ namespace chess_pos_db_gui
         public AggregatedEntry(SegregatedEntries entries, GameLevel level) :
             this()
         {
-            foreach (KeyValuePair<Origin, Entry> entry in entries)
+            foreach ((Origin origin, Entry entry) in entries)
             {
-                if (entry.Key.Level == level)
+                if (origin.Level == level)
                 {
-                    Combine(entry.Value, entry.Key.Result);
+                    Combine(entry, origin.Result);
                 }
             }
         }
