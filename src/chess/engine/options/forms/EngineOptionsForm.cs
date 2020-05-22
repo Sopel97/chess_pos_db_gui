@@ -16,6 +16,8 @@ namespace chess_pos_db_gui
         {
             InitializeComponent();
 
+            Icon = Properties.Resources.application_icon;
+
             saveButton.DialogResult = DialogResult.OK;
             discardButton.DialogResult = DialogResult.Cancel;
 

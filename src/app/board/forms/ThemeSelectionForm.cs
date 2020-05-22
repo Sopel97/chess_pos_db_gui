@@ -21,6 +21,8 @@ namespace chess_pos_db_gui.src.app.board.forms
         {
             InitializeComponent();
 
+            Icon = Properties.Resources.application_icon;
+
             Themes = db;
             SelectedBoardTheme = currentBoardTheme;
             SelectedPieceTheme = currentPieceTheme;

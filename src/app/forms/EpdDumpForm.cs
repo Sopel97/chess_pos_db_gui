@@ -21,6 +21,8 @@ namespace chess_pos_db_gui
         {
             InitializeComponent();
 
+            Icon = Properties.Resources.application_icon;
+
             database = db;
             dumpProgressBar.Maximum = 100;
         }

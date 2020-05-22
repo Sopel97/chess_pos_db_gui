@@ -31,6 +31,8 @@ namespace chess_pos_db_gui
         {
             InitializeComponent();
 
+            Icon = Properties.Resources.application_icon;
+
             Mode = mode;
             if (Mode == EngineProfilesFormMode.Manage)
             {

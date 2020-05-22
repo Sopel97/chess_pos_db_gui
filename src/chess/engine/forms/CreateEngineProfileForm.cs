@@ -12,6 +12,9 @@ namespace chess_pos_db_gui
         public CreateEngineProfileForm(UciEngineProfileStorage profiles)
         {
             InitializeComponent();
+
+            Icon = Properties.Resources.application_icon;
+
             Profiles = profiles;
         }
 

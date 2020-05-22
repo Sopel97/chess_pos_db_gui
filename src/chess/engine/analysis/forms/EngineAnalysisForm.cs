@@ -55,6 +55,8 @@ namespace chess_pos_db_gui
         {
             InitializeComponent();
 
+            Icon = Properties.Resources.application_icon;
+
             EngineProfiles = profiles;
 
             EmbeddedControl = new EmbeddedEngineAnalysisControl();

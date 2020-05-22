@@ -27,6 +27,8 @@ namespace chess_pos_db_gui.src.app.forms
         {
             InitializeComponent();
 
+            Icon = Properties.Resources.application_icon;
+
             Groups = new EntryGroups();
             UnassignedEntries = new List<Entry>();
 

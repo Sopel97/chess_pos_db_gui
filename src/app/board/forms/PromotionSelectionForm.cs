@@ -24,6 +24,8 @@ namespace chess_pos_db_gui.src.app.board.forms
         {
             InitializeComponent();
 
+            Icon = Properties.Resources.application_icon;
+
             PieceImages = theme;
             SideToMove = player;
 

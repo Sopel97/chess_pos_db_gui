@@ -12,6 +12,8 @@ namespace chess_pos_db_gui
         {
             InitializeComponent();
 
+            Icon = Properties.Resources.application_icon;
+
             WasCancelled = false;
             Fen = "";
             if (Clipboard.ContainsText())

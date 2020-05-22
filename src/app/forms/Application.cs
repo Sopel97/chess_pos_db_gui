@@ -127,6 +127,10 @@ namespace chess_pos_db_gui
 
         public Application()
         {
+            InitializeComponent();
+
+            Icon = Properties.Resources.application_icon;
+
             Levels = new HashSet<GameLevel>();
             Selects = new HashSet<Select>();
             CacheEntry = null;
@@ -137,8 +141,6 @@ namespace chess_pos_db_gui
             EngineProfiles = new UciEngineProfileStorage(engineProfilesPath);
 
             BestGoodness = 0.0;
-
-            InitializeComponent();
 
             levelHumanCheckBox.Checked = true;
             levelEngineCheckBox.Checked = true;
