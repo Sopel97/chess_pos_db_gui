@@ -1157,9 +1157,15 @@ namespace chess_pos_db_gui
                 return null;
             }
 
+            var move = BoardHistory.Current().Move;
+            if (move == null)
+            {
+                return null;
+            }
+
             return Eran.MakeFromBoardAndMove(
                 new ChessGame(e.GCD),
-                BoardHistory.Current().Move
+                move
                 );
         }
 
