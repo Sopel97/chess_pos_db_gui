@@ -104,15 +104,6 @@ namespace chess_pos_db_gui.src.app
 
         public void ScheduleUpdateDataAsync(QueryQueueEntry key)
         {
-            {
-                var entry = GetFromCache(key);
-                if (entry != null)
-                {
-                    onDataReceived?.Invoke(this, new KeyValuePair<QueryQueueEntry, QueryCacheEntry>(key, entry));
-                    return;
-                }
-            }
-
             QueryQueueMutex.WaitOne();
             QueryQueue.Enqueue(key);
             QueryQueueMutex.ReleaseMutex();
@@ -176,7 +167,12 @@ namespace chess_pos_db_gui.src.app
 
         private void QueryAsyncToCacheAndUpdate(QueryQueueEntry key)
         {
-            var entry = QueryAsyncToCache(key);
+            var entry = GetFromCache(key);
+            if (entry == null)
+            {
+                entry = QueryAsyncToCache(key);
+            }
+
             onDataReceived?.Invoke(this, new KeyValuePair<QueryQueueEntry, QueryCacheEntry>(key, entry));
         }
 
