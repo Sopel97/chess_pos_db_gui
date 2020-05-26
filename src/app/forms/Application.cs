@@ -1331,7 +1331,15 @@ namespace chess_pos_db_gui
                 if (cell.ColumnIndex == 0)
                 {
                     var san = cell.Value.ToString();
-                    chessBoard.DoMove(san);
+                    var nextSan = chessBoard.GetNextMoveSan();
+                    if (nextSan != null && san == nextSan)
+                    {
+                        chessBoard.DoHistoryMove();
+                    }
+                    else
+                    {
+                        chessBoard.DoMove(san);
+                    }
                 }
             }
         }
@@ -1772,13 +1780,23 @@ namespace chess_pos_db_gui
 
         private void retractionsGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            var reverseMove = (retractionsGridView[0, e.RowIndex].Value as ReverseMoveWithEran).ReverseMove;
-            var fen = chessBoard.GetFen();
-            var game = new ChessGame(fen);
-            var prevGame = reverseMove.AppliedTo(game);
-            var prevFen = prevGame.GetFen();
-            prevGame.MakeMove(reverseMove.Move, true);
-            chessBoard.SetGame(prevFen, prevGame);
+            var reverseMoveWithEran = retractionsGridView[0, e.RowIndex].Value as ReverseMoveWithEran;
+            var reverseMove = reverseMoveWithEran.ReverseMove;
+            var eran = reverseMoveWithEran.Eran;
+            var prevEran = chessBoard.GetPrevMoveEran();
+            if (prevEran != null && eran == prevEran)
+            {
+                chessBoard.UndoHistoryMove();
+            }
+            else
+            {
+                var fen = chessBoard.GetFen();
+                var game = new ChessGame(fen);
+                var prevGame = reverseMove.AppliedTo(game);
+                var prevFen = prevGame.GetFen();
+                prevGame.MakeMove(reverseMove.Move, true);
+                chessBoard.SetGame(prevFen, prevGame);
+            }
         }
 
         private void MergeToolStripMenuItem_Click(object sender, EventArgs e)

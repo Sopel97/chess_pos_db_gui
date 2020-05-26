@@ -1052,7 +1052,17 @@ namespace chess_pos_db_gui
             SetSelection(BoardHistory.Plies - 1);
         }
 
+        public void UndoHistoryMove()
+        {
+            SetSelection(BoardHistory.Plies - 1);
+        }
+
         private void GoToNextButton_Click(object sender, EventArgs e)
+        {
+            SetSelection(BoardHistory.Plies + 1);
+        }
+
+        public void DoHistoryMove()
         {
             SetSelection(BoardHistory.Plies + 1);
         }
