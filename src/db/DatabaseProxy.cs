@@ -277,7 +277,7 @@ namespace chess_pos_db_gui
                     }
                     else
                     {
-                        info.SetCounts(json);
+                        info.SetStatsFromJson(json);
                     }
                 }
                 return info;
@@ -964,38 +964,18 @@ namespace chess_pos_db_gui
         public bool IsOpen { get; private set; }
         public string Path { get; private set; }
 
-        public ulong NumHumanGames { get; private set; }
-        public ulong NumEngineGames { get; private set; }
-        public ulong NumServerGames { get; private set; }
-        public ulong NumHumanPositions { get; private set; }
-        public ulong NumEnginePositions { get; private set; }
-        public ulong NumServerPositions { get; private set; }
+        public DatabaseStats Stats { get; private set; }
 
         public DatabaseInfo(string path, bool isOpen)
         {
             Path = path;
             IsOpen = isOpen;
+            Stats = null;
         }
 
-        public void SetCounts(JsonValue json)
+        public void SetStatsFromJson(JsonValue json)
         {
-            NumHumanGames = json["human"]["num_games"];
-            NumEngineGames = json["engine"]["num_games"];
-            NumServerGames = json["server"]["num_games"];
-
-            NumHumanPositions = json["human"]["num_positions"];
-            NumEnginePositions = json["engine"]["num_positions"];
-            NumServerPositions = json["server"]["num_positions"];
-        }
-
-        internal ulong TotalNumGames()
-        {
-            return NumHumanGames + NumServerGames + NumEngineGames;
-        }
-
-        internal ulong TotalNumPositions()
-        {
-            return NumHumanPositions + NumServerPositions + NumEnginePositions;
+            Stats = new DatabaseStats(json);
         }
     }
 }

@@ -1271,12 +1271,14 @@ namespace chess_pos_db_gui
 
             if (info.IsOpen)
             {
-                int averageMovesPerGame = ((int)Math.Round((double)info.TotalNumPositions() / info.TotalNumGames() / 2.0));
+                var stats = info.Stats.GetTotal();
+
+                int averageMovesPerGame = ((int)Math.Round((double)stats.NumPositions / stats.NumGames / 2.0));
 
                 databaseInfoRichTextBox.Text =
                     "Path: " + info.Path + Environment.NewLine
-                    + "Games: " + info.TotalNumGames().ToString("N0")
-                    + " | Plies: " + info.TotalNumPositions().ToString("N0") + Environment.NewLine
+                    + "Games: " + stats.NumGames.ToString("N0")
+                    + " | Plies: " + stats.NumPositions.ToString("N0") + Environment.NewLine
                     + "Avg game length: " + averageMovesPerGame.ToString("N0") + " moves";
             }
             else
