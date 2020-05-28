@@ -13,6 +13,16 @@ namespace chess_pos_db_gui.src.app.forms
 {
     public partial class DatabaseFormatInfoForm : Form
     {
+        private static readonly List<KeyValuePair<ulong, string>> NumberFormattingSuffixes =
+            new List<KeyValuePair<ulong, string>>() {
+                new KeyValuePair<ulong, string>( 1_000_000_000_000_000_000, "Qi" ),
+                new KeyValuePair<ulong, string>( 1_000_000_000_000_000, "Q" ),
+                new KeyValuePair<ulong, string>( 1_000_000_000_000, "T" ),
+                new KeyValuePair<ulong, string>( 1_000_000_000, "B" ),
+                new KeyValuePair<ulong, string>( 1_000_000, "M" ),
+                new KeyValuePair<ulong, string>( 1_000, "k" )
+        };
+
         private DataTable TabulatedSupportManifestData { get; set; }
 
         private DatabaseProxy Database { get; set; }
@@ -87,7 +97,7 @@ namespace chess_pos_db_gui.src.app.forms
             supportManifestDataGridView.Columns["HasBlackElo"].HeaderText = "Has black elo";
             supportManifestDataGridView.Columns["MinElo"].HeaderText = "Min elo";
             supportManifestDataGridView.Columns["MaxElo"].HeaderText = "Max elo";
-            supportManifestDataGridView.Columns["HasCountWithElo"].HeaderText = "Has count with elo";
+            supportManifestDataGridView.Columns["HasCountWithElo"].HeaderText = "Has count\nwith elo";
 
             supportManifestDataGridView.Columns["HasFirstGame"].HeaderText = "Has first game";
             supportManifestDataGridView.Columns["HasLastGame"].HeaderText = "Has last game";
@@ -96,13 +106,25 @@ namespace chess_pos_db_gui.src.app.forms
             supportManifestDataGridView.Columns["HasReverseMove"].HeaderText = "Has reverse move";
             
             supportManifestDataGridView.Columns["AllowsFilteringByEloRange"].HeaderText = "Allows filtering\nby elo range";
-            supportManifestDataGridView.Columns["EloFilterGranularity"].HeaderText = "Elo filter granularity";
+            supportManifestDataGridView.Columns["EloFilterGranularity"].HeaderText = "Elo filter\ngranularity";
 
             supportManifestDataGridView.Columns["AllowsFilteringByMonthRange"].HeaderText = "Allows filtering\nby month range";
-            supportManifestDataGridView.Columns["MonthFilterGranularity"].HeaderText = "Month filter granularity";
+            supportManifestDataGridView.Columns["MonthFilterGranularity"].HeaderText = "Month filter\ngranularity";
 
-            supportManifestDataGridView.Columns["MaxBytesPerPosition"].HeaderText = "Max bytes per position";
+            supportManifestDataGridView.Columns["MaxBytesPerPosition"].HeaderText = "Max bytes\nper position";
             supportManifestDataGridView.Columns["EstimatedAverageBytesPerPosition"].HeaderText = "Estimated average\nbytes per position";
+
+            foreach(DataGridViewColumn column in supportManifestDataGridView.Columns)
+            {
+                if (column.ValueType == typeof(ulong))
+                {
+                    column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                }
+                else if (column.ValueType == typeof(bool))
+                {
+                    column.SortMode = DataGridViewColumnSortMode.Automatic;
+                }
+            }
 
             supportManifestDataGridView.CellPainting += DataGridView1_CellPainting;
 
@@ -114,10 +136,6 @@ namespace chess_pos_db_gui.src.app.forms
             supportManifestDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
 
             AdjustSizes();
-
-            var padding = new Size(32, 32); // for some reason preffered size is not enough
-            MaximumSize = supportManifestDataGridView.PreferredSize + padding;
-            MinimumSize = new Size(Math.Min(MaximumSize.Width, 640), Math.Min(MaximumSize.Height, 480));
         }
 
         private void AdjustSizes()
@@ -146,12 +164,12 @@ namespace chess_pos_db_gui.src.app.forms
             {
                 e.PaintBackground(e.ClipBounds, true);
                 Rectangle rect = e.CellBounds;
-                Size titleSize = TextRenderer.MeasureText(e.Value.ToString(), e.CellStyle.Font);
+                Size titleSize = TextRenderer.MeasureText(e.FormattedValue.ToString(), e.CellStyle.Font);
 
                 e.Graphics.TranslateTransform(0, titleSize.Width);
                 e.Graphics.RotateTransform(-90.0F);
 
-                e.Graphics.DrawString(e.Value.ToString(), e.CellStyle.Font, Brushes.Black, new PointF(rect.Y - (e.CellBounds.Height - titleSize.Width), rect.X));
+                e.Graphics.DrawString(e.FormattedValue.ToString(), e.CellStyle.Font, Brushes.Black, new PointF(rect.Y - (e.CellBounds.Height - titleSize.Width), rect.X));
 
                 e.Graphics.RotateTransform(90.0F);
                 e.Graphics.TranslateTransform(0, -titleSize.Width);
@@ -227,6 +245,29 @@ namespace chess_pos_db_gui.src.app.forms
             }
 
             TabulatedSupportManifestData.Rows.Add(row);
+        }
+
+        private void supportManifestDataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            var cell = supportManifestDataGridView[e.ColumnIndex, e.RowIndex];
+            if (e.Value != null && e.Value != System.DBNull.Value && cell.ValueType == typeof(ulong))
+            {
+                e.Value = FormatNumber((ulong)e.Value);
+                e.FormattingApplied = true;
+            }
+        }
+
+        private string FormatNumber(ulong number)
+        {
+            foreach((ulong unit, string suffix) in NumberFormattingSuffixes)
+            {
+                if (number >= unit)
+                {
+                    return (number / unit).ToString() + suffix;
+                }
+            }
+
+            return number.ToString();
         }
     }
 }
