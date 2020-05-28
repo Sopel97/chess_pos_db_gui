@@ -24,9 +24,7 @@ namespace chess_pos_db_gui
 
         public string DatabasePath { get { return destinationFolderTextBox.Text; } }
 
-        public ulong NumGames { get; private set; }
-        public ulong NumPositions { get; private set; }
-        public ulong NumSkippedGames { get; private set; }
+        public DatabaseImportStats ImportStats { get; private set; }
 
         private ulong TotalFileSizeBeingImported { get; set; }
         private ulong TotalFileSizeAlreadyImported { get; set; }
@@ -326,11 +324,9 @@ namespace chess_pos_db_gui
                     SetImportProgress((int)(TotalFileSizeAlreadyImported * 100 / TotalFileSizeBeingImported));
                 }
 
-                if (progressReport["finished"] == true)
+                if (progressReport["finished"] == true && progressReport.ContainsKey("stats"))
                 {
-                    NumGames = progressReport["num_games"];
-                    NumPositions = progressReport["num_positions"];
-                    NumSkippedGames = progressReport["num_skipped_games"];
+                    ImportStats = new DatabaseImportStats(progressReport["stats"]);
                 }
             }
             else if (progressReport["operation"] == "merge")
@@ -388,19 +384,47 @@ namespace chess_pos_db_gui
             Close();
         }
 
+        private void ShowStats(DatabaseImportStats stats)
+        {
+            if (stats == null)
+            {
+                return;
+            }
+
+            var total = stats.GetTotal();
+
+            MessageBox.Show(
+                string.Format(
+                    "Finished.\n" +
+                    "Games imported: {0}\n" +
+                    "Games skipped: {1}\n" +
+                    "Positions imported: {2}\n" +
+                    "Average white elo: {3}\n" +
+                    "Average black elo: {4}\n" +
+                    "Min elo: {5}\n" +
+                    "Max elo: {6}\n" +
+                    "Min date: {7}\n" +
+                    "Max date: {8}",
+                    total.NumGames,
+                    total.NumSkippedGames,
+                    total.NumPositions,
+                    total.TotalWhiteElo / total.NumGamesWithElo,
+                    total.TotalBlackElo / total.NumGamesWithElo,
+                    total.MinElo,
+                    total.MaxElo,
+                    total.MinDate.ToString('-'),
+                    total.MaxDate.ToString('-')
+                )
+            );
+        }
+
         private void BuildDatabase(JsonObject request)
         {
             try
             {
                 database.Create(request, ProgressCallback);
                 finishedWithErrors = false;
-                MessageBox.Show(
-                    string.Format("Finished.\nGames imported: {0}\nGames skipped: {1}\nPositions imported: {2}",
-                        NumGames,
-                        NumSkippedGames,
-                        NumPositions
-                    )
-                );
+                ShowStats(ImportStats);
 
                 if (InvokeRequired)
                 {
@@ -435,13 +459,7 @@ namespace chess_pos_db_gui
             {
                 database.Append(request, ProgressCallback);
                 finishedWithErrors = false;
-                MessageBox.Show(
-                    string.Format("Finished.\nGames imported: {0}\nGames skipped: {1}\nPositions imported: {2}",
-                        NumGames,
-                        NumSkippedGames,
-                        NumPositions
-                    )
-                );
+                ShowStats(ImportStats);
 
                 if (InvokeRequired)
                 {

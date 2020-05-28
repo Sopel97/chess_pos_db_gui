@@ -684,6 +684,151 @@ namespace chess_pos_db_gui
         }
     }
 
+    public class DatabaseSingleLevelStats
+    {
+        public ulong NumGames { get; private set; }
+        public ulong NumPositions { get; private set; }
+        public ulong TotalWhiteElo { get; private set; }
+        public ulong TotalBlackElo { get; private set; }
+        public ulong NumGamesWithElo { get; private set; }
+        public ulong NumGamesWithDate { get; private set; }
+        public ulong MinElo { get; private set; }
+        public ulong MaxElo { get; private set; }
+        public Date MinDate { get; private set; }
+        public Date MaxDate { get; private set; }
+
+        public DatabaseSingleLevelStats(JsonValue json)
+        {
+            NumGames = json["num_games"];
+            NumPositions = json["num_positions"];
+            TotalWhiteElo = json["total_white_elo"];
+            TotalBlackElo = json["total_black_elo"];
+            NumGamesWithElo = json["num_games_with_elo"];
+            NumGamesWithDate = json["num_games_with_date"];
+            if (NumGamesWithElo > 0)
+            {
+                MinElo = json["min_elo"];
+                MaxElo = json["max_elo"];
+            }
+            if (NumGamesWithDate > 0)
+            {
+                MinDate = Date.FromString(json["min_date"], '-');
+                MaxDate = Date.FromString(json["max_date"], '-');
+            }
+        }
+
+        public DatabaseSingleLevelStats(DatabaseSingleLevelStats other)
+        {
+            NumGames = other.NumGames;
+            NumPositions = other.NumPositions;
+            TotalWhiteElo = other.TotalWhiteElo;
+            TotalBlackElo = other.TotalBlackElo;
+            NumGamesWithElo = other.NumGamesWithElo;
+            NumGamesWithDate = other.NumGamesWithDate;
+            MinElo = other.MinElo;
+            MaxElo = other.MaxElo;
+            MinDate = other.MinDate;
+            MaxDate = other.MaxDate;
+        }
+
+        public void Add(DatabaseSingleLevelStats other)
+        {
+            NumGames += other.NumGames;
+            NumPositions += other.NumPositions;
+            TotalWhiteElo += other.TotalWhiteElo;
+            TotalBlackElo += other.TotalBlackElo;
+
+            if (NumGamesWithElo == 0)
+            {
+                MinElo = other.MinElo;
+                MaxElo = other.MaxElo;
+            }
+            else if (other.NumGamesWithElo != 0)
+            {
+                MinElo = Math.Min(MinElo, other.MinElo);
+                MaxElo = Math.Min(MaxElo, other.MaxElo);
+            }
+
+            if (NumGamesWithDate == 0)
+            {
+                MinDate = other.MinDate;
+                MaxDate = other.MaxDate;
+            }
+            else if (other.NumGamesWithDate != 0)
+            {
+                MinDate = Date.Min(MinDate, other.MinDate);
+                MaxDate = Date.Max(MaxDate, other.MaxDate);
+            }
+
+            NumGamesWithElo += other.NumGamesWithElo;
+            NumGamesWithDate += other.NumGamesWithDate;
+        }
+    }
+
+    public class DatabaseSingleLevelImportStats : DatabaseSingleLevelStats
+    {
+        public ulong NumSkippedGames { get; private set; }
+
+        public DatabaseSingleLevelImportStats(JsonValue json) :
+            base(json)
+        {
+            NumSkippedGames = json["num_skipped_games"];
+        }
+        public DatabaseSingleLevelImportStats(DatabaseSingleLevelImportStats other) :
+            base(other)
+        {
+            NumSkippedGames = other.NumSkippedGames;
+        }
+
+        public void Add(DatabaseSingleLevelImportStats other)
+        {
+            base.Add(other);
+            NumSkippedGames += other.NumSkippedGames;
+        }
+    }
+
+    public class DatabaseStats
+    {
+        public Dictionary<GameLevel, DatabaseSingleLevelStats> StatsByLevel { get; private set; }
+
+        public DatabaseStats(JsonValue json)
+        {
+            StatsByLevel = new Dictionary<GameLevel, DatabaseSingleLevelStats>();
+            StatsByLevel.Add(GameLevel.Engine, new DatabaseSingleLevelStats(json["engine"]));
+            StatsByLevel.Add(GameLevel.Human, new DatabaseSingleLevelStats(json["human"]));
+            StatsByLevel.Add(GameLevel.Server, new DatabaseSingleLevelStats(json["server"]));
+        }
+
+        public DatabaseSingleLevelStats GetTotal()
+        {
+            DatabaseSingleLevelStats total = new DatabaseSingleLevelStats(StatsByLevel[GameLevel.Engine]);
+            total.Add(StatsByLevel[GameLevel.Human]);
+            total.Add(StatsByLevel[GameLevel.Server]);
+            return total;
+        }
+    }
+
+    public class DatabaseImportStats
+    {
+        public Dictionary<GameLevel, DatabaseSingleLevelImportStats> StatsByLevel { get; private set; }
+
+        public DatabaseImportStats(JsonValue json)
+        {
+            StatsByLevel = new Dictionary<GameLevel, DatabaseSingleLevelImportStats>();
+            StatsByLevel.Add(GameLevel.Engine, new DatabaseSingleLevelImportStats(json["engine"]));
+            StatsByLevel.Add(GameLevel.Human, new DatabaseSingleLevelImportStats(json["human"]));
+            StatsByLevel.Add(GameLevel.Server, new DatabaseSingleLevelImportStats(json["server"]));
+        }
+
+        public DatabaseSingleLevelImportStats GetTotal()
+        {
+            DatabaseSingleLevelImportStats total = new DatabaseSingleLevelImportStats(StatsByLevel[GameLevel.Engine]);
+            total.Add(StatsByLevel[GameLevel.Human]);
+            total.Add(StatsByLevel[GameLevel.Server]);
+            return total;
+        }
+    }
+
     public class DatabaseManifest
     {
         public string Name { get; private set; }

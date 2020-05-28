@@ -10,14 +10,50 @@ namespace chess_pos_db_gui
         public Optional<byte> Month { get; set; }
         public Optional<byte> Day { get; set; }
 
+        public static Date Min(Date lhs, Date rhs)
+        {
+            if (lhs.Year.Or(0) < rhs.Year.Or(0))
+                return lhs;
+            if (lhs.Year.Or(0) > rhs.Year.Or(0))
+                return rhs;
+
+            if (lhs.Month.Or(0) < rhs.Month.Or(0))
+                return lhs;
+            if (lhs.Month.Or(0) > rhs.Month.Or(0))
+                return rhs;
+
+            if (lhs.Day.Or(0) < rhs.Day.Or(0))
+                return lhs;
+
+            return rhs;
+        }
+
+        public static Date Max(Date lhs, Date rhs)
+        {
+            if (lhs.Year.Or(0) > rhs.Year.Or(0))
+                return lhs;
+            if (lhs.Year.Or(0) < rhs.Year.Or(0))
+                return rhs;
+
+            if (lhs.Month.Or(0) > rhs.Month.Or(0))
+                return lhs;
+            if (lhs.Month.Or(0) < rhs.Month.Or(0))
+                return rhs;
+
+            if (lhs.Day.Or(0) > rhs.Day.Or(0))
+                return lhs;
+
+            return rhs;
+        }
+
         public static Date FromJson(JsonValue json)
         {
             return Date.FromString(json);
         }
 
-        public static Date FromString(string str)
+        public static Date FromString(string str, char sep = '.')
         {
-            string[] parts = str.Split('.');
+            string[] parts = str.Split(sep);
             if (parts.Length != 3)
             {
                 throw new ArgumentException();
@@ -40,7 +76,12 @@ namespace chess_pos_db_gui
 
         public override string ToString()
         {
-            return string.Join(".", new string[]{
+            return ToString('.');
+        }
+
+        public string ToString(char sep)
+        {
+            return string.Join(sep.ToString(), new string[]{
                 Year.Select(y => y.ToString("D4")).DefaultIfEmpty("????").First(),
                 Month.Select(y => y.ToString("D2")).DefaultIfEmpty("??").First(),
                 Day.Select(y => y.ToString("D2")).DefaultIfEmpty("??").First()
