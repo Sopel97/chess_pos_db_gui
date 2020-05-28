@@ -130,7 +130,7 @@ namespace chess_pos_db_gui
                     databaseFormatComboBox.Items.Add(type);
                 }
 
-                databaseFormatComboBox.SelectedItem = "";
+                databaseFormatComboBox.SelectedItem = database.GetDefaultDatabaseFormat();
             }
         }
 

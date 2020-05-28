@@ -106,6 +106,11 @@ namespace chess_pos_db_gui
             }
         }
 
+        public string GetDefaultDatabaseFormat()
+        {
+            return "db_delta";
+        }
+
         public Dictionary<string, DatabaseSupportManifest> GetSupportManifests()
         {
             if (SupportManifests == null)
