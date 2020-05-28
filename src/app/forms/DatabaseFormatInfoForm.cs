@@ -65,6 +65,78 @@ namespace chess_pos_db_gui.src.app.forms
 
             WinFormsControlUtil.MakeDoubleBuffered(supportManifestDataGridView);
             supportManifestDataGridView.DataSource = TabulatedSupportManifestData;
+
+            FillData();
+        }
+
+        private void FillData()
+        {
+            foreach ((string name, var manifest) in SupportManifests)
+            {
+                AddDataRow(name, manifest);
+            }
+        }
+
+        private void AddDataRow(string name, DatabaseSupportManifest manifest)
+        {
+            var row = TabulatedSupportManifestData.NewRow();
+
+            row["Name"] = name;
+
+            row["MaxGames"] = manifest.MaxGames;
+            row["MaxPositions"] = manifest.MaxPositions;
+            row["MaxInstancesOfSinglePosition"] = manifest.MaxInstancesOfSinglePosition;
+
+            row["HasOneWayKey"] = manifest.HasOneWayKey;
+            if (manifest.HasOneWayKey)
+            {
+                row["EstimatedMaxCollisions"] = manifest.EstimatedMaxCollisions;
+                row["EstimatedMaxPositionsWithNoCollisions"] = manifest.EstimatedMaxPositionsWithNoCollisions;
+            }
+
+            row["HasCount"] = manifest.HasCount;
+
+            row["HasEloDiff"] = manifest.HasEloDiff;
+            if (manifest.HasEloDiff)
+            {
+                row["MaxAbsEloDiff"] = manifest.MaxAbsEloDiff;
+                row["MaxAverageAbsEloDiff"] = manifest.MaxAverageAbsEloDiff;
+            }
+
+            row["HasWhiteElo"] = manifest.HasWhiteElo;
+            row["HasBlackElo"] = manifest.HasBlackElo;
+            if (manifest.HasWhiteElo || manifest.HasBlackElo)
+            {
+                row["MinElo"] = manifest.MinElo;
+                row["MaxElo"] = manifest.MaxElo;
+                row["HasCountWithElo"] = manifest.HasCountWithElo;
+            }
+
+            row["HasFirstGame"] = manifest.HasFirstGame;
+            row["HasLastGame"] = manifest.HasLastGame;
+
+            row["AllowsFilteringTranspositions"] = manifest.AllowsFilteringTranspositions;
+            row["HasReverseMove"] = manifest.HasReverseMove;
+
+            row["AllowsFilteringByEloRange"] = manifest.AllowsFilteringByEloRange;
+            if (manifest.AllowsFilteringByEloRange)
+            {
+                row["EloFilterGranularity"] = manifest.EloFilterGranularity;
+            }
+
+            row["AllowsFilteringByMonthRange"] = manifest.AllowsFilteringByMonthRange;
+            if (manifest.AllowsFilteringByMonthRange)
+            {
+                row["MonthFilterGranularity"] = manifest.MonthFilterGranularity;
+            }
+
+            row["MaxBytesPerPosition"] = manifest.MaxBytesPerPosition;
+            foreach(var v in manifest.EstimatedAverageBytesPerPosition)
+            {
+                row["EstimatedAverageBytesPerPosition"] = v;
+            }
+
+            TabulatedSupportManifestData.Rows.Add(row);
         }
     }
 }
