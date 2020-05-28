@@ -34,10 +34,19 @@
             // 
             // supportManifestDataGridView
             // 
+            this.supportManifestDataGridView.AllowUserToAddRows = false;
+            this.supportManifestDataGridView.AllowUserToDeleteRows = false;
+            this.supportManifestDataGridView.AllowUserToResizeColumns = false;
+            this.supportManifestDataGridView.AllowUserToResizeRows = false;
             this.supportManifestDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.supportManifestDataGridView.Location = new System.Drawing.Point(12, 12);
+            this.supportManifestDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.supportManifestDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.supportManifestDataGridView.Location = new System.Drawing.Point(0, 0);
             this.supportManifestDataGridView.Name = "supportManifestDataGridView";
-            this.supportManifestDataGridView.Size = new System.Drawing.Size(781, 430);
+            this.supportManifestDataGridView.ReadOnly = true;
+            this.supportManifestDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.supportManifestDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.supportManifestDataGridView.Size = new System.Drawing.Size(805, 454);
             this.supportManifestDataGridView.TabIndex = 0;
             // 
             // DatabaseFormatInfoForm
