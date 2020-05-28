@@ -90,6 +90,12 @@
     <Compile Include="src\app\board\PieceTheme.cs" />
     <Compile Include="src\app\board\ThemeDatabase.cs" />
     <Compile Include="src\app\chessdbcn\ChessDBCNScoreProvider.cs" />
+    <Compile Include="src\app\forms\DatabaseFormatInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\app\forms\DatabaseFormatInfoForm.Designer.cs">
+      <DependentUpon>DatabaseFormatInfoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\app\forms\DatabaseMergeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -233,6 +239,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\app\board\controls\ChessBoard.resx">
       <DependentUpon>ChessBoard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\app\forms\DatabaseFormatInfoForm.resx">
+      <DependentUpon>DatabaseFormatInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\app\forms\DatabaseMergeForm.resx">
       <DependentUpon>DatabaseMergeForm.cs</DependentUpon>

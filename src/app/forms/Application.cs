@@ -1821,5 +1821,13 @@ namespace chess_pos_db_gui
         {
             UpdateGoodness();
         }
+
+        private void databaseFormatsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new DatabaseFormatInfoForm(Database))
+            {
+                form.ShowDialog();
+            }
+        }
     }
 }

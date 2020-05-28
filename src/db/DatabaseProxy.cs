@@ -26,7 +26,6 @@ namespace chess_pos_db_gui
 
         private readonly object Lock = new object();
 
-
         public DatabaseProxy(string address, int port, int numTries = 3, int msBetweenTries = 1000)
         {
             IsOpen = false;
@@ -105,6 +104,15 @@ namespace chess_pos_db_gui
                     SupportManifests.Add(key, new DatabaseSupportManifest(supportManifestsJson[key]));
                 }
             }
+        }
+
+        public Dictionary<string, DatabaseSupportManifest> GetSupportManifests()
+        {
+            if (SupportManifests == null)
+            {
+                FetchSupportManifest();
+            }
+            return SupportManifests;
         }
 
         public void FetchManifest()
