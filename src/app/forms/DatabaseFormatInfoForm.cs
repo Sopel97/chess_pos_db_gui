@@ -66,7 +66,97 @@ namespace chess_pos_db_gui.src.app.forms
             WinFormsControlUtil.MakeDoubleBuffered(supportManifestDataGridView);
             supportManifestDataGridView.DataSource = TabulatedSupportManifestData;
 
+            supportManifestDataGridView.Columns["Name"].Frozen = true;
+            supportManifestDataGridView.Columns["Name"].HeaderText = "Name";
+
+            supportManifestDataGridView.Columns["MaxGames"].HeaderText = "Max games";
+            supportManifestDataGridView.Columns["MaxPositions"].HeaderText = "Max positions";
+            supportManifestDataGridView.Columns["MaxInstancesOfSinglePosition"].HeaderText = "Max instances of\na single position";
+            
+            supportManifestDataGridView.Columns["HasOneWayKey"].HeaderText = "Has one way key";
+            supportManifestDataGridView.Columns["EstimatedMaxCollisions"].HeaderText = "Estimated\nmax collisions";
+            supportManifestDataGridView.Columns["EstimatedMaxPositionsWithNoCollisions"].HeaderText = "Estimated max\npositions with\nno collisions";
+            
+            supportManifestDataGridView.Columns["HasCount"].HeaderText = "Has count";
+
+            supportManifestDataGridView.Columns["HasEloDiff"].HeaderText = "Has elo diff";
+            supportManifestDataGridView.Columns["MaxAbsEloDiff"].HeaderText = "Max abs elo diff";
+            supportManifestDataGridView.Columns["MaxAverageAbsEloDiff"].HeaderText = "Max average\nabs elo diff";
+
+            supportManifestDataGridView.Columns["HasWhiteElo"].HeaderText = "Has white elo";
+            supportManifestDataGridView.Columns["HasBlackElo"].HeaderText = "Has black elo";
+            supportManifestDataGridView.Columns["MinElo"].HeaderText = "Min elo";
+            supportManifestDataGridView.Columns["MaxElo"].HeaderText = "Max elo";
+            supportManifestDataGridView.Columns["HasCountWithElo"].HeaderText = "Has count with elo";
+
+            supportManifestDataGridView.Columns["HasFirstGame"].HeaderText = "Has first game";
+            supportManifestDataGridView.Columns["HasLastGame"].HeaderText = "Has last game";
+
+            supportManifestDataGridView.Columns["AllowsFilteringTranspositions"].HeaderText = "Allows filtering\ntranspositions";
+            supportManifestDataGridView.Columns["HasReverseMove"].HeaderText = "Has reverse move";
+            
+            supportManifestDataGridView.Columns["AllowsFilteringByEloRange"].HeaderText = "Allows filtering\nby elo range";
+            supportManifestDataGridView.Columns["EloFilterGranularity"].HeaderText = "Elo filter granularity";
+
+            supportManifestDataGridView.Columns["AllowsFilteringByMonthRange"].HeaderText = "Allows filtering\nby month range";
+            supportManifestDataGridView.Columns["MonthFilterGranularity"].HeaderText = "Month filter granularity";
+
+            supportManifestDataGridView.Columns["MaxBytesPerPosition"].HeaderText = "Max bytes per position";
+            supportManifestDataGridView.Columns["EstimatedAverageBytesPerPosition"].HeaderText = "Estimated average\nbytes per position";
+
+            supportManifestDataGridView.CellPainting += DataGridView1_CellPainting;
+
+            supportManifestDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            supportManifestDataGridView.ColumnHeadersHeight = 4;
+
             FillData();
+
+            supportManifestDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
+
+            AdjustSizes();
+
+            var padding = new Size(32, 32); // for some reason preffered size is not enough
+            MaximumSize = supportManifestDataGridView.PreferredSize + padding;
+            MinimumSize = new Size(Math.Min(MaximumSize.Width, 640), Math.Min(MaximumSize.Height, 480));
+        }
+
+        private void AdjustSizes()
+        {
+            const int verticalPadding = 10;
+            const int horizontalPadding = 3;
+
+            foreach (DataGridViewColumn column in supportManifestDataGridView.Columns)
+            {
+                Size titleSize = TextRenderer.MeasureText(column.HeaderText.ToString(), column.HeaderCell.Style.Font);
+                if (supportManifestDataGridView.ColumnHeadersHeight < titleSize.Width)
+                {
+                    supportManifestDataGridView.ColumnHeadersHeight = titleSize.Width + verticalPadding;
+                }
+
+                if (column.MinimumWidth < titleSize.Height)
+                {
+                    column.MinimumWidth = titleSize.Height + horizontalPadding;
+                }
+            }
+        }
+
+        private void DataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex == -1 && e.ColumnIndex >= 0)
+            {
+                e.PaintBackground(e.ClipBounds, true);
+                Rectangle rect = e.CellBounds;
+                Size titleSize = TextRenderer.MeasureText(e.Value.ToString(), e.CellStyle.Font);
+
+                e.Graphics.TranslateTransform(0, titleSize.Width);
+                e.Graphics.RotateTransform(-90.0F);
+
+                e.Graphics.DrawString(e.Value.ToString(), e.CellStyle.Font, Brushes.Black, new PointF(rect.Y - (e.CellBounds.Height - titleSize.Width), rect.X));
+
+                e.Graphics.RotateTransform(90.0F);
+                e.Graphics.TranslateTransform(0, -titleSize.Width);
+                e.Handled = true;
+            }
         }
 
         private void FillData()

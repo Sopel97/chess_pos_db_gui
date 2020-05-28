@@ -44,6 +44,7 @@
             this.supportManifestDataGridView.Location = new System.Drawing.Point(0, 0);
             this.supportManifestDataGridView.Name = "supportManifestDataGridView";
             this.supportManifestDataGridView.ReadOnly = true;
+            this.supportManifestDataGridView.RowHeadersVisible = false;
             this.supportManifestDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.supportManifestDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.supportManifestDataGridView.Size = new System.Drawing.Size(805, 454);
@@ -55,6 +56,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(805, 454);
             this.Controls.Add(this.supportManifestDataGridView);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "DatabaseFormatInfoForm";
             this.Text = "Database format info";
             ((System.ComponentModel.ISupportInitialize)(this.supportManifestDataGridView)).EndInit();
