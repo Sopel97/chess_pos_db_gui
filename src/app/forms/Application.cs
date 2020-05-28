@@ -1274,12 +1274,18 @@ namespace chess_pos_db_gui
                 var stats = info.Stats.GetTotal();
 
                 int averageMovesPerGame = ((int)Math.Round((double)stats.NumPositions / stats.NumGames / 2.0));
+                var averageWhiteElo = stats.TotalWhiteElo / stats.NumGamesWithElo;
+                var averageBlackElo = stats.TotalBlackElo / stats.NumGamesWithElo;
 
                 databaseInfoRichTextBox.Text =
                     "Path: " + info.Path + Environment.NewLine
                     + "Games: " + stats.NumGames.ToString("N0")
                     + " | Plies: " + stats.NumPositions.ToString("N0") + Environment.NewLine
-                    + "Avg game length: " + averageMovesPerGame.ToString("N0") + " moves";
+                    + "Avg game length: " + averageMovesPerGame.ToString("N0") + " moves" + Environment.NewLine
+                    + "Min elo: " + stats.MinElo.ToString()
+                    + " | Max elo: " + stats.MaxElo.ToString() + Environment.NewLine
+                    + "Average white elo: " + averageWhiteElo.ToString()
+                    + " | Average black elo: " + averageBlackElo.ToString();
             }
             else
             {

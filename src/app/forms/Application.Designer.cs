@@ -59,8 +59,9 @@
             this.epdDumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.themesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.themesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.databaseFormatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analysisAndBoardSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.firstGameInfoGroupBox = new System.Windows.Forms.GroupBox();
             this.fenRichTextBox = new System.Windows.Forms.RichTextBox();
             this.firstGameInfoRichTextBox = new System.Windows.Forms.RichTextBox();
@@ -86,8 +87,7 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.databaseFormatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -141,7 +141,7 @@
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(606, 270);
+            this.entriesGridView.Size = new System.Drawing.Size(605, 270);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -268,17 +268,16 @@
             this.splitContainer1.Panel2.Controls.Add(this.analysisAndBoardSplitContainer);
             this.splitContainer1.Panel2.Controls.Add(this.firstGameInfoGroupBox);
             this.splitContainer1.Size = new System.Drawing.Size(424, 558);
-            this.splitContainer1.SplitterDistance = 82;
+            this.splitContainer1.SplitterDistance = 110;
             this.splitContainer1.TabIndex = 1;
             // 
             // databaseInfoGroupBox
             // 
-            this.databaseInfoGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.databaseInfoGroupBox.Controls.Add(this.databaseInfoRichTextBox);
-            this.databaseInfoGroupBox.Location = new System.Drawing.Point(0, 20);
+            this.databaseInfoGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.databaseInfoGroupBox.Location = new System.Drawing.Point(0, 24);
             this.databaseInfoGroupBox.Name = "databaseInfoGroupBox";
-            this.databaseInfoGroupBox.Size = new System.Drawing.Size(424, 59);
+            this.databaseInfoGroupBox.Size = new System.Drawing.Size(424, 86);
             this.databaseInfoGroupBox.TabIndex = 0;
             this.databaseInfoGroupBox.TabStop = false;
             // 
@@ -290,7 +289,7 @@
             this.databaseInfoRichTextBox.Location = new System.Drawing.Point(3, 16);
             this.databaseInfoRichTextBox.Name = "databaseInfoRichTextBox";
             this.databaseInfoRichTextBox.ReadOnly = true;
-            this.databaseInfoRichTextBox.Size = new System.Drawing.Size(418, 40);
+            this.databaseInfoRichTextBox.Size = new System.Drawing.Size(418, 67);
             this.databaseInfoRichTextBox.TabIndex = 0;
             this.databaseInfoRichTextBox.Text = "";
             this.databaseInfoRichTextBox.WordWrap = false;
@@ -328,45 +327,45 @@
             // createToolStripMenuItem
             // 
             this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-            this.createToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.createToolStripMenuItem.Text = "Create";
             this.createToolStripMenuItem.Click += new System.EventHandler(this.CreateToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(113, 6);
             // 
             // appendToolStripMenuItem
             // 
             this.appendToolStripMenuItem.Name = "appendToolStripMenuItem";
-            this.appendToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.appendToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.appendToolStripMenuItem.Text = "Append";
             this.appendToolStripMenuItem.Click += new System.EventHandler(this.appendToolStripMenuItem_Click);
             // 
             // mergeToolStripMenuItem
             // 
             this.mergeToolStripMenuItem.Name = "mergeToolStripMenuItem";
-            this.mergeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mergeToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.mergeToolStripMenuItem.Text = "Merge";
             this.mergeToolStripMenuItem.Click += new System.EventHandler(this.MergeToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(113, 6);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
             // 
@@ -382,14 +381,14 @@
             // setupToolStripMenuItem
             // 
             this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
-            this.setupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.setupToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.setupToolStripMenuItem.Text = "Analysis";
             this.setupToolStripMenuItem.Click += new System.EventHandler(this.SetupToolStripMenuItem_Click);
             // 
             // profilesToolStripMenuItem
             // 
             this.profilesToolStripMenuItem.Name = "profilesToolStripMenuItem";
-            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.profilesToolStripMenuItem.Text = "Profiles";
             this.profilesToolStripMenuItem.Click += new System.EventHandler(this.ProfilesToolStripMenuItem_Click);
             // 
@@ -404,7 +403,7 @@
             // epdDumpToolStripMenuItem
             // 
             this.epdDumpToolStripMenuItem.Name = "epdDumpToolStripMenuItem";
-            this.epdDumpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.epdDumpToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.epdDumpToolStripMenuItem.Text = "Epd dump";
             this.epdDumpToolStripMenuItem.Click += new System.EventHandler(this.EpdDumpToolStripMenuItem_Click);
             // 
@@ -419,9 +418,24 @@
             // themesToolStripMenuItem1
             // 
             this.themesToolStripMenuItem1.Name = "themesToolStripMenuItem1";
-            this.themesToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.themesToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
             this.themesToolStripMenuItem1.Text = "Themes";
             this.themesToolStripMenuItem1.Click += new System.EventHandler(this.ThemesToolStripMenuItem1_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.databaseFormatsToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // databaseFormatsToolStripMenuItem
+            // 
+            this.databaseFormatsToolStripMenuItem.Name = "databaseFormatsToolStripMenuItem";
+            this.databaseFormatsToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.databaseFormatsToolStripMenuItem.Text = "Database formats";
+            this.databaseFormatsToolStripMenuItem.Click += new System.EventHandler(this.databaseFormatsToolStripMenuItem_Click);
             // 
             // analysisAndBoardSplitContainer
             // 
@@ -437,28 +451,16 @@
             // analysisAndBoardSplitContainer.Panel2
             // 
             this.analysisAndBoardSplitContainer.Panel2.Controls.Add(this.chessBoard);
-            this.analysisAndBoardSplitContainer.Size = new System.Drawing.Size(424, 402);
-            this.analysisAndBoardSplitContainer.SplitterDistance = 142;
+            this.analysisAndBoardSplitContainer.Size = new System.Drawing.Size(424, 374);
+            this.analysisAndBoardSplitContainer.SplitterDistance = 132;
             this.analysisAndBoardSplitContainer.TabIndex = 3;
-            // 
-            // chessBoard
-            // 
-            this.chessBoard.BoardImages = null;
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.PieceImages = null;
-            this.chessBoard.Size = new System.Drawing.Size(424, 256);
-            this.chessBoard.TabIndex = 0;
             // 
             // firstGameInfoGroupBox
             // 
             this.firstGameInfoGroupBox.Controls.Add(this.fenRichTextBox);
             this.firstGameInfoGroupBox.Controls.Add(this.firstGameInfoRichTextBox);
             this.firstGameInfoGroupBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.firstGameInfoGroupBox.Location = new System.Drawing.Point(0, 408);
+            this.firstGameInfoGroupBox.Location = new System.Drawing.Point(0, 380);
             this.firstGameInfoGroupBox.Name = "firstGameInfoGroupBox";
             this.firstGameInfoGroupBox.Size = new System.Drawing.Size(424, 64);
             this.firstGameInfoGroupBox.TabIndex = 2;
@@ -512,7 +514,7 @@
             // 
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsHelpButton);
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsGridView);
-            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(606, 381);
+            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(605, 381);
             this.entriesRetractionsSplitPanel.SplitterDistance = 270;
             this.entriesRetractionsSplitPanel.TabIndex = 9;
             // 
@@ -565,7 +567,7 @@
             this.retractionsGridView.RowHeadersWidth = 20;
             this.retractionsGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.retractionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.retractionsGridView.Size = new System.Drawing.Size(606, 107);
+            this.retractionsGridView.Size = new System.Drawing.Size(605, 107);
             this.retractionsGridView.TabIndex = 8;
             this.retractionsGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.retractionsGridView_CellContentDoubleClick);
             this.retractionsGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RetractionsGridView_CellFormatting);
@@ -769,7 +771,7 @@
             this.totalEntriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.totalEntriesGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(606, 66);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(605, 66);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -833,20 +835,17 @@
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
             // 
-            // helpToolStripMenuItem
+            // chessBoard
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.databaseFormatsToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            // 
-            // databaseFormatsToolStripMenuItem
-            // 
-            this.databaseFormatsToolStripMenuItem.Name = "databaseFormatsToolStripMenuItem";
-            this.databaseFormatsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.databaseFormatsToolStripMenuItem.Text = "Database formats";
-            this.databaseFormatsToolStripMenuItem.Click += new System.EventHandler(this.databaseFormatsToolStripMenuItem_Click);
+            this.chessBoard.BoardImages = null;
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.PieceImages = null;
+            this.chessBoard.Size = new System.Drawing.Size(424, 238);
+            this.chessBoard.TabIndex = 0;
             // 
             // Application
             // 
