@@ -1,4 +1,5 @@
 ﻿using chess_pos_db_gui.src.app.forms;
+using chess_pos_db_gui.src.util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -108,7 +109,51 @@ namespace chess_pos_db_gui
 
         public string GetDefaultDatabaseFormat()
         {
-            return "db_delta";
+            return GetRichestDatabaseFormat();
+        }
+
+        private int GetDatabaseFormatRichness(DatabaseSupportManifest manifest)
+        {
+            int r = 0;
+
+            if (manifest.HasWhiteElo || manifest.HasBlackElo)
+                r += 1;
+            if (manifest.HasCount)
+                r += 1;
+            if (manifest.HasEloDiff)
+                r += 1;
+            if (manifest.HasReverseMove)
+                r += 1;
+            if (manifest.HasFirstGame)
+                r += 1;
+            if (manifest.HasLastGame)
+                r += 1;
+            if (manifest.AllowsFilteringTranspositions)
+                r += 1;
+            if (manifest.AllowsFilteringByEloRange)
+                r += 1;
+            if (manifest.AllowsFilteringByMonthRange)
+                r += 1;
+
+            return r;
+        }
+
+        public string GetRichestDatabaseFormat()
+        {
+            int bestR = int.MaxValue;
+            string bestName = "";
+
+            foreach ((string name, var manifest) in GetSupportManifests())
+            {
+                int r = GetDatabaseFormatRichness(manifest);
+                if (bestName == "" || r > bestR)
+                {
+                    bestName = name;
+                    bestR = r;
+                }
+            }
+
+            return bestName;
         }
 
         public Dictionary<string, DatabaseSupportManifest> GetSupportManifests()
