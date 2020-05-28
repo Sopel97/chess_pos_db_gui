@@ -643,6 +643,41 @@ namespace chess_pos_db_gui
         public IList<string> SupportedExtensions { get; private set; }
         public MergeMode MergeMode { get; private set; }
 
+        public ulong MaxGames { get; private set; }
+        public ulong MaxPositions { get; private set; }
+        public ulong MaxInstancesOfSinglePosition { get; private set; }
+
+        public bool HasOneWayKey { get; private set; }
+        public ulong EstimatedMaxCollisions { get; private set; }
+        public ulong EstimatedMaxPositionsWithNoCollisions { get; private set; }
+
+        public bool HasCount { get; private set; }
+
+        public bool HasEloDiff { get; private set; }
+        public ulong MaxAbsEloDiff { get; private set; }
+        public ulong MaxAverageAbsEloDiff { get; private set; }
+
+        public bool HasWhiteElo { get; private set; }
+        public bool HasBlackElo { get; private set; }
+        public ulong MinElo { get; private set; }
+        public ulong MaxElo { get; private set; }
+        public bool HasCountWithElo { get; private set; }
+
+        public bool HasFirstGame { get; private set; }
+        public bool HasLastGame { get; private set; }
+
+        public bool AllowsFilteringTranspositions { get; private set; }
+        public bool HasReverseMove { get; private set; }
+
+        public bool AllowsFilteringByEloRange { get; private set; }
+        public ulong EloFilterGranularity { get; private set; }
+
+        public bool AllowsFilteringByMonthRange { get; private set; }
+        public ulong MonthFilterGranularity { get; private set; }
+
+        public ulong MaxBytesPerPosition { get; private set; }
+        public Optional<ulong> EstimatedAverageBytesPerPosition{ get; private set; }
+
         public DatabaseSupportManifest(JsonValue json)
         {
             SupportedExtensions = new List<string>();
@@ -665,6 +700,58 @@ namespace chess_pos_db_gui
                 case "any":
                     MergeMode = MergeMode.Any;
                     break;
+            }
+
+            MaxGames = json["max_games"];
+            MaxPositions = json["max_positions"];
+            MaxInstancesOfSinglePosition = json["max_instances_of_single_position"];
+
+            HasOneWayKey = json["has_one_way_key"];
+            if (HasOneWayKey)
+            {
+                EstimatedMaxCollisions = json["estimated_max_collisions"];
+                EstimatedMaxPositionsWithNoCollisions = json["estimated_max_positions_with_no_collisions"];
+            }
+
+            HasCount = json["has_count"];
+
+            HasEloDiff = json["has_elo_diff"];
+            if (HasEloDiff)
+            {
+                MaxAbsEloDiff = json["max_abs_elo_diff"];
+                MaxAverageAbsEloDiff = json["max_average_abs_elo_diff"];
+            }
+
+            HasWhiteElo = json["has_white_elo"];
+            HasBlackElo = json["has_black_elo"];
+            if (HasWhiteElo || HasBlackElo)
+            {
+                MinElo = json["min_elo"];
+                MaxElo = json["max_elo"];
+                HasCountWithElo = json["has_count_with_elo"];
+            }
+
+            HasFirstGame = json["has_first_game"];
+            HasLastGame = json["has_last_game"];
+
+            AllowsFilteringTranspositions = json["allows_filtering_transpositions"];
+            HasReverseMove = json["has_reverse_move"];
+
+            AllowsFilteringByEloRange = json["allows_filtering_by_elo_range"];
+            EloFilterGranularity = json["elo_filter_granularity"];
+
+            AllowsFilteringByMonthRange = json["allows_filtering_by_month_range"];
+            MonthFilterGranularity = json["month_filter_granularity"];
+
+            MaxBytesPerPosition = json["max_bytes_per_position"];
+
+            if (json.ContainsKey("estimated_average_bytes_per_position"))
+            {
+                EstimatedAverageBytesPerPosition = Optional<ulong>.Create(json["estimated_average_bytes_per_position"]);
+            }
+            else
+            {
+                EstimatedAverageBytesPerPosition = Optional<ulong>.CreateEmpty();
             }
         }
     }
