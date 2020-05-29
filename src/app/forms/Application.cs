@@ -1823,7 +1823,9 @@ namespace chess_pos_db_gui
                 form.ShowDialog();
             }
 
+            QueryExecutor.ResetQueueAndCache();
             UpdateDatabaseInfo();
+            UpdateData();
         }
 
         private void drawScoreNumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -1889,7 +1891,11 @@ namespace chess_pos_db_gui
 
         private void queryEvalCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            ToggleColumnVisibilityBasedOnSupportedFeatures(Database.GetSupportManifest(), queryEvalCheckBox.Checked);
+            if (Database != null && Database.IsOpen)
+            {
+                ToggleColumnVisibilityBasedOnSupportedFeatures(Database.GetSupportManifest(), queryEvalCheckBox.Checked);
+                UpdateData();
+            }
         }
     }
 }

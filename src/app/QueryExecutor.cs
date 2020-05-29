@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace chess_pos_db_gui.src.app
 {
+    // TODO: Separate cache for evals
     public class QueryExecutor
     {
         private static readonly int queryCacheSize = 128;

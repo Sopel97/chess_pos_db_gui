@@ -7,13 +7,7 @@
         public string San { get; private set; }
         public bool QueryEval { get; private set; }
 
-        public string Signature
-        {
-            get
-            {
-                return QueryFen + San;
-            }
-        }
+        public string Signature { get; private set; }
 
         public QueryQueueEntry(ChessBoard chessBoard, bool queryEval)
         {
@@ -27,6 +21,8 @@
             CurrentFen = chessBoard.GetFen();
 
             QueryEval = queryEval;
+
+            Signature = QueryFen + "$" + San + "$" + QueryEval.ToString();
         }
 
         public override int GetHashCode()
