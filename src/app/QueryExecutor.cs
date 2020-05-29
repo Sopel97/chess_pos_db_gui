@@ -10,7 +10,7 @@ namespace chess_pos_db_gui.src.app
     // TODO: Separate cache for evals
     public class QueryExecutor
     {
-        private static readonly int queryCacheSize = 128;
+        private static readonly int queryCacheSize = 1024;
 
         private DatabaseProxy Database { get; set; }
 
