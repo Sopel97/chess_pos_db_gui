@@ -62,6 +62,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.databaseFormatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analysisAndBoardSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.firstGameInfoGroupBox = new System.Windows.Forms.GroupBox();
             this.fenRichTextBox = new System.Windows.Forms.RichTextBox();
             this.firstGameInfoRichTextBox = new System.Windows.Forms.RichTextBox();
@@ -87,7 +88,6 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -141,7 +141,7 @@
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(605, 270);
+            this.entriesGridView.Size = new System.Drawing.Size(604, 270);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -455,6 +455,18 @@
             this.analysisAndBoardSplitContainer.SplitterDistance = 132;
             this.analysisAndBoardSplitContainer.TabIndex = 3;
             // 
+            // chessBoard
+            // 
+            this.chessBoard.BoardImages = null;
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.PieceImages = null;
+            this.chessBoard.Size = new System.Drawing.Size(424, 238);
+            this.chessBoard.TabIndex = 0;
+            // 
             // firstGameInfoGroupBox
             // 
             this.firstGameInfoGroupBox.Controls.Add(this.fenRichTextBox);
@@ -514,7 +526,7 @@
             // 
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsHelpButton);
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsGridView);
-            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(605, 381);
+            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(604, 381);
             this.entriesRetractionsSplitPanel.SplitterDistance = 270;
             this.entriesRetractionsSplitPanel.TabIndex = 9;
             // 
@@ -567,7 +579,7 @@
             this.retractionsGridView.RowHeadersWidth = 20;
             this.retractionsGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.retractionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.retractionsGridView.Size = new System.Drawing.Size(605, 107);
+            this.retractionsGridView.Size = new System.Drawing.Size(604, 107);
             this.retractionsGridView.TabIndex = 8;
             this.retractionsGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.retractionsGridView_CellContentDoubleClick);
             this.retractionsGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RetractionsGridView_CellFormatting);
@@ -771,7 +783,7 @@
             this.totalEntriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.totalEntriesGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(605, 66);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(604, 66);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -801,6 +813,7 @@
             this.tooltip.SetToolTip(this.queryEvalCheckBox, "When enabled it allows querying evaluation data from chessdb.cn. This can reduce " +
         "responsivness due to network latency.");
             this.queryEvalCheckBox.UseVisualStyleBackColor = true;
+            this.queryEvalCheckBox.CheckedChanged += new System.EventHandler(this.queryEvalCheckBox_CheckedChanged);
             // 
             // queryButton
             // 
@@ -834,18 +847,6 @@
             this.tooltip.AutoPopDelay = 10000;
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
-            // 
-            // chessBoard
-            // 
-            this.chessBoard.BoardImages = null;
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.PieceImages = null;
-            this.chessBoard.Size = new System.Drawing.Size(424, 238);
-            this.chessBoard.TabIndex = 0;
             // 
             // Application
             // 

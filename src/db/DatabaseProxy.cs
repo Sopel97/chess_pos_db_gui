@@ -165,6 +165,21 @@ namespace chess_pos_db_gui
             return SupportManifests;
         }
 
+        public DatabaseSupportManifest GetSupportManifest()
+        {
+            if (!IsOpen)
+            {
+                return null;
+            }
+
+            if (SupportManifests == null)
+            {
+                FetchSupportManifest();
+            }
+
+            return SupportManifests[GetDatabaseFormat()];
+        }
+
         public void FetchManifest()
         {
             lock (Lock)

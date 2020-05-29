@@ -1241,6 +1241,7 @@ namespace chess_pos_db_gui
             Database.Open(path);
             QueryExecutor.ResetQueueAndCache();
             UpdateDatabaseInfo();
+            ToggleColumnVisibilityBasedOnSupportedFeatures(Database.GetSupportManifest(), queryEvalCheckBox.Checked);
 
             var files = Database.GetMergableFiles();
             var total = files.Values.Sum(l => l.Count);
@@ -1836,6 +1837,59 @@ namespace chess_pos_db_gui
             {
                 form.ShowDialog();
             }
+        }
+
+        private void SetColumnVisibility(string name, bool visible)
+        {
+            if (totalEntriesGridView.Columns.Contains(name))
+            {
+                totalEntriesGridView.Columns[name].Visible = visible;
+            }
+
+            if (entriesGridView.Columns.Contains(name))
+            {
+                entriesGridView.Columns[name].Visible = visible;
+            }
+
+            if (retractionsGridView.Columns.Contains(name))
+            {
+                retractionsGridView.Columns[name].Visible = visible;
+            }
+        }
+
+        private void ToggleColumnVisibilityBasedOnSupportedFeatures(DatabaseSupportManifest support, bool eval)
+        {
+            if (support == null)
+            {
+                return;
+            }
+
+            SetColumnVisibility("Count", support.HasCount);
+            SetColumnVisibility("WinCount", support.HasCount);
+            SetColumnVisibility("DrawCount", support.HasCount);
+            SetColumnVisibility("LossCount", support.HasCount);
+            SetColumnVisibility("Perf", support.HasCount);
+            SetColumnVisibility("DrawPct", support.HasCount);
+            SetColumnVisibility("HumanPct", support.HasCount);
+
+            SetColumnVisibility("AverageEloDiff", support.HasEloDiff);
+            SetColumnVisibility("AdjustedPerf", support.HasEloDiff);
+
+            SetColumnVisibility("Eval", eval);
+            SetColumnVisibility("EvalPct", eval);
+
+            SetColumnVisibility("White", support.HasFirstGame);
+            SetColumnVisibility("Black", support.HasFirstGame);
+            SetColumnVisibility("Result", support.HasFirstGame);
+            SetColumnVisibility("ECO", support.HasFirstGame);
+            SetColumnVisibility("Date", support.HasFirstGame);
+            SetColumnVisibility("PlyCount", support.HasFirstGame);
+            SetColumnVisibility("Event", support.HasFirstGame);
+        }
+
+        private void queryEvalCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleColumnVisibilityBasedOnSupportedFeatures(Database.GetSupportManifest(), queryEvalCheckBox.Checked);
         }
     }
 }
