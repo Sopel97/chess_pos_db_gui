@@ -141,7 +141,7 @@ namespace chess_pos_db_gui.src.chess
             ChessGame before, 
             DetailedMove move)
         {
-            var ep = before.GetGameCreationData().EnPassant;
+            var ep = before.GetFen().Split(' ')[3];
             string eran = "";
 
             var pieceChar = Char.ToUpper(move.Piece.GetFenCharacter());
@@ -195,9 +195,9 @@ namespace chess_pos_db_gui.src.chess
 
             eran += ' ';
 
-            if (ep != null)
+            if (ep != "-")
             {
-                eran += ep.ToString().ToLower();
+                eran += ep;
             }
             else
             {

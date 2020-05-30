@@ -1802,9 +1802,16 @@ namespace chess_pos_db_gui
                 var fen = chessBoard.GetFen();
                 var game = new ChessGame(fen);
                 var prevGame = reverseMove.AppliedTo(game);
-                var prevFen = prevGame.GetFen();
+                string prevFen = prevGame.GetFen();
                 prevGame.MakeMove(reverseMove.Move, true);
-                chessBoard.SetGame(prevFen, prevGame);
+                // YOU WOULD EXPECT THAT prevGame NOW HAS ONLY ONE MOVE MADE
+                // BUT YOU WOULD BE FUCKING WRONG BECAUSE
+                // THIS FUCKING LIBRARY ADDS A PAWN MOVE BEFORE EN PASSANT
+                // SO THEN prevFen DOESN'T MATCH THE ACTUAL FIRST POSITION IN prevGame
+                // (DID I MENTION THAT THE LIBRARY DOESN'T PROVIDE A WAY TO UNDO MOVES
+                //  NOR GET THE START FEN IN A GAME?)
+                // SO WE PASS AN OFFSET TO INDICATE WHERE TO START READING MOVES
+                chessBoard.SetGame(prevFen, prevGame, prevGame.Moves.Count - 1);
             }
         }
 

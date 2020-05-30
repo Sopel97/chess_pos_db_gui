@@ -48,12 +48,23 @@ namespace chess_pos_db_gui.src.chess
                     movedPiece = game.GetPieceAt(Move.NewPosition);
                 }
 
-                creationData.Board[8 - Move.NewPosition.Rank][(int)Move.NewPosition.File] = CapturedPiece;
-                creationData.Board[8 - Move.OriginalPosition.Rank][(int)Move.OriginalPosition.File] = movedPiece;
+                if (movedPiece is Pawn && OldEpSquare == Move.NewPosition)
+                {
+                    int offset = prevPlayer == Player.White ? 1 : -1;
+                    creationData.Board[8 - Move.NewPosition.Rank + offset][(int)Move.NewPosition.File] = CapturedPiece;
+                    creationData.Board[8 - Move.NewPosition.Rank][(int)Move.NewPosition.File] = null;
+                    creationData.Board[8 - Move.OriginalPosition.Rank][(int)Move.OriginalPosition.File] = movedPiece;
+                }
+                else
+                {
+                    creationData.Board[8 - Move.NewPosition.Rank][(int)Move.NewPosition.File] = CapturedPiece;
+                    creationData.Board[8 - Move.OriginalPosition.Rank][(int)Move.OriginalPosition.File] = movedPiece;
+                }
             }
 
             creationData.Moves = new DetailedMove[0];
 
+            // IT ADDS A PAWN MOVE IF EnPassant IS SET... WTF IS THIS LIBRARY...
             return new ChessGame(creationData);
         }
 

@@ -105,11 +105,15 @@ namespace chess_pos_db_gui
             SetGame(FenProvider.StartPos, game);
         }
 
-        public void SetGame(string startpos, ChessGame game)
+        public void SetGame(string startpos, ChessGame game, int offset = 0)
         {
             SetPosition(startpos);
+            int i = 0;
             foreach (var move in game.Moves)
             {
+                ++i;
+                if (i <= offset)
+                    continue;
                 DoMove(move.SAN, true);
             }
             SetSelection(FirstPly);
