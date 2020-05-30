@@ -45,7 +45,8 @@ namespace chess_pos_db_gui
 
             Process = new Process();
             Process.StartInfo.FileName = processName + ".exe";
-            Process.StartInfo.Arguments = "tcp " + port;
+            Process.StartInfo.Arguments = string.Format("tcp --port {0}", port);
+            System.Diagnostics.Debug.WriteLine(Process.StartInfo.Arguments);
 
             // TODO: Setting this to true makes the program hang after a few queries
             //       Find a fix as it will be needed for reporting progress to the user.
