@@ -141,6 +141,7 @@ namespace chess_pos_db_gui.src.chess
             ChessGame before, 
             DetailedMove move)
         {
+            var ep = before.GetGameCreationData().EnPassant;
             string eran = "";
 
             var pieceChar = Char.ToUpper(move.Piece.GetFenCharacter());
@@ -155,6 +156,9 @@ namespace chess_pos_db_gui.src.chess
             {
                 eran += 'x';
                 var capturedPiece = before.GetPieceAt(move.NewPosition);
+                if (capturedPiece == null)
+                    capturedPiece = new Pawn();
+
                 var capturedPieceChar = Char.ToUpper(capturedPiece.GetFenCharacter());
                 if (capturedPieceChar != 'P')
                 {
@@ -191,7 +195,6 @@ namespace chess_pos_db_gui.src.chess
 
             eran += ' ';
 
-            var ep = before.GetGameCreationData().EnPassant;
             if (ep != null)
             {
                 eran += ep.ToString().ToLower();
