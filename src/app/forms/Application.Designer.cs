@@ -78,7 +78,6 @@
             this.gamesWeightCheckbox = new System.Windows.Forms.CheckBox();
             this.evaluationWeightCheckbox = new System.Windows.Forms.CheckBox();
             this.goodnessNormalizeCheckbox = new System.Windows.Forms.CheckBox();
-            this.goodnessUseCountCheckbox = new System.Windows.Forms.CheckBox();
             this.evalWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.displayGroupBox = new System.Windows.Forms.GroupBox();
             this.hideNeverPlayedCheckBox = new System.Windows.Forms.CheckBox();
@@ -141,7 +140,7 @@
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(604, 270);
+            this.entriesGridView.Size = new System.Drawing.Size(603, 270);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -526,7 +525,7 @@
             // 
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsHelpButton);
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsGridView);
-            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(604, 381);
+            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(603, 381);
             this.entriesRetractionsSplitPanel.SplitterDistance = 270;
             this.entriesRetractionsSplitPanel.TabIndex = 9;
             // 
@@ -579,7 +578,7 @@
             this.retractionsGridView.RowHeadersWidth = 20;
             this.retractionsGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.retractionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.retractionsGridView.Size = new System.Drawing.Size(604, 107);
+            this.retractionsGridView.Size = new System.Drawing.Size(603, 107);
             this.retractionsGridView.TabIndex = 8;
             this.retractionsGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.retractionsGridView_CellContentDoubleClick);
             this.retractionsGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RetractionsGridView_CellFormatting);
@@ -606,7 +605,6 @@
             this.goodnessGroupBox.Controls.Add(this.gamesWeightCheckbox);
             this.goodnessGroupBox.Controls.Add(this.evaluationWeightCheckbox);
             this.goodnessGroupBox.Controls.Add(this.goodnessNormalizeCheckbox);
-            this.goodnessGroupBox.Controls.Add(this.goodnessUseCountCheckbox);
             this.goodnessGroupBox.Controls.Add(this.evalWeightNumericUpDown);
             this.goodnessGroupBox.Location = new System.Drawing.Point(322, 3);
             this.goodnessGroupBox.Name = "goodnessGroupBox";
@@ -695,7 +693,7 @@
             this.goodnessNormalizeCheckbox.AutoSize = true;
             this.goodnessNormalizeCheckbox.Checked = true;
             this.goodnessNormalizeCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.goodnessNormalizeCheckbox.Location = new System.Drawing.Point(187, 45);
+            this.goodnessNormalizeCheckbox.Location = new System.Drawing.Point(187, 19);
             this.goodnessNormalizeCheckbox.Name = "goodnessNormalizeCheckbox";
             this.goodnessNormalizeCheckbox.Size = new System.Drawing.Size(72, 17);
             this.goodnessNormalizeCheckbox.TabIndex = 6;
@@ -703,22 +701,6 @@
             this.tooltip.SetToolTip(this.goodnessNormalizeCheckbox, "When enabled the quality index will be normalized to be in range 0..100");
             this.goodnessNormalizeCheckbox.UseVisualStyleBackColor = true;
             this.goodnessNormalizeCheckbox.CheckedChanged += new System.EventHandler(this.GoodnessNormalizeCheckbox_CheckedChanged);
-            // 
-            // goodnessUseCountCheckbox
-            // 
-            this.goodnessUseCountCheckbox.AutoSize = true;
-            this.goodnessUseCountCheckbox.Checked = true;
-            this.goodnessUseCountCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.goodnessUseCountCheckbox.Location = new System.Drawing.Point(187, 21);
-            this.goodnessUseCountCheckbox.Name = "goodnessUseCountCheckbox";
-            this.goodnessUseCountCheckbox.Size = new System.Drawing.Size(75, 17);
-            this.goodnessUseCountCheckbox.TabIndex = 2;
-            this.goodnessUseCountCheckbox.Text = "Use count";
-            this.tooltip.SetToolTip(this.goodnessUseCountCheckbox, "When enabled the number of position instances will affect the quality index. The " +
-        "more positions the more confidence - more confidence means better quality index." +
-        "");
-            this.goodnessUseCountCheckbox.UseVisualStyleBackColor = true;
-            this.goodnessUseCountCheckbox.CheckedChanged += new System.EventHandler(this.GoodnessUseCountCheckbox_CheckedChanged);
             // 
             // evalWeightNumericUpDown
             // 
@@ -783,7 +765,7 @@
             this.totalEntriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.totalEntriesGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(604, 66);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(603, 66);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -932,7 +914,6 @@
         private System.Windows.Forms.GroupBox goodnessGroupBox;
         private System.Windows.Forms.NumericUpDown evalWeightNumericUpDown;
         private System.Windows.Forms.CheckBox goodnessNormalizeCheckbox;
-        private System.Windows.Forms.CheckBox goodnessUseCountCheckbox;
         private System.Windows.Forms.CheckBox evaluationWeightCheckbox;
         private System.Windows.Forms.NumericUpDown gamesWeightNumericUpDown;
         private System.Windows.Forms.CheckBox gamesWeightCheckbox;

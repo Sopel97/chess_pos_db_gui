@@ -14,58 +14,12 @@ namespace chess_pos_db_gui.src.app
         {
             public bool UseGames { get; set; }
             public bool UseEval { get; set; }
-            public bool UseCount { get; set; }
 
             public double EvalWeight { get; set; }
             public double GamesWeight { get; set; }
             public double DrawScore { get; internal set; }
         }
 
-        /*
-         * This is the general idea, it is slightly modified at
-         * corner cases and extended for combined games.
-         * 
-         * W - number of wins
-         * D - number of draws
-         * L - number of losses
-         *
-         * Ev_Perf - performance estimate based on eval (between 0 and 1)
-         * H_Perf - human performance (between 0 and 1)
-         * E_Perf - engine performance (between 0 and 1)
-         * 
-         * expected_perf - performance expected from elo diff
-         *
-         * H_weight - weight for human games
-         * E_weight - weight for engine games
-         * Eval_weight - weight for eval
-         * Count_confidence - whether elo_error is to be used (boolean)
-         *
-         * elo error formula: http://talkchess.com/forum3/viewtopic.php?p=645304#p645304
-         *
-         * N = W+D+L
-         * draw_ratio = D/N
-         * s(p) = sqrt([p*(1 - p) - draw_ratio/4]/(N - 1))
-         * z = 2,58 (for 99% confidence) (would be 2 for 95% confidence)
-         *
-         * H_elo_error = 1600 * z * s(H_Perf) / ln(10)
-         * E_elo_error = 1600 * z * s(E_Perf) / ln(10)
-         *
-         * if eval not provided:
-         *     Eval_weight = 0
-         *
-         * if Count_confidence:
-         *     H_Perf = Perf(Elo(H_Perf) - H_elo_error)
-         *     E_Perf = Perf(Elo(E_Perf) - E_elo_error)
-         *     
-         * H_APerf = AdjustPerf(H_Perf, expected_perf)
-         * E_APerf = AdjustPerf(E_Perf, expected_perf)
-         *
-         * weight_sum = H_weight + E_weight + Eval_weight
-         * a = pow(H_APerf, H_weight)
-         * b = pow(E_APerf, A_weight)
-         * c = pow(Ev_Perf, Eval_weight)
-         * goodness = pow(a*b*c, 1.0/weight_sum)
-         */
         public static double CalculateGoodness(
             Player sideToMove,
             EnumArray<GameLevel, AggregatedEntry> aggregatedEntries,
@@ -80,7 +34,6 @@ namespace chess_pos_db_gui.src.app
             ulong penaltyFromCountThreshold = 10;
 
             bool useEval = options.UseEval;
-            bool useCount = options.UseCount;
 
             AggregatedEntry totalEntry = new AggregatedEntry();
             foreach(KeyValuePair<GameLevel, AggregatedEntry> e in aggregatedEntries)
@@ -116,10 +69,7 @@ namespace chess_pos_db_gui.src.app
                         totalPerf = 1.0 - totalPerf;
                         expectedTotalPerf = 1.0 - expectedTotalPerf;
                     }
-                    if (useCount)
-                    {
-                        totalPerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(totalPerf) - totalEloError);
-                    }
+                    totalPerf = EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(totalPerf) - totalEloError);
                     return EloCalculator.GetAdjustedPerformance(totalPerf, expectedTotalPerf);
                 }
                 else
@@ -147,10 +97,7 @@ namespace chess_pos_db_gui.src.app
                 return Math.Max(minPerf, perf / penalty);
             }
 
-            if (useCount)
-            {
-                adjustedGamesPerf = penalizePerf(adjustedGamesPerf, totalEntry.Count);
-            }
+            adjustedGamesPerf = penalizePerf(adjustedGamesPerf, totalEntry.Count);
 
             double gamesGoodness = Math.Pow(adjustedGamesPerf, gamesWeight);
 

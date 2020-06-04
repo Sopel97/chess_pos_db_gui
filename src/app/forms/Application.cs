@@ -517,7 +517,6 @@ namespace chess_pos_db_gui
             {
                 UseGames = levelHumanCheckBox.Checked || levelServerCheckBox.Checked || levelEngineCheckBox.Checked,
                 UseEval = evaluationWeightCheckbox.Checked,
-                UseCount = goodnessUseCountCheckbox.Checked,
 
                 DrawScore = (double)drawScoreNumericUpDown.Value,
 
@@ -1569,7 +1568,6 @@ namespace chess_pos_db_gui
             typeTranspositionsCheckBox.Checked = settings.TypeTranspositionsCheckBoxChecked;
             gamesWeightCheckbox.Checked = settings.GamesWeightCheckBoxChecked;
             evaluationWeightCheckbox.Checked = settings.EvaluationWeightCheckBoxChecked;
-            goodnessUseCountCheckbox.Checked = settings.GoodnessUseCountCheckBoxChecked;
             goodnessNormalizeCheckbox.Checked = settings.GoodnessNormalizeCheckBoxChecked;
             gamesWeightNumericUpDown.Value = settings.GamesWeightNumericUpDownValue;
             evalWeightNumericUpDown.Value = settings.EvalWeightNumericUpDownValue;
@@ -1615,7 +1613,6 @@ namespace chess_pos_db_gui
                 TypeTranspositionsCheckBoxChecked = typeTranspositionsCheckBox.Checked,
                 GamesWeightCheckBoxChecked = gamesWeightCheckbox.Checked,
                 EvaluationWeightCheckBoxChecked = evaluationWeightCheckbox.Checked,
-                GoodnessUseCountCheckBoxChecked = goodnessUseCountCheckbox.Checked,
                 GoodnessNormalizeCheckBoxChecked = goodnessNormalizeCheckbox.Checked,
                 GamesWeightNumericUpDownValue = gamesWeightNumericUpDown.Value,
                 EvalWeightNumericUpDownValue = evalWeightNumericUpDown.Value,
