@@ -17,7 +17,9 @@ namespace chess_pos_db_gui.src.app
 
             public double EvalWeight { get; set; }
             public double GamesWeight { get; set; }
-            public double DrawScore { get; internal set; }
+            public double DrawScore { get; set; }
+
+            public ulong LowN { get; set; }
         }
 
         public static double CalculateGoodness(
@@ -29,9 +31,6 @@ namespace chess_pos_db_gui.src.app
         {
             const long maxAllowedEloDiff = 400;
             const double minPerf = 0.01;
-
-            // if there's less than this amount of games then the goodness contribution will be penalized.
-            ulong penaltyFromCountThreshold = 10;
 
             bool useEval = options.UseEval;
 
@@ -62,7 +61,7 @@ namespace chess_pos_db_gui.src.app
                     ulong totalDraws = e.DrawCount;
                     ulong totalLosses = e.Count - totalWins - totalDraws;
                     double totalPerf = (totalWins + totalDraws * options.DrawScore) / e.Count;
-                    double totalEloError = EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses);
+                    double totalEloError = EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses, options.LowN);
                     double expectedTotalPerf = EloCalculator.GetExpectedPerformance((e.TotalEloDiff) / (double)e.Count);
                     if (sideToMove == Player.Black)
                     {
@@ -79,25 +78,6 @@ namespace chess_pos_db_gui.src.app
             }
 
             double adjustedGamesPerf = calculateAdjustedPerf(totalEntry);
-
-            double penalizePerf(double perf, double numGames)
-            {
-                if (numGames >= penaltyFromCountThreshold)
-                {
-                    return perf;
-                }
-
-                if (numGames == 0)
-                {
-                    return minPerf;
-                }
-
-                double r = ((numGames + 1.0) / (penaltyFromCountThreshold + 1));
-                double penalty = 1 - Math.Log(r);
-                return Math.Max(minPerf, perf / penalty);
-            }
-
-            adjustedGamesPerf = penalizePerf(adjustedGamesPerf, totalEntry.Count);
 
             double gamesGoodness = Math.Pow(adjustedGamesPerf, gamesWeight);
 

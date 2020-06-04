@@ -53,7 +53,7 @@ namespace chess_pos_db_gui
             return Math.Sqrt((v - drawRatio / 4.0) / (total - 1.0));
         }
 
-        public static double EloError99pct(ulong engineWins, ulong engineDraws, ulong engineLosses)
+        public static double EloError99pct(ulong engineWins, ulong engineDraws, ulong engineLosses, ulong? lowN = null)
         {
             double total = engineWins + engineDraws + engineLosses;
 
@@ -67,7 +67,15 @@ namespace chess_pos_db_gui
             double z = 2.58;
             double perf = (engineWins + engineDraws * 0.5) / total;
 
-            return Math.Min(1600.0 * z * ComputeS(perf, drawRatio, total) / Math.Log(10), maxElo * 2);
+            double error = 1600.0 * z * ComputeS(perf, drawRatio, total) / Math.Log(10);
+
+            if (lowN.HasValue)
+            {
+                double d = lowN.Value / 2.0;
+                error /= 1.0 - Math.Exp(-total / d);
+            }
+
+            return Math.Min(error, maxElo * 2);
         }
     }
 }

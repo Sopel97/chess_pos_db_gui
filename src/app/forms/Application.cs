@@ -519,6 +519,7 @@ namespace chess_pos_db_gui
                 UseEval = evaluationWeightCheckbox.Checked,
 
                 DrawScore = (double)drawScoreNumericUpDown.Value,
+                LowN = 100,
 
                 EvalWeight = (double)evalWeightNumericUpDown.Value,
                 GamesWeight = (double)gamesWeightNumericUpDown.Value
