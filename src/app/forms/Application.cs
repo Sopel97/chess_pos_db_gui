@@ -80,10 +80,12 @@ namespace chess_pos_db_gui
             public bool CombineHECheckBoxChecked { get; set; } = false;
             public bool GoodnessUseCountCheckBoxChecked { get; set; } = true;
             public bool GoodnessNormalizeCheckBoxChecked { get; set; } = true;
+            public bool LowNThresholdCheckBoxChecked { get; set; } = true;
             public decimal GamesWeightNumericUpDownValue { get; set; } = 1;
             public decimal HumanWeightNumericUpDownValue { get; set; } = 1;
             public decimal EngineWeightNumericUpDownValue { get; set; } = 3;
             public decimal EvalWeightNumericUpDownValue { get; set; } = 2;
+            public decimal LowNThresholdNumericUpDownValue { get; set; } = 10;
             public int SplitChessAndDataSplitterDistance { get; set; } = 428;
             public int EntriesRetractionsSplitPanelSplitterDistance { get; set; } = 270;
             public int FormWidth { get; set; } = 1075;
@@ -517,9 +519,10 @@ namespace chess_pos_db_gui
             {
                 UseGames = levelHumanCheckBox.Checked || levelServerCheckBox.Checked || levelEngineCheckBox.Checked,
                 UseEval = evaluationWeightCheckbox.Checked,
+                IncreaseErrorBarForLowN = lowNThesholdCheckBox.Checked,
 
                 DrawScore = (double)drawScoreNumericUpDown.Value,
-                LowN = 100,
+                LowN = (ulong)lowNThresholdNumericUpDown.Value,
 
                 EvalWeight = (double)evalWeightNumericUpDown.Value,
                 GamesWeight = (double)gamesWeightNumericUpDown.Value
@@ -1567,11 +1570,13 @@ namespace chess_pos_db_gui
             hideNeverPlayedCheckBox.Checked = settings.HideNeverPlayedCheckBoxChecked;
             typeContinuationsCheckBox.Checked = settings.TypeContinuationsCheckBoxChecked;
             typeTranspositionsCheckBox.Checked = settings.TypeTranspositionsCheckBoxChecked;
+            lowNThesholdCheckBox.Checked = settings.LowNThresholdCheckBoxChecked;
             gamesWeightCheckbox.Checked = settings.GamesWeightCheckBoxChecked;
             evaluationWeightCheckbox.Checked = settings.EvaluationWeightCheckBoxChecked;
             goodnessNormalizeCheckbox.Checked = settings.GoodnessNormalizeCheckBoxChecked;
             gamesWeightNumericUpDown.Value = settings.GamesWeightNumericUpDownValue;
             evalWeightNumericUpDown.Value = settings.EvalWeightNumericUpDownValue;
+            lowNThresholdNumericUpDown.Value = settings.LowNThresholdNumericUpDownValue;
             splitChessAndData.SplitterDistance = settings.SplitChessAndDataSplitterDistance;
             entriesRetractionsSplitPanel.SplitterDistance = settings.EntriesRetractionsSplitPanelSplitterDistance;
 
@@ -1615,8 +1620,10 @@ namespace chess_pos_db_gui
                 GamesWeightCheckBoxChecked = gamesWeightCheckbox.Checked,
                 EvaluationWeightCheckBoxChecked = evaluationWeightCheckbox.Checked,
                 GoodnessNormalizeCheckBoxChecked = goodnessNormalizeCheckbox.Checked,
+                LowNThresholdCheckBoxChecked = lowNThesholdCheckBox.Checked,
                 GamesWeightNumericUpDownValue = gamesWeightNumericUpDown.Value,
                 EvalWeightNumericUpDownValue = evalWeightNumericUpDown.Value,
+                LowNThresholdNumericUpDownValue = lowNThresholdNumericUpDown.Value,
                 SplitChessAndDataSplitterDistance = splitChessAndData.SplitterDistance,
                 EntriesRetractionsSplitPanelSplitterDistance = entriesRetractionsSplitPanel.SplitterDistance,
                 FormWidth = Width,
@@ -1901,6 +1908,16 @@ namespace chess_pos_db_gui
                 ToggleColumnVisibilityBasedOnSupportedFeatures(Database.GetSupportManifest(), queryEvalCheckBox.Checked);
                 UpdateData();
             }
+        }
+
+        private void lowNThesholdCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateGoodness();
+        }
+
+        private void lowNThresholdNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateGoodness();
         }
     }
 }

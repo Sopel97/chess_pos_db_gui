@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
@@ -62,7 +62,6 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.databaseFormatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analysisAndBoardSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.chessBoard = new chess_pos_db_gui.ChessBoard();
             this.firstGameInfoGroupBox = new System.Windows.Forms.GroupBox();
             this.fenRichTextBox = new System.Windows.Forms.RichTextBox();
             this.firstGameInfoRichTextBox = new System.Windows.Forms.RichTextBox();
@@ -87,6 +86,9 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.chessBoard = new chess_pos_db_gui.ChessBoard();
+            this.lowNThesholdCheckBox = new System.Windows.Forms.CheckBox();
+            this.lowNThresholdNumericUpDown = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -115,6 +117,7 @@
             this.displayGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).BeginInit();
             this.queryGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lowNThresholdNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -123,14 +126,14 @@
             this.entriesGridView.AllowUserToDeleteRows = false;
             this.entriesGridView.AllowUserToResizeColumns = false;
             this.entriesGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -454,18 +457,6 @@
             this.analysisAndBoardSplitContainer.SplitterDistance = 132;
             this.analysisAndBoardSplitContainer.TabIndex = 3;
             // 
-            // chessBoard
-            // 
-            this.chessBoard.BoardImages = null;
-            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessBoard.Location = new System.Drawing.Point(0, 0);
-            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
-            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
-            this.chessBoard.Name = "chessBoard";
-            this.chessBoard.PieceImages = null;
-            this.chessBoard.Size = new System.Drawing.Size(424, 238);
-            this.chessBoard.TabIndex = 0;
-            // 
             // firstGameInfoGroupBox
             // 
             this.firstGameInfoGroupBox.Controls.Add(this.fenRichTextBox);
@@ -561,14 +552,14 @@
             this.retractionsGridView.AllowUserToDeleteRows = false;
             this.retractionsGridView.AllowUserToResizeColumns = false;
             this.retractionsGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.retractionsGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.retractionsGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.retractionsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.retractionsGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.retractionsGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -599,6 +590,8 @@
             // 
             // goodnessGroupBox
             // 
+            this.goodnessGroupBox.Controls.Add(this.lowNThresholdNumericUpDown);
+            this.goodnessGroupBox.Controls.Add(this.lowNThesholdCheckBox);
             this.goodnessGroupBox.Controls.Add(this.drawScoreLabel);
             this.goodnessGroupBox.Controls.Add(this.drawScoreNumericUpDown);
             this.goodnessGroupBox.Controls.Add(this.gamesWeightNumericUpDown);
@@ -616,7 +609,7 @@
             // drawScoreLabel
             // 
             this.drawScoreLabel.AutoSize = true;
-            this.drawScoreLabel.Location = new System.Drawing.Point(50, 68);
+            this.drawScoreLabel.Location = new System.Drawing.Point(170, 44);
             this.drawScoreLabel.Name = "drawScoreLabel";
             this.drawScoreLabel.Size = new System.Drawing.Size(61, 13);
             this.drawScoreLabel.TabIndex = 14;
@@ -630,7 +623,7 @@
             0,
             0,
             131072});
-            this.drawScoreNumericUpDown.Location = new System.Drawing.Point(117, 66);
+            this.drawScoreNumericUpDown.Location = new System.Drawing.Point(237, 42);
             this.drawScoreNumericUpDown.Maximum = new decimal(new int[] {
             1,
             0,
@@ -693,7 +686,7 @@
             this.goodnessNormalizeCheckbox.AutoSize = true;
             this.goodnessNormalizeCheckbox.Checked = true;
             this.goodnessNormalizeCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.goodnessNormalizeCheckbox.Location = new System.Drawing.Point(187, 19);
+            this.goodnessNormalizeCheckbox.Location = new System.Drawing.Point(173, 19);
             this.goodnessNormalizeCheckbox.Name = "goodnessNormalizeCheckbox";
             this.goodnessNormalizeCheckbox.Size = new System.Drawing.Size(72, 17);
             this.goodnessNormalizeCheckbox.TabIndex = 6;
@@ -748,14 +741,14 @@
             this.totalEntriesGridView.AllowUserToResizeRows = false;
             this.totalEntriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.totalEntriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.totalEntriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.totalEntriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.totalEntriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.totalEntriesGridView.Location = new System.Drawing.Point(3, 102);
@@ -830,6 +823,55 @@
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
             // 
+            // chessBoard
+            // 
+            this.chessBoard.BoardImages = null;
+            this.chessBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chessBoard.Location = new System.Drawing.Point(0, 0);
+            this.chessBoard.Margin = new System.Windows.Forms.Padding(0);
+            this.chessBoard.MinimumSize = new System.Drawing.Size(1, 1);
+            this.chessBoard.Name = "chessBoard";
+            this.chessBoard.PieceImages = null;
+            this.chessBoard.Size = new System.Drawing.Size(424, 238);
+            this.chessBoard.TabIndex = 0;
+            // 
+            // lowNThesholdCheckBox
+            // 
+            this.lowNThesholdCheckBox.AutoSize = true;
+            this.lowNThesholdCheckBox.Checked = true;
+            this.lowNThesholdCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.lowNThesholdCheckBox.Location = new System.Drawing.Point(6, 67);
+            this.lowNThesholdCheckBox.Name = "lowNThesholdCheckBox";
+            this.lowNThesholdCheckBox.Size = new System.Drawing.Size(103, 17);
+            this.lowNThesholdCheckBox.TabIndex = 15;
+            this.lowNThesholdCheckBox.Text = "Low N threshold";
+            this.tooltip.SetToolTip(this.lowNThesholdCheckBox, "When enabled the quality index calculation will include engine evaluation");
+            this.lowNThesholdCheckBox.UseVisualStyleBackColor = true;
+            this.lowNThesholdCheckBox.CheckedChanged += new System.EventHandler(this.lowNThesholdCheckBox_CheckedChanged);
+            // 
+            // lowNThresholdNumericUpDown
+            // 
+            this.lowNThresholdNumericUpDown.Location = new System.Drawing.Point(117, 66);
+            this.lowNThresholdNumericUpDown.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.lowNThresholdNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.lowNThresholdNumericUpDown.Name = "lowNThresholdNumericUpDown";
+            this.lowNThresholdNumericUpDown.Size = new System.Drawing.Size(50, 20);
+            this.lowNThresholdNumericUpDown.TabIndex = 16;
+            this.lowNThresholdNumericUpDown.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.lowNThresholdNumericUpDown.ValueChanged += new System.EventHandler(this.lowNThresholdNumericUpDown_ValueChanged);
+            // 
             // Application
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -876,6 +918,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).EndInit();
             this.queryGroupBox.ResumeLayout(false);
             this.queryGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lowNThresholdNumericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -937,6 +980,8 @@
         private System.Windows.Forms.Button retractionsHelpButton;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem databaseFormatsToolStripMenuItem;
+        private System.Windows.Forms.NumericUpDown lowNThresholdNumericUpDown;
+        private System.Windows.Forms.CheckBox lowNThesholdCheckBox;
     }
 }
 

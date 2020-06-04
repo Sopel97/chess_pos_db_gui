@@ -14,6 +14,7 @@ namespace chess_pos_db_gui.src.app
         {
             public bool UseGames { get; set; }
             public bool UseEval { get; set; }
+            public bool IncreaseErrorBarForLowN { get; set; }
 
             public double EvalWeight { get; set; }
             public double GamesWeight { get; set; }
@@ -57,11 +58,12 @@ namespace chess_pos_db_gui.src.app
             {
                 if (e.Count > 0)
                 {
+                    ulong? lowNThreshold = options.IncreaseErrorBarForLowN ? (ulong?)options.LowN : null;
                     ulong totalWins = e.WinCount;
                     ulong totalDraws = e.DrawCount;
                     ulong totalLosses = e.Count - totalWins - totalDraws;
                     double totalPerf = (totalWins + totalDraws * options.DrawScore) / e.Count;
-                    double totalEloError = EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses, options.LowN);
+                    double totalEloError = EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses, lowNThreshold);
                     double expectedTotalPerf = EloCalculator.GetExpectedPerformance((e.TotalEloDiff) / (double)e.Count);
                     if (sideToMove == Player.Black)
                     {
