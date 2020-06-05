@@ -86,12 +86,14 @@ namespace chess_pos_db_gui
             public decimal EngineWeightNumericUpDownValue { get; set; } = 3;
             public decimal EvalWeightNumericUpDownValue { get; set; } = 2;
             public decimal LowNThresholdNumericUpDownValue { get; set; } = 10;
+            public int GamesEvalWeightTrackBarValue { get; set; } = 50;
             public int SplitChessAndDataSplitterDistance { get; set; } = 428;
             public int EntriesRetractionsSplitPanelSplitterDistance { get; set; } = 270;
             public int FormWidth { get; set; } = 1075;
             public int FormHeight { get; set; } = 600;
             public string BoardThemeName { get; set; } = null;
             public string PieceThemeName { get; set; } = null;
+            public string GoodnessFormulaComboBoxText { get; set; } = "";
         }
 
         private static readonly string engineProfilesPath = "data/engine_profiles.json";
@@ -149,6 +151,12 @@ namespace chess_pos_db_gui
             levelServerCheckBox.Checked = true;
             typeContinuationsCheckBox.Checked = true;
             typeTranspositionsCheckBox.Checked = true;
+
+            foreach (var formula in GoodnessCalculator.Formulas)
+            {
+                goodnessFormulaComboBox.Items.Add(formula);
+            }
+            goodnessFormulaComboBox.DisplayMember = "Name";
 
             queryButton.Enabled = false;
 
@@ -522,11 +530,12 @@ namespace chess_pos_db_gui
                 DrawScore = (double)drawScoreNumericUpDown.Value,
                 LowN = (ulong)lowNThresholdNumericUpDown.Value,
 
-                EvalWeight = (double)evalWeightNumericUpDown.Value,
-                GamesWeight = (double)gamesWeightNumericUpDown.Value
+                EvalWeight = (double)gamesEvalWeightTrackBar.Value,
+                GamesWeight = (double)(gamesEvalWeightTrackBar.Maximum - gamesEvalWeightTrackBar.Value)
             };
 
-            return GoodnessCalculator.CalculateGoodness(
+            var formula = (GoodnessCalculator.Formula)goodnessFormulaComboBox.SelectedItem;
+            return formula.Function(
                 chessBoard.SideToMove(),
                 aggregatedEntries,
                 score,
@@ -1569,11 +1578,17 @@ namespace chess_pos_db_gui
             typeContinuationsCheckBox.Checked = settings.TypeContinuationsCheckBoxChecked;
             typeTranspositionsCheckBox.Checked = settings.TypeTranspositionsCheckBoxChecked;
             lowNThesholdCheckBox.Checked = settings.LowNThresholdCheckBoxChecked;
-            gamesWeightCheckbox.Checked = settings.GamesWeightCheckBoxChecked;
-            evaluationWeightCheckbox.Checked = settings.EvaluationWeightCheckBoxChecked;
+            goodnessFormulaComboBox.SelectedIndex = 0;
+            foreach (GoodnessCalculator.Formula it in goodnessFormulaComboBox.Items)
+            {
+                if(it.Name == settings.GoodnessFormulaComboBoxText)
+                {
+                    goodnessFormulaComboBox.SelectedItem = it;
+                    break;
+                }
+            }
+            gamesEvalWeightTrackBar.Value = settings.GamesEvalWeightTrackBarValue;
             goodnessNormalizeCheckbox.Checked = settings.GoodnessNormalizeCheckBoxChecked;
-            gamesWeightNumericUpDown.Value = settings.GamesWeightNumericUpDownValue;
-            evalWeightNumericUpDown.Value = settings.EvalWeightNumericUpDownValue;
             lowNThresholdNumericUpDown.Value = settings.LowNThresholdNumericUpDownValue;
             splitChessAndData.SplitterDistance = settings.SplitChessAndDataSplitterDistance;
             entriesRetractionsSplitPanel.SplitterDistance = settings.EntriesRetractionsSplitPanelSplitterDistance;
@@ -1615,12 +1630,10 @@ namespace chess_pos_db_gui
                 HideNeverPlayedCheckBoxChecked = hideNeverPlayedCheckBox.Checked,
                 TypeContinuationsCheckBoxChecked = typeContinuationsCheckBox.Checked,
                 TypeTranspositionsCheckBoxChecked = typeTranspositionsCheckBox.Checked,
-                GamesWeightCheckBoxChecked = gamesWeightCheckbox.Checked,
-                EvaluationWeightCheckBoxChecked = evaluationWeightCheckbox.Checked,
+                GamesEvalWeightTrackBarValue = gamesEvalWeightTrackBar.Value,
                 GoodnessNormalizeCheckBoxChecked = goodnessNormalizeCheckbox.Checked,
                 LowNThresholdCheckBoxChecked = lowNThesholdCheckBox.Checked,
-                GamesWeightNumericUpDownValue = gamesWeightNumericUpDown.Value,
-                EvalWeightNumericUpDownValue = evalWeightNumericUpDown.Value,
+                GoodnessFormulaComboBoxText = ((GoodnessCalculator.Formula)goodnessFormulaComboBox.SelectedItem).Name,
                 LowNThresholdNumericUpDownValue = lowNThresholdNumericUpDown.Value,
                 SplitChessAndDataSplitterDistance = splitChessAndData.SplitterDistance,
                 EntriesRetractionsSplitPanelSplitterDistance = entriesRetractionsSplitPanel.SplitterDistance,
@@ -1634,14 +1647,6 @@ namespace chess_pos_db_gui
         private void HideNeverPlayedCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Repopulate();
-        }
-
-        private void EvalWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
-        {
-            if (evaluationWeightCheckbox.Checked)
-            {
-                UpdateGoodness();
-            }
         }
 
         private void GoodnessUseCountCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1688,14 +1693,6 @@ namespace chess_pos_db_gui
 
             EmbeddedHandler = null;
             AnalysisForm = null;
-        }
-
-        private void GamesWeightNumericUpDown_ValueChanged(object sender, EventArgs e)
-        {
-            if (gamesWeightCheckbox.Checked)
-            {
-                UpdateGoodness();
-            }
         }
 
         private void ProfilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1915,6 +1912,20 @@ namespace chess_pos_db_gui
 
         private void lowNThresholdNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
+            UpdateGoodness();
+        }
+
+        private void goodnessFormulaComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateGoodness();
+        }
+
+        private void gamesEvalWeightTrackBar_Scroll(object sender, EventArgs e)
+        {
+            int gamesWeight = gamesEvalWeightTrackBar.Value;
+            int evalWeight = gamesEvalWeightTrackBar.Maximum - gamesEvalWeightTrackBar.Value;
+            string text = string.Format("games weight {0} - {1} eval weight", gamesWeight, evalWeight);
+            tooltip.SetToolTip(gamesEvalWeightTrackBar, text);
             UpdateGoodness();
         }
     }

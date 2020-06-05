@@ -10,6 +10,22 @@ namespace chess_pos_db_gui.src.app
 {
     public static class GoodnessCalculator
     {
+        public enum FormulaType
+        {
+            Default,
+            PrioritizeEval
+        }
+
+        public struct Formula
+        {
+            public FormulaType Type { get; internal set; }
+            public string Name { get; internal set; }
+            public Func<
+                Player, EnumArray<GameLevel, AggregatedEntry>, ChessDBCNScore, Options, 
+                double
+                > Function { get; internal set; }
+        }
+
         public class Options
         {
             public bool IncreaseErrorBarForLowN { get; set; }
@@ -130,9 +146,10 @@ namespace chess_pos_db_gui.src.app
             Player sideToMove,
             EnumArray<GameLevel, AggregatedEntry> aggregatedEntries,
             ChessDBCNScore score,
-            PrioritizeEvalOptions options
+            Options options
             )
         {
+            const double eloErrorHalfWeight = 100;
             const double maxAllowedPlayerEloDiff = 400;
             const double maxCalculatedEloDiff = 800;
 
@@ -151,14 +168,15 @@ namespace chess_pos_db_gui.src.app
 
             Tuple<double, double> calculateAdjustedPerf(AggregatedEntry e)
             {
+                ulong? lowNThreshold = options.IncreaseErrorBarForLowN ? (ulong?)options.LowN : null;
                 ulong totalWins = e.WinCount;
                 ulong totalDraws = e.DrawCount;
                 ulong totalLosses = e.Count - totalWins - totalDraws;
                 double totalEloError = EloCalculator.Clamp(
-                    EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses),
+                    EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses, lowNThreshold),
                     2 * maxCalculatedEloDiff
                     );
-                double gw = options.GamesWeight * Math.Exp(-(totalEloError / options.EloErrorHalfWeight));
+                double gw = options.GamesWeight * Math.Exp(-(totalEloError / eloErrorHalfWeight));
 
                 if (e.Count > 0)
                 {
@@ -204,5 +222,10 @@ namespace chess_pos_db_gui.src.app
 
             return goodness;
         }
+
+        public static List<Formula> Formulas = new List<Formula>{
+            new Formula { Type = FormulaType.Default, Name = "Default", Function = CalculateGoodness },
+            new Formula { Type = FormulaType.PrioritizeEval, Name = "Prioritize eval", Function = CalculateGoodnessPrioritizeEval }
+        };
     }
 }

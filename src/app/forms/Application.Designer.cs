@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.entriesGridView = new System.Windows.Forms.DataGridView();
             this.levelSelectionGroupBox = new System.Windows.Forms.GroupBox();
             this.levelServerCheckBox = new System.Windows.Forms.CheckBox();
@@ -71,13 +71,11 @@
             this.retractionsGridView = new System.Windows.Forms.DataGridView();
             this.totalDataHelpButton = new System.Windows.Forms.Button();
             this.goodnessGroupBox = new System.Windows.Forms.GroupBox();
+            this.lowNThresholdNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.lowNThesholdCheckBox = new System.Windows.Forms.CheckBox();
             this.drawScoreLabel = new System.Windows.Forms.Label();
             this.drawScoreNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.gamesWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.gamesWeightCheckbox = new System.Windows.Forms.CheckBox();
-            this.evaluationWeightCheckbox = new System.Windows.Forms.CheckBox();
             this.goodnessNormalizeCheckbox = new System.Windows.Forms.CheckBox();
-            this.evalWeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.displayGroupBox = new System.Windows.Forms.GroupBox();
             this.hideNeverPlayedCheckBox = new System.Windows.Forms.CheckBox();
             this.totalEntriesGridView = new System.Windows.Forms.DataGridView();
@@ -86,9 +84,11 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.gamesEvalWeightTrackBar = new System.Windows.Forms.TrackBar();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.goodnessFormulaComboBox = new System.Windows.Forms.ComboBox();
             this.chessBoard = new chess_pos_db_gui.ChessBoard();
-            this.lowNThesholdCheckBox = new System.Windows.Forms.CheckBox();
-            this.lowNThresholdNumericUpDown = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitChessAndData)).BeginInit();
@@ -111,13 +111,12 @@
             this.entriesRetractionsSplitPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.retractionsGridView)).BeginInit();
             this.goodnessGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lowNThresholdNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.drawScoreNumericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gamesWeightNumericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.evalWeightNumericUpDown)).BeginInit();
             this.displayGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).BeginInit();
             this.queryGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lowNThresholdNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gamesEvalWeightTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -126,14 +125,14 @@
             this.entriesGridView.AllowUserToDeleteRows = false;
             this.entriesGridView.AllowUserToResizeColumns = false;
             this.entriesGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.entriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.entriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.entriesGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.entriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -143,7 +142,7 @@
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(603, 270);
+            this.entriesGridView.Size = new System.Drawing.Size(602, 270);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -516,7 +515,7 @@
             // 
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsHelpButton);
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsGridView);
-            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(603, 381);
+            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(602, 381);
             this.entriesRetractionsSplitPanel.SplitterDistance = 270;
             this.entriesRetractionsSplitPanel.TabIndex = 9;
             // 
@@ -552,14 +551,14 @@
             this.retractionsGridView.AllowUserToDeleteRows = false;
             this.retractionsGridView.AllowUserToResizeColumns = false;
             this.retractionsGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.retractionsGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.retractionsGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.retractionsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.retractionsGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.retractionsGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -569,7 +568,7 @@
             this.retractionsGridView.RowHeadersWidth = 20;
             this.retractionsGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.retractionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.retractionsGridView.Size = new System.Drawing.Size(603, 107);
+            this.retractionsGridView.Size = new System.Drawing.Size(602, 107);
             this.retractionsGridView.TabIndex = 8;
             this.retractionsGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.retractionsGridView_CellContentDoubleClick);
             this.retractionsGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RetractionsGridView_CellFormatting);
@@ -590,21 +589,58 @@
             // 
             // goodnessGroupBox
             // 
+            this.goodnessGroupBox.Controls.Add(this.goodnessFormulaComboBox);
+            this.goodnessGroupBox.Controls.Add(this.label2);
+            this.goodnessGroupBox.Controls.Add(this.label1);
+            this.goodnessGroupBox.Controls.Add(this.gamesEvalWeightTrackBar);
             this.goodnessGroupBox.Controls.Add(this.lowNThresholdNumericUpDown);
             this.goodnessGroupBox.Controls.Add(this.lowNThesholdCheckBox);
             this.goodnessGroupBox.Controls.Add(this.drawScoreLabel);
             this.goodnessGroupBox.Controls.Add(this.drawScoreNumericUpDown);
-            this.goodnessGroupBox.Controls.Add(this.gamesWeightNumericUpDown);
-            this.goodnessGroupBox.Controls.Add(this.gamesWeightCheckbox);
-            this.goodnessGroupBox.Controls.Add(this.evaluationWeightCheckbox);
             this.goodnessGroupBox.Controls.Add(this.goodnessNormalizeCheckbox);
-            this.goodnessGroupBox.Controls.Add(this.evalWeightNumericUpDown);
             this.goodnessGroupBox.Location = new System.Drawing.Point(322, 3);
             this.goodnessGroupBox.Name = "goodnessGroupBox";
             this.goodnessGroupBox.Size = new System.Drawing.Size(293, 93);
             this.goodnessGroupBox.TabIndex = 6;
             this.goodnessGroupBox.TabStop = false;
             this.goodnessGroupBox.Text = "Quality Index";
+            // 
+            // lowNThresholdNumericUpDown
+            // 
+            this.lowNThresholdNumericUpDown.Location = new System.Drawing.Point(115, 42);
+            this.lowNThresholdNumericUpDown.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.lowNThresholdNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.lowNThresholdNumericUpDown.Name = "lowNThresholdNumericUpDown";
+            this.lowNThresholdNumericUpDown.Size = new System.Drawing.Size(50, 20);
+            this.lowNThresholdNumericUpDown.TabIndex = 16;
+            this.lowNThresholdNumericUpDown.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.lowNThresholdNumericUpDown.ValueChanged += new System.EventHandler(this.lowNThresholdNumericUpDown_ValueChanged);
+            // 
+            // lowNThesholdCheckBox
+            // 
+            this.lowNThesholdCheckBox.AutoSize = true;
+            this.lowNThesholdCheckBox.Checked = true;
+            this.lowNThesholdCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.lowNThesholdCheckBox.Location = new System.Drawing.Point(6, 43);
+            this.lowNThesholdCheckBox.Name = "lowNThesholdCheckBox";
+            this.lowNThesholdCheckBox.Size = new System.Drawing.Size(103, 17);
+            this.lowNThesholdCheckBox.TabIndex = 15;
+            this.lowNThesholdCheckBox.Text = "Low N threshold";
+            this.tooltip.SetToolTip(this.lowNThesholdCheckBox, "When enabled the quality index calculation will include engine evaluation");
+            this.lowNThesholdCheckBox.UseVisualStyleBackColor = true;
+            this.lowNThesholdCheckBox.CheckedChanged += new System.EventHandler(this.lowNThesholdCheckBox_CheckedChanged);
             // 
             // drawScoreLabel
             // 
@@ -639,48 +675,6 @@
             65536});
             this.drawScoreNumericUpDown.ValueChanged += new System.EventHandler(this.drawScoreNumericUpDown_ValueChanged);
             // 
-            // gamesWeightNumericUpDown
-            // 
-            this.gamesWeightNumericUpDown.DecimalPlaces = 1;
-            this.gamesWeightNumericUpDown.Location = new System.Drawing.Point(117, 18);
-            this.gamesWeightNumericUpDown.Name = "gamesWeightNumericUpDown";
-            this.gamesWeightNumericUpDown.Size = new System.Drawing.Size(50, 20);
-            this.gamesWeightNumericUpDown.TabIndex = 12;
-            this.gamesWeightNumericUpDown.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.gamesWeightNumericUpDown.ValueChanged += new System.EventHandler(this.GamesWeightNumericUpDown_ValueChanged);
-            // 
-            // gamesWeightCheckbox
-            // 
-            this.gamesWeightCheckbox.AutoSize = true;
-            this.gamesWeightCheckbox.Checked = true;
-            this.gamesWeightCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.gamesWeightCheckbox.Location = new System.Drawing.Point(6, 19);
-            this.gamesWeightCheckbox.Name = "gamesWeightCheckbox";
-            this.gamesWeightCheckbox.Size = new System.Drawing.Size(93, 17);
-            this.gamesWeightCheckbox.TabIndex = 11;
-            this.gamesWeightCheckbox.Text = "Games weight";
-            this.tooltip.SetToolTip(this.gamesWeightCheckbox, "When enabled the quality index calculation will include all games");
-            this.gamesWeightCheckbox.UseVisualStyleBackColor = true;
-            this.gamesWeightCheckbox.CheckedChanged += new System.EventHandler(this.GamesWeightCheckbox_CheckedChanged);
-            // 
-            // evaluationWeightCheckbox
-            // 
-            this.evaluationWeightCheckbox.AutoSize = true;
-            this.evaluationWeightCheckbox.Checked = true;
-            this.evaluationWeightCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.evaluationWeightCheckbox.Location = new System.Drawing.Point(6, 43);
-            this.evaluationWeightCheckbox.Name = "evaluationWeightCheckbox";
-            this.evaluationWeightCheckbox.Size = new System.Drawing.Size(110, 17);
-            this.evaluationWeightCheckbox.TabIndex = 8;
-            this.evaluationWeightCheckbox.Text = "Evaluation weight";
-            this.tooltip.SetToolTip(this.evaluationWeightCheckbox, "When enabled the quality index calculation will include engine evaluation");
-            this.evaluationWeightCheckbox.UseVisualStyleBackColor = true;
-            this.evaluationWeightCheckbox.CheckedChanged += new System.EventHandler(this.EvaluationWeightCheckbox_CheckedChanged);
-            // 
             // goodnessNormalizeCheckbox
             // 
             this.goodnessNormalizeCheckbox.AutoSize = true;
@@ -694,20 +688,6 @@
             this.tooltip.SetToolTip(this.goodnessNormalizeCheckbox, "When enabled the quality index will be normalized to be in range 0..100");
             this.goodnessNormalizeCheckbox.UseVisualStyleBackColor = true;
             this.goodnessNormalizeCheckbox.CheckedChanged += new System.EventHandler(this.GoodnessNormalizeCheckbox_CheckedChanged);
-            // 
-            // evalWeightNumericUpDown
-            // 
-            this.evalWeightNumericUpDown.DecimalPlaces = 1;
-            this.evalWeightNumericUpDown.Location = new System.Drawing.Point(117, 42);
-            this.evalWeightNumericUpDown.Name = "evalWeightNumericUpDown";
-            this.evalWeightNumericUpDown.Size = new System.Drawing.Size(50, 20);
-            this.evalWeightNumericUpDown.TabIndex = 4;
-            this.evalWeightNumericUpDown.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.evalWeightNumericUpDown.ValueChanged += new System.EventHandler(this.EvalWeightNumericUpDown_ValueChanged);
             // 
             // displayGroupBox
             // 
@@ -741,14 +721,14 @@
             this.totalEntriesGridView.AllowUserToResizeRows = false;
             this.totalEntriesGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.totalEntriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.totalEntriesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.totalEntriesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.totalEntriesGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.totalEntriesGridView.Location = new System.Drawing.Point(3, 102);
@@ -758,7 +738,7 @@
             this.totalEntriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.totalEntriesGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(603, 66);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(602, 66);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -823,6 +803,46 @@
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
             // 
+            // gamesEvalWeightTrackBar
+            // 
+            this.gamesEvalWeightTrackBar.AutoSize = false;
+            this.gamesEvalWeightTrackBar.LargeChange = 10;
+            this.gamesEvalWeightTrackBar.Location = new System.Drawing.Point(63, 64);
+            this.gamesEvalWeightTrackBar.Maximum = 100;
+            this.gamesEvalWeightTrackBar.Name = "gamesEvalWeightTrackBar";
+            this.gamesEvalWeightTrackBar.Size = new System.Drawing.Size(168, 20);
+            this.gamesEvalWeightTrackBar.TabIndex = 17;
+            this.gamesEvalWeightTrackBar.TickFrequency = 10;
+            this.gamesEvalWeightTrackBar.Value = 50;
+            this.gamesEvalWeightTrackBar.Scroll += new System.EventHandler(this.gamesEvalWeightTrackBar_Scroll);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(22, 67);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(40, 13);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Games";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(237, 69);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(28, 13);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "Eval";
+            // 
+            // goodnessFormulaComboBox
+            // 
+            this.goodnessFormulaComboBox.FormattingEnabled = true;
+            this.goodnessFormulaComboBox.Location = new System.Drawing.Point(6, 15);
+            this.goodnessFormulaComboBox.Name = "goodnessFormulaComboBox";
+            this.goodnessFormulaComboBox.Size = new System.Drawing.Size(121, 21);
+            this.goodnessFormulaComboBox.TabIndex = 20;
+            this.goodnessFormulaComboBox.SelectedIndexChanged += new System.EventHandler(this.goodnessFormulaComboBox_SelectedIndexChanged);
+            // 
             // chessBoard
             // 
             this.chessBoard.BoardImages = null;
@@ -834,43 +854,6 @@
             this.chessBoard.PieceImages = null;
             this.chessBoard.Size = new System.Drawing.Size(424, 238);
             this.chessBoard.TabIndex = 0;
-            // 
-            // lowNThesholdCheckBox
-            // 
-            this.lowNThesholdCheckBox.AutoSize = true;
-            this.lowNThesholdCheckBox.Checked = true;
-            this.lowNThesholdCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.lowNThesholdCheckBox.Location = new System.Drawing.Point(6, 67);
-            this.lowNThesholdCheckBox.Name = "lowNThesholdCheckBox";
-            this.lowNThesholdCheckBox.Size = new System.Drawing.Size(103, 17);
-            this.lowNThesholdCheckBox.TabIndex = 15;
-            this.lowNThesholdCheckBox.Text = "Low N threshold";
-            this.tooltip.SetToolTip(this.lowNThesholdCheckBox, "When enabled the quality index calculation will include engine evaluation");
-            this.lowNThesholdCheckBox.UseVisualStyleBackColor = true;
-            this.lowNThesholdCheckBox.CheckedChanged += new System.EventHandler(this.lowNThesholdCheckBox_CheckedChanged);
-            // 
-            // lowNThresholdNumericUpDown
-            // 
-            this.lowNThresholdNumericUpDown.Location = new System.Drawing.Point(117, 66);
-            this.lowNThresholdNumericUpDown.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.lowNThresholdNumericUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.lowNThresholdNumericUpDown.Name = "lowNThresholdNumericUpDown";
-            this.lowNThresholdNumericUpDown.Size = new System.Drawing.Size(50, 20);
-            this.lowNThresholdNumericUpDown.TabIndex = 16;
-            this.lowNThresholdNumericUpDown.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.lowNThresholdNumericUpDown.ValueChanged += new System.EventHandler(this.lowNThresholdNumericUpDown_ValueChanged);
             // 
             // Application
             // 
@@ -910,15 +893,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.retractionsGridView)).EndInit();
             this.goodnessGroupBox.ResumeLayout(false);
             this.goodnessGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lowNThresholdNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.drawScoreNumericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gamesWeightNumericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.evalWeightNumericUpDown)).EndInit();
             this.displayGroupBox.ResumeLayout(false);
             this.displayGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).EndInit();
             this.queryGroupBox.ResumeLayout(false);
             this.queryGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lowNThresholdNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gamesEvalWeightTrackBar)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -955,11 +937,7 @@
         private System.Windows.Forms.GroupBox firstGameInfoGroupBox;
         private System.Windows.Forms.RichTextBox firstGameInfoRichTextBox;
         private System.Windows.Forms.GroupBox goodnessGroupBox;
-        private System.Windows.Forms.NumericUpDown evalWeightNumericUpDown;
         private System.Windows.Forms.CheckBox goodnessNormalizeCheckbox;
-        private System.Windows.Forms.CheckBox evaluationWeightCheckbox;
-        private System.Windows.Forms.NumericUpDown gamesWeightNumericUpDown;
-        private System.Windows.Forms.CheckBox gamesWeightCheckbox;
         private System.Windows.Forms.ToolStripMenuItem analysisToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setupToolStripMenuItem;
         private System.Windows.Forms.RichTextBox fenRichTextBox;
@@ -982,6 +960,10 @@
         private System.Windows.Forms.ToolStripMenuItem databaseFormatsToolStripMenuItem;
         private System.Windows.Forms.NumericUpDown lowNThresholdNumericUpDown;
         private System.Windows.Forms.CheckBox lowNThesholdCheckBox;
+        private System.Windows.Forms.ComboBox goodnessFormulaComboBox;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TrackBar gamesEvalWeightTrackBar;
     }
 }
 
