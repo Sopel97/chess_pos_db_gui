@@ -71,6 +71,10 @@
             this.retractionsGridView = new System.Windows.Forms.DataGridView();
             this.totalDataHelpButton = new System.Windows.Forms.Button();
             this.goodnessGroupBox = new System.Windows.Forms.GroupBox();
+            this.goodnessFormulaComboBox = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.gamesEvalWeightTrackBar = new System.Windows.Forms.TrackBar();
             this.lowNThresholdNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.lowNThesholdCheckBox = new System.Windows.Forms.CheckBox();
             this.drawScoreLabel = new System.Windows.Forms.Label();
@@ -84,10 +88,6 @@
             this.queryButton = new System.Windows.Forms.Button();
             this.autoQueryCheckbox = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.gamesEvalWeightTrackBar = new System.Windows.Forms.TrackBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.goodnessFormulaComboBox = new System.Windows.Forms.ComboBox();
             this.chessBoard = new chess_pos_db_gui.ChessBoard();
             ((System.ComponentModel.ISupportInitialize)(this.entriesGridView)).BeginInit();
             this.levelSelectionGroupBox.SuspendLayout();
@@ -111,12 +111,12 @@
             this.entriesRetractionsSplitPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.retractionsGridView)).BeginInit();
             this.goodnessGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gamesEvalWeightTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lowNThresholdNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.drawScoreNumericUpDown)).BeginInit();
             this.displayGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).BeginInit();
             this.queryGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gamesEvalWeightTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // entriesGridView
@@ -142,7 +142,7 @@
             this.entriesGridView.RowHeadersWidth = 20;
             this.entriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.entriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.entriesGridView.Size = new System.Drawing.Size(602, 270);
+            this.entriesGridView.Size = new System.Drawing.Size(601, 270);
             this.entriesGridView.TabIndex = 0;
             this.entriesGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.EntriesGridView_CellContentDoubleClick);
             this.entriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.EntriesGridView_CellFormatting);
@@ -515,7 +515,7 @@
             // 
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsHelpButton);
             this.entriesRetractionsSplitPanel.Panel2.Controls.Add(this.retractionsGridView);
-            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(602, 381);
+            this.entriesRetractionsSplitPanel.Size = new System.Drawing.Size(601, 381);
             this.entriesRetractionsSplitPanel.SplitterDistance = 270;
             this.entriesRetractionsSplitPanel.TabIndex = 9;
             // 
@@ -568,7 +568,7 @@
             this.retractionsGridView.RowHeadersWidth = 20;
             this.retractionsGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.retractionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.retractionsGridView.Size = new System.Drawing.Size(602, 107);
+            this.retractionsGridView.Size = new System.Drawing.Size(601, 107);
             this.retractionsGridView.TabIndex = 8;
             this.retractionsGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.retractionsGridView_CellContentDoubleClick);
             this.retractionsGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RetractionsGridView_CellFormatting);
@@ -604,6 +604,46 @@
             this.goodnessGroupBox.TabIndex = 6;
             this.goodnessGroupBox.TabStop = false;
             this.goodnessGroupBox.Text = "Quality Index";
+            // 
+            // goodnessFormulaComboBox
+            // 
+            this.goodnessFormulaComboBox.FormattingEnabled = true;
+            this.goodnessFormulaComboBox.Location = new System.Drawing.Point(6, 15);
+            this.goodnessFormulaComboBox.Name = "goodnessFormulaComboBox";
+            this.goodnessFormulaComboBox.Size = new System.Drawing.Size(159, 21);
+            this.goodnessFormulaComboBox.TabIndex = 20;
+            this.goodnessFormulaComboBox.SelectedIndexChanged += new System.EventHandler(this.goodnessFormulaComboBox_SelectedIndexChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(254, 68);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(28, 13);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "Eval";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 67);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(40, 13);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Games";
+            // 
+            // gamesEvalWeightTrackBar
+            // 
+            this.gamesEvalWeightTrackBar.AutoSize = false;
+            this.gamesEvalWeightTrackBar.LargeChange = 10;
+            this.gamesEvalWeightTrackBar.Location = new System.Drawing.Point(52, 64);
+            this.gamesEvalWeightTrackBar.Maximum = 100;
+            this.gamesEvalWeightTrackBar.Name = "gamesEvalWeightTrackBar";
+            this.gamesEvalWeightTrackBar.Size = new System.Drawing.Size(196, 20);
+            this.gamesEvalWeightTrackBar.TabIndex = 17;
+            this.gamesEvalWeightTrackBar.TickFrequency = 10;
+            this.gamesEvalWeightTrackBar.Value = 50;
+            this.gamesEvalWeightTrackBar.Scroll += new System.EventHandler(this.gamesEvalWeightTrackBar_Scroll);
             // 
             // lowNThresholdNumericUpDown
             // 
@@ -738,7 +778,7 @@
             this.totalEntriesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.totalEntriesGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.totalEntriesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.totalEntriesGridView.Size = new System.Drawing.Size(602, 66);
+            this.totalEntriesGridView.Size = new System.Drawing.Size(601, 66);
             this.totalEntriesGridView.TabIndex = 5;
             this.totalEntriesGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.TotalEntriesGridView_CellFormatting);
             this.totalEntriesGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.TotalEntriesGridView_ColumnWidthChanged);
@@ -803,46 +843,6 @@
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
             // 
-            // gamesEvalWeightTrackBar
-            // 
-            this.gamesEvalWeightTrackBar.AutoSize = false;
-            this.gamesEvalWeightTrackBar.LargeChange = 10;
-            this.gamesEvalWeightTrackBar.Location = new System.Drawing.Point(63, 64);
-            this.gamesEvalWeightTrackBar.Maximum = 100;
-            this.gamesEvalWeightTrackBar.Name = "gamesEvalWeightTrackBar";
-            this.gamesEvalWeightTrackBar.Size = new System.Drawing.Size(168, 20);
-            this.gamesEvalWeightTrackBar.TabIndex = 17;
-            this.gamesEvalWeightTrackBar.TickFrequency = 10;
-            this.gamesEvalWeightTrackBar.Value = 50;
-            this.gamesEvalWeightTrackBar.Scroll += new System.EventHandler(this.gamesEvalWeightTrackBar_Scroll);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(22, 67);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(40, 13);
-            this.label1.TabIndex = 18;
-            this.label1.Text = "Games";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(237, 69);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(28, 13);
-            this.label2.TabIndex = 19;
-            this.label2.Text = "Eval";
-            // 
-            // goodnessFormulaComboBox
-            // 
-            this.goodnessFormulaComboBox.FormattingEnabled = true;
-            this.goodnessFormulaComboBox.Location = new System.Drawing.Point(6, 15);
-            this.goodnessFormulaComboBox.Name = "goodnessFormulaComboBox";
-            this.goodnessFormulaComboBox.Size = new System.Drawing.Size(121, 21);
-            this.goodnessFormulaComboBox.TabIndex = 20;
-            this.goodnessFormulaComboBox.SelectedIndexChanged += new System.EventHandler(this.goodnessFormulaComboBox_SelectedIndexChanged);
-            // 
             // chessBoard
             // 
             this.chessBoard.BoardImages = null;
@@ -893,6 +893,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.retractionsGridView)).EndInit();
             this.goodnessGroupBox.ResumeLayout(false);
             this.goodnessGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gamesEvalWeightTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lowNThresholdNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.drawScoreNumericUpDown)).EndInit();
             this.displayGroupBox.ResumeLayout(false);
@@ -900,7 +901,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.totalEntriesGridView)).EndInit();
             this.queryGroupBox.ResumeLayout(false);
             this.queryGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gamesEvalWeightTrackBar)).EndInit();
             this.ResumeLayout(false);
 
         }
