@@ -97,17 +97,15 @@ namespace chess_pos_db_gui.src.app
             // If eval is not present then assume 0.5 but reduce it for moves with low game count.
             // The idea is that we don't want missing eval to penalize common moves.
             double evalGoodness =
-                EloCalculator.GetEloFromPerformance(
+                (
                     score != null
-                    ? score.Perf
-                    : EloCalculator.GetExpectedPerformance(
-                        -EloCalculator.EloError99pct(
-                            totalEntry.WinCount, 
-                            totalEntry.DrawCount, 
+                    ? EloCalculator.GetEloFromPerformance(score.Perf)
+                    : -EloCalculator.EloError99pct(
+                            totalEntry.WinCount,
+                            totalEntry.DrawCount,
                             totalEntry.LossCount
-                            )
                         )
-                    ) * evalWeight;
+                ) * evalWeight;
 
             double weightSum = gamesWeight + evalWeight;
 
