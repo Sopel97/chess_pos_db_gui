@@ -12,8 +12,6 @@ namespace chess_pos_db_gui.src.app
     {
         public class Options
         {
-            public bool UseGames { get; set; }
-            public bool UseEval { get; set; }
             public bool IncreaseErrorBarForLowN { get; set; }
 
             public double EvalWeight { get; set; }
@@ -34,7 +32,8 @@ namespace chess_pos_db_gui.src.app
             const double maxAllowedPlayerEloDiff = 400;
             const double maxCalculatedEloDiff = 800;
 
-            bool useEval = options.UseEval;
+            bool useEval = options.EvalWeight > 0.0;
+            bool useGames = options.GamesWeight > 0.0;
 
             AggregatedEntry totalEntry = new AggregatedEntry();
             foreach(KeyValuePair<GameLevel, AggregatedEntry> e in aggregatedEntries)
@@ -42,7 +41,7 @@ namespace chess_pos_db_gui.src.app
                 totalEntry.Combine(e.Value);
             }
 
-            if (options.UseGames && totalEntry.Count == 0)
+            if (useGames && totalEntry.Count == 0)
             {
                 return 0.0;
             }
@@ -52,8 +51,8 @@ namespace chess_pos_db_gui.src.app
                 return 0.0;
             }
 
-            double gamesWeight = options.UseGames ? options.GamesWeight : 0.0;
-            double evalWeight = useEval ? options.EvalWeight : 0.0;
+            double gamesWeight = options.GamesWeight;
+            double evalWeight = options.EvalWeight;
 
             double calculateAdjustedPerf(AggregatedEntry e)
             {
@@ -119,8 +118,6 @@ namespace chess_pos_db_gui.src.app
         }
         public class PrioritizeEvalOptions
         {
-            public bool UseGames { get; set; }
-
             public double EvalWeight { get; set; }
             public double GamesWeight { get; set; }
             public double DrawScore { get; set; }
@@ -161,8 +158,7 @@ namespace chess_pos_db_gui.src.app
                     EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses),
                     2 * maxCalculatedEloDiff
                     );
-                double gw = options.UseGames ? options.GamesWeight : 0.0;
-                gw *= Math.Exp(-(totalEloError / options.EloErrorHalfWeight));
+                double gw = options.GamesWeight * Math.Exp(-(totalEloError / options.EloErrorHalfWeight));
 
                 if (e.Count > 0)
                 {
@@ -178,7 +174,7 @@ namespace chess_pos_db_gui.src.app
                 }
                 else
                 {
-                    return new Tuple<double, double(0, 0);
+                    return new Tuple<double, double>(0, 0);
                 }
             }
 

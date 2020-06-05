@@ -517,8 +517,6 @@ namespace chess_pos_db_gui
         {
             var options = new GoodnessCalculator.Options
             {
-                UseGames = (levelHumanCheckBox.Checked || levelServerCheckBox.Checked || levelEngineCheckBox.Checked) && gamesWeightCheckbox.Checked,
-                UseEval = evaluationWeightCheckbox.Checked,
                 IncreaseErrorBarForLowN = lowNThesholdCheckBox.Checked,
 
                 DrawScore = (double)drawScoreNumericUpDown.Value,
