@@ -30,8 +30,8 @@ namespace chess_pos_db_gui.src.app
             Options options
             )
         {
-            const long maxAllowedEloDiff = 400;
-            const double minPerf = 0.01;
+            const double maxAllowedPlayerEloDiff = 400;
+            const double maxCalculatedEloDiff = 800;
 
             bool useEval = options.UseEval;
 
@@ -46,7 +46,7 @@ namespace chess_pos_db_gui.src.app
                 return 0.0;
             }
 
-            if (useEval && score == null && Math.Abs(totalEntry.TotalEloDiff / (long)totalEntry.Count) > maxAllowedEloDiff)
+            if (useEval && score == null && Math.Abs(totalEntry.TotalEloDiff / (double)totalEntry.Count) > maxAllowedPlayerEloDiff)
             {
                 return 0.0;
             }
@@ -63,30 +63,41 @@ namespace chess_pos_db_gui.src.app
                     ulong totalDraws = e.DrawCount;
                     ulong totalLosses = e.Count - totalWins - totalDraws;
                     double totalPerf = (totalWins + totalDraws * options.DrawScore) / e.Count;
-                    double totalEloError = EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses, lowNThreshold);
-                    double expectedTotalPerf = EloCalculator.GetExpectedPerformance((e.TotalEloDiff) / (double)e.Count);
+                    double totalEloError = EloCalculator.Clamp(
+                        EloCalculator.EloError99pct(totalWins, totalDraws, totalLosses, lowNThreshold),
+                        2 * maxCalculatedEloDiff
+                        );
+                    double expectedTotalPerf = EloCalculator.GetExpectedPerformance(e.TotalEloDiff / (double)e.Count);
                     if (sideToMove == Player.Black)
                     {
                         totalPerf = 1.0 - totalPerf;
                         expectedTotalPerf = 1.0 - expectedTotalPerf;
                     }
                     double adjustedPerf = EloCalculator.GetAdjustedPerformance(totalPerf, expectedTotalPerf);
-                    return EloCalculator.GetExpectedPerformance(EloCalculator.GetEloFromPerformance(adjustedPerf) - totalEloError);
+                    double expectedElo = 
+                        EloCalculator.Clamp(
+                            EloCalculator.Clamp(
+                                EloCalculator.GetEloFromPerformance(adjustedPerf),
+                                maxCalculatedEloDiff
+                                ) - totalEloError, 
+                            maxCalculatedEloDiff);
+                    adjustedPerf = EloCalculator.GetExpectedPerformance(expectedElo);
+                    return adjustedPerf;
                 }
                 else
                 {
-                    return 1.0;
+                    return 0.0;
                 }
             }
 
             double adjustedGamesPerf = calculateAdjustedPerf(totalEntry);
 
-            double gamesGoodness = Math.Pow(adjustedGamesPerf, gamesWeight);
+            double gamesGoodness = EloCalculator.GetEloFromPerformance(adjustedGamesPerf) * gamesWeight;
 
             // If eval is not present then assume 0.5 but reduce it for moves with low game count.
             // The idea is that we don't want missing eval to penalize common moves.
             double evalGoodness =
-                Math.Pow(
+                EloCalculator.GetEloFromPerformance(
                     score != null
                     ? score.Perf
                     : EloCalculator.GetExpectedPerformance(
@@ -96,11 +107,11 @@ namespace chess_pos_db_gui.src.app
                             totalEntry.LossCount
                             )
                         )
-                    , evalWeight);
+                    ) * evalWeight;
 
             double weightSum = gamesWeight + evalWeight;
 
-            double goodness = Math.Pow(gamesGoodness * evalGoodness, 1.0 / weightSum);
+            double goodness = EloCalculator.GetExpectedPerformance((gamesGoodness + evalGoodness) / weightSum);
 
             return goodness;
         }
