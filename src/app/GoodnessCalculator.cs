@@ -188,6 +188,19 @@ namespace chess_pos_db_gui.src.app
                         expectedTotalPerf = 1.0 - expectedTotalPerf;
                     }
                     double adjustedPerf = EloCalculator.GetAdjustedPerformance(totalPerf, expectedTotalPerf, maxCalculatedEloDiff);
+                    if (score == null)
+                    {
+                        // If the score is null there's nothing to moderate the bad empirical data.
+                        // So we apply the old method to reduce the QI of this move based on elo error.
+                        double expectedElo =
+                            EloCalculator.Clamp(
+                                EloCalculator.Clamp(
+                                    EloCalculator.GetEloFromPerformance(adjustedPerf),
+                                    maxCalculatedEloDiff
+                                    ) - totalEloError,
+                                maxCalculatedEloDiff);
+                        adjustedPerf = EloCalculator.GetExpectedPerformance(expectedElo);
+                    }
                     return new Tuple<double, double>(gw, adjustedPerf);
                 }
                 else
