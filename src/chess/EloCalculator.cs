@@ -19,19 +19,10 @@ namespace chess_pos_db_gui
             return -400.0 * Math.Log((1.0 - perf) / perf) / Math.Log(10.0);
         }
 
-        public static double GetAdjustedPerformance(double actualPerf, double expectedPerf)
+        public static double GetAdjustedPerformance(double actualPerf, double expectedPerf, double maxEloDiff = double.PositiveInfinity)
         {
-            // We have a cap on elo and elo error. Due to this we don't get infinities
-            // from 0% and 100% perf. This means adjusting them results in other values
-            // even if expected perf is 50%. So if the perf is borderling we just copy it.
-            double eps = 0.001;
-            if (actualPerf < eps || actualPerf > 1.0 - eps)
-            {
-                return actualPerf;
-            }
-
-            var actualElo = GetEloFromPerformance(actualPerf);
-            var expectedElo = GetEloFromPerformance(expectedPerf);
+            var actualElo = Clamp(GetEloFromPerformance(actualPerf), maxEloDiff);
+            var expectedElo = Clamp(GetEloFromPerformance(expectedPerf), maxEloDiff);
             return GetExpectedPerformance(actualElo - expectedElo);
         }
 

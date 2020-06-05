@@ -73,7 +73,7 @@ namespace chess_pos_db_gui.src.app
                         totalPerf = 1.0 - totalPerf;
                         expectedTotalPerf = 1.0 - expectedTotalPerf;
                     }
-                    double adjustedPerf = EloCalculator.GetAdjustedPerformance(totalPerf, expectedTotalPerf);
+                    double adjustedPerf = EloCalculator.GetAdjustedPerformance(totalPerf, expectedTotalPerf, maxCalculatedEloDiff);
                     double expectedElo = 
                         EloCalculator.Clamp(
                             EloCalculator.Clamp(
