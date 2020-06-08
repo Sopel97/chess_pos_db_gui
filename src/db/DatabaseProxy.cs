@@ -108,9 +108,9 @@ namespace chess_pos_db_gui
             }
         }
 
-        public string GetDefaultDatabaseFormat()
+        public string GetDefaultDatabaseSchema()
         {
-            return GetRichestDatabaseFormat();
+            return GetRichestDatabaseSchema();
         }
 
         private int GetDatabaseFormatRichness(DatabaseSupportManifest manifest)
@@ -139,7 +139,7 @@ namespace chess_pos_db_gui
             return r;
         }
 
-        public string GetRichestDatabaseFormat()
+        public string GetRichestDatabaseSchema()
         {
             int bestR = int.MaxValue;
             string bestName = "";
@@ -178,7 +178,7 @@ namespace chess_pos_db_gui
                 FetchSupportManifest();
             }
 
-            return SupportManifests[GetDatabaseFormat()];
+            return SupportManifests[GetDatabaseSchema()];
         }
 
         public void FetchManifest()
@@ -204,7 +204,7 @@ namespace chess_pos_db_gui
             }
         }
 
-        public IList<string> GetSupportedDatabaseTypes()
+        public IList<string> GetSupportedDatabaseSchemas()
         {
             if (SupportManifests == null)
             {
@@ -226,17 +226,17 @@ namespace chess_pos_db_gui
                 FetchSupportManifest();
             }
 
-            return SupportManifests[GetDatabaseFormat()].MergeMode;
+            return SupportManifests[GetDatabaseSchema()].MergeMode;
         }
 
-        public string GetDatabaseFormat()
+        public string GetDatabaseSchema()
         {
             if (Manifest == null)
             {
                 FetchManifest();
             }
 
-            return Manifest.Name;
+            return Manifest.Schema;
         }
 
         public Dictionary<string, List<DatabaseMergableFile>> GetMergableFiles()
@@ -847,12 +847,12 @@ namespace chess_pos_db_gui
 
     public class DatabaseManifest
     {
-        public string Name { get; private set; }
+        public string Schema { get; private set; }
         public string Version { get; private set; }
 
         public DatabaseManifest(JsonValue json)
         {
-            Name = json["name"];
+            Schema = json["schema"];
             Version = json["version"];
         }
     }

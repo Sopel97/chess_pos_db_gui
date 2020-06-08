@@ -116,19 +116,19 @@ namespace chess_pos_db_gui
         {
             if (IsAppend)
             {
-                string format = database.GetDatabaseFormat();
+                string format = database.GetDatabaseSchema();
                 databaseFormatComboBox.Items.Add(format);
                 databaseFormatComboBox.SelectedItem = format;
             }
             else
             {
-                var supported = database.GetSupportedDatabaseTypes();
+                var supported = database.GetSupportedDatabaseSchemas();
                 foreach (var type in supported)
                 {
                     databaseFormatComboBox.Items.Add(type);
                 }
 
-                databaseFormatComboBox.SelectedItem = database.GetDefaultDatabaseFormat();
+                databaseFormatComboBox.SelectedItem = database.GetDefaultDatabaseSchema();
             }
         }
 
@@ -151,7 +151,7 @@ namespace chess_pos_db_gui
         {
             if (databaseFormatComboBox.SelectedItem == null || (string)databaseFormatComboBox.SelectedItem == "")
             {
-                MessageBox.Show("Please select the database format first.");
+                MessageBox.Show("Please select the database schema first.");
                 return;
             }
 
@@ -613,7 +613,7 @@ namespace chess_pos_db_gui
 
             if (databaseFormatComboBox.SelectedItem == null || (string)databaseFormatComboBox.SelectedItem == "")
             {
-                MessageBox.Show("You need to specify the database format.");
+                MessageBox.Show("You need to specify the database schema.");
                 return;
             }
 
@@ -673,7 +673,7 @@ namespace chess_pos_db_gui
                 { "destination_path", dir },
                 { "merge", doMerge },
                 { "report_progress", true },
-                { "database_format", databaseFormatComboBox.Text },
+                { "schema", databaseFormatComboBox.Text },
                 { "human_pgns", new JsonArray(humanPgns) },
                 { "engine_pgns", new JsonArray(enginePgns) },
                 { "server_pgns", new JsonArray(serverPgns) }
@@ -861,17 +861,17 @@ namespace chess_pos_db_gui
         private void WhatsDatabaseFormatButton_Click(object sender, EventArgs e)
         {
             MessageBox.Show(
-                "This determines the binary format used for storing the database you're about to create.\n" +
-                "Different formats provide different tradeoffs between storage space required and the information they keep.\n" +
-                "Currently the following database formats exist:\n" +
+                "This determines the binary schemas used for storing the database you're about to create.\n" +
+                "Different schemas provide different tradeoffs between storage space required and the information they keep.\n" +
+                "Currently the following database schemas exist:\n" +
                 "\n" +
-                "- db_alpha - An old deprecated format. Not many advantages to using it now. Definitely don't use it if you have an HDD. May use less space than other formats for small databases. If you really want to know more about this see chess_pos_db documentation on github. If you're not certain don't use it.\n" +
+                "- db_alpha - An old deprecated schema. Not many advantages to using it now. Definitely don't use it if you have an HDD. May use less space than other schemes for small databases. If you really want to know more about this see chess_pos_db documentation on github. If you're not certain don't use it.\n" +
                 "\n" +
                 "- db_beta - Each unique position takes 24 bytes of storage space (usually ~70% of total number of positions). It provides WDL data and information about first game for each position. Supports filtering transpositions. Should handle every practical database size, is expected to work correctly with trillion of positions.\n" +
                 "\n" +
                 "- db_delta - Each unique position takes 32 bytes of storage space. Has all the features of db_beta but also stores average elo delta for each position (BlackElo - WhiteElo). This allows calculation of expected performance for white and effecively allows the GUI to compute more reliable move quality values. Also stores information about last game for each postion but it's unavailable in the GUI. This should be the default if you don't have any reason to go for a different one.\n" +
                 "\n" +
-                "- db_epsilon - Each unique position takes 16 bytes of storage space. This is a bare bones format that only keeps WDL and transposition information. You should only use it for huge databases and when you're low on disk space. Allows a maximum of 4 billion games to be aggregated, but there may be very very rare glitches beyond 1 billion games (you shouldn't be able to spot them).\n",
+                "- db_epsilon - Each unique position takes 16 bytes of storage space. This is a bare bones schema that only keeps WDL and transposition information. You should only use it for huge databases and when you're low on disk space. Allows a maximum of 4 billion games to be aggregated, but there may be very very rare glitches beyond 1 billion games (you shouldn't be able to spot them).\n",
                 "Help",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information

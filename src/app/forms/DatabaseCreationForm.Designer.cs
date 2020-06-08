@@ -65,6 +65,7 @@
             this.buildButton = new System.Windows.Forms.Button();
             this.tempDirsGroupBox = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.mergeNewAfterImportRadioButton = new System.Windows.Forms.RadioButton();
             this.mergeAllAfterImportRadioButton = new System.Windows.Forms.RadioButton();
             this.mergeManuallyAfterImportRadioButton = new System.Windows.Forms.RadioButton();
             this.dontMergeRadioButton = new System.Windows.Forms.RadioButton();
@@ -80,7 +81,6 @@
             this.setPrimaryTempFolderButton = new System.Windows.Forms.Button();
             this.primaryTempFolderTextBox = new System.Windows.Forms.TextBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.mergeNewAfterImportRadioButton = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -181,11 +181,11 @@
             // databaseFormatLabel
             // 
             this.databaseFormatLabel.AutoSize = true;
-            this.databaseFormatLabel.Location = new System.Drawing.Point(82, 41);
+            this.databaseFormatLabel.Location = new System.Drawing.Point(121, 41);
             this.databaseFormatLabel.Name = "databaseFormatLabel";
-            this.databaseFormatLabel.Size = new System.Drawing.Size(91, 13);
+            this.databaseFormatLabel.Size = new System.Drawing.Size(52, 13);
             this.databaseFormatLabel.TabIndex = 10;
-            this.databaseFormatLabel.Text = "Database format: ";
+            this.databaseFormatLabel.Text = "Schema: ";
             this.tooltip.SetToolTip(this.databaseFormatLabel, "The database format to use. Descriptions can be found on project\'s github page in" +
         " the documentation. Default is best for uninformed users.");
             // 
@@ -554,6 +554,17 @@
             this.panel1.Size = new System.Drawing.Size(637, 23);
             this.panel1.TabIndex = 24;
             // 
+            // mergeNewAfterImportRadioButton
+            // 
+            this.mergeNewAfterImportRadioButton.AutoSize = true;
+            this.mergeNewAfterImportRadioButton.Location = new System.Drawing.Point(380, 3);
+            this.mergeNewAfterImportRadioButton.Name = "mergeNewAfterImportRadioButton";
+            this.mergeNewAfterImportRadioButton.Size = new System.Drawing.Size(155, 17);
+            this.mergeNewAfterImportRadioButton.TabIndex = 24;
+            this.mergeNewAfterImportRadioButton.TabStop = true;
+            this.mergeNewAfterImportRadioButton.Text = "Merge only new after import";
+            this.mergeNewAfterImportRadioButton.UseVisualStyleBackColor = true;
+            // 
             // mergeAllAfterImportRadioButton
             // 
             this.mergeAllAfterImportRadioButton.AutoSize = true;
@@ -728,17 +739,6 @@
             this.tooltip.AutoPopDelay = 10000;
             this.tooltip.InitialDelay = 200;
             this.tooltip.ReshowDelay = 40;
-            // 
-            // mergeNewAfterImportRadioButton
-            // 
-            this.mergeNewAfterImportRadioButton.AutoSize = true;
-            this.mergeNewAfterImportRadioButton.Location = new System.Drawing.Point(380, 3);
-            this.mergeNewAfterImportRadioButton.Name = "mergeNewAfterImportRadioButton";
-            this.mergeNewAfterImportRadioButton.Size = new System.Drawing.Size(155, 17);
-            this.mergeNewAfterImportRadioButton.TabIndex = 24;
-            this.mergeNewAfterImportRadioButton.TabStop = true;
-            this.mergeNewAfterImportRadioButton.Text = "Merge only new after import";
-            this.mergeNewAfterImportRadioButton.UseVisualStyleBackColor = true;
             // 
             // DatabaseCreationForm
             // 
