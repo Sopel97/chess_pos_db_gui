@@ -848,12 +848,12 @@ namespace chess_pos_db_gui
     public class DatabaseManifest
     {
         public string Name { get; private set; }
-        public bool RequiresMatchinEndianness { get; private set; }
+        public string Version { get; private set; }
 
         public DatabaseManifest(JsonValue json)
         {
             Name = json["name"];
-            RequiresMatchinEndianness = json["requires_matching_endianness"];
+            Version = json["version"];
         }
     }
 
