@@ -508,7 +508,7 @@ namespace chess_pos_db_gui
                     { "command", "dump" },
                     { "output_path", outPath }
                 };
-                json.Add("temprary_paths", new JsonArray(tempPaths.Select(t =>
+                json.Add("temporary_paths", new JsonArray(tempPaths.Select(t =>
                 {
                     JsonValue s = t;
                     return s;
