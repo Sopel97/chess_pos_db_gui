@@ -294,6 +294,21 @@ namespace chess_pos_db_gui
 
         private async void DumpButton_Click(object sender, EventArgs e)
         {
+            if (outputPathTextBox.Text == "")
+            {
+                MessageBox.Show("You must specify an output file.", "No output file", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+
+            if ((int)minCountInput.Value == 1)
+            {
+                var result = MessageBox.Show("Are you sure you want to dump ALL positions? This may take a lot of space.", "Confirm", MessageBoxButtons.YesNo);
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
             DisableInput();
 
             await Task.Run(() => Dump(
@@ -333,7 +348,7 @@ namespace chess_pos_db_gui
         private void PgnsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             var row = pgnsDataGridView.Rows[e.RowIndex];
-            if (row.Cells[1].Value.Equals("100%"))
+            if (row.Cells[1].Value != null && row.Cells[1].Value.Equals("100%"))
             {
                 row.DefaultCellStyle.BackColor = Color.LimeGreen;
             }
