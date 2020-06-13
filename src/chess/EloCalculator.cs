@@ -39,7 +39,8 @@ namespace chess_pos_db_gui
             double safePerf = 0.15;
             p = Math.Max(safePerf, Math.Min(1.0 - safePerf, p));
             var v = p * (1.0 - p);
-            return Math.Sqrt((v - drawRatio / 4.0) / (total - 1.0));
+            // return Math.Sqrt((v - drawRatio / 4.0) / (total - 1.0)); // returns 0 when drawRatio == 1... that's bad...
+            return Math.Sqrt(v / (total - 1.0));
         }
 
         public static double EloError99pct(ulong engineWins, ulong engineDraws, ulong engineLosses, ulong? lowN = null)
