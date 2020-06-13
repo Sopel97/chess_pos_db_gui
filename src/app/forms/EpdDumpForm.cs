@@ -101,7 +101,7 @@ namespace chess_pos_db_gui
         {
             using (OpenFileDialog browser = new OpenFileDialog())
             {
-                browser.Filter = "PGN Files (*.pgn)|*.pgn|All files (*.*)|*.*";
+                browser.Filter = "Chess game Files (*.pgn;*.bcgn)|*.pgn;*.bcgn|All files (*.*)|*.*";
                 browser.CheckFileExists = true;
                 browser.Multiselect = true;
                 browser.ValidateNames = true;
@@ -309,10 +309,17 @@ namespace chess_pos_db_gui
                 }
             }
 
+            var pgns = GetPgns();
+            if (pgns.Count == 0)
+            {
+                MessageBox.Show("You must specify at least one input file.", "No input files", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+
             DisableInput();
 
             await Task.Run(() => Dump(
-                GetPgns(),
+                pgns,
                 outputPathTextBox.Text,
                 GetTempPaths(),
                 (int)minCountInput.Value,
