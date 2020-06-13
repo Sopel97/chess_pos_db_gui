@@ -40,6 +40,19 @@ namespace chess_pos_db_gui
             }
         }
 
+        private void setSecondaryTempFolderButton_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog browser = new FolderBrowserDialog())
+            {
+                browser.ShowNewFolderButton = true;
+
+                if (browser.ShowDialog() == DialogResult.OK)
+                {
+                    secondaryTempFolderTextBox.Text = browser.SelectedPath;
+                }
+            }
+        }
+
         private void SetOutputPathButton_Click(object sender, EventArgs e)
         {
             using (SaveFileDialog browser = new SaveFileDialog())
@@ -58,6 +71,11 @@ namespace chess_pos_db_gui
         private void ClearTempFolderButton_Click(object sender, EventArgs e)
         {
             tempFolderTextBox.Clear();
+        }
+
+        private void clearSecondaryTempFolderButton_Click(object sender, EventArgs e)
+        {
+            secondaryTempFolderTextBox.Clear();
         }
 
         private void DatabaseCreationForm_Load(object sender, EventArgs e)
@@ -207,11 +225,11 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Dump(List<string> pgns, string outPath, string tempPath, int minCount)
+        private void Dump(List<string> pgns, string outPath, List<string> tempPaths, int minCount, int maxPly)
         {
             try
             {
-                database.Dump(pgns, outPath, tempPath, minCount, ProgressCallback);
+                database.Dump(pgns, outPath, tempPaths, minCount, maxPly, ProgressCallback);
                 MessageBox.Show(
                     String.Format(
                         "Finished.\nGames processed: {0}\nPositions processed: {1}\nPositions dumped: {2}",
@@ -281,8 +299,27 @@ namespace chess_pos_db_gui
             await Task.Run(() => Dump(
                 GetPgns(),
                 outputPathTextBox.Text,
-                tempFolderTextBox.Text != "" ? tempFolderTextBox.Text : null,
-                (int)minCountInput.Value));
+                GetTempPaths(),
+                (int)minCountInput.Value,
+                (int)maxPlyNumericUpDown.Value
+                ));
+        }
+
+        private List<string> GetTempPaths()
+        {
+            var paths = new List<string>();
+
+            if (tempFolderTextBox.Text != "")
+            {
+                paths.Add(tempFolderTextBox.Text);
+            }
+
+            if (secondaryTempFolderTextBox.Text != "")
+            {
+                paths.Add(secondaryTempFolderTextBox.Text);
+            }
+
+            return paths;
         }
 
         private void DatabaseCreationForm_FormClosing(object sender, FormClosingEventArgs e)
