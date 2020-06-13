@@ -54,6 +54,7 @@
             this.secondaryTempFolderTextBox = new System.Windows.Forms.TextBox();
             this.setSecondaryTempFolderButton = new System.Windows.Forms.Button();
             this.clearSecondaryTempFolderButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pgnsDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -140,11 +141,11 @@
             // minCountLabel
             // 
             this.minCountLabel.AutoSize = true;
-            this.minCountLabel.Location = new System.Drawing.Point(70, 92);
+            this.minCountLabel.Location = new System.Drawing.Point(64, 92);
             this.minCountLabel.Name = "minCountLabel";
-            this.minCountLabel.Size = new System.Drawing.Size(54, 13);
+            this.minCountLabel.Size = new System.Drawing.Size(60, 13);
             this.minCountLabel.TabIndex = 10;
-            this.minCountLabel.Text = "Min count";
+            this.minCountLabel.Text = "Min count: ";
             this.tooltip.SetToolTip(this.minCountLabel, "The minimal number of times the position needs to be seen to include it in the ou" +
         "tput epd. If 1 then all positions are included.");
             // 
@@ -262,6 +263,7 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.label2);
             this.splitContainer2.Panel2.Controls.Add(this.dumpProgressLabel);
             this.splitContainer2.Panel2.Controls.Add(this.dumpProgressBar);
             this.splitContainer2.Panel2.Controls.Add(this.dumpButton);
@@ -293,9 +295,9 @@
             // 
             this.dumpProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dumpProgressBar.Location = new System.Drawing.Point(12, 9);
+            this.dumpProgressBar.Location = new System.Drawing.Point(130, 9);
             this.dumpProgressBar.Name = "dumpProgressBar";
-            this.dumpProgressBar.Size = new System.Drawing.Size(437, 17);
+            this.dumpProgressBar.Size = new System.Drawing.Size(319, 20);
             this.dumpProgressBar.TabIndex = 3;
             this.tooltip.SetToolTip(this.dumpProgressBar, "Dumping progress.");
             // 
@@ -316,15 +318,15 @@
             this.maxPlyLabel.AutoSize = true;
             this.maxPlyLabel.Location = new System.Drawing.Point(206, 92);
             this.maxPlyLabel.Name = "maxPlyLabel";
-            this.maxPlyLabel.Size = new System.Drawing.Size(43, 13);
+            this.maxPlyLabel.Size = new System.Drawing.Size(49, 13);
             this.maxPlyLabel.TabIndex = 11;
-            this.maxPlyLabel.Text = "Max ply";
+            this.maxPlyLabel.Text = "Max ply: ";
             this.tooltip.SetToolTip(this.maxPlyLabel, "The minimal number of times the position needs to be seen to include it in the ou" +
         "tput epd. If 1 then all positions are included.");
             // 
             // maxPlyNumericUpDown
             // 
-            this.maxPlyNumericUpDown.Location = new System.Drawing.Point(255, 90);
+            this.maxPlyNumericUpDown.Location = new System.Drawing.Point(261, 90);
             this.maxPlyNumericUpDown.Maximum = new decimal(new int[] {
             276447231,
             23283,
@@ -388,6 +390,17 @@
             this.clearSecondaryTempFolderButton.UseVisualStyleBackColor = true;
             this.clearSecondaryTempFolderButton.Click += new System.EventHandler(this.clearSecondaryTempFolderButton_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(40, 13);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(84, 13);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Dump progress: ";
+            this.tooltip.SetToolTip(this.label2, "The minimal number of times the position needs to be seen to include it in the ou" +
+        "tput epd. If 1 then all positions are included.");
+            // 
             // EpdDumpForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -443,5 +456,6 @@
         private System.Windows.Forms.Button setSecondaryTempFolderButton;
         private System.Windows.Forms.TextBox secondaryTempFolderTextBox;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
