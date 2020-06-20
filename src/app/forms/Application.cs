@@ -1285,8 +1285,8 @@ namespace chess_pos_db_gui
                 var stats = info.Stats.GetTotal();
 
                 int averageMovesPerGame = ((int)Math.Round((double)stats.NumPositions / stats.NumGames / 2.0));
-                var averageWhiteElo = stats.TotalWhiteElo / stats.NumGamesWithElo;
-                var averageBlackElo = stats.TotalBlackElo / stats.NumGamesWithElo;
+                var averageWhiteElo = stats.TotalWhiteElo / Math.Max(1, stats.NumGamesWithElo);
+                var averageBlackElo = stats.TotalBlackElo / Math.Max(1, stats.NumGamesWithElo);
 
                 databaseInfoRichTextBox.Text =
                     "Path: " + info.Path + Environment.NewLine
