@@ -225,11 +225,11 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Dump(List<string> pgns, string outPath, List<string> tempPaths, int minCount, int maxPly)
+        private void Dump(List<string> pgns, string outPath, List<string> tempPaths, int minCount, int maxPly, int minPieces)
         {
             try
             {
-                database.Dump(pgns, outPath, tempPaths, minCount, maxPly, ProgressCallback);
+                database.Dump(pgns, outPath, tempPaths, minCount, maxPly, minPieces, ProgressCallback);
                 MessageBox.Show(
                     String.Format(
                         "Finished.\nGames processed: {0}\nPositions processed: {1}\nPositions dumped: {2}",
@@ -323,7 +323,8 @@ namespace chess_pos_db_gui
                 outputPathTextBox.Text,
                 GetTempPaths(),
                 (int)minCountInput.Value,
-                (int)maxPlyNumericUpDown.Value
+                (int)maxPlyNumericUpDown.Value,
+                (int)minPiecesNumericUpDown.Value
                 ));
         }
 

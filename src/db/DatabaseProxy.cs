@@ -497,7 +497,7 @@ namespace chess_pos_db_gui
             return response;
         }
 
-        public void Dump(List<string> pgns, string outPath, List<string> tempPaths, int minCount, int maxPly, Action<JsonValue> callback)
+        public void Dump(List<string> pgns, string outPath, List<string> tempPaths, int minCount, int maxPly, int minPieces, Action<JsonValue> callback)
         {
             lock (Lock)
             {
@@ -515,6 +515,7 @@ namespace chess_pos_db_gui
                 })));
                 json.Add("min_count", minCount);
                 json.Add("max_ply", maxPly);
+                json.Add("min_pieces", minPieces);
                 json.Add("report_progress", true);
 
                 var pgnsJson = new JsonArray();

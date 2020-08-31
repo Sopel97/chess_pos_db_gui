@@ -33,6 +33,12 @@
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Progress = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.clearSecondaryTempFolderButton = new System.Windows.Forms.Button();
+            this.setSecondaryTempFolderButton = new System.Windows.Forms.Button();
+            this.secondaryTempFolderTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.maxPlyNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.maxPlyLabel = new System.Windows.Forms.Label();
             this.minCountLabel = new System.Windows.Forms.Label();
             this.minCountInput = new System.Windows.Forms.NumericUpDown();
             this.clearTempFolderButton = new System.Windows.Forms.Button();
@@ -44,28 +50,25 @@
             this.outputPathTextBox = new System.Windows.Forms.TextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.addPgnsButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.dumpProgressLabel = new System.Windows.Forms.Label();
             this.dumpProgressBar = new System.Windows.Forms.ProgressBar();
             this.dumpButton = new System.Windows.Forms.Button();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.maxPlyLabel = new System.Windows.Forms.Label();
-            this.maxPlyNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.secondaryTempFolderTextBox = new System.Windows.Forms.TextBox();
-            this.setSecondaryTempFolderButton = new System.Windows.Forms.Button();
-            this.clearSecondaryTempFolderButton = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.minPiecesLabel = new System.Windows.Forms.Label();
+            this.minPiecesNumericUpDown = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pgnsDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.maxPlyNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minCountInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.maxPlyNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minPiecesNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // pgnsDataGridView
@@ -114,6 +117,8 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.minPiecesNumericUpDown);
+            this.splitContainer1.Panel1.Controls.Add(this.minPiecesLabel);
             this.splitContainer1.Panel1.Controls.Add(this.clearSecondaryTempFolderButton);
             this.splitContainer1.Panel1.Controls.Add(this.setSecondaryTempFolderButton);
             this.splitContainer1.Panel1.Controls.Add(this.secondaryTempFolderTextBox);
@@ -137,6 +142,83 @@
             this.splitContainer1.Size = new System.Drawing.Size(624, 602);
             this.splitContainer1.SplitterDistance = 114;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // clearSecondaryTempFolderButton
+            // 
+            this.clearSecondaryTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.clearSecondaryTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.clearSecondaryTempFolderButton.Location = new System.Drawing.Point(586, 65);
+            this.clearSecondaryTempFolderButton.Name = "clearSecondaryTempFolderButton";
+            this.clearSecondaryTempFolderButton.Size = new System.Drawing.Size(26, 19);
+            this.clearSecondaryTempFolderButton.TabIndex = 16;
+            this.clearSecondaryTempFolderButton.Text = "X";
+            this.clearSecondaryTempFolderButton.UseVisualStyleBackColor = true;
+            this.clearSecondaryTempFolderButton.Click += new System.EventHandler(this.clearSecondaryTempFolderButton_Click);
+            // 
+            // setSecondaryTempFolderButton
+            // 
+            this.setSecondaryTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.setSecondaryTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.setSecondaryTempFolderButton.Location = new System.Drawing.Point(541, 65);
+            this.setSecondaryTempFolderButton.Name = "setSecondaryTempFolderButton";
+            this.setSecondaryTempFolderButton.Size = new System.Drawing.Size(39, 19);
+            this.setSecondaryTempFolderButton.TabIndex = 15;
+            this.setSecondaryTempFolderButton.Text = "...";
+            this.setSecondaryTempFolderButton.UseVisualStyleBackColor = true;
+            this.setSecondaryTempFolderButton.Click += new System.EventHandler(this.setSecondaryTempFolderButton_Click);
+            // 
+            // secondaryTempFolderTextBox
+            // 
+            this.secondaryTempFolderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.secondaryTempFolderTextBox.Location = new System.Drawing.Point(130, 64);
+            this.secondaryTempFolderTextBox.Name = "secondaryTempFolderTextBox";
+            this.secondaryTempFolderTextBox.ReadOnly = true;
+            this.secondaryTempFolderTextBox.Size = new System.Drawing.Size(405, 20);
+            this.secondaryTempFolderTextBox.TabIndex = 14;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(5, 67);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(119, 13);
+            this.label1.TabIndex = 13;
+            this.label1.Text = "Secondary temp folder: ";
+            this.tooltip.SetToolTip(this.label1, "The temporary folder used for intermediate data.");
+            // 
+            // maxPlyNumericUpDown
+            // 
+            this.maxPlyNumericUpDown.Location = new System.Drawing.Point(261, 90);
+            this.maxPlyNumericUpDown.Maximum = new decimal(new int[] {
+            276447231,
+            23283,
+            0,
+            0});
+            this.maxPlyNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.maxPlyNumericUpDown.Name = "maxPlyNumericUpDown";
+            this.maxPlyNumericUpDown.Size = new System.Drawing.Size(70, 20);
+            this.maxPlyNumericUpDown.TabIndex = 12;
+            this.maxPlyNumericUpDown.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // maxPlyLabel
+            // 
+            this.maxPlyLabel.AutoSize = true;
+            this.maxPlyLabel.Location = new System.Drawing.Point(206, 92);
+            this.maxPlyLabel.Name = "maxPlyLabel";
+            this.maxPlyLabel.Size = new System.Drawing.Size(49, 13);
+            this.maxPlyLabel.TabIndex = 11;
+            this.maxPlyLabel.Text = "Max ply: ";
+            this.tooltip.SetToolTip(this.maxPlyLabel, "The minimal number of times the position needs to be seen to include it in the ou" +
+        "tput epd. If 1 then all positions are included.");
             // 
             // minCountLabel
             // 
@@ -281,6 +363,17 @@
             this.addPgnsButton.UseVisualStyleBackColor = true;
             this.addPgnsButton.Click += new System.EventHandler(this.AddPgnsButton_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(40, 13);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(84, 13);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Dump progress: ";
+            this.tooltip.SetToolTip(this.label2, "The minimal number of times the position needs to be seen to include it in the ou" +
+        "tput epd. If 1 then all positions are included.");
+            // 
             // dumpProgressLabel
             // 
             this.dumpProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -313,93 +406,37 @@
             this.dumpButton.UseVisualStyleBackColor = true;
             this.dumpButton.Click += new System.EventHandler(this.DumpButton_Click);
             // 
-            // maxPlyLabel
+            // minPiecesLabel
             // 
-            this.maxPlyLabel.AutoSize = true;
-            this.maxPlyLabel.Location = new System.Drawing.Point(206, 92);
-            this.maxPlyLabel.Name = "maxPlyLabel";
-            this.maxPlyLabel.Size = new System.Drawing.Size(49, 13);
-            this.maxPlyLabel.TabIndex = 11;
-            this.maxPlyLabel.Text = "Max ply: ";
-            this.tooltip.SetToolTip(this.maxPlyLabel, "The minimal number of times the position needs to be seen to include it in the ou" +
-        "tput epd. If 1 then all positions are included.");
+            this.minPiecesLabel.AutoSize = true;
+            this.minPiecesLabel.Location = new System.Drawing.Point(337, 92);
+            this.minPiecesLabel.Name = "minPiecesLabel";
+            this.minPiecesLabel.Size = new System.Drawing.Size(64, 13);
+            this.minPiecesLabel.TabIndex = 17;
+            this.minPiecesLabel.Text = "Min pieces: ";
+            this.tooltip.SetToolTip(this.minPiecesLabel, "The minimal number of pieces for positions to be included");
             // 
-            // maxPlyNumericUpDown
+            // minPiecesNumericUpDown
             // 
-            this.maxPlyNumericUpDown.Location = new System.Drawing.Point(261, 90);
-            this.maxPlyNumericUpDown.Maximum = new decimal(new int[] {
-            276447231,
-            23283,
-            0,
-            0});
-            this.maxPlyNumericUpDown.Minimum = new decimal(new int[] {
-            1,
+            this.minPiecesNumericUpDown.Location = new System.Drawing.Point(406, 90);
+            this.minPiecesNumericUpDown.Maximum = new decimal(new int[] {
+            32,
             0,
             0,
             0});
-            this.maxPlyNumericUpDown.Name = "maxPlyNumericUpDown";
-            this.maxPlyNumericUpDown.Size = new System.Drawing.Size(70, 20);
-            this.maxPlyNumericUpDown.TabIndex = 12;
-            this.maxPlyNumericUpDown.Value = new decimal(new int[] {
-            100,
+            this.minPiecesNumericUpDown.Minimum = new decimal(new int[] {
+            2,
             0,
             0,
             0});
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(5, 67);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(119, 13);
-            this.label1.TabIndex = 13;
-            this.label1.Text = "Secondary temp folder: ";
-            this.tooltip.SetToolTip(this.label1, "The temporary folder used for intermediate data.");
-            // 
-            // secondaryTempFolderTextBox
-            // 
-            this.secondaryTempFolderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.secondaryTempFolderTextBox.Location = new System.Drawing.Point(130, 64);
-            this.secondaryTempFolderTextBox.Name = "secondaryTempFolderTextBox";
-            this.secondaryTempFolderTextBox.ReadOnly = true;
-            this.secondaryTempFolderTextBox.Size = new System.Drawing.Size(405, 20);
-            this.secondaryTempFolderTextBox.TabIndex = 14;
-            // 
-            // setSecondaryTempFolderButton
-            // 
-            this.setSecondaryTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.setSecondaryTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.setSecondaryTempFolderButton.Location = new System.Drawing.Point(541, 65);
-            this.setSecondaryTempFolderButton.Name = "setSecondaryTempFolderButton";
-            this.setSecondaryTempFolderButton.Size = new System.Drawing.Size(39, 19);
-            this.setSecondaryTempFolderButton.TabIndex = 15;
-            this.setSecondaryTempFolderButton.Text = "...";
-            this.setSecondaryTempFolderButton.UseVisualStyleBackColor = true;
-            this.setSecondaryTempFolderButton.Click += new System.EventHandler(this.setSecondaryTempFolderButton_Click);
-            // 
-            // clearSecondaryTempFolderButton
-            // 
-            this.clearSecondaryTempFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.clearSecondaryTempFolderButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.clearSecondaryTempFolderButton.Location = new System.Drawing.Point(586, 65);
-            this.clearSecondaryTempFolderButton.Name = "clearSecondaryTempFolderButton";
-            this.clearSecondaryTempFolderButton.Size = new System.Drawing.Size(26, 19);
-            this.clearSecondaryTempFolderButton.TabIndex = 16;
-            this.clearSecondaryTempFolderButton.Text = "X";
-            this.clearSecondaryTempFolderButton.UseVisualStyleBackColor = true;
-            this.clearSecondaryTempFolderButton.Click += new System.EventHandler(this.clearSecondaryTempFolderButton_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(40, 13);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(84, 13);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "Dump progress: ";
-            this.tooltip.SetToolTip(this.label2, "The minimal number of times the position needs to be seen to include it in the ou" +
-        "tput epd. If 1 then all positions are included.");
+            this.minPiecesNumericUpDown.Name = "minPiecesNumericUpDown";
+            this.minPiecesNumericUpDown.Size = new System.Drawing.Size(70, 20);
+            this.minPiecesNumericUpDown.TabIndex = 18;
+            this.minPiecesNumericUpDown.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
             // 
             // EpdDumpForm
             // 
@@ -418,13 +455,14 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.maxPlyNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.minCountInput)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.maxPlyNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minPiecesNumericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -457,5 +495,7 @@
         private System.Windows.Forms.TextBox secondaryTempFolderTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown minPiecesNumericUpDown;
+        private System.Windows.Forms.Label minPiecesLabel;
     }
 }
