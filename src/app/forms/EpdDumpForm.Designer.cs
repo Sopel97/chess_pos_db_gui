@@ -57,6 +57,11 @@
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.minPiecesLabel = new System.Windows.Forms.Label();
             this.minPiecesNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.includeFenCheckBox = new System.Windows.Forms.CheckBox();
+            this.includeWinCountCheckBox = new System.Windows.Forms.CheckBox();
+            this.includeDrawCountCheckBox = new System.Windows.Forms.CheckBox();
+            this.includeLossCountCheckBox = new System.Windows.Forms.CheckBox();
+            this.includePerfCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pgnsDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -87,7 +92,7 @@
             this.pgnsDataGridView.Location = new System.Drawing.Point(3, 35);
             this.pgnsDataGridView.Name = "pgnsDataGridView";
             this.pgnsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.pgnsDataGridView.Size = new System.Drawing.Size(618, 344);
+            this.pgnsDataGridView.Size = new System.Drawing.Size(618, 323);
             this.pgnsDataGridView.TabIndex = 2;
             this.tooltip.SetToolTip(this.pgnsDataGridView, "The PGN files to be scanned.");
             this.pgnsDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.PgnsDataGridView_RowPrePaint);
@@ -117,6 +122,11 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.includePerfCheckBox);
+            this.splitContainer1.Panel1.Controls.Add(this.includeLossCountCheckBox);
+            this.splitContainer1.Panel1.Controls.Add(this.includeDrawCountCheckBox);
+            this.splitContainer1.Panel1.Controls.Add(this.includeWinCountCheckBox);
+            this.splitContainer1.Panel1.Controls.Add(this.includeFenCheckBox);
             this.splitContainer1.Panel1.Controls.Add(this.minPiecesNumericUpDown);
             this.splitContainer1.Panel1.Controls.Add(this.minPiecesLabel);
             this.splitContainer1.Panel1.Controls.Add(this.clearSecondaryTempFolderButton);
@@ -134,13 +144,13 @@
             this.splitContainer1.Panel1.Controls.Add(this.setTempFolderButton);
             this.splitContainer1.Panel1.Controls.Add(this.tempFolderTextBox);
             this.splitContainer1.Panel1.Controls.Add(this.outputPathTextBox);
-            this.splitContainer1.Panel1MinSize = 90;
+            this.splitContainer1.Panel1MinSize = 135;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(624, 602);
-            this.splitContainer1.SplitterDistance = 114;
+            this.splitContainer1.SplitterDistance = 135;
             this.splitContainer1.TabIndex = 1;
             // 
             // clearSecondaryTempFolderButton
@@ -349,8 +359,8 @@
             this.splitContainer2.Panel2.Controls.Add(this.dumpProgressLabel);
             this.splitContainer2.Panel2.Controls.Add(this.dumpProgressBar);
             this.splitContainer2.Panel2.Controls.Add(this.dumpButton);
-            this.splitContainer2.Size = new System.Drawing.Size(624, 484);
-            this.splitContainer2.SplitterDistance = 382;
+            this.splitContainer2.Size = new System.Drawing.Size(624, 463);
+            this.splitContainer2.SplitterDistance = 361;
             this.splitContainer2.TabIndex = 0;
             // 
             // addPgnsButton
@@ -438,6 +448,58 @@
             0,
             0});
             // 
+            // includeFenCheckBox
+            // 
+            this.includeFenCheckBox.AutoSize = true;
+            this.includeFenCheckBox.Checked = true;
+            this.includeFenCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.includeFenCheckBox.Location = new System.Drawing.Point(130, 115);
+            this.includeFenCheckBox.Name = "includeFenCheckBox";
+            this.includeFenCheckBox.Size = new System.Drawing.Size(47, 17);
+            this.includeFenCheckBox.TabIndex = 19;
+            this.includeFenCheckBox.Text = "FEN";
+            this.includeFenCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // includeWinCountCheckBox
+            // 
+            this.includeWinCountCheckBox.AutoSize = true;
+            this.includeWinCountCheckBox.Location = new System.Drawing.Point(183, 115);
+            this.includeWinCountCheckBox.Name = "includeWinCountCheckBox";
+            this.includeWinCountCheckBox.Size = new System.Drawing.Size(75, 17);
+            this.includeWinCountCheckBox.TabIndex = 20;
+            this.includeWinCountCheckBox.Text = "Win count";
+            this.includeWinCountCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // includeDrawCountCheckBox
+            // 
+            this.includeDrawCountCheckBox.AutoSize = true;
+            this.includeDrawCountCheckBox.Location = new System.Drawing.Point(264, 115);
+            this.includeDrawCountCheckBox.Name = "includeDrawCountCheckBox";
+            this.includeDrawCountCheckBox.Size = new System.Drawing.Size(81, 17);
+            this.includeDrawCountCheckBox.TabIndex = 21;
+            this.includeDrawCountCheckBox.Text = "Draw count";
+            this.includeDrawCountCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // includeLossCountCheckBox
+            // 
+            this.includeLossCountCheckBox.AutoSize = true;
+            this.includeLossCountCheckBox.Location = new System.Drawing.Point(351, 115);
+            this.includeLossCountCheckBox.Name = "includeLossCountCheckBox";
+            this.includeLossCountCheckBox.Size = new System.Drawing.Size(78, 17);
+            this.includeLossCountCheckBox.TabIndex = 22;
+            this.includeLossCountCheckBox.Text = "Loss count";
+            this.includeLossCountCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // includePerfCheckBox
+            // 
+            this.includePerfCheckBox.AutoSize = true;
+            this.includePerfCheckBox.Location = new System.Drawing.Point(435, 115);
+            this.includePerfCheckBox.Name = "includePerfCheckBox";
+            this.includePerfCheckBox.Size = new System.Drawing.Size(45, 17);
+            this.includePerfCheckBox.TabIndex = 23;
+            this.includePerfCheckBox.Text = "Perf";
+            this.includePerfCheckBox.UseVisualStyleBackColor = true;
+            // 
             // EpdDumpForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -497,5 +559,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown minPiecesNumericUpDown;
         private System.Windows.Forms.Label minPiecesLabel;
+        private System.Windows.Forms.CheckBox includePerfCheckBox;
+        private System.Windows.Forms.CheckBox includeLossCountCheckBox;
+        private System.Windows.Forms.CheckBox includeDrawCountCheckBox;
+        private System.Windows.Forms.CheckBox includeWinCountCheckBox;
+        private System.Windows.Forms.CheckBox includeFenCheckBox;
     }
 }

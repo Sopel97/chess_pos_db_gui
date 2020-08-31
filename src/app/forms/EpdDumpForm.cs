@@ -225,11 +225,11 @@ namespace chess_pos_db_gui
             }
         }
 
-        private void Dump(List<string> pgns, string outPath, List<string> tempPaths, int minCount, int maxPly, int minPieces)
+        private void Dump(List<string> pgns, string outPath, List<string> tempPaths, EpdDumpFilters filters, List<EpdDumpOutputElement> elems)
         {
             try
             {
-                database.Dump(pgns, outPath, tempPaths, minCount, maxPly, minPieces, ProgressCallback);
+                database.Dump(pgns, outPath, tempPaths, filters, elems, ProgressCallback);
                 MessageBox.Show(
                     String.Format(
                         "Finished.\nGames processed: {0}\nPositions processed: {1}\nPositions dumped: {2}",
@@ -318,14 +318,52 @@ namespace chess_pos_db_gui
 
             DisableInput();
 
+            var filters = new EpdDumpFilters
+            {
+                MinCount = (int)minCountInput.Value,
+                MaxPly = (int)maxPlyNumericUpDown.Value,
+                MinPieces = (int)minPiecesNumericUpDown.Value
+            };
+
             await Task.Run(() => Dump(
                 pgns,
                 outputPathTextBox.Text,
                 GetTempPaths(),
-                (int)minCountInput.Value,
-                (int)maxPlyNumericUpDown.Value,
-                (int)minPiecesNumericUpDown.Value
+                filters,
+                GetOutputElements()
                 ));
+        }
+
+        private List<EpdDumpOutputElement> GetOutputElements()
+        {
+            var elems = new List<EpdDumpOutputElement>();
+
+            if (includeFenCheckBox.Checked)
+            {
+                elems.Add(EpdDumpOutputElement.Fen);
+            }
+
+            if (includeWinCountCheckBox.Checked)
+            {
+                elems.Add(EpdDumpOutputElement.WinCount);
+            }
+
+            if (includeDrawCountCheckBox.Checked)
+            {
+                elems.Add(EpdDumpOutputElement.DrawCount);
+            }
+
+            if (includeLossCountCheckBox.Checked)
+            {
+                elems.Add(EpdDumpOutputElement.LossCount);
+            }
+
+            if (includePerfCheckBox.Checked)
+            {
+                elems.Add(EpdDumpOutputElement.Perf);
+            }
+
+            return elems;
         }
 
         private List<string> GetTempPaths()

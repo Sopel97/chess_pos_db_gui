@@ -497,8 +497,20 @@ namespace chess_pos_db_gui
             return response;
         }
 
-        public void Dump(List<string> pgns, string outPath, List<string> tempPaths, int minCount, int maxPly, int minPieces, Action<JsonValue> callback)
+        public void Dump(
+            List<string> pgns, 
+            string outPath, 
+            List<string> tempPaths, 
+            EpdDumpFilters filters, 
+            List<EpdDumpOutputElement> outputElements, 
+            Action<JsonValue> callback
+            )
         {
+            if (outputElements.Count == 0)
+            {
+                throw new ArgumentException("No output elements specified.");
+            }
+
             lock (Lock)
             {
                 var stream = Client.GetStream();
@@ -513,10 +525,15 @@ namespace chess_pos_db_gui
                     JsonValue s = t;
                     return s;
                 })));
-                json.Add("min_count", minCount);
-                json.Add("max_ply", maxPly);
-                json.Add("min_pieces", minPieces);
+                json.Add("min_count", filters.MinCount);
+                json.Add("max_ply", filters.MaxPly);
+                json.Add("min_pieces", filters.MinPieces);
                 json.Add("report_progress", true);
+                json.Add("output", new JsonArray(outputElements.Select(t =>
+                {
+                    JsonValue s = t.GetName();
+                    return s;
+                })));
 
                 var pgnsJson = new JsonArray();
                 foreach (string pgn in pgns)
@@ -681,6 +698,44 @@ namespace chess_pos_db_gui
                     }
                 }
             }
+        }
+    }
+
+    public class EpdDumpFilters
+    {
+        public int MinCount { get; set; }
+        public int MaxPly { get; set; }
+        public int MinPieces { get; set; }
+    }
+
+    public enum EpdDumpOutputElement
+    {
+        Fen,
+        WinCount,
+        DrawCount,
+        LossCount,
+        Perf
+    }
+
+    static class EpdDumpOutputElementHelper
+    {
+        static public string GetName(this EpdDumpOutputElement elem)
+        {
+            switch (elem)
+            {
+                case EpdDumpOutputElement.Fen:
+                    return "fen";
+                case EpdDumpOutputElement.WinCount:
+                    return "win_count";
+                case EpdDumpOutputElement.DrawCount:
+                    return "draw_count";
+                case EpdDumpOutputElement.LossCount:
+                    return "loss_count";
+                case EpdDumpOutputElement.Perf:
+                    return "perf";
+            }
+
+            throw new ArgumentException("Invalid elem");
         }
     }
 
